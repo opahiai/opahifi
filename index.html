@@ -299,17 +299,51 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--pl3-gap-md);
+            gap: 30px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .PL3-upcomingArtWrap {
             height: 20vh;
             width: 20vh;
-            overflow: hidden;
+            overflow: visible;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 15px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        .PL3-upcomingArtWrap::before,
+        .PL3-upcomingArtWrap::after {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: -3px;
+            background: linear-gradient(45deg, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444);
+            background-size: 400%;
+            width: calc(100% + 6px);
+            height: calc(100% + 6px);
+            border-radius: 20px;
+            z-index: -1;
+            animation: PL3-upcomingBorderShine 20s linear infinite;
+        }
+
+        .PL3-upcomingArtWrap::after {
+            filter: blur(20px);
+            animation: PL3-upcomingBorderShine 20s linear infinite;
+        }
+
+        .PL3-upcomingArtWrap:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .PL3-upcomingArt {
@@ -318,6 +352,29 @@
             object-fit: contain;
             display: block;
             border-radius: 15px;
+            box-shadow: 0 0 30px rgba(31, 111, 235, 0.4), inset 0 0 30px rgba(140, 70, 255, 0.1);
+            animation: PL3-upcomingGlow 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        .PL3-upcomingArt::before,
+        .PL3-upcomingArt::after {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: -3px;
+            background: linear-gradient(45deg, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444);
+            background-size: 400%;
+            width: calc(100% + 6px);
+            height: calc(100% + 6px);
+            border-radius: 15px;
+            z-index: -1;
+            animation: PL3-upcomingBorderShine 8s linear infinite;
+        }
+
+        .PL3-upcomingArt::after {
+            filter: blur(12px);
         }
 
         .PL3-upcomingMeta {
@@ -326,6 +383,16 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            animation: PL3-upcomingPulse 2.5s ease-in-out infinite;
+        }
+
+        .PL3-upcomingRight {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
         }
 
         .PL3-upcomingDesc {
@@ -333,6 +400,17 @@
             font-size: 2.7rem;
             font-weight: 900;
             line-height: 1.1;
+            text-shadow: 0 0 20px rgba(31, 111, 235, 0.4);
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .PL3-upcomingButtons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .PL3-upcomingSub {
@@ -374,6 +452,44 @@
         .PL3-upcomingPreviewBtn:focus-visible {
             outline: 2px solid rgba(255, 255, 255, 0.6);
             outline-offset: 2px;
+        }
+
+        .PL3-spotifySticker {
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1.5px solid rgba(100, 150, 120, 0.3);
+            color: rgb(255, 255, 255);
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 200ms ease;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .PL3-spotifySticker img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            opacity: 0.7;
+        }
+
+        .PL3-spotifySticker:hover {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(100, 150, 120, 0.5);
+            color: rgba(100, 150, 120, 0.9);
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(100, 150, 120, 0.1);
+        }
+
+        .PL3-spotifySticker:active {
+            transform: scale(0.98);
         }
 
         /* ===== Preview Video Modal ===== */
@@ -428,6 +544,84 @@
 
         #PL3-preview-modal.PL3-preview--open .PL3-previewInner {
             animation: PL3-previewInnerWiggle 520ms ease both;
+        }
+
+        @keyframes PL3-upcomingBorderShine {
+            0% {
+                background-position: 0 0;
+            }
+
+            50% {
+                background-position: 400% 0;
+            }
+
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        @keyframes PL3-upcomingMagicBorder {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 0.9;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes PL3-upcomingSparkle {
+            0% {
+                filter: blur(8px) brightness(0.8);
+            }
+
+            50% {
+                filter: blur(8px) brightness(1.2);
+            }
+
+            100% {
+                filter: blur(8px) brightness(0.8);
+            }
+        }
+
+        @keyframes PL3-upcomingShimmer {
+            0% {
+                transform: translateX(-200%);
+            }
+
+            100% {
+                transform: translateX(200%);
+            }
+        }
+
+        @keyframes PL3-upcomingGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(31, 111, 235, 0.4), inset 0 0 30px rgba(140, 70, 255, 0.1);
+            }
+
+            50% {
+                box-shadow: 0 0 50px rgba(31, 111, 235, 0.6), inset 0 0 40px rgba(140, 70, 255, 0.2);
+            }
+        }
+
+        @keyframes PL3-upcomingPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.98;
+                transform: scale(1.01);
+            }
         }
 
         @keyframes PL3-previewInnerWiggle {
@@ -1065,18 +1259,31 @@
                     <!-- Middle (30%): cover art + drop msg -->
                     <div class="PL3-part PL3-part--upcoming" aria-label="Upcoming and recent">
                         <div class="PL3-upcoming" aria-label="Upcoming single">
-                            <a href="https://distrokid.com/hyperfollow/opahifi/believe-the-truth-fairy?utm_campaign=website&utm_medium=Email+&utm_source=SendGrid" target="_blank" rel="noopener noreferrer" class="PL3-upcomingArtWrap" aria-label="Listen to Believe the Truth fairy on DistroKid">
+                            <!-- Left: Image -->
+                            <a href="https://distrokid.com/hyperfollow/opahifi/believe-the-truth-fairy?utm_campaign=website&utm_medium=Email+&utm_source=SendGrid"
+                                target="_blank" rel="noopener noreferrer" class="PL3-upcomingArtWrap"
+                                aria-label="Listen to Believe the Truth fairy on DistroKid">
                                 <img class="PL3-upcomingArt" src="img/music/main_truthfairy.png"
                                     alt="Upcoming single cover" loading="lazy"
                                     onerror="this.src='img/music/opahiai_album.png'">
                             </a>
-                            <div class="PL3-upcomingMeta">
+
+                            <!-- Right: Drop Message and Buttons -->
+                            <div class="PL3-upcomingRight">
                                 <div class="PL3-upcomingDesc">Drops<br>Feb 6</div>
-                                <button class="PL3-upcomingPreviewBtn" type="button" data-pl3-preview
-                                    aria-label="Preview video">
-                                    <i class="fa-brands fa-youtube" aria-hidden="true"></i>
-                                    <span>Preview</span>
-                                </button>
+                                <div class="PL3-upcomingButtons">
+                                    <button class="PL3-upcomingPreviewBtn" type="button" data-pl3-preview
+                                        aria-label="Preview video">
+                                        <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                                        <span>Preview</span>
+                                    </button>
+                                    <a href="https://distrokid.com/hyperfollow/opahifi/believe-the-truth-fairy?utm_campaign=website&utm_medium=Email+&utm_source=SendGrid"
+                                        target="_blank" rel="noopener noreferrer" class="PL3-spotifySticker"
+                                        aria-label="Listen on Spotify">
+                                        <img src="img/icon_spotify.png" alt="Save on Spotify" loading="lazy">
+                                        <span>Save on Spotify</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1117,7 +1324,9 @@
                                         onerror="this.src='img/music/opahiai_album.png'">
                                 </button>
 
-                                <a class="PL3-galleryItemBtn" href="https://distrokid.com/hyperfollow/opahifi/believe-the-truth-fairy?utm_campaign=website&utm_medium=Email+&utm_source=SendGrid" target="_blank" rel="noopener noreferrer"
+                                <a class="PL3-galleryItemBtn"
+                                    href="https://distrokid.com/hyperfollow/opahifi/believe-the-truth-fairy?utm_campaign=website&utm_medium=Email+&utm_source=SendGrid"
+                                    target="_blank" rel="noopener noreferrer"
                                     aria-label="Listen to Believe the Truth fairy">
                                     <img class="PL3-galleryImg" src="img/music/main_truthfairy.png"
                                         alt="Believe the Truth fairy cover" loading="lazy"
