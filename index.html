@@ -34,9 +34,6 @@
             --pl3-gap-md: 10px;
             --pl3-gap-sm: 8px;
 
-            /* Top hero layout */
-            --pl3-hero-img-col: 15%;
-
             /* Vertical split knobs (unitless numbers out of 100). These should sum to 100. */
             --pl3-part-entity: 30;
             --pl3-part-upcoming: 30;
@@ -425,6 +422,7 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
+            margin-top: 10px;
             flex-shrink: 0;
         }
 
@@ -1787,7 +1785,7 @@
                 this.el = {
                     btnRow: this.section.querySelector('.PL3-btnRow'),
                     heroBtns: Array.from(this.section.querySelectorAll('.PL3-heroBtn')),
-                    previewBtn: this.section.querySelector('[data-pl3-preview]'),
+                    previewBtns: Array.from(this.section.querySelectorAll('[data-pl3-preview]')),
                     streamingBtns: Array.from(document.querySelectorAll('[data-pl3-streaming-popup]')),
                     modal: document.getElementById('PL3-group-modal'),
                     heroCrop: document.getElementById('PL3-group-hero-crop'),
@@ -1885,11 +1883,13 @@
 
             // === Preview (embedded YouTube) ===
             attachPreviewEvents() {
-                if (this.el.previewBtn) {
-                    this.el.previewBtn.addEventListener('click', (ev) => {
-                        ev.preventDefault();
-                        this.openPreviewModal('https://youtube.com/playlist?list=PLtGnlTqdsNV1g28xiKP3KdhdBthKY8-hL&si=bOYKXdjOq_q8XhUi');
-                    }, { passive: false });
+                if (this.el.previewBtns && this.el.previewBtns.length > 0) {
+                    this.el.previewBtns.forEach(btn => {
+                        btn.addEventListener('click', (ev) => {
+                            ev.preventDefault();
+                            this.openPreviewModal('https://youtube.com/playlist?list=PLtGnlTqdsNV1g28xiKP3KdhdBthKY8-hL&si=bOYKXdjOq_q8XhUi');
+                        }, { passive: false });
+                    });
                 }
 
                 const m = this.el.previewModal;
