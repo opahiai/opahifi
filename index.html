@@ -49,10 +49,21 @@
 
             /* Gallery layout */
             --pl3-gallery-gap: var(--pl3-gap-md);
+
+            /* Upcoming section */
+            --pl3-upcoming-size: 20vh;
+
+            /* Viewport-based dimensions */
+            --pl3-viewport-h: 100vh;
+            --pl3-preview-top-offset: 18vh;
+            --pl3-preview-max-h: 52vh;
+            --pl3-modal-top-offset: 10vh;
+            --pl3-modal-max-h: 75vh;
+            --pl3-share-top-offset: 22vh;
         }
 
         #p_listen3.PL3-section {
-            height: 100vh;
+            height: var(--pl3-viewport-h);
             box-sizing: border-box;
             background:
                 radial-gradient(1200px 600px at 20% 10%, rgba(31, 111, 235, 0.18), transparent 60%),
@@ -64,7 +75,7 @@
 
         /* tileSize = min(30vw, galleryHeight / 2.5) */
         #p_listen3 {
-            --pl3-available-h: 100vh;
+            --pl3-available-h: var(--pl3-viewport-h);
             --pl3-gallery-h: calc(var(--pl3-available-h) * (var(--pl3-part-gallery) / 100));
             --pl3-gallery-tile-size: min(30vw, calc(var(--pl3-gallery-h) / 3));
         }
@@ -96,7 +107,7 @@
         .PL3-part {
             padding: var(--pl3-part-padding);
             box-sizing: border-box;
-            overflow: hidden;
+            /* over flow: hidden; */
         }
 
         .PL3-part--gallery {
@@ -125,32 +136,34 @@
             display: flex;
             gap: var(--pl3-gap-md);
             align-items: center;
+            justify-content: center;
         }
 
         .PL3-heroImgWrap {
-            flex: 0 0 40%;
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: center;
             padding: 18px 0;
         }
 
         .PL3-heroImg {
-            width: 100px;
-            height: 100px;
+            width: clamp(100px, 15vw, 140px);
+            height: clamp(100px, 15vw, 140px);
             object-fit: contain;
             display: block;
             border-radius: 15px;
         }
 
         .PL3-heroText {
-            flex: 1;
-            height: 100%;
+            flex: 0 0 auto;
+            height: auto;
             min-width: 0;
             display: flex;
             flex-direction: column;
             gap: 4px;
-            justify-content: center
+            justify-content: center;
+            text-align: center;
         }
 
         .PL3-heroTitle {
@@ -299,19 +312,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 30px;
+            gap: 15px;
             padding: 20px;
             box-sizing: border-box;
         }
 
         .PL3-upcomingArtWrap {
-            height: 20vh;
-            width: 20vh;
+            height: var(--pl3-upcoming-size);
+            width: var(--pl3-upcoming-size);
             overflow: visible;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 15px;
+            border: none;
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -319,6 +333,7 @@
             position: relative;
             z-index: 2;
             flex-shrink: 0;
+            cursor: pointer;
         }
 
         .PL3-upcomingArtWrap::before,
@@ -347,8 +362,8 @@
         }
 
         .PL3-upcomingArt {
-            width: 20vh;
-            height: 20vh;
+            width: var(--pl3-upcoming-size);
+            height: var(--pl3-upcoming-size);
             object-fit: contain;
             display: block;
             border-radius: 15px;
@@ -391,15 +406,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-
             flex-shrink: 0;
         }
 
         .PL3-upcomingDesc {
             color: #fff;
-            font-size: 2.7rem;
+            font-size: 3rem;
             font-weight: 900;
-            line-height: 1.1;
+            line-height: 0.9;
             text-shadow: 0 0 20px rgba(31, 111, 235, 0.4);
             text-align: center;
             flex-shrink: 0;
@@ -410,6 +424,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 4px;
             flex-shrink: 0;
         }
 
@@ -420,28 +435,39 @@
             font-weight: 600;
         }
 
-        .PL3-upcomingPreviewBtn {
-            margin-top: 10px;
+        /* Base button styles */
+        .PL3-upcomingBtn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            width: fit-content;
-            padding: 8px 1.3rem;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(0, 0, 0, 0.25);
+            justify-content: center;
+            gap: var(--upcoming-btn-gap, 6px);
+            width: var(--upcoming-btn-width, 140px);
+            padding: var(--upcoming-btn-padding, 8px 14px);
+            border-radius: var(--upcoming-btn-radius, 20px);
             color: #fff;
-            font-size: 14px;
-            font-weight: 800;
+            font-size: var(--upcoming-btn-font-size, 12px);
+            font-weight: var(--upcoming-btn-font-weight, 700);
+            line-height: 1;
+            margin-top: 15px;
             cursor: pointer;
             -webkit-user-select: none;
             user-select: none;
+        }
+
+        .PL3-upcomingPreviewBtn {
+            --upcoming-btn-bg: rgba(0, 0, 0, 0.25);
+            --upcoming-btn-border: 1px solid rgba(255, 255, 255, 0.18);
+            --upcoming-btn-bg-hover: rgba(0, 0, 0, 0.35);
+            --upcoming-btn-border-hover: rgba(255, 255, 255, 0.28);
+
+            background: var(--upcoming-btn-bg);
+            border: var(--upcoming-btn-border);
             transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
         }
 
         .PL3-upcomingPreviewBtn:hover {
-            background: rgba(0, 0, 0, 0.35);
-            border-color: rgba(255, 255, 255, 0.28);
+            background: var(--upcoming-btn-bg-hover);
+            border-color: var(--upcoming-btn-border-hover);
             transform: translateY(-1px);
         }
 
@@ -455,22 +481,18 @@
         }
 
         .PL3-spotifySticker {
-            margin-top: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1.5px solid rgba(100, 150, 120, 0.3);
-            color: rgb(255, 255, 255);
-            font-size: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
+            --upcoming-btn-bg: rgba(0, 0, 0, 0.3);
+            --upcoming-btn-border: 1px solid rgba(100, 150, 120, 0.3);
+            --upcoming-btn-bg-hover: rgba(0, 0, 0, 0.4);
+            --upcoming-btn-border-hover: rgba(100, 150, 120, 0.5);
+
+            background: var(--upcoming-btn-bg);
+            border: var(--upcoming-btn-border);
             transition: all 200ms ease;
-            -webkit-user-select: none;
-            user-select: none;
+        }
+
+        .PL3-upcomingPreviewBtn i {
+            font-size: 14px;
         }
 
         .PL3-spotifySticker img {
@@ -481,8 +503,8 @@
         }
 
         .PL3-spotifySticker:hover {
-            background: rgba(0, 0, 0, 0.4);
-            border-color: rgba(100, 150, 120, 0.5);
+            background: var(--upcoming-btn-bg-hover);
+            border-color: var(--upcoming-btn-border-hover);
             color: rgba(100, 150, 120, 0.9);
             transform: scale(1.05);
             box-shadow: 0 4px 16px rgba(100, 150, 120, 0.1);
@@ -490,6 +512,122 @@
 
         .PL3-spotifySticker:active {
             transform: scale(0.98);
+        }
+
+        /* ===== Streaming Services Popup Modal ===== */
+        #PL3-streaming-modal[hidden] {
+            display: none;
+        }
+
+        #PL3-streaming-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .PL3-streamingOverlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+
+        .PL3-streamingPanel {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 100%);
+            border: 2px solid rgba(140, 70, 255, 0.3);
+            border-radius: 24px;
+            padding: 40px 32px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(31, 111, 235, 0.2), 0 0 40px rgba(140, 70, 255, 0.1);
+            animation: slideUp 300ms ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .PL3-streamingClose {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 200ms ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .PL3-streamingClose:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .PL3-streamingContent {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .PL3-streamingTitle {
+            font-size: 32px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(140, 70, 255, 0.3);
+        }
+
+        .PL3-streamingMessage {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
+        }
+
+        .PL3-streamingMessage strong {
+            color: #1f6feb;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(31, 111, 235, 0.4);
+        }
+
+        .PL3-streamingServices {
+            font-size: 48px;
+            margin-top: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         /* ===== Preview Video Modal ===== */
@@ -520,12 +658,7 @@
         #PL3-preview-modal .PL3-previewPanel {
             position: relative;
             width: min(86vw, 360px);
-            margin: 18vh auto 0;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.10);
-            background: linear-gradient(180deg, rgba(20, 25, 42, 0.98) 0%, rgba(12, 14, 24, 0.96) 100%);
-            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.60);
-            padding: 12px;
+            margin: var(--pl3-preview-top-offset) auto 0;
             opacity: 0;
             transform: translateY(22px);
             transition: opacity 0.22s ease, transform 0.22s ease;
@@ -704,7 +837,7 @@
         #PL3-preview-modal .PL3-previewFrame {
             width: min(100%, 300px);
             aspect-ratio: 9 / 16;
-            max-height: 52vh;
+            max-height: var(--pl3-preview-max-h);
             border-radius: 14px;
             overflow: hidden;
             background: rgba(0, 0, 0, 0.35);
@@ -790,9 +923,9 @@
             position: relative;
             width: 92%;
             max-width: 440px;
-            max-height: 75vh;
-            height: min(75vh, 600px);
-            margin: 10vh auto 0;
+            max-height: var(--pl3-modal-max-h);
+            height: min(var(--pl3-modal-max-h), 600px);
+            margin: var(--pl3-modal-top-offset) auto 0;
             background: linear-gradient(180deg, rgba(20, 25, 42, 0.96) 0%, rgba(15, 18, 30, 0.94) 100%);
             border-radius: var(--pl3-panel-radius);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -942,36 +1075,6 @@
             font-size: 18px;
         }
 
-        /* Responsive fixes for tablet to avoid hero image clipping */
-        @media (max-width: 900px) {
-            .PL3-top {
-                align-content: center;
-                padding-top: 12px;
-                padding-bottom: 12px;
-            }
-
-            .PL3-heroRow {
-                gap: 8px;
-                align-items: center;
-            }
-
-            .PL3-heroImgWrap {
-                justify-content: center;
-                padding: 12px 0;
-            }
-
-            .PL3-heroImg {
-                width: 84px;
-                height: 84px;
-                max-width: 84px;
-                max-height: 84px;
-            }
-
-            .PL3-heroTitle {
-                font-size: clamp(2rem, 6vw, 3.2rem);
-            }
-        }
-
         /* ===== Share Sheet ===== */
         #PL3-share-modal[hidden] {
             display: none;
@@ -1000,10 +1103,7 @@
         #PL3-share-modal .PL3-sharePanel {
             position: relative;
             width: min(92vw, 520px);
-            margin: 22vh auto 0;
-            background: linear-gradient(180deg, rgba(20, 25, 42, 0.98) 0%, rgba(12, 14, 24, 0.96) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.10);
-            border-radius: 16px;
+            margin: var(--pl3-share-top-offset) auto 0;
             box-shadow: 0 30px 90px rgba(0, 0, 0, 0.60);
             padding: 14px;
             opacity: 0;
@@ -1260,29 +1360,22 @@
                     <div class="PL3-part PL3-part--upcoming" aria-label="Upcoming and recent">
                         <div class="PL3-upcoming" aria-label="Upcoming single">
                             <!-- Left: Image -->
-                            <a href="https://distrokid.com/hyperfollow/opahifi/believe-the-truth-fairy?utm_campaign=website&utm_medium=Email+&utm_source=SendGrid"
-                                target="_blank" rel="noopener noreferrer" class="PL3-upcomingArtWrap"
-                                aria-label="Listen to Believe the Truth fairy on DistroKid">
+                            <button class="PL3-upcomingArtWrap" type="button"
+                                aria-label="Preview Believe the Truth fairy playlist" data-pl3-preview>
                                 <img class="PL3-upcomingArt" src="img/music/main_truthfairy.png"
                                     alt="Upcoming single cover" loading="lazy"
                                     onerror="this.src='img/music/opahiai_album.png'">
-                            </a>
+                            </button>
 
                             <!-- Right: Drop Message and Buttons -->
                             <div class="PL3-upcomingRight">
                                 <div class="PL3-upcomingDesc">Drops<br>Feb 6</div>
                                 <div class="PL3-upcomingButtons">
-                                    <button class="PL3-upcomingPreviewBtn" type="button" data-pl3-preview
-                                        aria-label="Preview video">
+                                    <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
+                                        data-pl3-preview aria-label="Preview video">
                                         <i class="fa-brands fa-youtube" aria-hidden="true"></i>
                                         <span>Preview</span>
                                     </button>
-                                    <a href="https://distrokid.com/hyperfollow/opahifi/believe-the-truth-fairy?utm_campaign=website&utm_medium=Email+&utm_source=SendGrid"
-                                        target="_blank" rel="noopener noreferrer" class="PL3-spotifySticker"
-                                        aria-label="Listen on Spotify">
-                                        <img src="img/icon_spotify.png" alt="Save on Spotify" loading="lazy">
-                                        <span>Save on Spotify</span>
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -1324,14 +1417,12 @@
                                         onerror="this.src='img/music/opahiai_album.png'">
                                 </button>
 
-                                <a class="PL3-galleryItemBtn"
-                                    href="https://distrokid.com/hyperfollow/opahifi/believe-the-truth-fairy?utm_campaign=website&utm_medium=Email+&utm_source=SendGrid"
-                                    target="_blank" rel="noopener noreferrer"
-                                    aria-label="Listen to Believe the Truth fairy">
+                                <button class="PL3-galleryItemBtn" type="button"
+                                    aria-label="Preview Believe the Truth fairy playlist" data-pl3-preview>
                                     <img class="PL3-galleryImg" src="img/music/main_truthfairy.png"
                                         alt="Believe the Truth fairy cover" loading="lazy"
                                         onerror="this.src='img/music/opahiai_album.png'">
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1697,6 +1788,7 @@
                     btnRow: this.section.querySelector('.PL3-btnRow'),
                     heroBtns: Array.from(this.section.querySelectorAll('.PL3-heroBtn')),
                     previewBtn: this.section.querySelector('[data-pl3-preview]'),
+                    streamingBtns: Array.from(document.querySelectorAll('[data-pl3-streaming-popup]')),
                     modal: document.getElementById('PL3-group-modal'),
                     heroCrop: document.getElementById('PL3-group-hero-crop'),
                     heroImg: document.getElementById('PL3-group-hero-img'),
@@ -1706,7 +1798,8 @@
                     shareModal: document.getElementById('PL3-share-modal'),
                     shareInput: document.getElementById('PL3-share-url'),
                     previewModal: document.getElementById('PL3-preview-modal'),
-                    previewIframe: document.getElementById('PL3-preview-iframe')
+                    previewIframe: document.getElementById('PL3-preview-iframe'),
+                    streamingModal: document.getElementById('PL3-streaming-modal')
                 };
 
                 // Cache nested elements
@@ -1744,7 +1837,50 @@
                 this.attachModalEvents();
                 this.attachShareEvents();
                 this.attachPreviewEvents();
+                this.attachStreamingPopupEvents();
                 this.openFromUrlIfPresent();
+            }
+
+            // === Streaming Services Popup ===
+            attachStreamingPopupEvents() {
+                if (this.el.streamingBtns && this.el.streamingBtns.length > 0) {
+                    this.el.streamingBtns.forEach(btn => {
+                        btn.addEventListener('click', (ev) => {
+                            ev.preventDefault();
+                            this.openStreamingPopup();
+                        }, { passive: false });
+                    });
+                }
+
+                const m = this.el.streamingModal;
+                if (m) {
+                    m.addEventListener('click', (ev) => {
+                        if (!ev.target.closest('[data-pl3-streaming-close]') || !m.contains(ev.target)) return;
+                        ev.preventDefault();
+                        this.closeStreamingPopup();
+                    }, { passive: false });
+                }
+
+                window.addEventListener('keydown', (ev) => {
+                    if (!this.el.streamingModal || this.el.streamingModal.hidden || ev.key !== 'Escape') return;
+                    this.closeStreamingPopup();
+                }, { passive: true });
+            }
+
+            openStreamingPopup() {
+                const m = this.el.streamingModal;
+                if (!m) return;
+                m.hidden = false;
+                m.removeAttribute('aria-hidden');
+                this.lockScroll();
+            }
+
+            closeStreamingPopup() {
+                const m = this.el.streamingModal;
+                if (!m) return;
+                m.hidden = true;
+                m.setAttribute('aria-hidden', 'true');
+                this.unlockScroll();
             }
 
             // === Preview (embedded YouTube) ===
@@ -1752,7 +1888,7 @@
                 if (this.el.previewBtn) {
                     this.el.previewBtn.addEventListener('click', (ev) => {
                         ev.preventDefault();
-                        this.openPreviewModal('pdsSTho5n30');
+                        this.openPreviewModal('https://youtube.com/playlist?list=PLtGnlTqdsNV1g28xiKP3KdhdBthKY8-hL&si=bOYKXdjOq_q8XhUi');
                     }, { passive: false });
                 }
 
@@ -1802,9 +1938,18 @@
             applyPreviewIframeSrc() {
                 const id = String(this.state.previewVideoId || '').trim();
                 if (!id || !this.el.previewIframe) return;
-                const mute = this.state.previewMuted ? 1 : 0;
-                // Shorts embed with controls visible for clear audio control
-                const src = `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
+
+                // Check if it's a playlist URL or video ID
+                let src;
+                if (id.includes('playlist?list=')) {
+                    // It's a playlist URL
+                    const playlistId = new URL(id).searchParams.get('list');
+                    src = `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&modestbranding=1&controls=1`;
+                } else {
+                    // It's a video ID
+                    const mute = this.state.previewMuted ? 1 : 0;
+                    src = `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
+                }
                 this.el.previewIframe.src = src;
             }
 
