@@ -11,6 +11,15 @@
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LHJPDBZDMB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-LHJPDBZDMB');
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -422,7 +431,6 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
-            margin-top: 10px;
             flex-shrink: 0;
         }
 
@@ -1603,7 +1611,70 @@
         </div>
     </div>
 
+
+    <!-- GA4 labeled click tracking (internal + external) -->
     <script>
+        (() => {
+            const sanitize = (s, max = 90) => String(s || '')
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, '_')
+                .replace(/[^a-z0-9_\-:/\.]/g, '')
+                .slice(0, max);
+
+            const labelOf = (el) => {
+                if (!el) return 'click';
+
+                const ctxAction = el.closest('[data-pl3-action]')?.dataset?.pl3Action || '';
+                const ctxActionKey = ctxAction ? sanitize(ctxAction) : '';
+
+                if (el.dataset.track) return sanitize(el.dataset.track);
+
+                if (el.dataset.pl3Action) return 'pl3_action_' + sanitize(el.dataset.pl3Action);
+                if (el.dataset.pl3Group) return 'pl3_group_' + sanitize(el.dataset.pl3Group);
+                if (el.hasAttribute('data-pl3-preview')) return ctxActionKey ? 'pl3_' + ctxActionKey + '_preview' : 'pl3_preview';
+                if (el.hasAttribute('data-pl3-share-group')) return 'pl3_share_open';
+                if (el.hasAttribute('data-pl3-share-copy')) return 'pl3_share_copy';
+                if (el.hasAttribute('data-pl3-preview-sound')) return 'pl3_preview_sound';
+
+                if (el.dataset.pl3Platform) {
+                    const p = sanitize(el.dataset.pl3Platform);
+                    return ctxActionKey ? ('pl3_' + ctxActionKey + '_platform_' + p) : ('pl3_platform_' + p);
+                }
+
+                const aria = el.getAttribute('aria-label');
+                if (aria) {
+                    const a = sanitize(aria);
+                    return ctxActionKey ? ('pl3_' + ctxActionKey + '_' + a) : a;
+                }
+
+                if (el.tagName === 'A') {
+                    const href = el.getAttribute('href') || '';
+                    const h = href ? sanitize(href) : '';
+                    return ctxActionKey ? ('pl3_' + ctxActionKey + '_link_' + (h || '')) : (href ? 'link_' + h : 'link');
+                }
+
+                const txt = (el.textContent || '').trim();
+                return txt ? (ctxActionKey ? ('pl3_' + ctxActionKey + '_btn_' + sanitize(txt)) : ('btn_' + sanitize(txt))) : 'click';
+            };
+
+            document.addEventListener('click', (e) => {
+                const el = e.target.closest(
+                    '[data-track],a,button,[role="button"],[data-pl3-action],[data-pl3-group],[data-pl3-preview],[data-pl3-share-group],[data-pl3-share-copy],[data-pl3-preview-sound],[data-pl3-platform]'
+                );
+                if (!el) return;
+                if (typeof window.gtag !== 'function') return;
+
+                window.gtag('event', 'ui_click', {
+                    label: labelOf(el),
+                    href: el.getAttribute('href') || '',
+                    page_path: location.pathname
+                });
+            }, { capture: true });
+        })();
+    </script>
+
+<script>
         // Music data (inline)
         (function () {
             if (window.musicDataGrouped) return;
@@ -1785,7 +1856,7 @@
                 this.el = {
                     btnRow: this.section.querySelector('.PL3-btnRow'),
                     heroBtns: Array.from(this.section.querySelectorAll('.PL3-heroBtn')),
-                    previewBtns: Array.from(this.section.querySelectorAll('[data-pl3-preview]')),
+                    previewBtn: this.section.querySelector('[data-pl3-preview]'),
                     streamingBtns: Array.from(document.querySelectorAll('[data-pl3-streaming-popup]')),
                     modal: document.getElementById('PL3-group-modal'),
                     heroCrop: document.getElementById('PL3-group-hero-crop'),
@@ -1883,13 +1954,11 @@
 
             // === Preview (embedded YouTube) ===
             attachPreviewEvents() {
-                if (this.el.previewBtns && this.el.previewBtns.length > 0) {
-                    this.el.previewBtns.forEach(btn => {
-                        btn.addEventListener('click', (ev) => {
-                            ev.preventDefault();
-                            this.openPreviewModal('https://youtube.com/playlist?list=PLtGnlTqdsNV1g28xiKP3KdhdBthKY8-hL&si=bOYKXdjOq_q8XhUi');
-                        }, { passive: false });
-                    });
+                if (this.el.previewBtn) {
+                    this.el.previewBtn.addEventListener('click', (ev) => {
+                        ev.preventDefault();
+                        this.openPreviewModal('https://youtube.com/playlist?list=PLtGnlTqdsNV1g28xiKP3KdhdBthKY8-hL&si=bOYKXdjOq_q8XhUi');
+                    }, { passive: false });
                 }
 
                 const m = this.el.previewModal;
