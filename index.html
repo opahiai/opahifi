@@ -8,14 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;700;900&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:,">
+    <link rel="icon" href="img/ico/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LHJPDBZDMB"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-LHJPDBZDMB');
     </script>
@@ -1275,6 +1275,17 @@
         #PL3-group-modal .ohf-mix-icon--fa {
             font-size: 18px;
         }
+
+        @media (min-width: 425px) {
+            #PL3-group-modal .ohf-mix-icons {
+                gap: 15px;
+            }
+
+            #PL3-group-modal .ohf-mix-link {
+                width: 36px;
+                height: 36px;
+            }
+        }
     </style>
 </head>
 
@@ -1366,8 +1377,8 @@
                     <div class="PL3-part PL3-part--upcoming" aria-label="Upcoming and recent">
                         <div class="PL3-upcoming" aria-label="Upcoming single">
                             <!-- Left: Image -->
-                            <button class="PL3-upcomingArtWrap" type="button"
-                                aria-label="Preview Believe the Truth fairy playlist" data-pl3-preview>
+                            <button class="PL3-upcomingArtWrap" type="button" aria-label="Open Believe the Truth fairy"
+                                data-pl3-group="believe-the-truth-fairy">
                                 <img class="PL3-upcomingArt" src="img/music/main_truthfairy.png"
                                     alt="Upcoming single cover" loading="lazy"
                                     onerror="this.src='img/music/opahiai_album.png'">
@@ -1375,12 +1386,12 @@
 
                             <!-- Right: Drop Message and Buttons -->
                             <div class="PL3-upcomingRight">
-                                <div class="PL3-upcomingDesc">Drops<br>Feb 6</div>
+                                <div class="PL3-upcomingDesc">Latest<br>Release</div>
                                 <div class="PL3-upcomingButtons">
                                     <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
-                                        data-pl3-preview aria-label="Preview video">
+                                        data-pl3-preview aria-label="Watch video">
                                         <i class="fa-brands fa-youtube" aria-hidden="true"></i>
-                                        <span>Preview</span>
+                                        <span>Videos</span>
                                     </button>
                                 </div>
                             </div>
@@ -1424,7 +1435,7 @@
                                 </button>
 
                                 <button class="PL3-galleryItemBtn" type="button"
-                                    aria-label="Preview Believe the Truth fairy playlist" data-pl3-preview>
+                                    aria-label="Open Believe the Truth fairy" data-pl3-group="believe-the-truth-fairy">
                                     <img class="PL3-galleryImg" src="img/music/main_truthfairy.png"
                                         alt="Believe the Truth fairy cover" loading="lazy"
                                         onerror="this.src='img/music/opahiai_album.png'">
@@ -1670,11 +1681,11 @@
                     href: el.getAttribute('href') || '',
                     page_path: location.pathname
                 });
-            }, { capture: true });
+            }, { capture: true, passive: true });
         })();
     </script>
 
-<script>
+    <script>
         // Music data (inline)
         (function () {
             if (window.musicDataGrouped) return;
@@ -1692,7 +1703,8 @@
                 OPA_PA_PA_PARTY: 'opa-pa-pa-party',
                 GLITTAA: 'glittaa',
                 SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
-                GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix'
+                GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
+                BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy'
             });
 
             const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
@@ -1740,9 +1752,6 @@
                     title: 'Believe the Truth fairy',
                     titleLines: ['BELIEVE the', 'TRUTH FAIRY'],
                     cover: 'img/music/main_truthfairy.png',
-                    isComingSoon: true,
-                    releaseDate: '2025-02-06',
-                    dropLabel: 'Drops<br>Feb 6',
                     songIds: [],
                     singlesById: {}
                 }
@@ -1819,6 +1828,19 @@
                         'Apple Music': 'https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659',
                         'Amazon Music': 'https://music.amazon.com/tracks/B0GGHZ6L2F'
                     }
+                },
+                [SINGLE.BELIEVE_THE_TRUTH_FAIRY]: {
+                    id: SINGLE.BELIEVE_THE_TRUTH_FAIRY,
+                    groupKey: GROUP.BELIEVE_THE_TRUTH_FAIRY,
+                    title: 'Believe the Truth Fairy',
+                    image: 'img/music/main_truthfairy.png',
+                    links: {
+                        'Apple Music': 'https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683',
+                        'YouTube Music': 'https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj',
+                        'Spotify': 'https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg',
+                        'Amazon Music': 'https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P',
+                        'Other': 'https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC'
+                    }
                 }
             };
 
@@ -1827,7 +1849,8 @@
                 SINGLE.OPA_PA_PA_PARTY,
                 SINGLE.GLITTAA,
                 SINGLE.SPLENDA_LOVE_RABBIT_HELL,
-                SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX
+                SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
+                SINGLE.BELIEVE_THE_TRUTH_FAIRY
             ];
 
             for (const id of singleIdsInOrder) {
@@ -1957,7 +1980,7 @@
                 if (this.el.previewBtn) {
                     this.el.previewBtn.addEventListener('click', (ev) => {
                         ev.preventDefault();
-                        this.openPreviewModal('https://youtube.com/playlist?list=PLtGnlTqdsNV1g28xiKP3KdhdBthKY8-hL&si=bOYKXdjOq_q8XhUi');
+                        this.openPreviewModal('https://www.youtube.com/embed/videoseries?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF');
                     }, { passive: false });
                 }
 
@@ -2008,11 +2031,15 @@
                 const id = String(this.state.previewVideoId || '').trim();
                 if (!id || !this.el.previewIframe) return;
 
-                // Check if it's a playlist URL or video ID
+                // Check if it's already an embed URL or a playlist URL or video ID
                 let src;
-                if (id.includes('playlist?list=')) {
-                    // It's a playlist URL
-                    const playlistId = new URL(id).searchParams.get('list');
+                if (id.includes('youtube.com/embed/videoseries')) {
+                    // It's already an embed URL - use as-is
+                    src = id;
+                } else if (id.includes('playlist?list=') || id.includes('list=')) {
+                    // It's a playlist URL, convert to embed format
+                    const url = new URL(id);
+                    const playlistId = url.searchParams.get('list');
                     src = `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&modestbranding=1&controls=1`;
                 } else {
                     // It's a video ID
@@ -2108,7 +2135,7 @@
                     if (action === 'listen' || action === 'follow') {
                         this.state.expandedBtn === btn ? this.collapseAllButtons() : this.expandButton(btn);
                     }
-                });
+                }, { passive: true });
             }
 
             expandButton(btn) {
