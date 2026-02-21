@@ -587,11 +587,36 @@ class PL3Controller {
 
     // === Gallery ===
     attachGalleryEvents() {
+        const galleryButtons = Array.from(this.section.querySelectorAll('.PL3-gallery [data-pl3-group]'));
+        const setGalleryActive = (btn) => {
+            galleryButtons.forEach((item) => item.classList.toggle('is-active', item === btn));
+        };
+        const clearGalleryActive = () => {
+            galleryButtons.forEach((item) => item.classList.remove('is-active'));
+        };
+
+        galleryButtons.forEach((btn) => {
+            btn.addEventListener('pointerenter', () => setGalleryActive(btn), { passive: true });
+            btn.addEventListener('focus', () => setGalleryActive(btn), { passive: true });
+        });
+
+        this.section.addEventListener('pointerleave', (ev) => {
+            if (!ev.target.closest('.PL3-gallery')) return;
+            clearGalleryActive();
+        }, { passive: true });
+
+        this.section.addEventListener('focusout', () => {
+            const activeEl = document.activeElement;
+            if (activeEl && activeEl.closest && activeEl.closest('.PL3-gallery')) return;
+            clearGalleryActive();
+        }, { passive: true });
+
         this.section.addEventListener('click', (ev) => {
             const btn = ev.target.closest('[data-pl3-group]');
             if (!btn || !this.section.contains(btn)) return;
             const key = String(btn.getAttribute('data-pl3-group') || '').trim();
             if (!key) return;
+            setGalleryActive(btn);
             ev.preventDefault();
             this.openModal(key, btn);
         }, { passive: false });
