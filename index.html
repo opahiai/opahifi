@@ -20,6 +20,75 @@
         gtag('js', new Date());
         gtag('config', 'G-LHJPDBZDMB');
     </script>
+    <style>
+        /* 3D Gallery Overrides */
+        .PL3-gallery {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap !important;
+            perspective: 1000px;
+            padding: 30px 30px;
+            overflow: visible !important;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .PL3-galleryItemBtn {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            flex-shrink: 0;
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin-right: -50px;
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateY(-30deg) scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s 0.2s;
+            cursor: pointer;
+            z-index: 1;
+            border-radius: 6px;
+            box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .PL3-galleryItemBtn:last-child {
+            margin-right: 0;
+        }
+
+        .PL3-galleryItemBtn:hover,
+        .PL3-galleryItemBtn:focus-visible {
+            transform: perspective(1000px) rotateY(0deg) scale(1.2) translateZ(30px);
+            z-index: 100;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s;
+            outline: none;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .PL3-galleryImg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            display: block;
+        }
+
+        /* Ensure parent doesn't clip the 3D effects */
+        .PL3-part--gallery {
+            overflow: visible !important;
+            z-index: 10;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .PL3-galleryItemBtn {
+                width: 80px;
+                height: 80px;
+                margin-right: -35px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -145,47 +214,47 @@
 
                     <!-- Bottom (40%): gallery 3 + 2 -->
                     <div class="PL3-part PL3-part--gallery" aria-label="Gallery">
-                        <div class="PL3-subTitle">Previous Releases</div>
+                        <div class="PL3-subTitle">Releases</div>
                         <div class="PL3-gallery" aria-label="OpaHiFi groups">
-                            <div class="PL3-galleryRow PL3-galleryRow--top" role="presentation" aria-hidden="false">
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Old Love Story"
-                                    data-pl3-group="old-love-story">
-                                    <img class="PL3-galleryImg" src="img/music/main_oldlovestory.png"
-                                        alt="Old Love Story cover" loading="lazy"
-                                        onerror="this.src='img/music/opahiai_album.png'">
-                                </button>
+                            <button class="PL3-galleryItemBtn" type="button" aria-label="Open Old Love Story"
+                                data-pl3-group="old-love-story">
+                                <img class="PL3-galleryImg" src="img/music/main_oldlovestory.png"
+                                    alt="Old Love Story cover" loading="lazy"
+                                    onerror="this.src='img/music/opahiai_album.png'">
+                            </button>
 
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Opa pa pa party"
-                                    data-pl3-group="opa-pa-pa-party">
-                                    <img class="PL3-galleryImg" src="img/music/main_oparty.png"
-                                        alt="Opa pa pa party cover" loading="lazy"
-                                        onerror="this.src='img/music/opahiai_album.png'">
-                                </button>
+                            <button class="PL3-galleryItemBtn" type="button" aria-label="Open Opa pa pa party"
+                                data-pl3-group="opa-pa-pa-party">
+                                <img class="PL3-galleryImg" src="img/music/main_oparty.png" alt="Opa pa pa party cover"
+                                    loading="lazy" onerror="this.src='img/music/opahiai_album.png'">
+                            </button>
 
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Glittaa Phoenix"
-                                    data-pl3-group="glittaa-phoenix">
-                                    <img class="PL3-galleryImg" src="img/music/main_glitta.png"
-                                        alt="Glittaa Phoenix cover" loading="lazy"
-                                        onerror="this.src='img/music/opahiai_album.png'">
-                                </button>
-                            </div>
+                            <button class="PL3-galleryItemBtn" type="button" aria-label="Open Glittaa Phoenix"
+                                data-pl3-group="glittaa-phoenix">
+                                <img class="PL3-galleryImg" src="img/music/main_glitta.png" alt="Glittaa Phoenix cover"
+                                    loading="lazy" onerror="this.src='img/music/opahiai_album.png'">
+                            </button>
 
-                            <div class="PL3-galleryRow PL3-galleryRow--bottom" role="presentation" aria-hidden="false">
-                                <button class="PL3-galleryItemBtn" type="button"
-                                    aria-label="Open Splenda Love Rabbit Hell"
-                                    data-pl3-group="splenda-love-rabbit-hell">
-                                    <img class="PL3-galleryImg" src="img/music/main_splenda_rabbit.png"
-                                        alt="Splenda Love Rabbit Hell cover" loading="lazy"
-                                        onerror="this.src='img/music/opahiai_album.png'">
-                                </button>
+                            <button class="PL3-galleryItemBtn" type="button" aria-label="Open Splenda Love Rabbit Hell"
+                                data-pl3-group="splenda-love-rabbit-hell">
+                                <img class="PL3-galleryImg" src="img/music/main_splenda_rabbit.png"
+                                    alt="Splenda Love Rabbit Hell cover" loading="lazy"
+                                    onerror="this.src='img/music/opahiai_album.png'">
+                            </button>
 
-                                <button class="PL3-galleryItemBtn" type="button"
-                                    aria-label="Open Believe the Truth fairy" data-pl3-group="believe-the-truth-fairy">
-                                    <img class="PL3-galleryImg" src="img/music/main_truthfairy.png"
-                                        alt="Believe the Truth fairy cover" loading="lazy"
-                                        onerror="this.src='img/music/opahiai_album.png'">
-                                </button>
-                            </div>
+                            <button class="PL3-galleryItemBtn" type="button" aria-label="Open Believe the Truth fairy"
+                                data-pl3-group="believe-the-truth-fairy">
+                                <img class="PL3-galleryImg" src="img/music/main_truthfairy.png"
+                                    alt="Believe the Truth fairy cover" loading="lazy"
+                                    onerror="this.src='img/music/opahiai_album.png'">
+                            </button>
+
+                            <button class="PL3-galleryItemBtn" type="button" aria-label="Open Full-Mindness"
+                                data-pl3-group="full-mindness">
+                                <img class="PL3-galleryImg" src="img/music/main_full_mindness.png"
+                                    alt="Full-Mindness cover" loading="lazy"
+                                    onerror="this.src='img/music/opahiai_album.png'">
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -368,837 +437,7 @@
     </div>
 
     <script src="script.js"></script>
-</body>
 
-</html>
-(() => {
-const sanitize = (s, max = 90) => String(s || '')
-.trim()
-.toLowerCase()
-.replace(/\s+/g, '_')
-.replace(/[^a-z0-9_\-:/\.]/g, '')
-.slice(0, max);
-
-const labelOf = (el) => {
-if (!el) return 'click';
-
-const ctxAction = el.closest('[data-pl3-action]')?.dataset?.pl3Action || '';
-const ctxActionKey = ctxAction ? sanitize(ctxAction) : '';
-
-if (el.dataset.track) return sanitize(el.dataset.track);
-
-if (el.dataset.pl3Action) return 'pl3_action_' + sanitize(el.dataset.pl3Action);
-if (el.dataset.pl3Group) return 'pl3_group_' + sanitize(el.dataset.pl3Group);
-if (el.hasAttribute('data-pl3-preview')) return ctxActionKey ? 'pl3_' + ctxActionKey + '_preview' : 'pl3_preview';
-if (el.hasAttribute('data-pl3-share-group')) return 'pl3_share_open';
-if (el.hasAttribute('data-pl3-share-copy')) return 'pl3_share_copy';
-if (el.hasAttribute('data-pl3-preview-sound')) return 'pl3_preview_sound';
-
-if (el.dataset.pl3Platform) {
-const p = sanitize(el.dataset.pl3Platform);
-return ctxActionKey ? ('pl3_' + ctxActionKey + '_platform_' + p) : ('pl3_platform_' + p);
-}
-
-const aria = el.getAttribute('aria-label');
-if (aria) {
-const a = sanitize(aria);
-return ctxActionKey ? ('pl3_' + ctxActionKey + '_' + a) : a;
-}
-
-if (el.tagName === 'A') {
-const href = el.getAttribute('href') || '';
-const h = href ? sanitize(href) : '';
-return ctxActionKey ? ('pl3_' + ctxActionKey + '_link_' + (h || '')) : (href ? 'link_' + h : 'link');
-}
-
-const txt = (el.textContent || '').trim();
-return txt ? (ctxActionKey ? ('pl3_' + ctxActionKey + '_btn_' + sanitize(txt)) : ('btn_' + sanitize(txt))) : 'click';
-};
-
-document.addEventListener('click', (e) => {
-const el = e.target.closest(
-'[data-track],a,button,[role="button"],[data-pl3-action],[data-pl3-group],[data-pl3-preview],[data-pl3-share-group],[data-pl3-share-copy],[data-pl3-preview-sound],[data-pl3-platform]'
-);
-if (!el) return;
-if (typeof window.gtag !== 'function') return;
-
-window.gtag('event', 'ui_click', {
-label: labelOf(el),
-href: el.getAttribute('href') || '',
-page_path: location.pathname
-});
-}, { capture: true, passive: true });
-})();
-</script>
-
-<script>
-    // Music data (inline)
-    (function () {
-        if (window.musicDataGrouped) return;
-
-        const GROUP = Object.freeze({
-            FULL_MINDNESS: 'full-mindness',
-            OLD_LOVE_STORY: 'old-love-story',
-            OPA_PA_PA_PARTY: 'opa-pa-pa-party',
-            GLITTAA_PHOENIX: 'glittaa-phoenix',
-            SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
-            BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy'
-        });
-
-        const SINGLE = Object.freeze({
-            OLD_LOVE_STORY: 'old-love-story',
-            OPA_PA_PA_PARTY: 'opa-pa-pa-party',
-            GLITTAA: 'glittaa',
-            SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
-            GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
-            BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
-            FULL_MINDNESS: 'full-mindness'
-        });
-
-        const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
-
-        const groups = [
-            {
-                id: 1,
-                key: GROUP.OLD_LOVE_STORY,
-                title: 'Old Love Story',
-                titleLines: ['OLD LOVE', 'STORY'],
-                cover: 'img/music/main_oldlovestory.png',
-                songIds: [],
-                singlesById: {}
-            },
-            {
-                id: 2,
-                key: GROUP.OPA_PA_PA_PARTY,
-                title: 'Opa pa pa party',
-                titleLines: ['OPA PA', 'PA PARTY!'],
-                cover: 'img/music/main_oparty.png',
-                songIds: [],
-                singlesById: {}
-            },
-            {
-                id: 3,
-                key: GROUP.GLITTAA_PHOENIX,
-                title: 'Glittaa Phoenix',
-                titleLines: ['GLITTAA', 'PHOENIX!'],
-                cover: 'img/music/main_glitta.png',
-                songIds: [],
-                singlesById: {}
-            },
-            {
-                id: 4,
-                key: GROUP.SPLENDA_LOVE_RABBIT_HELL,
-                title: 'Splenda Love Rabbit Hell',
-                titleLines: ['SPLENDA LOVE', 'RABBIT HELL'],
-                cover: 'img/music/main_splenda_rabbit.png',
-                songIds: [],
-                singlesById: {}
-            },
-            {
-                id: 5,
-                key: GROUP.BELIEVE_THE_TRUTH_FAIRY,
-                title: 'Believe the Truth fairy',
-                titleLines: ['BELIEVE the', 'TRUTH FAIRY'],
-                cover: 'img/music/main_truthfairy.png',
-                songIds: [],
-                singlesById: {}
-            },
-            {
-                id: 6,
-                key: GROUP.FULL_MINDNESS,
-                title: 'Full-Mindness',
-                titleLines: ['FULL-', 'MINDNESS'],
-                cover: 'img/music/main_fullmindness.png',
-                songIds: [],
-                singlesById: {},
-
-            }
-        ];
-
-        const groupsByKey = {};
-        for (const g of groups) {
-            groupsByKey[g.key] = g;
-        }
-
-        const singlesById = {
-            [SINGLE.OLD_LOVE_STORY]: {
-                id: SINGLE.OLD_LOVE_STORY,
-                groupKey: GROUP.OLD_LOVE_STORY,
-                title: 'Old Love Story',
-                version: 'Desert Disco Duet',
-                image: 'img/music/oldlovestory_opa-max-mix.png',
-                links: {
-                    'YouTube Music': 'https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE',
-                    'Amazon Music': 'https://music.amazon.com/albums/B0FXB4X48G',
-                    'Spotify': 'https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII',
-                    'Apple Music': 'https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028',
-                    'Other': 'https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq'
-                }
-            },
-            [SINGLE.OPA_PA_PA_PARTY]: {
-                id: SINGLE.OPA_PA_PA_PARTY,
-                groupKey: GROUP.OPA_PA_PA_PARTY,
-                title: 'Opa pa pa party',
-                image: 'img/music/main_oparty.png',
-                links: {
-                    'YouTube Music': 'https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw',
-                    'Amazon Music': 'https://music.amazon.com/albums/B0FYVMVZS4',
-                    'Spotify': 'https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf',
-                    'Apple Music': 'https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737',
-                    'Other': 'https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8'
-                }
-            },
-            [SINGLE.GLITTAA]: {
-                id: SINGLE.GLITTAA,
-                groupKey: GROUP.GLITTAA_PHOENIX,
-                title: 'Glittaa Phoenix',
-                image: 'img/music/3_glitta.png',
-                links: {
-                    'YouTube Music': 'https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17',
-                    'Amazon Music': 'https://music.amazon.com/albums/B0G1N1Y83C',
-                    'Spotify': 'https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6',
-                    'Apple Music': 'https://music.apple.com/us/album/glittaa-phoenix-single/1853214791',
-                    'Other': 'https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX'
-                }
-            },
-            [SINGLE.SPLENDA_LOVE_RABBIT_HELL]: {
-                id: SINGLE.SPLENDA_LOVE_RABBIT_HELL,
-                groupKey: GROUP.SPLENDA_LOVE_RABBIT_HELL,
-                title: 'Splenda Love Rabbit Hell',
-                version: 'Opa Max Mix',
-                image: 'img/music/main_splenda_rabbit.png',
-                links: {
-                    'YouTube Music': 'https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE',
-                    'Amazon Music': 'https://music.amazon.com/albums/B0GJQZXHNL',
-                    'Other': 'https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F'
-                }
-            },
-            [SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX]: {
-                id: SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
-                groupKey: GROUP.GLITTAA_PHOENIX,
-                title: 'GLITTAA Phoenix',
-                version: 'Opa Sunrize Max Mix',
-                image: 'img/music/glittaa_max-mix.png',
-                links: {
-                    'YouTube Music': 'https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP',
-                    'Other': 'https://www.youtube.com/watch?v=LOywm64SGCY',
-                    'Spotify': 'https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP',
-                    'Apple Music': 'https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659',
-                    'Amazon Music': 'https://music.amazon.com/tracks/B0GGHZ6L2F'
-                }
-            },
-            [SINGLE.BELIEVE_THE_TRUTH_FAIRY]: {
-                id: SINGLE.BELIEVE_THE_TRUTH_FAIRY,
-                groupKey: GROUP.BELIEVE_THE_TRUTH_FAIRY,
-                title: 'Believe the Truth Fairy',
-                image: 'img/music/main_truthfairy.png',
-                links: {
-                    'Apple Music': 'https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683',
-                    'YouTube Music': 'https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj',
-                    'Spotify': 'https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg',
-                    'Amazon Music': 'https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P',
-                    'Other': 'https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC'
-                }
-            },
-            [SINGLE.FULL_MINDNESS]: {
-                id: SINGLE.FULL_MINDNESS,
-                groupKey: GROUP.FULL_MINDNESS,
-                title: 'Full-Mindness',
-                version: 'Opa Mayhem Mix',
-                image: 'img/music/main_fullmindness.png',
-                links: {}
-            }
-        };
-
-        const singleIdsInOrder = [
-            SINGLE.OLD_LOVE_STORY,
-            SINGLE.OPA_PA_PA_PARTY,
-            SINGLE.GLITTAA,
-            SINGLE.SPLENDA_LOVE_RABBIT_HELL,
-            SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
-            SINGLE.BELIEVE_THE_TRUTH_FAIRY,
-            SINGLE.FULL_MINDNESS,
-        ];
-
-        for (const id of singleIdsInOrder) {
-            const s = singlesById[id];
-            if (!s) continue;
-            const group = groupsByKey[s.groupKey];
-            if (!group) continue;
-            group.songIds.push(s.id);
-            group.singlesById[s.id] = s;
-        }
-
-        window.musicDataGrouped = {
-            platformOrder,
-            groups,
-            singlesById
-        };
-    })();
-
-    // PL3 Controller Class - caches all DOM elements once
-    class PL3Controller {
-        constructor(sectionId) {
-            this.section = document.getElementById(sectionId);
-            if (!this.section) return;
-
-            // Cache ALL elements once - no repeated querySelector calls
-            this.el = {
-                btnRow: this.section.querySelector('.PL3-btnRow'),
-                heroBtns: Array.from(this.section.querySelectorAll('.PL3-heroBtn')),
-                previewBtn: this.section.querySelector('[data-pl3-preview]'),
-                streamingBtns: Array.from(document.querySelectorAll('[data-pl3-streaming-popup]')),
-                modal: document.getElementById('PL3-group-modal'),
-                heroCrop: document.getElementById('PL3-group-hero-crop'),
-                heroImg: document.getElementById('PL3-group-hero-img'),
-                titleEl: document.getElementById('PL3-group-title'),
-                mixesEl: document.getElementById('PL3-mixes'),
-                emptyEl: document.getElementById('PL3-mixes-empty'),
-                shareModal: document.getElementById('PL3-share-modal'),
-                shareInput: document.getElementById('PL3-share-url'),
-                previewModal: document.getElementById('PL3-preview-modal'),
-                previewIframe: document.getElementById('PL3-preview-iframe'),
-                streamingModal: document.getElementById('PL3-streaming-modal')
-            };
-
-            // Cache nested elements
-            this.el.modalPanel = this.el.modal?.querySelector('.PL3-modalPanel');
-            this.el.coverOverlay = this.el.heroCrop?.querySelector('.PL3-coverOverlay');
-            this.el.titleLine1 = this.el.titleEl?.querySelector('[data-pl3-title-line="1"]');
-            this.el.titleLine2 = this.el.titleEl?.querySelector('[data-pl3-title-line="2"]');
-            this.el.previewSoundBtn = this.el.previewModal?.querySelector('[data-pl3-preview-sound]');
-
-            // Cache mix rows with all their child elements
-            this.el.mixRows = this.el.mixesEl ? Array.from(this.el.mixesEl.querySelectorAll('[data-pl3-mix-row]')).map(row => ({
-                row,
-                art: row.querySelector('[data-pl3-mix-art]'),
-                name: row.querySelector('[data-pl3-mix-name]'),
-                links: Array.from(row.querySelectorAll('[data-pl3-platform]'))
-            })) : [];
-
-            this.state = {
-                expandedBtn: null,
-                scrollLocked: false,
-                prevHtmlOverflow: '',
-                prevBodyOverflow: '',
-                openGroupKey: null,
-                shareUrl: '',
-                previewVideoId: '',
-                previewMuted: false
-            };
-            this.init();
-        }
-
-        init() {
-            if (!this.section) return;
-            this.attachButtonEvents();
-            this.attachGalleryEvents();
-            this.attachModalEvents();
-            this.attachShareEvents();
-            this.attachPreviewEvents();
-            this.attachStreamingPopupEvents();
-            this.openFromUrlIfPresent();
-        }
-
-        // === Streaming Services Popup ===
-        attachStreamingPopupEvents() {
-            if (this.el.streamingBtns && this.el.streamingBtns.length > 0) {
-                this.el.streamingBtns.forEach(btn => {
-                    btn.addEventListener('click', (ev) => {
-                        ev.preventDefault();
-                        this.openStreamingPopup();
-                    }, { passive: false });
-                });
-            }
-
-            const m = this.el.streamingModal;
-            if (m) {
-                m.addEventListener('click', (ev) => {
-                    if (!ev.target.closest('[data-pl3-streaming-close]') || !m.contains(ev.target)) return;
-                    ev.preventDefault();
-                    this.closeStreamingPopup();
-                }, { passive: false });
-            }
-
-            window.addEventListener('keydown', (ev) => {
-                if (!this.el.streamingModal || this.el.streamingModal.hidden || ev.key !== 'Escape') return;
-                this.closeStreamingPopup();
-            }, { passive: true });
-        }
-
-        openStreamingPopup() {
-            const m = this.el.streamingModal;
-            if (!m) return;
-            m.hidden = false;
-            m.removeAttribute('aria-hidden');
-            this.lockScroll();
-        }
-
-        closeStreamingPopup() {
-            const m = this.el.streamingModal;
-            if (!m) return;
-            m.hidden = true;
-            m.setAttribute('aria-hidden', 'true');
-            this.unlockScroll();
-        }
-
-        // === Preview (embedded YouTube) ===
-        attachPreviewEvents() {
-            if (this.el.previewBtn) {
-                this.el.previewBtn.addEventListener('click', (ev) => {
-                    ev.preventDefault();
-                    this.openPreviewModal('https://www.youtube.com/embed/videoseries?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF');
-                }, { passive: false });
-            }
-
-            const m = this.el.previewModal;
-            if (m) {
-                m.addEventListener('click', (ev) => {
-                    if (ev.target.closest('[data-pl3-preview-sound]')) {
-                        ev.preventDefault();
-                        this.state.previewMuted = !this.state.previewMuted;
-                        this.applyPreviewIframeSrc();
-                        this.syncPreviewSoundUi();
-                        return;
-                    }
-                    if (!ev.target.closest('[data-pl3-preview-close]') || !m.contains(ev.target)) return;
-                    ev.preventDefault();
-                    this.closePreviewModal();
-                }, { passive: false });
-            }
-
-            window.addEventListener('keydown', (ev) => {
-                if (!this.el.previewModal || this.el.previewModal.hidden || ev.key !== 'Escape') return;
-                this.closePreviewModal();
-            }, { passive: true });
-        }
-
-        openPreviewModal(videoId) {
-            const m = this.el.previewModal;
-            if (!m) return;
-            const id = String(videoId || '').trim();
-            if (!id) return;
-
-            this.state.previewVideoId = id;
-            // Try sound-on by default (user clicked Preview). Some browsers may still require a tap.
-            this.state.previewMuted = false;
-            this.applyPreviewIframeSrc();
-            this.syncPreviewSoundUi();
-
-            m.hidden = false;
-            m.setAttribute('aria-hidden', 'false');
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    m.classList.add('PL3-preview--open');
-                });
-            });
-        }
-
-        applyPreviewIframeSrc() {
-            const id = String(this.state.previewVideoId || '').trim();
-            if (!id || !this.el.previewIframe) return;
-
-            // Check if it's already an embed URL or a playlist URL or video ID
-            let src;
-            if (id.includes('youtube.com/embed/videoseries')) {
-                // It's already an embed URL - use as-is
-                src = id;
-            } else if (id.includes('playlist?list=') || id.includes('list=')) {
-                // It's a playlist URL, convert to embed format
-                const url = new URL(id);
-                const playlistId = url.searchParams.get('list');
-                src = `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&modestbranding=1&controls=1`;
-            } else {
-                // It's a video ID
-                const mute = this.state.previewMuted ? 1 : 0;
-                src = `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
-            }
-            this.el.previewIframe.src = src;
-        }
-
-        syncPreviewSoundUi() {
-            const btn = this.el.previewSoundBtn;
-            if (!btn) return;
-            const isMuted = !!this.state.previewMuted;
-            btn.setAttribute('aria-pressed', isMuted ? 'true' : 'false');
-            btn.setAttribute('aria-label', isMuted ? 'Unmute preview' : 'Mute preview');
-            const icon = btn.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('fa-volume-xmark', isMuted);
-                icon.classList.toggle('fa-volume-high', !isMuted);
-            }
-        }
-
-        closePreviewModal() {
-            const m = this.el.previewModal;
-            if (!m || m.hidden) return;
-            m.classList.remove('PL3-preview--open');
-            setTimeout(() => {
-                m.hidden = true;
-                m.setAttribute('aria-hidden', 'true');
-                if (this.el.previewIframe) this.el.previewIframe.src = '';
-                this.state.previewVideoId = '';
-            }, 240);
-        }
-
-        // === URL deep link ===
-        getGroupKeyFromUrl() {
-            try {
-                const u = new URL(window.location.href);
-                const key = (u.searchParams.get('pl3') || '').trim();
-                if (!key) return null;
-                const g = this.getGroup(key);
-                if (!g || g.isComingSoon) return null;
-                return String(g.key);
-            } catch {
-                return null;
-            }
-        }
-
-        setGroupKeyInUrl(groupKeyOrNull) {
-            try {
-                const u = new URL(window.location.href);
-                if (groupKeyOrNull) u.searchParams.set('pl3', String(groupKeyOrNull));
-                else u.searchParams.delete('pl3');
-                // Keep it simple: replaceState so it doesn't spam history
-                window.history.replaceState({}, '', u.toString());
-            } catch {
-                // ignore
-            }
-        }
-
-        buildGroupUrl(groupKey) {
-            // Share URL that has stable OG tags (static share pages live under /s/<groupKey>/).
-            // The share page will redirect humans back to /?pl3=<groupKey> to open the modal.
-            const safeKey = encodeURIComponent(String(groupKey || ""));
-            try {
-                return `${window.location.origin}/s/${safeKey}`;
-            } catch (e) {
-                return `/s/${safeKey}`;
-            }
-        }
-
-        openFromUrlIfPresent() {
-            const key = this.getGroupKeyFromUrl();
-            if (!key) return;
-            // Open without a source button (same modal)
-            this.openModal(key, null);
-        }
-
-        // === Button Expansion ===
-        attachButtonEvents() {
-            if (!this.el.btnRow) return;
-            this.el.btnRow.addEventListener('click', (ev) => {
-                const btn = ev.target.closest('.PL3-heroBtn');
-                if (!btn) return;
-                const action = btn.getAttribute('data-pl3-action');
-                const isCloseBtn = ev.target.closest('[data-pl3-close-btn]');
-
-                if (action === 'shop' && !isCloseBtn) {
-                    window.location.href = 'https://shop.opahifi.com';
-                    return;
-                }
-                if (isCloseBtn) return this.collapseAllButtons();
-                if (action === 'listen' || action === 'follow') {
-                    this.state.expandedBtn === btn ? this.collapseAllButtons() : this.expandButton(btn);
-                }
-            }, { passive: true });
-        }
-
-        expandButton(btn) {
-            this.collapseAllButtons();
-            btn.classList.add('PL3-heroBtn--expanded');
-            const icons = btn.querySelector('.PL3-heroBtn-icons');
-            if (icons) icons.hidden = false;
-            this.el.heroBtns.forEach(b => b !== btn && b.classList.add('PL3-heroBtn--collapsed'));
-            this.state.expandedBtn = btn;
-        }
-
-        collapseAllButtons() {
-            this.el.heroBtns.forEach(b => {
-                b.classList.remove('PL3-heroBtn--expanded', 'PL3-heroBtn--collapsed');
-                const icons = b.querySelector('.PL3-heroBtn-icons');
-                if (icons) icons.hidden = true;
-            });
-            this.state.expandedBtn = null;
-        }
-
-        // === Gallery ===
-        attachGalleryEvents() {
-            this.section.addEventListener('click', (ev) => {
-                const btn = ev.target.closest('[data-pl3-group]');
-                if (!btn || !this.section.contains(btn)) return;
-                const key = String(btn.getAttribute('data-pl3-group') || '').trim();
-                if (!key) return;
-                ev.preventDefault();
-                this.openModal(key, btn);
-            }, { passive: false });
-        }
-
-        // === Modal ===
-        attachModalEvents() {
-            if (!this.el.modal) return;
-            this.el.modal.addEventListener('click', (ev) => {
-                if (!ev.target.closest('[data-pl3-close-group]') || !this.el.modal.contains(ev.target)) return;
-                ev.preventDefault();
-                this.closeModal();
-            }, { passive: false });
-            window.addEventListener('keydown', (ev) => {
-                if (!this.el.modal || this.el.modal.hidden || ev.key !== 'Escape') return;
-                this.closeModal();
-            }, { passive: true });
-        }
-
-        // === Share ===
-        attachShareEvents() {
-            if (this.el.modal) {
-                this.el.modal.addEventListener('click', (ev) => {
-                    const btn = ev.target.closest('[data-pl3-share-group]');
-                    if (!btn || !this.el.modal.contains(btn)) return;
-                    ev.preventDefault();
-                    this.shareCurrentGroup();
-                }, { passive: false });
-            }
-
-            if (this.el.shareModal) {
-                this.el.shareModal.addEventListener('click', (ev) => {
-                    if (ev.target.closest('[data-pl3-share-close]')) {
-                        ev.preventDefault();
-                        this.closeShareSheet();
-                        return;
-                    }
-                    if (ev.target.closest('[data-pl3-share-copy]')) {
-                        ev.preventDefault();
-                        this.copyShareUrl();
-                        return;
-                    }
-                }, { passive: false });
-            }
-        }
-
-        openShareSheet(url) {
-            const m = this.el.shareModal;
-            if (!m) return;
-            this.state.shareUrl = url || '';
-            if (this.el.shareInput) this.el.shareInput.value = this.state.shareUrl;
-            m.hidden = false;
-            m.setAttribute('aria-hidden', 'false');
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    m.classList.add('PL3-share--open');
-                });
-            });
-        }
-
-        closeShareSheet() {
-            const m = this.el.shareModal;
-            if (!m || m.hidden) return;
-            m.classList.remove('PL3-share--open');
-            setTimeout(() => {
-                m.hidden = true;
-                m.setAttribute('aria-hidden', 'true');
-            }, 240);
-        }
-
-        async copyShareUrl() {
-            const url = this.state.shareUrl || (this.el.shareInput ? this.el.shareInput.value : '') || '';
-            if (!url) return;
-            try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(url);
-                    return;
-                }
-            } catch {
-                // fall back below
-            }
-
-            const ta = document.createElement('textarea');
-            ta.value = url;
-            ta.setAttribute('readonly', '');
-            ta.style.position = 'fixed';
-            ta.style.left = '-9999px';
-            ta.style.top = '0';
-            document.body.appendChild(ta);
-            ta.select();
-            try { document.execCommand('copy'); } catch { /* ignore */ }
-            ta.remove();
-        }
-
-        async shareCurrentGroup() {
-            const key = this.state.openGroupKey;
-            if (!key) return;
-            const g = this.getGroup(key);
-            if (!g) return;
-            const url = this.buildGroupUrl(key);
-
-            // Prefer native share when available
-            try {
-                if (navigator.share) {
-                    await navigator.share({
-                        title: g.title || 'OpaHiFi',
-                        text: g.title || 'OpaHiFi group',
-                        url
-                    });
-                    return;
-                }
-            } catch {
-                // user cancelled or unsupported; fall back
-            }
-
-            this.openShareSheet(url);
-        }
-
-        openModal(groupKey, sourceBtn) {
-            const { modal, heroCrop, heroImg, coverOverlay } = this.el;
-            if (!modal || !heroCrop || !heroImg) return;
-            const group = this.getGroup(groupKey);
-            if (!group || group.isComingSoon) return;
-
-            // Prepare content
-            this.setTitle(group.titleLines || [group.title]);
-            this.renderMixes(group);
-
-            // Simple modal open: show + slide in via CSS
-            modal.classList.remove('PL3-modal--opening');
-            modal.hidden = false;
-            modal.setAttribute('aria-hidden', 'false');
-            this.lockScroll();
-            this.updateHeroImage(group);
-
-            this.state.openGroupKey = String(group.key);
-            this.setGroupKeyInUrl(this.state.openGroupKey);
-
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    modal.classList.add('PL3-modal--opening');
-                });
-            });
-        }
-
-        closeModal() {
-            const { modal, heroCrop, heroImg, coverOverlay } = this.el;
-            if (!modal || modal.hidden) return;
-
-            // Simple modal close: slide out via CSS then hide
-            modal.classList.remove('PL3-modal--opening');
-            setTimeout(() => {
-                modal.hidden = true;
-                modal.setAttribute('aria-hidden', 'true');
-                this.unlockScroll();
-
-                this.state.openGroupKey = null;
-                this.setGroupKeyInUrl(null);
-
-                // Clean up
-                if (heroCrop) {
-                    heroCrop.replaceChildren();
-                    if (heroImg) {
-                        heroImg.hidden = true;
-                        heroImg.src = '';
-                        heroImg.alt = '';
-                        heroCrop.appendChild(heroImg);
-                    }
-                    heroCrop.style.removeProperty('--pl3-hero-bg');
-                    if (coverOverlay) heroCrop.appendChild(coverOverlay);
-                }
-            }, 300);
-        }
-
-        updateHeroImage(group) {
-            const { heroCrop, heroImg, coverOverlay } = this.el;
-            heroCrop.replaceChildren();
-            if (heroImg) heroCrop.appendChild(heroImg);
-            if (coverOverlay) heroCrop.appendChild(coverOverlay);
-            const cover = group.cover || '';
-            if (heroImg) {
-                heroImg.hidden = !cover;
-                heroImg.src = cover;
-                heroImg.alt = cover ? `${group.title || 'Group'} cover` : '';
-            }
-
-            if (heroCrop) {
-                heroCrop.style.setProperty('--pl3-hero-bg', cover ? `url("${cover}")` : 'none');
-            }
-        }
-
-        setTitle(lines) {
-            const { titleLine1, titleLine2 } = this.el;
-            if (!titleLine1) return;
-            const arr = Array.isArray(lines) ? lines.filter(Boolean).map(String) : [];
-            titleLine1.textContent = arr[0] || '';
-            if (titleLine2) {
-                titleLine2.textContent = arr[1] || '';
-                titleLine2.hidden = !arr[1];
-            }
-        }
-
-        renderMixes(group) {
-            this.el.mixRows.forEach(r => this.clearMixRow(r));
-            if (!group) return this.showEmpty('Missing group.');
-            const ids = Array.isArray(group.songIds) ? group.songIds : [];
-            if (!ids.length) return this.showEmpty('Mixes list coming soon.');
-
-            this.hideEmpty();
-            const platforms = this.getPlatformOrder();
-            const max = Math.min(this.el.mixRows.length, ids.length);
-            for (let i = 0; i < max; i++) {
-                const single = group.singlesById?.[ids[i]];
-                single ? this.populateMixRow(this.el.mixRows[i], single, group, platforms) : this.clearMixRow(this.el.mixRows[i]);
-            }
-        }
-
-        clearMixRow({ row, art, name, links }) {
-            row.hidden = true;
-            if (art) { art.hidden = true; art.src = ''; art.alt = ''; }
-            if (name) name.textContent = '';
-            links.forEach(a => { a.hidden = true; a.href = '#'; });
-        }
-
-        populateMixRow({ row, art, name, links }, single, group, platforms) {
-            const mixName = single.version || 'Main Version';
-            const artSrc = single.image || group.cover || '';
-            const singleLinks = single.links || {};
-            row.hidden = false;
-            if (art) { art.hidden = false; art.src = artSrc; art.alt = `${mixName} cover`; }
-            if (name) name.textContent = mixName;
-            platforms.forEach(p => {
-                const link = links.find(a => a.getAttribute('data-pl3-platform') === p);
-                if (!link) return;
-                const url = singleLinks[p] || '';
-                link.hidden = !url;
-                link.href = url || '#';
-            });
-        }
-
-        showEmpty(msg) { if (this.el.emptyEl) { this.el.emptyEl.textContent = msg || ''; this.el.emptyEl.hidden = false; } }
-        hideEmpty() { if (this.el.emptyEl) { this.el.emptyEl.textContent = ''; this.el.emptyEl.hidden = true; } }
-        getGroup(key) { return window.musicDataGrouped?.groups?.find(g => String(g.key) === String(key)) || null; }
-        getPlatformOrder() { return window.musicDataGrouped?.platformOrder?.length ? window.musicDataGrouped.platformOrder : ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other']; }
-        lockScroll() {
-            if (this.state.scrollLocked) return;
-            this.state.prevHtmlOverflow = document.documentElement.style.overflow;
-            this.state.prevBodyOverflow = document.body.style.overflow;
-            document.documentElement.style.overflow = 'hidden';
-            document.body.style.overflow = 'hidden';
-            this.state.scrollLocked = true;
-        }
-        unlockScroll() {
-            if (!this.state.scrollLocked) return;
-            document.documentElement.style.overflow = this.state.prevHtmlOverflow || '';
-            document.body.style.overflow = this.state.prevBodyOverflow || '';
-            this.state.scrollLocked = false;
-        }
-    }
-
-    window.initPL3 = function () { window.PL3Instance = new PL3Controller('p_listen3'); };
-
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', window.initPL3);
-    } else {
-        window.initPL3();
-    }
-</script>
 </body>
 
 </html>

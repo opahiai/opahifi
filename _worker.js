@@ -29,7 +29,7 @@ const SHARE = {
     ,
     "full-mindness": {
         title: "Full-Mindness (Opa Mayhem Mix)",
-        imagePath: "/img/music/main-full-mindness.png",
+        imagePath: "/img/music/main_full_mindness.png",
         description: "Listen to Full-Mindness by OpaHiFi."
     }
 };
