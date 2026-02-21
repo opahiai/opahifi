@@ -262,56 +262,110 @@
     };
 })();
 
-// PL3 Controller Class - caches all DOM elements once
+class PL3MusicModel {
+    constructor(data = window.musicDataGrouped) {
+        this.data = data || { groups: [], platformOrder: [], singlesById: {} };
+        this.defaultPlatformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
+    }
+
+    getGroup(key) {
+        return this.data?.groups?.find((group) => String(group.key) === String(key)) || null;
+    }
+
+    getPlatformOrder() {
+        return this.data?.platformOrder?.length ? this.data.platformOrder : this.defaultPlatformOrder;
+    }
+
+    buildGroupUrl(groupKey) {
+        const safeKey = encodeURIComponent(String(groupKey || ''));
+        try {
+            return `${window.location.origin}/s/${safeKey}`;
+        } catch (e) {
+            return `/s/${safeKey}`;
+        }
+    }
+}
+
+class PL3StateModel {
+    constructor() {
+        this.expandedBtn = null;
+        this.openGroupKey = null;
+        this.shareUrl = '';
+        this.previewVideoId = '';
+        this.previewMuted = false;
+    }
+}
+
+class PL3DomRegistry {
+    constructor(section) {
+        this.section = section;
+        this.btnRow = section.querySelector('.PL3-btnRow');
+        this.heroBtns = Array.from(section.querySelectorAll('.PL3-heroBtn'));
+        this.previewBtn = section.querySelector('[data-pl3-preview]');
+        this.streamingBtns = Array.from(document.querySelectorAll('[data-pl3-streaming-popup]'));
+        this.modal = document.getElementById('PL3-group-modal');
+        this.heroCrop = document.getElementById('PL3-group-hero-crop');
+        this.heroImg = document.getElementById('PL3-group-hero-img');
+        this.titleEl = document.getElementById('PL3-group-title');
+        this.mixesEl = document.getElementById('PL3-mixes');
+        this.emptyEl = document.getElementById('PL3-mixes-empty');
+        this.shareModal = document.getElementById('PL3-share-modal');
+        this.shareInput = document.getElementById('PL3-share-url');
+        this.previewModal = document.getElementById('PL3-preview-modal');
+        this.previewIframe = document.getElementById('PL3-preview-iframe');
+        this.streamingModal = document.getElementById('PL3-streaming-modal');
+
+        this.modalPanel = this.modal?.querySelector('.PL3-modalPanel');
+        this.coverOverlay = this.heroCrop?.querySelector('.PL3-coverOverlay');
+        this.titleLine1 = this.titleEl?.querySelector('[data-pl3-title-line="1"]');
+        this.titleLine2 = this.titleEl?.querySelector('[data-pl3-title-line="2"]');
+        this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
+
+        this.mixRows = this.mixesEl
+            ? Array.from(this.mixesEl.querySelectorAll('[data-pl3-mix-row]')).map((row) => ({
+                row,
+                art: row.querySelector('[data-pl3-mix-art]'),
+                name: row.querySelector('[data-pl3-mix-name]'),
+                links: Array.from(row.querySelectorAll('[data-pl3-platform]'))
+            }))
+            : [];
+    }
+}
+
+class PL3ScrollLock {
+    constructor() {
+        this.locked = false;
+        this.prevHtmlOverflow = '';
+        this.prevBodyOverflow = '';
+    }
+
+    lock() {
+        if (this.locked) return;
+        this.prevHtmlOverflow = document.documentElement.style.overflow;
+        this.prevBodyOverflow = document.body.style.overflow;
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        this.locked = true;
+    }
+
+    unlock() {
+        if (!this.locked) return;
+        document.documentElement.style.overflow = this.prevHtmlOverflow || '';
+        document.body.style.overflow = this.prevBodyOverflow || '';
+        this.locked = false;
+    }
+}
+
+// PL3 Controller Class - orchestrates UI + model + state
 class PL3Controller {
-    constructor(sectionId) {
+    constructor(sectionId, model = new PL3MusicModel()) {
         this.section = document.getElementById(sectionId);
         if (!this.section) return;
 
-        // Cache ALL elements once - no repeated querySelector calls
-        this.el = {
-            btnRow: this.section.querySelector('.PL3-btnRow'),
-            heroBtns: Array.from(this.section.querySelectorAll('.PL3-heroBtn')),
-            previewBtn: this.section.querySelector('[data-pl3-preview]'),
-            streamingBtns: Array.from(document.querySelectorAll('[data-pl3-streaming-popup]')),
-            modal: document.getElementById('PL3-group-modal'),
-            heroCrop: document.getElementById('PL3-group-hero-crop'),
-            heroImg: document.getElementById('PL3-group-hero-img'),
-            titleEl: document.getElementById('PL3-group-title'),
-            mixesEl: document.getElementById('PL3-mixes'),
-            emptyEl: document.getElementById('PL3-mixes-empty'),
-            shareModal: document.getElementById('PL3-share-modal'),
-            shareInput: document.getElementById('PL3-share-url'),
-            previewModal: document.getElementById('PL3-preview-modal'),
-            previewIframe: document.getElementById('PL3-preview-iframe'),
-            streamingModal: document.getElementById('PL3-streaming-modal')
-        };
-
-        // Cache nested elements
-        this.el.modalPanel = this.el.modal?.querySelector('.PL3-modalPanel');
-        this.el.coverOverlay = this.el.heroCrop?.querySelector('.PL3-coverOverlay');
-        this.el.titleLine1 = this.el.titleEl?.querySelector('[data-pl3-title-line="1"]');
-        this.el.titleLine2 = this.el.titleEl?.querySelector('[data-pl3-title-line="2"]');
-        this.el.previewSoundBtn = this.el.previewModal?.querySelector('[data-pl3-preview-sound]');
-
-        // Cache mix rows with all their child elements
-        this.el.mixRows = this.el.mixesEl ? Array.from(this.el.mixesEl.querySelectorAll('[data-pl3-mix-row]')).map(row => ({
-            row,
-            art: row.querySelector('[data-pl3-mix-art]'),
-            name: row.querySelector('[data-pl3-mix-name]'),
-            links: Array.from(row.querySelectorAll('[data-pl3-platform]'))
-        })) : [];
-
-        this.state = {
-            expandedBtn: null,
-            scrollLocked: false,
-            prevHtmlOverflow: '',
-            prevBodyOverflow: '',
-            openGroupKey: null,
-            shareUrl: '',
-            previewVideoId: '',
-            previewMuted: false
-        };
+        this.model = model;
+        this.state = new PL3StateModel();
+        this.scrollLock = new PL3ScrollLock();
+        this.el = new PL3DomRegistry(this.section);
         this.init();
     }
 
@@ -406,7 +460,6 @@ class PL3Controller {
         if (!id) return;
 
         this.state.previewVideoId = id;
-        // Try sound-on by default (user clicked Preview). Some browsers may still require a tap.
         this.state.previewMuted = false;
         this.applyPreviewIframeSrc();
         this.syncPreviewSoundUi();
@@ -424,18 +477,14 @@ class PL3Controller {
         const id = String(this.state.previewVideoId || '').trim();
         if (!id || !this.el.previewIframe) return;
 
-        // Check if it's already an embed URL or a playlist URL or video ID
         let src;
         if (id.includes('youtube.com/embed/videoseries')) {
-            // It's already an embed URL - use as-is
             src = id;
         } else if (id.includes('playlist?list=') || id.includes('list=')) {
-            // It's a playlist URL, convert to embed format
             const url = new URL(id);
             const playlistId = url.searchParams.get('list');
             src = `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&modestbranding=1&controls=1`;
         } else {
-            // It's a video ID
             const mute = this.state.previewMuted ? 1 : 0;
             src = `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
         }
@@ -473,7 +522,7 @@ class PL3Controller {
             const u = new URL(window.location.href);
             const key = (u.searchParams.get('pl3') || '').trim();
             if (!key) return null;
-            const g = this.getGroup(key);
+            const g = this.model.getGroup(key);
             if (!g || g.isComingSoon) return null;
             return String(g.key);
         } catch {
@@ -486,28 +535,15 @@ class PL3Controller {
             const u = new URL(window.location.href);
             if (groupKeyOrNull) u.searchParams.set('pl3', String(groupKeyOrNull));
             else u.searchParams.delete('pl3');
-            // Keep it simple: replaceState so it doesn't spam history
             window.history.replaceState({}, '', u.toString());
         } catch {
             // ignore
         }
     }
 
-    buildGroupUrl(groupKey) {
-        // Share URL that has stable OG tags (static share pages live under /s/<groupKey>/).
-        // The share page will redirect humans back to /?pl3=<groupKey> to open the modal.
-        const safeKey = encodeURIComponent(String(groupKey || ""));
-        try {
-            return `${window.location.origin}/s/${safeKey}`;
-        } catch (e) {
-            return `/s/${safeKey}`;
-        }
-    }
-
     openFromUrlIfPresent() {
         const key = this.getGroupKeyFromUrl();
         if (!key) return;
-        // Open without a source button (same modal)
         this.openModal(key, null);
     }
 
@@ -653,11 +689,10 @@ class PL3Controller {
     async shareCurrentGroup() {
         const key = this.state.openGroupKey;
         if (!key) return;
-        const g = this.getGroup(key);
+        const g = this.model.getGroup(key);
         if (!g) return;
-        const url = this.buildGroupUrl(key);
+        const url = this.model.buildGroupUrl(key);
 
-        // Prefer native share when available
         try {
             if (navigator.share) {
                 await navigator.share({
@@ -675,16 +710,14 @@ class PL3Controller {
     }
 
     openModal(groupKey, sourceBtn) {
-        const { modal, heroCrop, heroImg, coverOverlay } = this.el;
+        const { modal, heroCrop, heroImg } = this.el;
         if (!modal || !heroCrop || !heroImg) return;
-        const group = this.getGroup(groupKey);
+        const group = this.model.getGroup(groupKey);
         if (!group || group.isComingSoon) return;
 
-        // Prepare content
         this.setTitle(group.titleLines || [group.title]);
         this.renderMixes(group);
 
-        // Simple modal open: show + slide in via CSS
         modal.classList.remove('PL3-modal--opening');
         modal.hidden = false;
         modal.setAttribute('aria-hidden', 'false');
@@ -705,7 +738,6 @@ class PL3Controller {
         const { modal, heroCrop, heroImg, coverOverlay } = this.el;
         if (!modal || modal.hidden) return;
 
-        // Simple modal close: slide out via CSS then hide
         modal.classList.remove('PL3-modal--opening');
         setTimeout(() => {
             modal.hidden = true;
@@ -715,7 +747,6 @@ class PL3Controller {
             this.state.openGroupKey = null;
             this.setGroupKeyInUrl(null);
 
-            // Clean up
             if (heroCrop) {
                 heroCrop.replaceChildren();
                 if (heroImg) {
@@ -765,7 +796,7 @@ class PL3Controller {
         if (!ids.length) return this.showEmpty('Mixes list coming soon.');
 
         this.hideEmpty();
-        const platforms = this.getPlatformOrder();
+        const platforms = this.model.getPlatformOrder();
         const max = Math.min(this.el.mixRows.length, ids.length);
         for (let i = 0; i < max; i++) {
             const single = group.singlesById?.[ids[i]];
@@ -798,27 +829,12 @@ class PL3Controller {
 
     showEmpty(msg) { if (this.el.emptyEl) { this.el.emptyEl.textContent = msg || ''; this.el.emptyEl.hidden = false; } }
     hideEmpty() { if (this.el.emptyEl) { this.el.emptyEl.textContent = ''; this.el.emptyEl.hidden = true; } }
-    getGroup(key) { return window.musicDataGrouped?.groups?.find(g => String(g.key) === String(key)) || null; }
-    getPlatformOrder() { return window.musicDataGrouped?.platformOrder?.length ? window.musicDataGrouped.platformOrder : ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other']; }
-    lockScroll() {
-        if (this.state.scrollLocked) return;
-        this.state.prevHtmlOverflow = document.documentElement.style.overflow;
-        this.state.prevBodyOverflow = document.body.style.overflow;
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        this.state.scrollLocked = true;
-    }
-    unlockScroll() {
-        if (!this.state.scrollLocked) return;
-        document.documentElement.style.overflow = this.state.prevHtmlOverflow || '';
-        document.body.style.overflow = this.state.prevBodyOverflow || '';
-        this.state.scrollLocked = false;
-    }
+    lockScroll() { this.scrollLock.lock(); }
+    unlockScroll() { this.scrollLock.unlock(); }
 }
 
 window.initPL3 = function () { window.PL3Instance = new PL3Controller('p_listen3'); };
 
-// Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', window.initPL3);
 } else {
