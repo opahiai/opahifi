@@ -24,7 +24,13 @@ const SHARE = {
     "believe-the-truth-fairy": {
         title: "Believe the Truth Fairy",
         imagePath: "/img/music/main_truthfairy.png",
-        description: "Believe the Truth Fairy — OpaHiFi."
+        description: "Listen to Believe the Truth Fairy by OpaHiFi."
+    }
+    ,
+    "full-mindness": {
+        title: "Full-Mindness (Opa Mayhem Mix)",
+        imagePath: "/img/music/main-full-mindness.png",
+        description: "Listen to Full-Mindness by OpaHiFi."
     }
 };
 
