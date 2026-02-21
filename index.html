@@ -1703,6 +1703,7 @@
             if (window.musicDataGrouped) return;
 
             const GROUP = Object.freeze({
+                FULL_MINDNESS: 'full-mindness',
                 OLD_LOVE_STORY: 'old-love-story',
                 OPA_PA_PA_PARTY: 'opa-pa-pa-party',
                 GLITTAA_PHOENIX: 'glittaa-phoenix',
@@ -1716,7 +1717,8 @@
                 GLITTAA: 'glittaa',
                 SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
                 GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
-                BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy'
+                BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
+                FULL_MINDNESS: 'full-mindness'
             });
 
             const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
@@ -1766,6 +1768,16 @@
                     cover: 'img/music/main_truthfairy.png',
                     songIds: [],
                     singlesById: {}
+                },
+                {
+                    id: 6,
+                    key: GROUP.FULL_MINDNESS,
+                    title: 'Full-Mindness',
+                    titleLines: ['FULL-', 'MINDNESS'],
+                    cover: 'img/music/main_fullmindness.png',
+                    songIds: [],
+                    singlesById: {},
+
                 }
             ];
 
@@ -1853,6 +1865,14 @@
                         'Amazon Music': 'https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P',
                         'Other': 'https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC'
                     }
+                },
+                [SINGLE.FULL_MINDNESS]: {
+                    id: SINGLE.FULL_MINDNESS,
+                    groupKey: GROUP.FULL_MINDNESS,
+                    title: 'Full-Mindness',
+                    version: 'Opa Mayhem Mix',
+                    image: 'img/music/main_fullmindness.png',
+                    links: {}
                 }
             };
 
@@ -1862,7 +1882,8 @@
                 SINGLE.GLITTAA,
                 SINGLE.SPLENDA_LOVE_RABBIT_HELL,
                 SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
-                SINGLE.BELIEVE_THE_TRUTH_FAIRY
+                SINGLE.BELIEVE_THE_TRUTH_FAIRY,
+                SINGLE.FULL_MINDNESS,
             ];
 
             for (const id of singleIdsInOrder) {
