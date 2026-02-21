@@ -875,33 +875,33 @@ body {
 }
 
 .PL3-galleryItemBtn[data-pl3-gallery-index="0"] {
-    transform: rotateY(var(--pl3-gallery-tilt)) translateZ(8px);
+    transform: rotateY(var(--pl3-gallery-tilt)) translateZ(6px);
     z-index: 1;
 }
 
 .PL3-galleryItemBtn[data-pl3-gallery-index="1"] {
-    transform: rotateY(calc(var(--pl3-gallery-tilt) * 0.56)) translateZ(20px);
+    transform: rotateY(var(--pl3-gallery-tilt)) translateZ(12px);
     z-index: 2;
 }
 
 .PL3-galleryItemBtn[data-pl3-gallery-index="2"] {
-    transform: rotateY(calc(var(--pl3-gallery-tilt) * 0.24)) translateZ(36px);
+    transform: rotateY(var(--pl3-gallery-tilt)) translateZ(20px);
     z-index: 3;
 }
 
 .PL3-galleryItemBtn[data-pl3-gallery-index="3"] {
-    transform: rotateY(calc(var(--pl3-gallery-tilt) * -0.24)) translateZ(36px);
-    z-index: 3;
+    transform: rotateY(var(--pl3-gallery-tilt)) translateZ(28px);
+    z-index: 4;
 }
 
 .PL3-galleryItemBtn[data-pl3-gallery-index="4"] {
-    transform: rotateY(calc(var(--pl3-gallery-tilt) * -0.56)) translateZ(20px);
-    z-index: 2;
+    transform: rotateY(var(--pl3-gallery-tilt)) translateZ(36px);
+    z-index: 5;
 }
 
 .PL3-galleryItemBtn[data-pl3-gallery-index="5"] {
-    transform: rotateY(calc(var(--pl3-gallery-tilt) * -1)) translateZ(8px);
-    z-index: 1;
+    transform: rotateY(var(--pl3-gallery-tilt)) translateZ(44px);
+    z-index: 6;
 }
 
 .PL3-galleryItemBtn:is(:hover, :focus-visible, .is-active) {
