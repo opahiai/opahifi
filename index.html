@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;700;900&display=swap" rel="stylesheet">
     <link rel="icon" href="img/ico/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LHJPDBZDMB"></script>
@@ -19,1278 +20,10 @@
         gtag('js', new Date());
         gtag('config', 'G-LHJPDBZDMB');
     </script>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Oswald', sans-serif;
-            background: #050711;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        :root {
-            /* ===== PL3 (p_listen3) tuning knobs ===== */
-            --pl3-card-max-width: 500px;
-            --pl3-part-padding: 10px;
-            --pl3-card-radius: 18px;
-            --pl3-tile-radius: 14px;
-            --pl3-gap-md: 10px;
-            --pl3-gap-sm: 8px;
-
-            /* Vertical split knobs (unitless numbers out of 100). These should sum to 100. */
-            --pl3-part-entity: 30;
-            --pl3-part-upcoming: 30;
-            --pl3-part-gallery: 37;
-
-            /* Derived percentages for grid usage */
-            --pl3-part-entity-pct: calc(var(--pl3-part-entity) * 1%);
-            --pl3-part-upcoming-pct: calc(var(--pl3-part-upcoming) * 1%);
-            --pl3-part-gallery-pct: calc(var(--pl3-part-gallery) * 1%);
-
-            /* Gallery layout */
-            --pl3-gallery-gap: var(--pl3-gap-md);
-
-            /* Upcoming section */
-            --pl3-upcoming-size: 20vh;
-
-            /* Viewport-based dimensions */
-            --pl3-viewport-h: 100vh;
-            --pl3-preview-top-offset: 18vh;
-            --pl3-preview-max-h: 52vh;
-            --pl3-modal-top-offset: 10vh;
-            --pl3-modal-max-h: 75vh;
-            --pl3-share-top-offset: 22vh;
-        }
-
-        #p_listen3.PL3-section {
-            height: var(--pl3-viewport-h);
-            box-sizing: border-box;
-            background:
-                radial-gradient(1200px 600px at 20% 10%, rgba(31, 111, 235, 0.18), transparent 60%),
-                radial-gradient(900px 500px at 80% 30%, rgba(140, 70, 255, 0.16), transparent 55%),
-                radial-gradient(900px 520px at 25% 85%, rgba(239, 68, 68, 0.18), transparent 60%),
-                linear-gradient(180deg, #060914 0%, #050711 100%);
-            overflow: hidden;
-        }
-
-        /* tileSize = min(30vw, galleryHeight / 2.5) */
-        #p_listen3 {
-            --pl3-available-h: var(--pl3-viewport-h);
-            --pl3-gallery-h: calc(var(--pl3-available-h) * (var(--pl3-part-gallery) / 100));
-            --pl3-gallery-tile-size: min(30vw, calc(var(--pl3-gallery-h) / 3));
-        }
-
-        .PL3-wrap {
-            height: 100%;
-            display: flex;
-            align-items: stretch;
-            justify-content: center;
-            box-sizing: border-box;
-        }
-
-        .PL3-card {
-            width: 100%;
-            max-width: var(--pl3-card-max-width);
-            height: 100%;
-            border-radius: var(--pl3-card-radius);
-            border: none;
-            overflow: hidden;
-        }
-
-        .PL3-split {
-            height: 100%;
-            display: grid;
-            grid-template-rows:
-                minmax(0, var(--pl3-part-entity-pct)) minmax(0, var(--pl3-part-upcoming-pct)) minmax(0, var(--pl3-part-gallery-pct));
-        }
-
-        .PL3-part {
-            padding: var(--pl3-part-padding);
-            box-sizing: border-box;
-            /* over flow: hidden; */
-        }
-
-        .PL3-part--gallery {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .PL3-subTitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            font-weight: 800;
-            margin-bottom: var(--pl3-gap-sm);
-        }
-
-        /* ===== Top (30%) ===== */
-        .PL3-top {
-            height: 100%;
-            display: grid;
-            grid-template-rows: auto auto;
-            row-gap: var(--pl3-gap-md);
-            align-content: end;
-        }
-
-        .PL3-heroRow {
-            display: flex;
-            gap: var(--pl3-gap-md);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .PL3-heroImgWrap {
-            flex: 0 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 18px 0;
-        }
-
-        .PL3-heroImg {
-            width: clamp(100px, 15vw, 140px);
-            height: clamp(100px, 15vw, 140px);
-            object-fit: contain;
-            display: block;
-            border-radius: 15px;
-        }
-
-        .PL3-heroText {
-            flex: 0 0 auto;
-            height: auto;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .PL3-heroTitle {
-            color: #fff;
-            font-size: clamp(3rem, 4.2vw, 5rem);
-            font-weight: 900;
-            line-height: 1.05;
-            letter-spacing: -0.02em;
-        }
-
-        .PL3-heroSlogan {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 200;
-            line-height: 1.05;
-            margin-top: 4px;
-        }
-
-        .PL3-btnRow {
-            width: 95%;
-            /* max-width: 330px; */
-
-            display: flex;
-            flex-direction: row;
-            gap: var(--pl3-gap-sm);
-            flex-wrap: nowrap;
-            align-items: stretch;
-            justify-content: center
-        }
-
-        .PL3-heroBtn {
-            height: clamp(32px, 7.2vw, 38px);
-            border-radius: var(--pl3-tile-radius);
-            border: none;
-            color: #fff;
-            font-size: clamp(12px, 3.2vw, 15px);
-            font-weight: 900;
-            cursor: pointer;
-            flex: 1 1 auto;
-            min-width: 0;
-            padding: 0 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            transition: all 0.35s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .PL3-heroBtn[data-pl3-action="listen"] {
-            background: linear-gradient(135deg, rgb(45 51 218 / 93%) 0%, #065fd4 100%);
-        }
-
-        .PL3-heroBtn[data-pl3-action="follow"] {
-            background: linear-gradient(135deg, rgb(83 5 211 / 81%) 0%, rgb(133 6 255 / 66%) 100%);
-        }
-
-        .PL3-heroBtn[data-pl3-action="contact"],
-        .PL3-heroBtn[data-pl3-action="shop"] {
-            background: linear-gradient(135deg, rgb(255 0 0 / 49%) 0%, #e1002d 100%);
-        }
-
-        .PL3-heroBtn:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.15);
-        }
-
-        .PL3-heroBtn.PL3-heroBtn--expanded {
-            flex: 4 1 auto;
-            justify-content: flex-start;
-        }
-
-        .PL3-heroBtn.PL3-heroBtn--collapsed {
-            flex: 0 0 0px;
-            padding: 0;
-            min-width: 0;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .PL3-heroBtn-text {
-            display: inline;
-        }
-
-        .PL3-heroBtn--expanded .PL3-heroBtn-text {
-            display: none;
-        }
-
-        .PL3-heroBtn--collapsed .PL3-heroBtn-text {
-            display: none;
-        }
-
-        .PL3-heroBtn-icons {
-            display: none;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: nowrap;
-            width: 100%;
-            justify-content: space-between;
-        }
-
-        /* Social only: keep icons centered + nicely spaced (don't shove left) */
-        .PL3-heroBtn[data-pl3-action="follow"].PL3-heroBtn--expanded .PL3-heroBtn-icons {
-            justify-content: center;
-            gap: 35px;
-            flex-wrap: wrap;
-            row-gap: 10px;
-        }
-
-        .PL3-heroBtn--expanded .PL3-heroBtn-icons {
-            display: flex;
-        }
-
-        .PL3-heroBtn-icon {
-            width: 26px;
-            height: 26px;
-            opacity: 0.9;
-            transition: opacity 0.2s;
-        }
-
-        .PL3-heroBtn-icon.fa-amazon {
-            width: auto;
-            font-size: 25px;
-            color: #fff;
-        }
-
-        .PL3-heroBtn-icon:hover {
-            opacity: 1;
-        }
-
-        .PL3-heroBtn-close {
-            margin-left: 16px;
-            padding-left: 16px;
-            border-left: 1px solid rgba(255, 255, 255, 0.25);
-            font-size: 22px;
-            font-weight: 900;
-            opacity: 0.8;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        /* ===== Middle (30%) ===== */
-        .PL3-upcoming {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .PL3-upcomingArtWrap {
-            height: var(--pl3-upcoming-size);
-            width: var(--pl3-upcoming-size);
-            overflow: visible;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            border: none;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            z-index: 2;
-            flex-shrink: 0;
-            cursor: pointer;
-        }
-
-        .PL3-upcomingArtWrap::before,
-        .PL3-upcomingArtWrap::after {
-            content: '';
-            position: absolute;
-            left: -3px;
-            top: -3px;
-            background: linear-gradient(45deg, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444);
-            background-size: 400%;
-            width: calc(100% + 6px);
-            height: calc(100% + 6px);
-            border-radius: 20px;
-            z-index: -1;
-            animation: PL3-upcomingBorderShine 20s linear infinite;
-        }
-
-        .PL3-upcomingArtWrap::after {
-            filter: blur(20px);
-            animation: PL3-upcomingBorderShine 20s linear infinite;
-        }
-
-        .PL3-upcomingArtWrap:hover {
-            transform: scale(1.05);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .PL3-upcomingArt {
-            width: var(--pl3-upcoming-size);
-            height: var(--pl3-upcoming-size);
-            object-fit: contain;
-            display: block;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(31, 111, 235, 0.4), inset 0 0 30px rgba(140, 70, 255, 0.1);
-            animation: PL3-upcomingGlow 2s ease-in-out infinite;
-            position: relative;
-            z-index: 1;
-        }
-
-        .PL3-upcomingArt::before,
-        .PL3-upcomingArt::after {
-            content: '';
-            position: absolute;
-            left: -3px;
-            top: -3px;
-            background: linear-gradient(45deg, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444);
-            background-size: 400%;
-            width: calc(100% + 6px);
-            height: calc(100% + 6px);
-            border-radius: 15px;
-            z-index: -1;
-            animation: PL3-upcomingBorderShine 8s linear infinite;
-        }
-
-        .PL3-upcomingArt::after {
-            filter: blur(12px);
-        }
-
-        .PL3-upcomingMeta {
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            animation: PL3-upcomingPulse 2.5s ease-in-out infinite;
-        }
-
-        .PL3-upcomingRight {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .PL3-upcomingDesc {
-            color: #fff;
-            font-size: 3rem;
-            font-weight: 900;
-            line-height: 0.9;
-            text-shadow: 0 0 20px rgba(31, 111, 235, 0.4);
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .PL3-upcomingButtons {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            flex-shrink: 0;
-        }
-
-        .PL3-upcomingSub {
-            margin-top: 6px;
-            color: rgba(255, 255, 255, 0.75);
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Base button styles */
-        .PL3-upcomingBtn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--upcoming-btn-gap, 6px);
-            width: var(--upcoming-btn-width, 140px);
-            padding: var(--upcoming-btn-padding, 8px 14px);
-            border-radius: var(--upcoming-btn-radius, 20px);
-            color: #fff;
-            font-size: var(--upcoming-btn-font-size, 12px);
-            font-weight: var(--upcoming-btn-font-weight, 700);
-            line-height: 1;
-            margin-top: 15px;
-            cursor: pointer;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .PL3-upcomingPreviewBtn {
-            --upcoming-btn-bg: rgba(0, 0, 0, 0.25);
-            --upcoming-btn-border: 1px solid rgba(255, 255, 255, 0.18);
-            --upcoming-btn-bg-hover: rgba(0, 0, 0, 0.35);
-            --upcoming-btn-border-hover: rgba(255, 255, 255, 0.28);
-
-            background: var(--upcoming-btn-bg);
-            border: var(--upcoming-btn-border);
-            transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
-        }
-
-        .PL3-upcomingPreviewBtn:hover {
-            background: var(--upcoming-btn-bg-hover);
-            border-color: var(--upcoming-btn-border-hover);
-            transform: translateY(-1px);
-        }
-
-        .PL3-upcomingPreviewBtn:active {
-            transform: translateY(0px);
-        }
-
-        .PL3-upcomingPreviewBtn:focus-visible {
-            outline: 2px solid rgba(255, 255, 255, 0.6);
-            outline-offset: 2px;
-        }
-
-        .PL3-spotifySticker {
-            --upcoming-btn-bg: rgba(0, 0, 0, 0.3);
-            --upcoming-btn-border: 1px solid rgba(100, 150, 120, 0.3);
-            --upcoming-btn-bg-hover: rgba(0, 0, 0, 0.4);
-            --upcoming-btn-border-hover: rgba(100, 150, 120, 0.5);
-
-            background: var(--upcoming-btn-bg);
-            border: var(--upcoming-btn-border);
-            transition: all 200ms ease;
-        }
-
-        .PL3-upcomingPreviewBtn i {
-            font-size: 14px;
-        }
-
-        .PL3-spotifySticker img {
-            width: 16px;
-            height: 16px;
-            object-fit: contain;
-            opacity: 0.7;
-        }
-
-        .PL3-spotifySticker:hover {
-            background: var(--upcoming-btn-bg-hover);
-            border-color: var(--upcoming-btn-border-hover);
-            color: rgba(100, 150, 120, 0.9);
-            transform: scale(1.05);
-            box-shadow: 0 4px 16px rgba(100, 150, 120, 0.1);
-        }
-
-        .PL3-spotifySticker:active {
-            transform: scale(0.98);
-        }
-
-        /* ===== Streaming Services Popup Modal ===== */
-        #PL3-streaming-modal[hidden] {
-            display: none;
-        }
-
-        #PL3-streaming-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 10002;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .PL3-streamingOverlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            cursor: pointer;
-        }
-
-        .PL3-streamingPanel {
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 100%);
-            border: 2px solid rgba(140, 70, 255, 0.3);
-            border-radius: 24px;
-            padding: 40px 32px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(31, 111, 235, 0.2), 0 0 40px rgba(140, 70, 255, 0.1);
-            animation: slideUp 300ms ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .PL3-streamingClose {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            color: #fff;
-            font-size: 24px;
-            line-height: 1;
-            cursor: pointer;
-            transition: all 200ms ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .PL3-streamingClose:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-
-        .PL3-streamingContent {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .PL3-streamingTitle {
-            font-size: 32px;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(140, 70, 255, 0.3);
-        }
-
-        .PL3-streamingMessage {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.6;
-        }
-
-        .PL3-streamingMessage strong {
-            color: #1f6feb;
-            font-weight: 800;
-            text-shadow: 0 0 10px rgba(31, 111, 235, 0.4);
-        }
-
-        .PL3-streamingServices {
-            font-size: 48px;
-            margin-top: 10px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        /* ===== Preview Video Modal ===== */
-        #PL3-preview-modal[hidden] {
-            display: none;
-        }
-
-        #PL3-preview-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 10001;
-        }
-
-        #PL3-preview-modal .PL3-previewOverlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.72);
-            -webkit-backdrop-filter: blur(6px);
-            backdrop-filter: blur(6px);
-            opacity: 0;
-            transition: opacity 0.20s ease;
-        }
-
-        #PL3-preview-modal.PL3-preview--open .PL3-previewOverlay {
-            opacity: 1;
-        }
-
-        #PL3-preview-modal .PL3-previewPanel {
-            position: relative;
-            width: min(86vw, 360px);
-            margin: var(--pl3-preview-top-offset) auto 0;
-            opacity: 0;
-            transform: translateY(22px);
-            transition: opacity 0.22s ease, transform 0.22s ease;
-        }
-
-        #PL3-preview-modal.PL3-preview--open .PL3-previewPanel {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #PL3-preview-modal .PL3-previewInner {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #PL3-preview-modal.PL3-preview--open .PL3-previewInner {
-            animation: PL3-previewInnerWiggle 520ms ease both;
-        }
-
-        @keyframes PL3-upcomingBorderShine {
-            0% {
-                background-position: 0 0;
-            }
-
-            50% {
-                background-position: 400% 0;
-            }
-
-            100% {
-                background-position: 0 0;
-            }
-        }
-
-        @keyframes PL3-upcomingMagicBorder {
-            0% {
-                opacity: 0.5;
-            }
-
-            50% {
-                opacity: 0.9;
-            }
-
-            100% {
-                opacity: 0.5;
-            }
-        }
-
-        @keyframes PL3-upcomingSparkle {
-            0% {
-                filter: blur(8px) brightness(0.8);
-            }
-
-            50% {
-                filter: blur(8px) brightness(1.2);
-            }
-
-            100% {
-                filter: blur(8px) brightness(0.8);
-            }
-        }
-
-        @keyframes PL3-upcomingShimmer {
-            0% {
-                transform: translateX(-200%);
-            }
-
-            100% {
-                transform: translateX(200%);
-            }
-        }
-
-        @keyframes PL3-upcomingGlow {
-
-            0%,
-            100% {
-                box-shadow: 0 0 30px rgba(31, 111, 235, 0.4), inset 0 0 30px rgba(140, 70, 255, 0.1);
-            }
-
-            50% {
-                box-shadow: 0 0 50px rgba(31, 111, 235, 0.6), inset 0 0 40px rgba(140, 70, 255, 0.2);
-            }
-        }
-
-        @keyframes PL3-upcomingPulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.98;
-                transform: scale(1.01);
-            }
-        }
-
-        @keyframes PL3-previewInnerWiggle {
-            0% {
-                transform: translateX(0);
-            }
-
-            60% {
-                transform: translateX(0);
-            }
-
-            72% {
-                transform: translateX(-4px);
-            }
-
-            84% {
-                transform: translateX(3px);
-            }
-
-            100% {
-                transform: translateX(0);
-            }
-        }
-
-        #PL3-preview-modal .PL3-previewHeader {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        #PL3-preview-modal .PL3-previewHeaderActions {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #PL3-preview-modal .PL3-previewTitle {
-            font-weight: 900;
-            font-size: 1.7rem;
-        }
-
-
-        #PL3-preview-modal .PL3-previewSound {
-            height: 42px;
-            padding: 0 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.98);
-            cursor: pointer;
-            font-weight: 900;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #PL3-preview-modal .PL3-previewSound:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        #PL3-preview-modal .PL3-previewClose {
-            width: 42px;
-            height: 42px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.98);
-            cursor: pointer;
-            font-weight: 900;
-            font-size: 22px;
-            line-height: 1;
-        }
-
-        #PL3-preview-modal .PL3-previewClose:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        /* Shorts-friendly aspect ratio */
-        #PL3-preview-modal .PL3-previewFrame {
-            width: min(100%, 300px);
-            aspect-ratio: 9 / 16;
-            max-height: var(--pl3-preview-max-h);
-            border-radius: 14px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.35);
-            margin: 0 auto;
-        }
-
-        #PL3-preview-modal .PL3-previewFrame iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            display: block;
-        }
-
-        /* ===== Bottom (40%) ===== */
-        .PL3-gallery {
-            flex: 1;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: var(--pl3-gallery-gap);
-        }
-
-        .PL3-galleryRow {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: var(--pl3-gallery-gap);
-        }
-
-        .PL3-galleryItemBtn {
-            width: var(--pl3-gallery-tile-size);
-            height: var(--pl3-gallery-tile-size);
-            border: none;
-            background: transparent;
-            padding: 0;
-            margin: 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .PL3-galleryImg {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-            border-radius: 15px;
-        }
-
-        /* ===== PL3 Group Modal ===== */
-        #PL3-group-modal {
-            --pl3-panel-radius: 18px;
-        }
-
-        #PL3-group-modal.PL3-modal[hidden] {
-            display: none;
-        }
-
-        #PL3-group-modal.PL3-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-        }
-
-        #PL3-group-modal .PL3-modalOverlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            -webkit-backdrop-filter: blur(4px);
-            backdrop-filter: blur(4px);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        #PL3-group-modal.PL3-modal--opening .PL3-modalOverlay {
-            opacity: 1;
-        }
-
-        #PL3-group-modal .PL3-modalPanel {
-            position: relative;
-            width: 92%;
-            max-width: 440px;
-            max-height: var(--pl3-modal-max-h);
-            height: min(var(--pl3-modal-max-h), 600px);
-            margin: var(--pl3-modal-top-offset) auto 0;
-            background: linear-gradient(180deg, rgba(20, 25, 42, 0.96) 0%, rgba(15, 18, 30, 0.94) 100%);
-            border-radius: var(--pl3-panel-radius);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.28s ease, transform 0.28s ease;
-        }
-
-        #PL3-group-modal.PL3-modal--opening .PL3-modalPanel {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #PL3-group-modal .PL3-groupHero {
-            position: relative;
-            width: 100%;
-            height: 40%;
-            min-height: 180px;
-            flex-shrink: 0;
-        }
-
-        #PL3-group-modal .PL3-groupHeroCrop {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            border-radius: var(--pl3-panel-radius) var(--pl3-panel-radius) 0 0;
-            --pl3-hero-bg: none;
-            background: radial-gradient(120% 120% at 50% 30%, rgba(255, 255, 255, 0.10) 0%, rgba(0, 0, 0, 0.25) 55%, rgba(0, 0, 0, 0.35) 100%);
-        }
-
-        /* Blurred cover fill behind the contained artwork (no black side bars) */
-        #PL3-group-modal .PL3-groupHeroCrop::before {
-            content: '';
-            position: absolute;
-            inset: -120px;
-            z-index: 0;
-            background-image: var(--pl3-hero-bg);
-            background-size: 160% 160%;
-            background-position: 50% 45%;
-            background-repeat: no-repeat;
-            filter: blur(46px) saturate(1.25) contrast(1.08);
-            opacity: 0.95;
-            transform: scale(1.25);
-            pointer-events: none;
-        }
-
-        /* Make the side-fill feel intentional (soft color + vignette) */
-        #PL3-group-modal .PL3-groupHeroCrop::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            background:
-                radial-gradient(120% 120% at 50% 35%, rgba(255, 255, 255, 0.10) 0%, rgba(0, 0, 0, 0.00) 40%, rgba(0, 0, 0, 0.30) 100%),
-                linear-gradient(90deg, rgba(0, 153, 255, 0.20) 0%, rgba(0, 0, 0, 0.00) 36%, rgba(0, 0, 0, 0.00) 64%, rgba(255, 92, 0, 0.20) 100%);
-            pointer-events: none;
-        }
-
-        #PL3-group-modal .PL3-groupHeroCrop img {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            object-position: center;
-            display: block;
-        }
-
-        #PL3-group-modal .PL3-coverOverlay {
-            position: absolute;
-            inset: 0;
-            padding: 10px;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        #PL3-group-modal .PL3-coverTitle {
-            display: none;
-        }
-
-        #PL3-group-modal .PL3-coverTitleLine {
-            display: block;
-            font-size: clamp(2rem, 6.2vw, 46px);
-        }
-
-        #PL3-group-modal .PL3-coverActions {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            z-index: 3;
-            pointer-events: auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        #PL3-group-modal .PL3-coverIconBtn {
-            width: 35px;
-            height: 35px;
-            border: 1px solid rgba(71, 19, 204, 0);
-            border-radius: 999px;
-            padding: 0;
-            background: rgba(90, 89, 92, 0.261);
-            color: rgba(255, 255, 255, 0.98);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.287);
-            transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
-        }
-
-        #PL3-group-modal .PL3-coverIconBtn:hover {
-            background: rgba(0, 0, 0, 0.66);
-            border-color: rgba(255, 255, 255, 0.45);
-            transform: translateY(-1px);
-        }
-
-        #PL3-group-modal .PL3-coverIconBtn:active {
-            transform: translateY(0);
-        }
-
-        #PL3-group-modal .PL3-coverIconBtn:focus-visible {
-            outline: 2px solid rgba(255, 255, 255, 0.6);
-            outline-offset: 2px;
-        }
-
-        #PL3-group-modal .PL3-coverShareIcon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        #PL3-group-modal .PL3-coverShareIcon i {
-            font-size: 18px;
-        }
-
-        /* ===== Share Sheet ===== */
-        #PL3-share-modal[hidden] {
-            display: none;
-        }
-
-        #PL3-share-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-        }
-
-        #PL3-share-modal .PL3-shareOverlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.72);
-            -webkit-backdrop-filter: blur(6px);
-            backdrop-filter: blur(6px);
-            opacity: 0;
-            transition: opacity 0.20s ease;
-        }
-
-        #PL3-share-modal.PL3-share--open .PL3-shareOverlay {
-            opacity: 1;
-        }
-
-        #PL3-share-modal .PL3-sharePanel {
-            position: relative;
-            width: min(92vw, 520px);
-            margin: var(--pl3-share-top-offset) auto 0;
-            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.60);
-            padding: 14px;
-            opacity: 0;
-            transform: translateY(22px);
-            transition: opacity 0.22s ease, transform 0.22s ease;
-        }
-
-        #PL3-share-modal.PL3-share--open .PL3-sharePanel {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #PL3-share-modal .PL3-shareTitle {
-            font-weight: 900;
-            font-size: 1.05rem;
-            margin-bottom: 6px;
-        }
-
-        #PL3-share-modal .PL3-shareHint {
-            color: rgba(255, 255, 255, 0.72);
-            font-size: 0.92rem;
-            margin-bottom: 12px;
-        }
-
-        #PL3-share-modal .PL3-shareRow {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 10px;
-            align-items: center;
-        }
-
-        #PL3-share-modal .PL3-shareInput {
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(0, 0, 0, 0.35);
-            color: rgba(255, 255, 255, 0.95);
-            outline: none;
-        }
-
-        #PL3-share-modal .PL3-shareCopy,
-        #PL3-share-modal .PL3-shareClose {
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.98);
-            cursor: pointer;
-            font-weight: 800;
-        }
-
-        #PL3-share-modal .PL3-shareCopy:hover,
-        #PL3-share-modal .PL3-shareClose:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        #PL3-share-modal .PL3-shareActions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 12px;
-        }
-
-        #PL3-group-modal .PL3-coverClose::after {
-            content: '\00D7';
-            font-weight: 900;
-            font-size: 24px;
-            line-height: 1;
-        }
-
-        #PL3-group-modal .PL3-groupBody {
-            margin-top: 10px;
-            flex: 1;
-            min-height: 0;
-            overflow: auto;
-            padding: 0 5px 5px;
-        }
-
-        #PL3-group-modal .PL3-members {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #PL3-group-modal .PL3-memberEmpty {
-            color: rgba(255, 255, 255, 0.75);
-            padding: 20px;
-            text-align: center;
-        }
-
-        #PL3-group-modal .ohf-mix-row {
-            display: grid;
-            grid-template-columns: 70px 1fr;
-            gap: 7px;
-            align-items: center;
-            border-radius: 16px;
-            padding: 8px;
-            opacity: 1;
-            transform: none;
-            transition: none;
-        }
-
-        #PL3-group-modal .ohf-mix-row[hidden] {
-            display: none;
-        }
-
-
-
-        #PL3-group-modal .ohf-mix-art {
-            width: 65px;
-            height: 65px;
-            border-radius: 15px;
-            object-fit: cover;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-        }
-
-        #PL3-group-modal .ohf-mix-meta {
-            min-width: 0;
-        }
-
-        #PL3-group-modal .ohf-mix-name {
-            font-weight: 700;
-            font-size: 1.3rem;
-            line-height: 1.2;
-            margin-bottom: 8px;
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        #PL3-group-modal .ohf-mix-icons {
-            display: flex;
-            gap: 7px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        #PL3-group-modal .ohf-mix-link {
-            width: 32px;
-            height: 32px;
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(0, 0, 0, 0.20);
-            color: rgba(255, 255, 255, 0.95);
-            text-decoration: none;
-        }
-
-        #PL3-group-modal .ohf-mix-link:hover {
-            background: rgba(0, 0, 0, 0.30);
-            border-color: rgba(255, 255, 255, 0.22);
-        }
-
-        #PL3-group-modal .ohf-mix-icon {
-            width: 18px;
-            height: 18px;
-        }
-
-        #PL3-group-modal .ohf-mix-icon--fa {
-            font-size: 18px;
-        }
-
-        @media (min-width: 425px) {
-            #PL3-group-modal .ohf-mix-icons {
-                gap: 15px;
-            }
-
-            #PL3-group-modal .ohf-mix-link {
-                width: 36px;
-                height: 36px;
-            }
-        }
-    </style>
 </head>
 
 <body>
+
     <section id="p_listen3" class="PL3-section" aria-label="OpaHiFi">
         <div class="PL3-wrap">
             <div class="PL3-card">
@@ -1634,837 +367,838 @@
         </div>
     </div>
 
+    <script src="script.js"></script>
+</body>
 
-    <!-- GA4 labeled click tracking (internal + external) -->
-    <script>
-        (() => {
-            const sanitize = (s, max = 90) => String(s || '')
-                .trim()
-                .toLowerCase()
-                .replace(/\s+/g, '_')
-                .replace(/[^a-z0-9_\-:/\.]/g, '')
-                .slice(0, max);
+</html>
+(() => {
+const sanitize = (s, max = 90) => String(s || '')
+.trim()
+.toLowerCase()
+.replace(/\s+/g, '_')
+.replace(/[^a-z0-9_\-:/\.]/g, '')
+.slice(0, max);
 
-            const labelOf = (el) => {
-                if (!el) return 'click';
+const labelOf = (el) => {
+if (!el) return 'click';
 
-                const ctxAction = el.closest('[data-pl3-action]')?.dataset?.pl3Action || '';
-                const ctxActionKey = ctxAction ? sanitize(ctxAction) : '';
+const ctxAction = el.closest('[data-pl3-action]')?.dataset?.pl3Action || '';
+const ctxActionKey = ctxAction ? sanitize(ctxAction) : '';
 
-                if (el.dataset.track) return sanitize(el.dataset.track);
+if (el.dataset.track) return sanitize(el.dataset.track);
 
-                if (el.dataset.pl3Action) return 'pl3_action_' + sanitize(el.dataset.pl3Action);
-                if (el.dataset.pl3Group) return 'pl3_group_' + sanitize(el.dataset.pl3Group);
-                if (el.hasAttribute('data-pl3-preview')) return ctxActionKey ? 'pl3_' + ctxActionKey + '_preview' : 'pl3_preview';
-                if (el.hasAttribute('data-pl3-share-group')) return 'pl3_share_open';
-                if (el.hasAttribute('data-pl3-share-copy')) return 'pl3_share_copy';
-                if (el.hasAttribute('data-pl3-preview-sound')) return 'pl3_preview_sound';
+if (el.dataset.pl3Action) return 'pl3_action_' + sanitize(el.dataset.pl3Action);
+if (el.dataset.pl3Group) return 'pl3_group_' + sanitize(el.dataset.pl3Group);
+if (el.hasAttribute('data-pl3-preview')) return ctxActionKey ? 'pl3_' + ctxActionKey + '_preview' : 'pl3_preview';
+if (el.hasAttribute('data-pl3-share-group')) return 'pl3_share_open';
+if (el.hasAttribute('data-pl3-share-copy')) return 'pl3_share_copy';
+if (el.hasAttribute('data-pl3-preview-sound')) return 'pl3_preview_sound';
 
-                if (el.dataset.pl3Platform) {
-                    const p = sanitize(el.dataset.pl3Platform);
-                    return ctxActionKey ? ('pl3_' + ctxActionKey + '_platform_' + p) : ('pl3_platform_' + p);
+if (el.dataset.pl3Platform) {
+const p = sanitize(el.dataset.pl3Platform);
+return ctxActionKey ? ('pl3_' + ctxActionKey + '_platform_' + p) : ('pl3_platform_' + p);
+}
+
+const aria = el.getAttribute('aria-label');
+if (aria) {
+const a = sanitize(aria);
+return ctxActionKey ? ('pl3_' + ctxActionKey + '_' + a) : a;
+}
+
+if (el.tagName === 'A') {
+const href = el.getAttribute('href') || '';
+const h = href ? sanitize(href) : '';
+return ctxActionKey ? ('pl3_' + ctxActionKey + '_link_' + (h || '')) : (href ? 'link_' + h : 'link');
+}
+
+const txt = (el.textContent || '').trim();
+return txt ? (ctxActionKey ? ('pl3_' + ctxActionKey + '_btn_' + sanitize(txt)) : ('btn_' + sanitize(txt))) : 'click';
+};
+
+document.addEventListener('click', (e) => {
+const el = e.target.closest(
+'[data-track],a,button,[role="button"],[data-pl3-action],[data-pl3-group],[data-pl3-preview],[data-pl3-share-group],[data-pl3-share-copy],[data-pl3-preview-sound],[data-pl3-platform]'
+);
+if (!el) return;
+if (typeof window.gtag !== 'function') return;
+
+window.gtag('event', 'ui_click', {
+label: labelOf(el),
+href: el.getAttribute('href') || '',
+page_path: location.pathname
+});
+}, { capture: true, passive: true });
+})();
+</script>
+
+<script>
+    // Music data (inline)
+    (function () {
+        if (window.musicDataGrouped) return;
+
+        const GROUP = Object.freeze({
+            FULL_MINDNESS: 'full-mindness',
+            OLD_LOVE_STORY: 'old-love-story',
+            OPA_PA_PA_PARTY: 'opa-pa-pa-party',
+            GLITTAA_PHOENIX: 'glittaa-phoenix',
+            SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
+            BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy'
+        });
+
+        const SINGLE = Object.freeze({
+            OLD_LOVE_STORY: 'old-love-story',
+            OPA_PA_PA_PARTY: 'opa-pa-pa-party',
+            GLITTAA: 'glittaa',
+            SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
+            GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
+            BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
+            FULL_MINDNESS: 'full-mindness'
+        });
+
+        const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
+
+        const groups = [
+            {
+                id: 1,
+                key: GROUP.OLD_LOVE_STORY,
+                title: 'Old Love Story',
+                titleLines: ['OLD LOVE', 'STORY'],
+                cover: 'img/music/main_oldlovestory.png',
+                songIds: [],
+                singlesById: {}
+            },
+            {
+                id: 2,
+                key: GROUP.OPA_PA_PA_PARTY,
+                title: 'Opa pa pa party',
+                titleLines: ['OPA PA', 'PA PARTY!'],
+                cover: 'img/music/main_oparty.png',
+                songIds: [],
+                singlesById: {}
+            },
+            {
+                id: 3,
+                key: GROUP.GLITTAA_PHOENIX,
+                title: 'Glittaa Phoenix',
+                titleLines: ['GLITTAA', 'PHOENIX!'],
+                cover: 'img/music/main_glitta.png',
+                songIds: [],
+                singlesById: {}
+            },
+            {
+                id: 4,
+                key: GROUP.SPLENDA_LOVE_RABBIT_HELL,
+                title: 'Splenda Love Rabbit Hell',
+                titleLines: ['SPLENDA LOVE', 'RABBIT HELL'],
+                cover: 'img/music/main_splenda_rabbit.png',
+                songIds: [],
+                singlesById: {}
+            },
+            {
+                id: 5,
+                key: GROUP.BELIEVE_THE_TRUTH_FAIRY,
+                title: 'Believe the Truth fairy',
+                titleLines: ['BELIEVE the', 'TRUTH FAIRY'],
+                cover: 'img/music/main_truthfairy.png',
+                songIds: [],
+                singlesById: {}
+            },
+            {
+                id: 6,
+                key: GROUP.FULL_MINDNESS,
+                title: 'Full-Mindness',
+                titleLines: ['FULL-', 'MINDNESS'],
+                cover: 'img/music/main_fullmindness.png',
+                songIds: [],
+                singlesById: {},
+
+            }
+        ];
+
+        const groupsByKey = {};
+        for (const g of groups) {
+            groupsByKey[g.key] = g;
+        }
+
+        const singlesById = {
+            [SINGLE.OLD_LOVE_STORY]: {
+                id: SINGLE.OLD_LOVE_STORY,
+                groupKey: GROUP.OLD_LOVE_STORY,
+                title: 'Old Love Story',
+                version: 'Desert Disco Duet',
+                image: 'img/music/oldlovestory_opa-max-mix.png',
+                links: {
+                    'YouTube Music': 'https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE',
+                    'Amazon Music': 'https://music.amazon.com/albums/B0FXB4X48G',
+                    'Spotify': 'https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII',
+                    'Apple Music': 'https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028',
+                    'Other': 'https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq'
                 }
-
-                const aria = el.getAttribute('aria-label');
-                if (aria) {
-                    const a = sanitize(aria);
-                    return ctxActionKey ? ('pl3_' + ctxActionKey + '_' + a) : a;
+            },
+            [SINGLE.OPA_PA_PA_PARTY]: {
+                id: SINGLE.OPA_PA_PA_PARTY,
+                groupKey: GROUP.OPA_PA_PA_PARTY,
+                title: 'Opa pa pa party',
+                image: 'img/music/main_oparty.png',
+                links: {
+                    'YouTube Music': 'https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw',
+                    'Amazon Music': 'https://music.amazon.com/albums/B0FYVMVZS4',
+                    'Spotify': 'https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf',
+                    'Apple Music': 'https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737',
+                    'Other': 'https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8'
                 }
-
-                if (el.tagName === 'A') {
-                    const href = el.getAttribute('href') || '';
-                    const h = href ? sanitize(href) : '';
-                    return ctxActionKey ? ('pl3_' + ctxActionKey + '_link_' + (h || '')) : (href ? 'link_' + h : 'link');
+            },
+            [SINGLE.GLITTAA]: {
+                id: SINGLE.GLITTAA,
+                groupKey: GROUP.GLITTAA_PHOENIX,
+                title: 'Glittaa Phoenix',
+                image: 'img/music/3_glitta.png',
+                links: {
+                    'YouTube Music': 'https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17',
+                    'Amazon Music': 'https://music.amazon.com/albums/B0G1N1Y83C',
+                    'Spotify': 'https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6',
+                    'Apple Music': 'https://music.apple.com/us/album/glittaa-phoenix-single/1853214791',
+                    'Other': 'https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX'
                 }
+            },
+            [SINGLE.SPLENDA_LOVE_RABBIT_HELL]: {
+                id: SINGLE.SPLENDA_LOVE_RABBIT_HELL,
+                groupKey: GROUP.SPLENDA_LOVE_RABBIT_HELL,
+                title: 'Splenda Love Rabbit Hell',
+                version: 'Opa Max Mix',
+                image: 'img/music/main_splenda_rabbit.png',
+                links: {
+                    'YouTube Music': 'https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE',
+                    'Amazon Music': 'https://music.amazon.com/albums/B0GJQZXHNL',
+                    'Other': 'https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F'
+                }
+            },
+            [SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX]: {
+                id: SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
+                groupKey: GROUP.GLITTAA_PHOENIX,
+                title: 'GLITTAA Phoenix',
+                version: 'Opa Sunrize Max Mix',
+                image: 'img/music/glittaa_max-mix.png',
+                links: {
+                    'YouTube Music': 'https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP',
+                    'Other': 'https://www.youtube.com/watch?v=LOywm64SGCY',
+                    'Spotify': 'https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP',
+                    'Apple Music': 'https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659',
+                    'Amazon Music': 'https://music.amazon.com/tracks/B0GGHZ6L2F'
+                }
+            },
+            [SINGLE.BELIEVE_THE_TRUTH_FAIRY]: {
+                id: SINGLE.BELIEVE_THE_TRUTH_FAIRY,
+                groupKey: GROUP.BELIEVE_THE_TRUTH_FAIRY,
+                title: 'Believe the Truth Fairy',
+                image: 'img/music/main_truthfairy.png',
+                links: {
+                    'Apple Music': 'https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683',
+                    'YouTube Music': 'https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj',
+                    'Spotify': 'https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg',
+                    'Amazon Music': 'https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P',
+                    'Other': 'https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC'
+                }
+            },
+            [SINGLE.FULL_MINDNESS]: {
+                id: SINGLE.FULL_MINDNESS,
+                groupKey: GROUP.FULL_MINDNESS,
+                title: 'Full-Mindness',
+                version: 'Opa Mayhem Mix',
+                image: 'img/music/main_fullmindness.png',
+                links: {}
+            }
+        };
 
-                const txt = (el.textContent || '').trim();
-                return txt ? (ctxActionKey ? ('pl3_' + ctxActionKey + '_btn_' + sanitize(txt)) : ('btn_' + sanitize(txt))) : 'click';
+        const singleIdsInOrder = [
+            SINGLE.OLD_LOVE_STORY,
+            SINGLE.OPA_PA_PA_PARTY,
+            SINGLE.GLITTAA,
+            SINGLE.SPLENDA_LOVE_RABBIT_HELL,
+            SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
+            SINGLE.BELIEVE_THE_TRUTH_FAIRY,
+            SINGLE.FULL_MINDNESS,
+        ];
+
+        for (const id of singleIdsInOrder) {
+            const s = singlesById[id];
+            if (!s) continue;
+            const group = groupsByKey[s.groupKey];
+            if (!group) continue;
+            group.songIds.push(s.id);
+            group.singlesById[s.id] = s;
+        }
+
+        window.musicDataGrouped = {
+            platformOrder,
+            groups,
+            singlesById
+        };
+    })();
+
+    // PL3 Controller Class - caches all DOM elements once
+    class PL3Controller {
+        constructor(sectionId) {
+            this.section = document.getElementById(sectionId);
+            if (!this.section) return;
+
+            // Cache ALL elements once - no repeated querySelector calls
+            this.el = {
+                btnRow: this.section.querySelector('.PL3-btnRow'),
+                heroBtns: Array.from(this.section.querySelectorAll('.PL3-heroBtn')),
+                previewBtn: this.section.querySelector('[data-pl3-preview]'),
+                streamingBtns: Array.from(document.querySelectorAll('[data-pl3-streaming-popup]')),
+                modal: document.getElementById('PL3-group-modal'),
+                heroCrop: document.getElementById('PL3-group-hero-crop'),
+                heroImg: document.getElementById('PL3-group-hero-img'),
+                titleEl: document.getElementById('PL3-group-title'),
+                mixesEl: document.getElementById('PL3-mixes'),
+                emptyEl: document.getElementById('PL3-mixes-empty'),
+                shareModal: document.getElementById('PL3-share-modal'),
+                shareInput: document.getElementById('PL3-share-url'),
+                previewModal: document.getElementById('PL3-preview-modal'),
+                previewIframe: document.getElementById('PL3-preview-iframe'),
+                streamingModal: document.getElementById('PL3-streaming-modal')
             };
 
-            document.addEventListener('click', (e) => {
-                const el = e.target.closest(
-                    '[data-track],a,button,[role="button"],[data-pl3-action],[data-pl3-group],[data-pl3-preview],[data-pl3-share-group],[data-pl3-share-copy],[data-pl3-preview-sound],[data-pl3-platform]'
-                );
-                if (!el) return;
-                if (typeof window.gtag !== 'function') return;
+            // Cache nested elements
+            this.el.modalPanel = this.el.modal?.querySelector('.PL3-modalPanel');
+            this.el.coverOverlay = this.el.heroCrop?.querySelector('.PL3-coverOverlay');
+            this.el.titleLine1 = this.el.titleEl?.querySelector('[data-pl3-title-line="1"]');
+            this.el.titleLine2 = this.el.titleEl?.querySelector('[data-pl3-title-line="2"]');
+            this.el.previewSoundBtn = this.el.previewModal?.querySelector('[data-pl3-preview-sound]');
 
-                window.gtag('event', 'ui_click', {
-                    label: labelOf(el),
-                    href: el.getAttribute('href') || '',
-                    page_path: location.pathname
-                });
-            }, { capture: true, passive: true });
-        })();
-    </script>
+            // Cache mix rows with all their child elements
+            this.el.mixRows = this.el.mixesEl ? Array.from(this.el.mixesEl.querySelectorAll('[data-pl3-mix-row]')).map(row => ({
+                row,
+                art: row.querySelector('[data-pl3-mix-art]'),
+                name: row.querySelector('[data-pl3-mix-name]'),
+                links: Array.from(row.querySelectorAll('[data-pl3-platform]'))
+            })) : [];
 
-    <script>
-        // Music data (inline)
-        (function () {
-            if (window.musicDataGrouped) return;
-
-            const GROUP = Object.freeze({
-                FULL_MINDNESS: 'full-mindness',
-                OLD_LOVE_STORY: 'old-love-story',
-                OPA_PA_PA_PARTY: 'opa-pa-pa-party',
-                GLITTAA_PHOENIX: 'glittaa-phoenix',
-                SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
-                BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy'
-            });
-
-            const SINGLE = Object.freeze({
-                OLD_LOVE_STORY: 'old-love-story',
-                OPA_PA_PA_PARTY: 'opa-pa-pa-party',
-                GLITTAA: 'glittaa',
-                SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
-                GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
-                BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
-                FULL_MINDNESS: 'full-mindness'
-            });
-
-            const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
-
-            const groups = [
-                {
-                    id: 1,
-                    key: GROUP.OLD_LOVE_STORY,
-                    title: 'Old Love Story',
-                    titleLines: ['OLD LOVE', 'STORY'],
-                    cover: 'img/music/main_oldlovestory.png',
-                    songIds: [],
-                    singlesById: {}
-                },
-                {
-                    id: 2,
-                    key: GROUP.OPA_PA_PA_PARTY,
-                    title: 'Opa pa pa party',
-                    titleLines: ['OPA PA', 'PA PARTY!'],
-                    cover: 'img/music/main_oparty.png',
-                    songIds: [],
-                    singlesById: {}
-                },
-                {
-                    id: 3,
-                    key: GROUP.GLITTAA_PHOENIX,
-                    title: 'Glittaa Phoenix',
-                    titleLines: ['GLITTAA', 'PHOENIX!'],
-                    cover: 'img/music/main_glitta.png',
-                    songIds: [],
-                    singlesById: {}
-                },
-                {
-                    id: 4,
-                    key: GROUP.SPLENDA_LOVE_RABBIT_HELL,
-                    title: 'Splenda Love Rabbit Hell',
-                    titleLines: ['SPLENDA LOVE', 'RABBIT HELL'],
-                    cover: 'img/music/main_splenda_rabbit.png',
-                    songIds: [],
-                    singlesById: {}
-                },
-                {
-                    id: 5,
-                    key: GROUP.BELIEVE_THE_TRUTH_FAIRY,
-                    title: 'Believe the Truth fairy',
-                    titleLines: ['BELIEVE the', 'TRUTH FAIRY'],
-                    cover: 'img/music/main_truthfairy.png',
-                    songIds: [],
-                    singlesById: {}
-                },
-                {
-                    id: 6,
-                    key: GROUP.FULL_MINDNESS,
-                    title: 'Full-Mindness',
-                    titleLines: ['FULL-', 'MINDNESS'],
-                    cover: 'img/music/main_fullmindness.png',
-                    songIds: [],
-                    singlesById: {},
-
-                }
-            ];
-
-            const groupsByKey = {};
-            for (const g of groups) {
-                groupsByKey[g.key] = g;
-            }
-
-            const singlesById = {
-                [SINGLE.OLD_LOVE_STORY]: {
-                    id: SINGLE.OLD_LOVE_STORY,
-                    groupKey: GROUP.OLD_LOVE_STORY,
-                    title: 'Old Love Story',
-                    version: 'Desert Disco Duet',
-                    image: 'img/music/oldlovestory_opa-max-mix.png',
-                    links: {
-                        'YouTube Music': 'https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE',
-                        'Amazon Music': 'https://music.amazon.com/albums/B0FXB4X48G',
-                        'Spotify': 'https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII',
-                        'Apple Music': 'https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028',
-                        'Other': 'https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq'
-                    }
-                },
-                [SINGLE.OPA_PA_PA_PARTY]: {
-                    id: SINGLE.OPA_PA_PA_PARTY,
-                    groupKey: GROUP.OPA_PA_PA_PARTY,
-                    title: 'Opa pa pa party',
-                    image: 'img/music/main_oparty.png',
-                    links: {
-                        'YouTube Music': 'https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw',
-                        'Amazon Music': 'https://music.amazon.com/albums/B0FYVMVZS4',
-                        'Spotify': 'https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf',
-                        'Apple Music': 'https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737',
-                        'Other': 'https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8'
-                    }
-                },
-                [SINGLE.GLITTAA]: {
-                    id: SINGLE.GLITTAA,
-                    groupKey: GROUP.GLITTAA_PHOENIX,
-                    title: 'Glittaa Phoenix',
-                    image: 'img/music/3_glitta.png',
-                    links: {
-                        'YouTube Music': 'https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17',
-                        'Amazon Music': 'https://music.amazon.com/albums/B0G1N1Y83C',
-                        'Spotify': 'https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6',
-                        'Apple Music': 'https://music.apple.com/us/album/glittaa-phoenix-single/1853214791',
-                        'Other': 'https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX'
-                    }
-                },
-                [SINGLE.SPLENDA_LOVE_RABBIT_HELL]: {
-                    id: SINGLE.SPLENDA_LOVE_RABBIT_HELL,
-                    groupKey: GROUP.SPLENDA_LOVE_RABBIT_HELL,
-                    title: 'Splenda Love Rabbit Hell',
-                    version: 'Opa Max Mix',
-                    image: 'img/music/main_splenda_rabbit.png',
-                    links: {
-                        'YouTube Music': 'https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE',
-                        'Amazon Music': 'https://music.amazon.com/albums/B0GJQZXHNL',
-                        'Other': 'https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F'
-                    }
-                },
-                [SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX]: {
-                    id: SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
-                    groupKey: GROUP.GLITTAA_PHOENIX,
-                    title: 'GLITTAA Phoenix',
-                    version: 'Opa Sunrize Max Mix',
-                    image: 'img/music/glittaa_max-mix.png',
-                    links: {
-                        'YouTube Music': 'https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP',
-                        'Other': 'https://www.youtube.com/watch?v=LOywm64SGCY',
-                        'Spotify': 'https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP',
-                        'Apple Music': 'https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659',
-                        'Amazon Music': 'https://music.amazon.com/tracks/B0GGHZ6L2F'
-                    }
-                },
-                [SINGLE.BELIEVE_THE_TRUTH_FAIRY]: {
-                    id: SINGLE.BELIEVE_THE_TRUTH_FAIRY,
-                    groupKey: GROUP.BELIEVE_THE_TRUTH_FAIRY,
-                    title: 'Believe the Truth Fairy',
-                    image: 'img/music/main_truthfairy.png',
-                    links: {
-                        'Apple Music': 'https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683',
-                        'YouTube Music': 'https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj',
-                        'Spotify': 'https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg',
-                        'Amazon Music': 'https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P',
-                        'Other': 'https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC'
-                    }
-                },
-                [SINGLE.FULL_MINDNESS]: {
-                    id: SINGLE.FULL_MINDNESS,
-                    groupKey: GROUP.FULL_MINDNESS,
-                    title: 'Full-Mindness',
-                    version: 'Opa Mayhem Mix',
-                    image: 'img/music/main_fullmindness.png',
-                    links: {}
-                }
+            this.state = {
+                expandedBtn: null,
+                scrollLocked: false,
+                prevHtmlOverflow: '',
+                prevBodyOverflow: '',
+                openGroupKey: null,
+                shareUrl: '',
+                previewVideoId: '',
+                previewMuted: false
             };
+            this.init();
+        }
 
-            const singleIdsInOrder = [
-                SINGLE.OLD_LOVE_STORY,
-                SINGLE.OPA_PA_PA_PARTY,
-                SINGLE.GLITTAA,
-                SINGLE.SPLENDA_LOVE_RABBIT_HELL,
-                SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
-                SINGLE.BELIEVE_THE_TRUTH_FAIRY,
-                SINGLE.FULL_MINDNESS,
-            ];
+        init() {
+            if (!this.section) return;
+            this.attachButtonEvents();
+            this.attachGalleryEvents();
+            this.attachModalEvents();
+            this.attachShareEvents();
+            this.attachPreviewEvents();
+            this.attachStreamingPopupEvents();
+            this.openFromUrlIfPresent();
+        }
 
-            for (const id of singleIdsInOrder) {
-                const s = singlesById[id];
-                if (!s) continue;
-                const group = groupsByKey[s.groupKey];
-                if (!group) continue;
-                group.songIds.push(s.id);
-                group.singlesById[s.id] = s;
-            }
-
-            window.musicDataGrouped = {
-                platformOrder,
-                groups,
-                singlesById
-            };
-        })();
-
-        // PL3 Controller Class - caches all DOM elements once
-        class PL3Controller {
-            constructor(sectionId) {
-                this.section = document.getElementById(sectionId);
-                if (!this.section) return;
-
-                // Cache ALL elements once - no repeated querySelector calls
-                this.el = {
-                    btnRow: this.section.querySelector('.PL3-btnRow'),
-                    heroBtns: Array.from(this.section.querySelectorAll('.PL3-heroBtn')),
-                    previewBtn: this.section.querySelector('[data-pl3-preview]'),
-                    streamingBtns: Array.from(document.querySelectorAll('[data-pl3-streaming-popup]')),
-                    modal: document.getElementById('PL3-group-modal'),
-                    heroCrop: document.getElementById('PL3-group-hero-crop'),
-                    heroImg: document.getElementById('PL3-group-hero-img'),
-                    titleEl: document.getElementById('PL3-group-title'),
-                    mixesEl: document.getElementById('PL3-mixes'),
-                    emptyEl: document.getElementById('PL3-mixes-empty'),
-                    shareModal: document.getElementById('PL3-share-modal'),
-                    shareInput: document.getElementById('PL3-share-url'),
-                    previewModal: document.getElementById('PL3-preview-modal'),
-                    previewIframe: document.getElementById('PL3-preview-iframe'),
-                    streamingModal: document.getElementById('PL3-streaming-modal')
-                };
-
-                // Cache nested elements
-                this.el.modalPanel = this.el.modal?.querySelector('.PL3-modalPanel');
-                this.el.coverOverlay = this.el.heroCrop?.querySelector('.PL3-coverOverlay');
-                this.el.titleLine1 = this.el.titleEl?.querySelector('[data-pl3-title-line="1"]');
-                this.el.titleLine2 = this.el.titleEl?.querySelector('[data-pl3-title-line="2"]');
-                this.el.previewSoundBtn = this.el.previewModal?.querySelector('[data-pl3-preview-sound]');
-
-                // Cache mix rows with all their child elements
-                this.el.mixRows = this.el.mixesEl ? Array.from(this.el.mixesEl.querySelectorAll('[data-pl3-mix-row]')).map(row => ({
-                    row,
-                    art: row.querySelector('[data-pl3-mix-art]'),
-                    name: row.querySelector('[data-pl3-mix-name]'),
-                    links: Array.from(row.querySelectorAll('[data-pl3-platform]'))
-                })) : [];
-
-                this.state = {
-                    expandedBtn: null,
-                    scrollLocked: false,
-                    prevHtmlOverflow: '',
-                    prevBodyOverflow: '',
-                    openGroupKey: null,
-                    shareUrl: '',
-                    previewVideoId: '',
-                    previewMuted: false
-                };
-                this.init();
-            }
-
-            init() {
-                if (!this.section) return;
-                this.attachButtonEvents();
-                this.attachGalleryEvents();
-                this.attachModalEvents();
-                this.attachShareEvents();
-                this.attachPreviewEvents();
-                this.attachStreamingPopupEvents();
-                this.openFromUrlIfPresent();
-            }
-
-            // === Streaming Services Popup ===
-            attachStreamingPopupEvents() {
-                if (this.el.streamingBtns && this.el.streamingBtns.length > 0) {
-                    this.el.streamingBtns.forEach(btn => {
-                        btn.addEventListener('click', (ev) => {
-                            ev.preventDefault();
-                            this.openStreamingPopup();
-                        }, { passive: false });
-                    });
-                }
-
-                const m = this.el.streamingModal;
-                if (m) {
-                    m.addEventListener('click', (ev) => {
-                        if (!ev.target.closest('[data-pl3-streaming-close]') || !m.contains(ev.target)) return;
+        // === Streaming Services Popup ===
+        attachStreamingPopupEvents() {
+            if (this.el.streamingBtns && this.el.streamingBtns.length > 0) {
+                this.el.streamingBtns.forEach(btn => {
+                    btn.addEventListener('click', (ev) => {
                         ev.preventDefault();
-                        this.closeStreamingPopup();
+                        this.openStreamingPopup();
                     }, { passive: false });
-                }
+                });
+            }
 
-                window.addEventListener('keydown', (ev) => {
-                    if (!this.el.streamingModal || this.el.streamingModal.hidden || ev.key !== 'Escape') return;
+            const m = this.el.streamingModal;
+            if (m) {
+                m.addEventListener('click', (ev) => {
+                    if (!ev.target.closest('[data-pl3-streaming-close]') || !m.contains(ev.target)) return;
+                    ev.preventDefault();
                     this.closeStreamingPopup();
-                }, { passive: true });
+                }, { passive: false });
             }
 
-            openStreamingPopup() {
-                const m = this.el.streamingModal;
-                if (!m) return;
-                m.hidden = false;
-                m.removeAttribute('aria-hidden');
-                this.lockScroll();
+            window.addEventListener('keydown', (ev) => {
+                if (!this.el.streamingModal || this.el.streamingModal.hidden || ev.key !== 'Escape') return;
+                this.closeStreamingPopup();
+            }, { passive: true });
+        }
+
+        openStreamingPopup() {
+            const m = this.el.streamingModal;
+            if (!m) return;
+            m.hidden = false;
+            m.removeAttribute('aria-hidden');
+            this.lockScroll();
+        }
+
+        closeStreamingPopup() {
+            const m = this.el.streamingModal;
+            if (!m) return;
+            m.hidden = true;
+            m.setAttribute('aria-hidden', 'true');
+            this.unlockScroll();
+        }
+
+        // === Preview (embedded YouTube) ===
+        attachPreviewEvents() {
+            if (this.el.previewBtn) {
+                this.el.previewBtn.addEventListener('click', (ev) => {
+                    ev.preventDefault();
+                    this.openPreviewModal('https://www.youtube.com/embed/videoseries?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF');
+                }, { passive: false });
             }
 
-            closeStreamingPopup() {
-                const m = this.el.streamingModal;
-                if (!m) return;
+            const m = this.el.previewModal;
+            if (m) {
+                m.addEventListener('click', (ev) => {
+                    if (ev.target.closest('[data-pl3-preview-sound]')) {
+                        ev.preventDefault();
+                        this.state.previewMuted = !this.state.previewMuted;
+                        this.applyPreviewIframeSrc();
+                        this.syncPreviewSoundUi();
+                        return;
+                    }
+                    if (!ev.target.closest('[data-pl3-preview-close]') || !m.contains(ev.target)) return;
+                    ev.preventDefault();
+                    this.closePreviewModal();
+                }, { passive: false });
+            }
+
+            window.addEventListener('keydown', (ev) => {
+                if (!this.el.previewModal || this.el.previewModal.hidden || ev.key !== 'Escape') return;
+                this.closePreviewModal();
+            }, { passive: true });
+        }
+
+        openPreviewModal(videoId) {
+            const m = this.el.previewModal;
+            if (!m) return;
+            const id = String(videoId || '').trim();
+            if (!id) return;
+
+            this.state.previewVideoId = id;
+            // Try sound-on by default (user clicked Preview). Some browsers may still require a tap.
+            this.state.previewMuted = false;
+            this.applyPreviewIframeSrc();
+            this.syncPreviewSoundUi();
+
+            m.hidden = false;
+            m.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    m.classList.add('PL3-preview--open');
+                });
+            });
+        }
+
+        applyPreviewIframeSrc() {
+            const id = String(this.state.previewVideoId || '').trim();
+            if (!id || !this.el.previewIframe) return;
+
+            // Check if it's already an embed URL or a playlist URL or video ID
+            let src;
+            if (id.includes('youtube.com/embed/videoseries')) {
+                // It's already an embed URL - use as-is
+                src = id;
+            } else if (id.includes('playlist?list=') || id.includes('list=')) {
+                // It's a playlist URL, convert to embed format
+                const url = new URL(id);
+                const playlistId = url.searchParams.get('list');
+                src = `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&modestbranding=1&controls=1`;
+            } else {
+                // It's a video ID
+                const mute = this.state.previewMuted ? 1 : 0;
+                src = `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
+            }
+            this.el.previewIframe.src = src;
+        }
+
+        syncPreviewSoundUi() {
+            const btn = this.el.previewSoundBtn;
+            if (!btn) return;
+            const isMuted = !!this.state.previewMuted;
+            btn.setAttribute('aria-pressed', isMuted ? 'true' : 'false');
+            btn.setAttribute('aria-label', isMuted ? 'Unmute preview' : 'Mute preview');
+            const icon = btn.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-volume-xmark', isMuted);
+                icon.classList.toggle('fa-volume-high', !isMuted);
+            }
+        }
+
+        closePreviewModal() {
+            const m = this.el.previewModal;
+            if (!m || m.hidden) return;
+            m.classList.remove('PL3-preview--open');
+            setTimeout(() => {
                 m.hidden = true;
                 m.setAttribute('aria-hidden', 'true');
-                this.unlockScroll();
-            }
+                if (this.el.previewIframe) this.el.previewIframe.src = '';
+                this.state.previewVideoId = '';
+            }, 240);
+        }
 
-            // === Preview (embedded YouTube) ===
-            attachPreviewEvents() {
-                if (this.el.previewBtn) {
-                    this.el.previewBtn.addEventListener('click', (ev) => {
-                        ev.preventDefault();
-                        this.openPreviewModal('https://www.youtube.com/embed/videoseries?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF');
-                    }, { passive: false });
-                }
-
-                const m = this.el.previewModal;
-                if (m) {
-                    m.addEventListener('click', (ev) => {
-                        if (ev.target.closest('[data-pl3-preview-sound]')) {
-                            ev.preventDefault();
-                            this.state.previewMuted = !this.state.previewMuted;
-                            this.applyPreviewIframeSrc();
-                            this.syncPreviewSoundUi();
-                            return;
-                        }
-                        if (!ev.target.closest('[data-pl3-preview-close]') || !m.contains(ev.target)) return;
-                        ev.preventDefault();
-                        this.closePreviewModal();
-                    }, { passive: false });
-                }
-
-                window.addEventListener('keydown', (ev) => {
-                    if (!this.el.previewModal || this.el.previewModal.hidden || ev.key !== 'Escape') return;
-                    this.closePreviewModal();
-                }, { passive: true });
-            }
-
-            openPreviewModal(videoId) {
-                const m = this.el.previewModal;
-                if (!m) return;
-                const id = String(videoId || '').trim();
-                if (!id) return;
-
-                this.state.previewVideoId = id;
-                // Try sound-on by default (user clicked Preview). Some browsers may still require a tap.
-                this.state.previewMuted = false;
-                this.applyPreviewIframeSrc();
-                this.syncPreviewSoundUi();
-
-                m.hidden = false;
-                m.setAttribute('aria-hidden', 'false');
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        m.classList.add('PL3-preview--open');
-                    });
-                });
-            }
-
-            applyPreviewIframeSrc() {
-                const id = String(this.state.previewVideoId || '').trim();
-                if (!id || !this.el.previewIframe) return;
-
-                // Check if it's already an embed URL or a playlist URL or video ID
-                let src;
-                if (id.includes('youtube.com/embed/videoseries')) {
-                    // It's already an embed URL - use as-is
-                    src = id;
-                } else if (id.includes('playlist?list=') || id.includes('list=')) {
-                    // It's a playlist URL, convert to embed format
-                    const url = new URL(id);
-                    const playlistId = url.searchParams.get('list');
-                    src = `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&modestbranding=1&controls=1`;
-                } else {
-                    // It's a video ID
-                    const mute = this.state.previewMuted ? 1 : 0;
-                    src = `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
-                }
-                this.el.previewIframe.src = src;
-            }
-
-            syncPreviewSoundUi() {
-                const btn = this.el.previewSoundBtn;
-                if (!btn) return;
-                const isMuted = !!this.state.previewMuted;
-                btn.setAttribute('aria-pressed', isMuted ? 'true' : 'false');
-                btn.setAttribute('aria-label', isMuted ? 'Unmute preview' : 'Mute preview');
-                const icon = btn.querySelector('i');
-                if (icon) {
-                    icon.classList.toggle('fa-volume-xmark', isMuted);
-                    icon.classList.toggle('fa-volume-high', !isMuted);
-                }
-            }
-
-            closePreviewModal() {
-                const m = this.el.previewModal;
-                if (!m || m.hidden) return;
-                m.classList.remove('PL3-preview--open');
-                setTimeout(() => {
-                    m.hidden = true;
-                    m.setAttribute('aria-hidden', 'true');
-                    if (this.el.previewIframe) this.el.previewIframe.src = '';
-                    this.state.previewVideoId = '';
-                }, 240);
-            }
-
-            // === URL deep link ===
-            getGroupKeyFromUrl() {
-                try {
-                    const u = new URL(window.location.href);
-                    const key = (u.searchParams.get('pl3') || '').trim();
-                    if (!key) return null;
-                    const g = this.getGroup(key);
-                    if (!g || g.isComingSoon) return null;
-                    return String(g.key);
-                } catch {
-                    return null;
-                }
-            }
-
-            setGroupKeyInUrl(groupKeyOrNull) {
-                try {
-                    const u = new URL(window.location.href);
-                    if (groupKeyOrNull) u.searchParams.set('pl3', String(groupKeyOrNull));
-                    else u.searchParams.delete('pl3');
-                    // Keep it simple: replaceState so it doesn't spam history
-                    window.history.replaceState({}, '', u.toString());
-                } catch {
-                    // ignore
-                }
-            }
-
-            buildGroupUrl(groupKey) {
-                // Share URL that has stable OG tags (static share pages live under /s/<groupKey>/).
-                // The share page will redirect humans back to /?pl3=<groupKey> to open the modal.
-                const safeKey = encodeURIComponent(String(groupKey || ""));
-                try {
-                    return `${window.location.origin}/s/${safeKey}`;
-                } catch (e) {
-                    return `/s/${safeKey}`;
-                }
-            }
-
-            openFromUrlIfPresent() {
-                const key = this.getGroupKeyFromUrl();
-                if (!key) return;
-                // Open without a source button (same modal)
-                this.openModal(key, null);
-            }
-
-            // === Button Expansion ===
-            attachButtonEvents() {
-                if (!this.el.btnRow) return;
-                this.el.btnRow.addEventListener('click', (ev) => {
-                    const btn = ev.target.closest('.PL3-heroBtn');
-                    if (!btn) return;
-                    const action = btn.getAttribute('data-pl3-action');
-                    const isCloseBtn = ev.target.closest('[data-pl3-close-btn]');
-
-                    if (action === 'shop' && !isCloseBtn) {
-                        window.location.href = 'https://shop.opahifi.com';
-                        return;
-                    }
-                    if (isCloseBtn) return this.collapseAllButtons();
-                    if (action === 'listen' || action === 'follow') {
-                        this.state.expandedBtn === btn ? this.collapseAllButtons() : this.expandButton(btn);
-                    }
-                }, { passive: true });
-            }
-
-            expandButton(btn) {
-                this.collapseAllButtons();
-                btn.classList.add('PL3-heroBtn--expanded');
-                const icons = btn.querySelector('.PL3-heroBtn-icons');
-                if (icons) icons.hidden = false;
-                this.el.heroBtns.forEach(b => b !== btn && b.classList.add('PL3-heroBtn--collapsed'));
-                this.state.expandedBtn = btn;
-            }
-
-            collapseAllButtons() {
-                this.el.heroBtns.forEach(b => {
-                    b.classList.remove('PL3-heroBtn--expanded', 'PL3-heroBtn--collapsed');
-                    const icons = b.querySelector('.PL3-heroBtn-icons');
-                    if (icons) icons.hidden = true;
-                });
-                this.state.expandedBtn = null;
-            }
-
-            // === Gallery ===
-            attachGalleryEvents() {
-                this.section.addEventListener('click', (ev) => {
-                    const btn = ev.target.closest('[data-pl3-group]');
-                    if (!btn || !this.section.contains(btn)) return;
-                    const key = String(btn.getAttribute('data-pl3-group') || '').trim();
-                    if (!key) return;
-                    ev.preventDefault();
-                    this.openModal(key, btn);
-                }, { passive: false });
-            }
-
-            // === Modal ===
-            attachModalEvents() {
-                if (!this.el.modal) return;
-                this.el.modal.addEventListener('click', (ev) => {
-                    if (!ev.target.closest('[data-pl3-close-group]') || !this.el.modal.contains(ev.target)) return;
-                    ev.preventDefault();
-                    this.closeModal();
-                }, { passive: false });
-                window.addEventListener('keydown', (ev) => {
-                    if (!this.el.modal || this.el.modal.hidden || ev.key !== 'Escape') return;
-                    this.closeModal();
-                }, { passive: true });
-            }
-
-            // === Share ===
-            attachShareEvents() {
-                if (this.el.modal) {
-                    this.el.modal.addEventListener('click', (ev) => {
-                        const btn = ev.target.closest('[data-pl3-share-group]');
-                        if (!btn || !this.el.modal.contains(btn)) return;
-                        ev.preventDefault();
-                        this.shareCurrentGroup();
-                    }, { passive: false });
-                }
-
-                if (this.el.shareModal) {
-                    this.el.shareModal.addEventListener('click', (ev) => {
-                        if (ev.target.closest('[data-pl3-share-close]')) {
-                            ev.preventDefault();
-                            this.closeShareSheet();
-                            return;
-                        }
-                        if (ev.target.closest('[data-pl3-share-copy]')) {
-                            ev.preventDefault();
-                            this.copyShareUrl();
-                            return;
-                        }
-                    }, { passive: false });
-                }
-            }
-
-            openShareSheet(url) {
-                const m = this.el.shareModal;
-                if (!m) return;
-                this.state.shareUrl = url || '';
-                if (this.el.shareInput) this.el.shareInput.value = this.state.shareUrl;
-                m.hidden = false;
-                m.setAttribute('aria-hidden', 'false');
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        m.classList.add('PL3-share--open');
-                    });
-                });
-            }
-
-            closeShareSheet() {
-                const m = this.el.shareModal;
-                if (!m || m.hidden) return;
-                m.classList.remove('PL3-share--open');
-                setTimeout(() => {
-                    m.hidden = true;
-                    m.setAttribute('aria-hidden', 'true');
-                }, 240);
-            }
-
-            async copyShareUrl() {
-                const url = this.state.shareUrl || (this.el.shareInput ? this.el.shareInput.value : '') || '';
-                if (!url) return;
-                try {
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        await navigator.clipboard.writeText(url);
-                        return;
-                    }
-                } catch {
-                    // fall back below
-                }
-
-                const ta = document.createElement('textarea');
-                ta.value = url;
-                ta.setAttribute('readonly', '');
-                ta.style.position = 'fixed';
-                ta.style.left = '-9999px';
-                ta.style.top = '0';
-                document.body.appendChild(ta);
-                ta.select();
-                try { document.execCommand('copy'); } catch { /* ignore */ }
-                ta.remove();
-            }
-
-            async shareCurrentGroup() {
-                const key = this.state.openGroupKey;
-                if (!key) return;
+        // === URL deep link ===
+        getGroupKeyFromUrl() {
+            try {
+                const u = new URL(window.location.href);
+                const key = (u.searchParams.get('pl3') || '').trim();
+                if (!key) return null;
                 const g = this.getGroup(key);
-                if (!g) return;
-                const url = this.buildGroupUrl(key);
+                if (!g || g.isComingSoon) return null;
+                return String(g.key);
+            } catch {
+                return null;
+            }
+        }
 
-                // Prefer native share when available
-                try {
-                    if (navigator.share) {
-                        await navigator.share({
-                            title: g.title || 'OpaHiFi',
-                            text: g.title || 'OpaHiFi group',
-                            url
-                        });
+        setGroupKeyInUrl(groupKeyOrNull) {
+            try {
+                const u = new URL(window.location.href);
+                if (groupKeyOrNull) u.searchParams.set('pl3', String(groupKeyOrNull));
+                else u.searchParams.delete('pl3');
+                // Keep it simple: replaceState so it doesn't spam history
+                window.history.replaceState({}, '', u.toString());
+            } catch {
+                // ignore
+            }
+        }
+
+        buildGroupUrl(groupKey) {
+            // Share URL that has stable OG tags (static share pages live under /s/<groupKey>/).
+            // The share page will redirect humans back to /?pl3=<groupKey> to open the modal.
+            const safeKey = encodeURIComponent(String(groupKey || ""));
+            try {
+                return `${window.location.origin}/s/${safeKey}`;
+            } catch (e) {
+                return `/s/${safeKey}`;
+            }
+        }
+
+        openFromUrlIfPresent() {
+            const key = this.getGroupKeyFromUrl();
+            if (!key) return;
+            // Open without a source button (same modal)
+            this.openModal(key, null);
+        }
+
+        // === Button Expansion ===
+        attachButtonEvents() {
+            if (!this.el.btnRow) return;
+            this.el.btnRow.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('.PL3-heroBtn');
+                if (!btn) return;
+                const action = btn.getAttribute('data-pl3-action');
+                const isCloseBtn = ev.target.closest('[data-pl3-close-btn]');
+
+                if (action === 'shop' && !isCloseBtn) {
+                    window.location.href = 'https://shop.opahifi.com';
+                    return;
+                }
+                if (isCloseBtn) return this.collapseAllButtons();
+                if (action === 'listen' || action === 'follow') {
+                    this.state.expandedBtn === btn ? this.collapseAllButtons() : this.expandButton(btn);
+                }
+            }, { passive: true });
+        }
+
+        expandButton(btn) {
+            this.collapseAllButtons();
+            btn.classList.add('PL3-heroBtn--expanded');
+            const icons = btn.querySelector('.PL3-heroBtn-icons');
+            if (icons) icons.hidden = false;
+            this.el.heroBtns.forEach(b => b !== btn && b.classList.add('PL3-heroBtn--collapsed'));
+            this.state.expandedBtn = btn;
+        }
+
+        collapseAllButtons() {
+            this.el.heroBtns.forEach(b => {
+                b.classList.remove('PL3-heroBtn--expanded', 'PL3-heroBtn--collapsed');
+                const icons = b.querySelector('.PL3-heroBtn-icons');
+                if (icons) icons.hidden = true;
+            });
+            this.state.expandedBtn = null;
+        }
+
+        // === Gallery ===
+        attachGalleryEvents() {
+            this.section.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('[data-pl3-group]');
+                if (!btn || !this.section.contains(btn)) return;
+                const key = String(btn.getAttribute('data-pl3-group') || '').trim();
+                if (!key) return;
+                ev.preventDefault();
+                this.openModal(key, btn);
+            }, { passive: false });
+        }
+
+        // === Modal ===
+        attachModalEvents() {
+            if (!this.el.modal) return;
+            this.el.modal.addEventListener('click', (ev) => {
+                if (!ev.target.closest('[data-pl3-close-group]') || !this.el.modal.contains(ev.target)) return;
+                ev.preventDefault();
+                this.closeModal();
+            }, { passive: false });
+            window.addEventListener('keydown', (ev) => {
+                if (!this.el.modal || this.el.modal.hidden || ev.key !== 'Escape') return;
+                this.closeModal();
+            }, { passive: true });
+        }
+
+        // === Share ===
+        attachShareEvents() {
+            if (this.el.modal) {
+                this.el.modal.addEventListener('click', (ev) => {
+                    const btn = ev.target.closest('[data-pl3-share-group]');
+                    if (!btn || !this.el.modal.contains(btn)) return;
+                    ev.preventDefault();
+                    this.shareCurrentGroup();
+                }, { passive: false });
+            }
+
+            if (this.el.shareModal) {
+                this.el.shareModal.addEventListener('click', (ev) => {
+                    if (ev.target.closest('[data-pl3-share-close]')) {
+                        ev.preventDefault();
+                        this.closeShareSheet();
                         return;
                     }
-                } catch {
-                    // user cancelled or unsupported; fall back
-                }
-
-                this.openShareSheet(url);
-            }
-
-            openModal(groupKey, sourceBtn) {
-                const { modal, heroCrop, heroImg, coverOverlay } = this.el;
-                if (!modal || !heroCrop || !heroImg) return;
-                const group = this.getGroup(groupKey);
-                if (!group || group.isComingSoon) return;
-
-                // Prepare content
-                this.setTitle(group.titleLines || [group.title]);
-                this.renderMixes(group);
-
-                // Simple modal open: show + slide in via CSS
-                modal.classList.remove('PL3-modal--opening');
-                modal.hidden = false;
-                modal.setAttribute('aria-hidden', 'false');
-                this.lockScroll();
-                this.updateHeroImage(group);
-
-                this.state.openGroupKey = String(group.key);
-                this.setGroupKeyInUrl(this.state.openGroupKey);
-
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        modal.classList.add('PL3-modal--opening');
-                    });
-                });
-            }
-
-            closeModal() {
-                const { modal, heroCrop, heroImg, coverOverlay } = this.el;
-                if (!modal || modal.hidden) return;
-
-                // Simple modal close: slide out via CSS then hide
-                modal.classList.remove('PL3-modal--opening');
-                setTimeout(() => {
-                    modal.hidden = true;
-                    modal.setAttribute('aria-hidden', 'true');
-                    this.unlockScroll();
-
-                    this.state.openGroupKey = null;
-                    this.setGroupKeyInUrl(null);
-
-                    // Clean up
-                    if (heroCrop) {
-                        heroCrop.replaceChildren();
-                        if (heroImg) {
-                            heroImg.hidden = true;
-                            heroImg.src = '';
-                            heroImg.alt = '';
-                            heroCrop.appendChild(heroImg);
-                        }
-                        heroCrop.style.removeProperty('--pl3-hero-bg');
-                        if (coverOverlay) heroCrop.appendChild(coverOverlay);
+                    if (ev.target.closest('[data-pl3-share-copy]')) {
+                        ev.preventDefault();
+                        this.copyShareUrl();
+                        return;
                     }
-                }, 300);
+                }, { passive: false });
             }
+        }
 
-            updateHeroImage(group) {
-                const { heroCrop, heroImg, coverOverlay } = this.el;
-                heroCrop.replaceChildren();
-                if (heroImg) heroCrop.appendChild(heroImg);
-                if (coverOverlay) heroCrop.appendChild(coverOverlay);
-                const cover = group.cover || '';
-                if (heroImg) {
-                    heroImg.hidden = !cover;
-                    heroImg.src = cover;
-                    heroImg.alt = cover ? `${group.title || 'Group'} cover` : '';
-                }
-
-                if (heroCrop) {
-                    heroCrop.style.setProperty('--pl3-hero-bg', cover ? `url("${cover}")` : 'none');
-                }
-            }
-
-            setTitle(lines) {
-                const { titleLine1, titleLine2 } = this.el;
-                if (!titleLine1) return;
-                const arr = Array.isArray(lines) ? lines.filter(Boolean).map(String) : [];
-                titleLine1.textContent = arr[0] || '';
-                if (titleLine2) {
-                    titleLine2.textContent = arr[1] || '';
-                    titleLine2.hidden = !arr[1];
-                }
-            }
-
-            renderMixes(group) {
-                this.el.mixRows.forEach(r => this.clearMixRow(r));
-                if (!group) return this.showEmpty('Missing group.');
-                const ids = Array.isArray(group.songIds) ? group.songIds : [];
-                if (!ids.length) return this.showEmpty('Mixes list coming soon.');
-
-                this.hideEmpty();
-                const platforms = this.getPlatformOrder();
-                const max = Math.min(this.el.mixRows.length, ids.length);
-                for (let i = 0; i < max; i++) {
-                    const single = group.singlesById?.[ids[i]];
-                    single ? this.populateMixRow(this.el.mixRows[i], single, group, platforms) : this.clearMixRow(this.el.mixRows[i]);
-                }
-            }
-
-            clearMixRow({ row, art, name, links }) {
-                row.hidden = true;
-                if (art) { art.hidden = true; art.src = ''; art.alt = ''; }
-                if (name) name.textContent = '';
-                links.forEach(a => { a.hidden = true; a.href = '#'; });
-            }
-
-            populateMixRow({ row, art, name, links }, single, group, platforms) {
-                const mixName = single.version || 'Main Version';
-                const artSrc = single.image || group.cover || '';
-                const singleLinks = single.links || {};
-                row.hidden = false;
-                if (art) { art.hidden = false; art.src = artSrc; art.alt = `${mixName} cover`; }
-                if (name) name.textContent = mixName;
-                platforms.forEach(p => {
-                    const link = links.find(a => a.getAttribute('data-pl3-platform') === p);
-                    if (!link) return;
-                    const url = singleLinks[p] || '';
-                    link.hidden = !url;
-                    link.href = url || '#';
+        openShareSheet(url) {
+            const m = this.el.shareModal;
+            if (!m) return;
+            this.state.shareUrl = url || '';
+            if (this.el.shareInput) this.el.shareInput.value = this.state.shareUrl;
+            m.hidden = false;
+            m.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    m.classList.add('PL3-share--open');
                 });
+            });
+        }
+
+        closeShareSheet() {
+            const m = this.el.shareModal;
+            if (!m || m.hidden) return;
+            m.classList.remove('PL3-share--open');
+            setTimeout(() => {
+                m.hidden = true;
+                m.setAttribute('aria-hidden', 'true');
+            }, 240);
+        }
+
+        async copyShareUrl() {
+            const url = this.state.shareUrl || (this.el.shareInput ? this.el.shareInput.value : '') || '';
+            if (!url) return;
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(url);
+                    return;
+                }
+            } catch {
+                // fall back below
             }
 
-            showEmpty(msg) { if (this.el.emptyEl) { this.el.emptyEl.textContent = msg || ''; this.el.emptyEl.hidden = false; } }
-            hideEmpty() { if (this.el.emptyEl) { this.el.emptyEl.textContent = ''; this.el.emptyEl.hidden = true; } }
-            getGroup(key) { return window.musicDataGrouped?.groups?.find(g => String(g.key) === String(key)) || null; }
-            getPlatformOrder() { return window.musicDataGrouped?.platformOrder?.length ? window.musicDataGrouped.platformOrder : ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other']; }
-            lockScroll() {
-                if (this.state.scrollLocked) return;
-                this.state.prevHtmlOverflow = document.documentElement.style.overflow;
-                this.state.prevBodyOverflow = document.body.style.overflow;
-                document.documentElement.style.overflow = 'hidden';
-                document.body.style.overflow = 'hidden';
-                this.state.scrollLocked = true;
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            ta.style.top = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch { /* ignore */ }
+            ta.remove();
+        }
+
+        async shareCurrentGroup() {
+            const key = this.state.openGroupKey;
+            if (!key) return;
+            const g = this.getGroup(key);
+            if (!g) return;
+            const url = this.buildGroupUrl(key);
+
+            // Prefer native share when available
+            try {
+                if (navigator.share) {
+                    await navigator.share({
+                        title: g.title || 'OpaHiFi',
+                        text: g.title || 'OpaHiFi group',
+                        url
+                    });
+                    return;
+                }
+            } catch {
+                // user cancelled or unsupported; fall back
             }
-            unlockScroll() {
-                if (!this.state.scrollLocked) return;
-                document.documentElement.style.overflow = this.state.prevHtmlOverflow || '';
-                document.body.style.overflow = this.state.prevBodyOverflow || '';
-                this.state.scrollLocked = false;
+
+            this.openShareSheet(url);
+        }
+
+        openModal(groupKey, sourceBtn) {
+            const { modal, heroCrop, heroImg, coverOverlay } = this.el;
+            if (!modal || !heroCrop || !heroImg) return;
+            const group = this.getGroup(groupKey);
+            if (!group || group.isComingSoon) return;
+
+            // Prepare content
+            this.setTitle(group.titleLines || [group.title]);
+            this.renderMixes(group);
+
+            // Simple modal open: show + slide in via CSS
+            modal.classList.remove('PL3-modal--opening');
+            modal.hidden = false;
+            modal.setAttribute('aria-hidden', 'false');
+            this.lockScroll();
+            this.updateHeroImage(group);
+
+            this.state.openGroupKey = String(group.key);
+            this.setGroupKeyInUrl(this.state.openGroupKey);
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    modal.classList.add('PL3-modal--opening');
+                });
+            });
+        }
+
+        closeModal() {
+            const { modal, heroCrop, heroImg, coverOverlay } = this.el;
+            if (!modal || modal.hidden) return;
+
+            // Simple modal close: slide out via CSS then hide
+            modal.classList.remove('PL3-modal--opening');
+            setTimeout(() => {
+                modal.hidden = true;
+                modal.setAttribute('aria-hidden', 'true');
+                this.unlockScroll();
+
+                this.state.openGroupKey = null;
+                this.setGroupKeyInUrl(null);
+
+                // Clean up
+                if (heroCrop) {
+                    heroCrop.replaceChildren();
+                    if (heroImg) {
+                        heroImg.hidden = true;
+                        heroImg.src = '';
+                        heroImg.alt = '';
+                        heroCrop.appendChild(heroImg);
+                    }
+                    heroCrop.style.removeProperty('--pl3-hero-bg');
+                    if (coverOverlay) heroCrop.appendChild(coverOverlay);
+                }
+            }, 300);
+        }
+
+        updateHeroImage(group) {
+            const { heroCrop, heroImg, coverOverlay } = this.el;
+            heroCrop.replaceChildren();
+            if (heroImg) heroCrop.appendChild(heroImg);
+            if (coverOverlay) heroCrop.appendChild(coverOverlay);
+            const cover = group.cover || '';
+            if (heroImg) {
+                heroImg.hidden = !cover;
+                heroImg.src = cover;
+                heroImg.alt = cover ? `${group.title || 'Group'} cover` : '';
+            }
+
+            if (heroCrop) {
+                heroCrop.style.setProperty('--pl3-hero-bg', cover ? `url("${cover}")` : 'none');
             }
         }
 
-        window.initPL3 = function () { window.PL3Instance = new PL3Controller('p_listen3'); };
-
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', window.initPL3);
-        } else {
-            window.initPL3();
+        setTitle(lines) {
+            const { titleLine1, titleLine2 } = this.el;
+            if (!titleLine1) return;
+            const arr = Array.isArray(lines) ? lines.filter(Boolean).map(String) : [];
+            titleLine1.textContent = arr[0] || '';
+            if (titleLine2) {
+                titleLine2.textContent = arr[1] || '';
+                titleLine2.hidden = !arr[1];
+            }
         }
-    </script>
+
+        renderMixes(group) {
+            this.el.mixRows.forEach(r => this.clearMixRow(r));
+            if (!group) return this.showEmpty('Missing group.');
+            const ids = Array.isArray(group.songIds) ? group.songIds : [];
+            if (!ids.length) return this.showEmpty('Mixes list coming soon.');
+
+            this.hideEmpty();
+            const platforms = this.getPlatformOrder();
+            const max = Math.min(this.el.mixRows.length, ids.length);
+            for (let i = 0; i < max; i++) {
+                const single = group.singlesById?.[ids[i]];
+                single ? this.populateMixRow(this.el.mixRows[i], single, group, platforms) : this.clearMixRow(this.el.mixRows[i]);
+            }
+        }
+
+        clearMixRow({ row, art, name, links }) {
+            row.hidden = true;
+            if (art) { art.hidden = true; art.src = ''; art.alt = ''; }
+            if (name) name.textContent = '';
+            links.forEach(a => { a.hidden = true; a.href = '#'; });
+        }
+
+        populateMixRow({ row, art, name, links }, single, group, platforms) {
+            const mixName = single.version || 'Main Version';
+            const artSrc = single.image || group.cover || '';
+            const singleLinks = single.links || {};
+            row.hidden = false;
+            if (art) { art.hidden = false; art.src = artSrc; art.alt = `${mixName} cover`; }
+            if (name) name.textContent = mixName;
+            platforms.forEach(p => {
+                const link = links.find(a => a.getAttribute('data-pl3-platform') === p);
+                if (!link) return;
+                const url = singleLinks[p] || '';
+                link.hidden = !url;
+                link.href = url || '#';
+            });
+        }
+
+        showEmpty(msg) { if (this.el.emptyEl) { this.el.emptyEl.textContent = msg || ''; this.el.emptyEl.hidden = false; } }
+        hideEmpty() { if (this.el.emptyEl) { this.el.emptyEl.textContent = ''; this.el.emptyEl.hidden = true; } }
+        getGroup(key) { return window.musicDataGrouped?.groups?.find(g => String(g.key) === String(key)) || null; }
+        getPlatformOrder() { return window.musicDataGrouped?.platformOrder?.length ? window.musicDataGrouped.platformOrder : ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other']; }
+        lockScroll() {
+            if (this.state.scrollLocked) return;
+            this.state.prevHtmlOverflow = document.documentElement.style.overflow;
+            this.state.prevBodyOverflow = document.body.style.overflow;
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
+            this.state.scrollLocked = true;
+        }
+        unlockScroll() {
+            if (!this.state.scrollLocked) return;
+            document.documentElement.style.overflow = this.state.prevHtmlOverflow || '';
+            document.body.style.overflow = this.state.prevBodyOverflow || '';
+            this.state.scrollLocked = false;
+        }
+    }
+
+    window.initPL3 = function () { window.PL3Instance = new PL3Controller('p_listen3'); };
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', window.initPL3);
+    } else {
+        window.initPL3();
+    }
+</script>
 </body>
 
 </html>
