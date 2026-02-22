@@ -301,6 +301,7 @@ class PL3MusicModel {
 class PL3StateModel {
     constructor() {
         this.expandedBtn = null;
+        this.activeGalleryBtn = null;
         this.openGroupKey = null;
         this.openSingleId = null;
         this.shareUrl = '';
@@ -813,6 +814,7 @@ class PL3Controller {
 
         this.state.openGroupKey = String(group.key);
         this.setGroupKeyInUrl(this.state.openGroupKey);
+        this.setActiveGalleryButton(sourceBtn || this.section.querySelector(`[data-pl3-group="${String(group.key)}"]`));
 
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
@@ -835,6 +837,7 @@ class PL3Controller {
             this.state.openGroupKey = null;
             this.state.openSingleId = null;
             this.setGroupKeyInUrl(null);
+            this.setActiveGalleryButton(null);
             this.closeSingleView(true);
             this.syncCoverActionMode();
 
@@ -867,6 +870,18 @@ class PL3Controller {
         if (heroCrop) {
             heroCrop.style.setProperty('--pl3-hero-bg', cover ? `url("${cover}")` : 'none');
         }
+    }
+
+    setActiveGalleryButton(btnOrNull) {
+        const prev = this.state.activeGalleryBtn;
+        if (prev) prev.classList.remove('PL3-galleryItemBtn--active');
+
+        const nextBtn = btnOrNull && btnOrNull.classList
+            ? btnOrNull
+            : null;
+
+        if (nextBtn) nextBtn.classList.add('PL3-galleryItemBtn--active');
+        this.state.activeGalleryBtn = nextBtn;
     }
 
     setTitle(lines) {
