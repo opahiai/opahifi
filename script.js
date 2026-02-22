@@ -303,7 +303,6 @@ class PL3StateModel {
         this.expandedBtn = null;
         this.activeGalleryBtn = null;
         this.openGroupKey = null;
-        this.openSingleId = null;
         this.shareUrl = '';
         this.previewVideoId = '';
         this.previewMuted = false;
@@ -324,17 +323,8 @@ class PL3DomRegistry {
         this.heroCrop = document.getElementById('PL3-group-hero-crop');
         this.heroImg = document.getElementById('PL3-group-hero-img');
         this.titleEl = document.getElementById('PL3-group-title');
-        this.songCard = document.getElementById('PL3-song-card');
         this.mixesEl = document.getElementById('PL3-mixes');
         this.emptyEl = document.getElementById('PL3-mixes-empty');
-        this.songArt = document.getElementById('PL3-song-art');
-        this.songName = document.getElementById('PL3-song-name');
-        this.songVersion = document.getElementById('PL3-song-version');
-        this.songLinks = Array.from(document.querySelectorAll('[data-pl3-song-platform]'));
-        this.songAboutSection = document.getElementById('PL3-song-about-section');
-        this.songAbout = document.getElementById('PL3-song-about');
-        this.songLyricsSection = document.getElementById('PL3-song-lyrics-section');
-        this.songLyrics = document.getElementById('PL3-song-lyrics');
         this.shareModal = document.getElementById('PL3-share-modal');
         this.shareInput = document.getElementById('PL3-share-url');
         this.previewModal = document.getElementById('PL3-preview-modal');
@@ -343,7 +333,6 @@ class PL3DomRegistry {
 
         this.modalPanel = this.modal?.querySelector('.PL3-modalPanel');
         this.coverOverlay = this.heroCrop?.querySelector('.PL3-coverOverlay');
-        this.coverBackBtn = this.modal?.querySelector('[data-pl3-song-back]');
         this.titleLine1 = this.titleEl?.querySelector('[data-pl3-title-line="1"]');
         this.titleLine2 = this.titleEl?.querySelector('[data-pl3-title-line="2"]');
         this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
@@ -393,7 +382,6 @@ class PL3Controller {
         this.state = new PL3StateModel();
         this.scrollLock = new PL3ScrollLock();
         this.el = new PL3DomRegistry(this.section);
-        this.lyricsCache = new Map();
         this.galleryShiftRaf = null;
         this.groupScrollRaf = null;
         this.groupOpenScrollY = 0;
@@ -402,11 +390,9 @@ class PL3Controller {
 
     init() {
         if (!this.section) return;
-        this.syncCoverActionMode();
         this.attachButtonEvents();
         this.attachGalleryEvents();
         this.attachModalEvents();
-        this.attachSongDetailEvents();
         this.attachShareEvents();
         this.attachPreviewEvents();
         this.attachStreamingPopupEvents();
@@ -567,25 +553,15 @@ class PL3Controller {
     }
 
     getSingleIdFromUrl(groupKey) {
-        try {
-            const u = new URL(window.location.href);
-            const singleId = (u.searchParams.get('pl3s') || '').trim();
-            if (!singleId) return null;
-            const group = this.model.getGroup(groupKey);
-            if (!group) return null;
-            return group.singlesById?.[singleId] ? singleId : null;
-        } catch {
-            return null;
-        }
+        return null;
     }
 
-    setGroupKeyInUrl(groupKeyOrNull, singleIdOrNull = null) {
+    setGroupKeyInUrl(groupKeyOrNull) {
         try {
             const u = new URL(window.location.href);
             if (groupKeyOrNull) u.searchParams.set('pl3', String(groupKeyOrNull));
             else u.searchParams.delete('pl3');
-            if (groupKeyOrNull && singleIdOrNull) u.searchParams.set('pl3s', String(singleIdOrNull));
-            else u.searchParams.delete('pl3s');
+            u.searchParams.delete('pl3s');
             window.history.replaceState({}, '', u.toString());
         } catch {
             // ignore
@@ -596,9 +572,6 @@ class PL3Controller {
         const key = this.getGroupKeyFromUrl();
         if (!key) return;
         this.openModal(key);
-        const singleId = this.getSingleIdFromUrl(key);
-        if (!singleId) return;
-        this.openSingleView(singleId);
     }
 
     // === Button Expansion ===
@@ -644,6 +617,7 @@ class PL3Controller {
         this.section.addEventListener('click', (ev) => {
             const btn = ev.target.closest('[data-pl3-group]');
             if (!btn || !this.section.contains(btn)) return;
+            if (this.el.modal && !this.el.modal.hidden) return;
             const key = String(btn.getAttribute('data-pl3-group') || '').trim();
             if (!key) return;
             ev.preventDefault();
@@ -664,44 +638,23 @@ class PL3Controller {
             ev.preventDefault();
             this.closeModal();
         }, { passive: false });
+
+        document.addEventListener('pointerdown', (ev) => {
+            if (!this.el.modal || this.el.modal.hidden) return;
+
+            if (typeof ev.button === 'number' && ev.button !== 0) return;
+            const target = ev.target;
+            if (!(target instanceof Element)) return;
+            if (target.closest('#PL3-group-modal .PL3-modalPanel')) return;
+            this.closeModal();
+        }, { passive: true });
+
         window.addEventListener('keydown', (ev) => {
             if (!this.el.modal || this.el.modal.hidden || ev.key !== 'Escape') return;
             this.closeModal();
         }, { passive: true });
     }
 
-    attachSongDetailEvents() {
-        if (this.el.mixesEl) {
-            this.el.mixesEl.addEventListener('click', (ev) => {
-                const row = ev.target.closest('[data-pl3-mix-row]');
-                if (!row || row.hidden || !this.el.mixesEl.contains(row)) return;
-                if (ev.target.closest('a[data-pl3-platform]')) return;
-                ev.preventDefault();
-                const singleId = String(row.getAttribute('data-pl3-single-id') || '').trim();
-                if (!singleId) return;
-                this.openSingleView(singleId);
-            }, { passive: false });
-
-            this.el.mixesEl.addEventListener('keydown', (ev) => {
-                const row = ev.target.closest('[data-pl3-mix-row]');
-                if (!row || row.hidden || !this.el.mixesEl.contains(row)) return;
-                if (ev.key !== 'Enter' && ev.key !== ' ') return;
-                ev.preventDefault();
-                const singleId = String(row.getAttribute('data-pl3-single-id') || '').trim();
-                if (!singleId) return;
-                this.openSingleView(singleId);
-            });
-        }
-
-        if (this.el.modal) {
-            this.el.modal.addEventListener('click', (ev) => {
-                const backBtn = ev.target.closest('[data-pl3-song-back]');
-                if (!backBtn || !this.el.modal.contains(backBtn)) return;
-                ev.preventDefault();
-                this.closeSingleView();
-            }, { passive: false });
-        }
-    }
 
     // === Share ===
     attachShareEvents() {
@@ -783,13 +736,9 @@ class PL3Controller {
         if (!key) return;
         const g = this.model.getGroup(key);
         if (!g) return;
-        const currentSingle = this.state.openSingleId ? g.singlesById?.[this.state.openSingleId] : null;
-        const singleLinks = currentSingle?.links || {};
-        const preferred = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
-        const singleUrl = preferred.map(p => singleLinks[p]).find(Boolean) || '';
-        const url = singleUrl || this.model.buildGroupUrl(key);
-        const shareTitle = currentSingle?.version || currentSingle?.title || g.title || 'OpaHiFi';
-        const shareText = currentSingle ? `${shareTitle}` : (g.title || 'OpaHiFi group');
+        const url = this.model.buildGroupUrl(key);
+        const shareTitle = g.title || 'OpaHiFi';
+        const shareText = g.title || 'OpaHiFi group';
 
         try {
             if (navigator.share) {
@@ -813,10 +762,6 @@ class PL3Controller {
         const group = this.model.getGroup(groupKey);
         if (!group || group.isComingSoon) return;
 
-        modal.classList.remove('PL3-modal--single-view');
-        this.closeSingleView(true);
-        this.state.openSingleId = null;
-        this.syncCoverActionMode();
         this.setTitle(group.titleLines || [group.title]);
         this.renderMixes(group);
 
@@ -851,15 +796,11 @@ class PL3Controller {
         setTimeout(() => {
             modal.hidden = true;
             modal.setAttribute('aria-hidden', 'true');
-            modal.classList.remove('PL3-modal--single-view');
 
             this.state.openGroupKey = null;
-            this.state.openSingleId = null;
             this.setGroupKeyInUrl(null);
             this.setActiveGalleryButton(null);
             this.setGalleryInteractionLocked(false);
-            this.closeSingleView(true);
-            this.syncCoverActionMode();
             this.unlockScroll();
             this.groupOpenScrollY = 0;
 
@@ -999,6 +940,7 @@ class PL3Controller {
         return this.animateWindowScrollTo(top);
     }
 
+
     setTitle(lines) {
         const { titleLine1, titleLine2 } = this.el;
         if (!titleLine1) return;
@@ -1030,6 +972,7 @@ class PL3Controller {
         row.removeAttribute('data-pl3-single-id');
         row.setAttribute('tabindex', '-1');
         row.setAttribute('aria-label', '');
+        row.classList.remove('is-active', 'is-collapsed', 'is-before', 'is-after');
         if (art) { art.hidden = true; art.src = ''; art.alt = ''; }
         if (name) name.textContent = '';
         links.forEach(a => { a.hidden = true; a.href = '#'; });
@@ -1041,8 +984,9 @@ class PL3Controller {
         const singleLinks = single.links || {};
         row.hidden = false;
         row.setAttribute('data-pl3-single-id', String(single.id || ''));
-        row.setAttribute('tabindex', '0');
-        row.setAttribute('aria-label', `Open ${mixName}`);
+        row.setAttribute('tabindex', '-1');
+        row.setAttribute('aria-label', mixName);
+        row.classList.remove('is-active', 'is-collapsed', 'is-before', 'is-after');
         if (art) { art.hidden = false; art.src = artSrc; art.alt = `${mixName} cover`; }
         if (name) name.textContent = mixName;
         platforms.forEach(p => {
@@ -1054,79 +998,10 @@ class PL3Controller {
         });
     }
 
-    async openSingleView(singleId) {
-        const group = this.model.getGroup(this.state.openGroupKey);
-        if (!group) return;
-        const single = group.singlesById?.[singleId];
-        if (!single) return;
 
-        const songName = String(single.title || group.title || 'Song').trim();
-        const versionName = String(single.version || 'Main Version').trim();
-        const image = String(single.image || group.cover || '').trim();
-        const links = single.links || {};
-        const platforms = this.model.getPlatformOrder();
 
-        if (this.el.songArt) {
-            this.el.songArt.hidden = !image;
-            this.el.songArt.src = image;
-            this.el.songArt.alt = image ? `${songName} cover` : '';
-        }
-        if (this.el.songName) this.el.songName.textContent = songName;
-        if (this.el.songVersion) this.el.songVersion.textContent = versionName;
 
-        platforms.forEach((platform) => {
-            const anchor = this.el.songLinks.find(a => a.getAttribute('data-pl3-song-platform') === platform);
-            if (!anchor) return;
-            const url = String(links[platform] || '').trim();
-            anchor.hidden = !url;
-            anchor.href = url || '#';
-        });
 
-        const aboutText = String(single.about || '').trim();
-        if (this.el.songAboutSection) this.el.songAboutSection.hidden = !aboutText;
-        if (this.el.songAbout) this.el.songAbout.textContent = aboutText;
-
-        let lyricsText = String(single.lyrics || '').trim();
-        if (!lyricsText) {
-            const lyricsPath = String(single.lyricsPath || '').trim();
-            if (lyricsPath) {
-                if (this.lyricsCache.has(lyricsPath)) {
-                    lyricsText = this.lyricsCache.get(lyricsPath) || '';
-                } else {
-                    try {
-                        const res = await fetch(lyricsPath);
-                        lyricsText = res.ok ? (await res.text()) : '';
-                    } catch {
-                        lyricsText = '';
-                    }
-                    this.lyricsCache.set(lyricsPath, lyricsText);
-                }
-            }
-        }
-
-        if (this.el.songLyricsSection) this.el.songLyricsSection.hidden = false;
-        if (this.el.songLyrics) this.el.songLyrics.textContent = lyricsText || 'Lyrics coming soon.';
-
-        this.state.openSingleId = String(single.id || '');
-        if (this.el.songCard) this.el.songCard.classList.add('is-flipped');
-        if (this.el.modal) this.el.modal.classList.add('PL3-modal--single-view');
-        this.setGroupKeyInUrl(this.state.openGroupKey, this.state.openSingleId);
-        this.syncCoverActionMode();
-    }
-
-    closeSingleView(silent = false) {
-        this.state.openSingleId = null;
-        if (this.el.songCard) this.el.songCard.classList.remove('is-flipped');
-        if (this.el.modal) this.el.modal.classList.remove('PL3-modal--single-view');
-        if (this.state.openGroupKey) this.setGroupKeyInUrl(this.state.openGroupKey, null);
-        this.syncCoverActionMode();
-        if (silent) return;
-    }
-
-    syncCoverActionMode() {
-        const inSingleMode = !!this.state.openSingleId;
-        if (this.el.coverBackBtn) this.el.coverBackBtn.hidden = !inSingleMode;
-    }
 
     showEmpty(msg) { if (this.el.emptyEl) { this.el.emptyEl.textContent = msg || ''; this.el.emptyEl.hidden = false; } }
     hideEmpty() { if (this.el.emptyEl) { this.el.emptyEl.textContent = ''; this.el.emptyEl.hidden = true; } }
