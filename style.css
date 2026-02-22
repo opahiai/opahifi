@@ -101,7 +101,7 @@ body {
 .PL3-subTitle {
     text-align: center;
     color: rgba(255, 255, 255, 0.9);
-    font-size: 1rem;
+    font-size: 2rem;
     font-weight: 800;
     margin-bottom: var(--pl3-gap-sm);
 }
@@ -840,6 +840,7 @@ body {
     flex: 1;
     min-height: 0;
     display: flex;
+    align-items: flex-start;
     flex-direction: column;
     justify-content: center;
     gap: var(--pl3-gallery-gap);
@@ -1252,6 +1253,10 @@ body {
 
 #PL3-group-modal .ohf-mix-icon--fa {
     font-size: 18px;
+}
+
+.PL3-videoButtons {
+    opacity: 0;
 }
 
 @media (min-width: 425px) {

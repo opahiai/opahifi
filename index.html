@@ -26,7 +26,7 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             flex-wrap: nowrap;
             perspective: 1000px;
             padding: 20px 0;
@@ -196,9 +196,9 @@
                     <div class="PL3-part PL3-part--upcoming" aria-label="Upcoming and recent">
                         <div class="PL3-upcoming" aria-label="Upcoming single">
                             <!-- Left: Image -->
-                            <button class="PL3-upcomingArtWrap" type="button" aria-label="Open Believe the Truth fairy"
-                                data-pl3-group="believe-the-truth-fairy">
-                                <img class="PL3-upcomingArt" src="img/music/main_truthfairy.png"
+                            <button class="PL3-upcomingArtWrap" type="button" aria-label="Open Full-Mindness"
+                                data-pl3-group="full-mindness">
+                                <img class="PL3-upcomingArt" src="img/music/main_full_mindness.png"
                                     alt="Upcoming single cover" loading="lazy"
                                     onerror="this.src='img/music/opahiai_album.png'">
                             </button>
@@ -206,7 +206,7 @@
                             <!-- Right: Drop Message and Buttons -->
                             <div class="PL3-upcomingRight">
                                 <div class="PL3-upcomingDesc">Latest<br>Release</div>
-                                <div class="PL3-upcomingButtons">
+                                <div class="PL3-upcomingButtons PL3-videoButtons" aria-label="Video actions">
                                     <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
                                         data-pl3-preview aria-label="Watch video">
                                         <i class="fa-brands fa-youtube" aria-hidden="true"></i>
@@ -219,7 +219,7 @@
 
                     <!-- Bottom (40%): gallery 3 + 2 -->
                     <div class="PL3-part PL3-part--gallery" aria-label="Gallery">
-                        <div class="PL3-subTitle">Releases</div>
+                        <div class="PL3-subTitle">All Releases</div>
                         <div class="PL3-gallery" aria-label="OpaHiFi groups">
                             <button class="PL3-galleryItemBtn" type="button" aria-label="Open Old Love Story"
                                 data-pl3-group="old-love-story">

@@ -232,7 +232,12 @@
             title: 'Full-Mindness',
             version: 'Opa Mayhem Mix',
             image: 'img/music/main_full_mindness.png',
-            links: {}
+            links: {
+                'YouTube Music': 'https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z',
+                'Other': 'https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh',
+                'Spotify': 'https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960',
+                'Amazon Music': 'https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653'
+            }
         }
     };
 
