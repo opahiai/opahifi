@@ -153,6 +153,7 @@
             title: 'Old Love Story',
             version: 'Desert Disco Duet',
             image: 'img/music/oldlovestory_opa-max-mix.png',
+            lyricsPath: 'lyrics/old-love-story.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE',
                 'Amazon Music': 'https://music.amazon.com/albums/B0FXB4X48G',
@@ -166,6 +167,7 @@
             groupKey: GROUP.OPA_PA_PA_PARTY,
             title: 'Opa pa pa party',
             image: 'img/music/main_oparty.png',
+            lyricsPath: 'lyrics/opa-pa-pa-party.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw',
                 'Amazon Music': 'https://music.amazon.com/albums/B0FYVMVZS4',
@@ -179,6 +181,7 @@
             groupKey: GROUP.GLITTAA_PHOENIX,
             title: 'Glittaa Phoenix',
             image: 'img/music/3_glitta.png',
+            lyricsPath: 'lyrics/glittaa-pheonix.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17',
                 'Amazon Music': 'https://music.amazon.com/albums/B0G1N1Y83C',
@@ -193,6 +196,7 @@
             title: 'Splenda Love Rabbit Hell',
             version: 'Opa Max Mix',
             image: 'img/music/main_splenda_rabbit.png',
+            lyricsPath: 'lyrics/splenda-love-rabbit-hell.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE',
                 'Amazon Music': 'https://music.amazon.com/albums/B0GJQZXHNL',
@@ -205,6 +209,7 @@
             title: 'GLITTAA Phoenix',
             version: 'Opa Sunrize Max Mix',
             image: 'img/music/glittaa_max-mix.png',
+            lyricsPath: 'lyrics/glittaa-pheonix.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP',
                 'Other': 'https://www.youtube.com/watch?v=LOywm64SGCY',
@@ -218,6 +223,7 @@
             groupKey: GROUP.BELIEVE_THE_TRUTH_FAIRY,
             title: 'Believe the Truth Fairy',
             image: 'img/music/main_truthfairy.png',
+            lyricsPath: 'lyrics/beleive-the-truth-fairy.txt',
             links: {
                 'Apple Music': 'https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683',
                 'YouTube Music': 'https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj',
@@ -549,11 +555,26 @@ class PL3Controller {
         }
     }
 
-    setGroupKeyInUrl(groupKeyOrNull) {
+    getSingleIdFromUrl(groupKey) {
+        try {
+            const u = new URL(window.location.href);
+            const singleId = (u.searchParams.get('pl3s') || '').trim();
+            if (!singleId) return null;
+            const group = this.model.getGroup(groupKey);
+            if (!group) return null;
+            return group.singlesById?.[singleId] ? singleId : null;
+        } catch {
+            return null;
+        }
+    }
+
+    setGroupKeyInUrl(groupKeyOrNull, singleIdOrNull = null) {
         try {
             const u = new URL(window.location.href);
             if (groupKeyOrNull) u.searchParams.set('pl3', String(groupKeyOrNull));
             else u.searchParams.delete('pl3');
+            if (groupKeyOrNull && singleIdOrNull) u.searchParams.set('pl3s', String(singleIdOrNull));
+            else u.searchParams.delete('pl3s');
             window.history.replaceState({}, '', u.toString());
         } catch {
             // ignore
@@ -564,6 +585,9 @@ class PL3Controller {
         const key = this.getGroupKeyFromUrl();
         if (!key) return;
         this.openModal(key, null);
+        const singleId = this.getSingleIdFromUrl(key);
+        if (!singleId) return;
+        this.openSingleView(singleId);
     }
 
     // === Button Expansion ===
@@ -953,6 +977,7 @@ class PL3Controller {
         this.state.openSingleId = String(single.id || '');
         if (this.el.songCard) this.el.songCard.classList.add('is-flipped');
         if (this.el.modal) this.el.modal.classList.add('PL3-modal--single-view');
+        this.setGroupKeyInUrl(this.state.openGroupKey, this.state.openSingleId);
         this.syncCoverActionMode();
     }
 
@@ -960,6 +985,7 @@ class PL3Controller {
         this.state.openSingleId = null;
         if (this.el.songCard) this.el.songCard.classList.remove('is-flipped');
         if (this.el.modal) this.el.modal.classList.remove('PL3-modal--single-view');
+        if (this.state.openGroupKey) this.setGroupKeyInUrl(this.state.openGroupKey, null);
         this.syncCoverActionMode();
         if (silent) return;
     }
