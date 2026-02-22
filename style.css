@@ -21,9 +21,9 @@ body {
     --pl3-gap-sm: 8px;
 
     /* Vertical split knobs (unitless numbers out of 100). These should sum to 100. */
-    --pl3-part-entity: 30;
-    --pl3-part-upcoming: 30;
-    --pl3-part-gallery: 37;
+    --pl3-part-entity: 33;
+    --pl3-part-upcoming: 33;
+    --pl3-part-gallery: 30;
 
     /* Derived percentages for grid usage */
     --pl3-part-entity-pct: calc(var(--pl3-part-entity) * 1%);
@@ -37,11 +37,14 @@ body {
     --pl3-upcoming-size: 20vh;
 
     /* Viewport-based dimensions */
-    --pl3-viewport-h: 100vh;
+    --pl3-viewport-h: 95vh;
     --pl3-preview-top-offset: 18vh;
     --pl3-preview-max-h: 52vh;
-    --pl3-modal-top-offset: 10vh;
+    --pl3-modal-top-offset: 0px;
     --pl3-modal-max-h: 75vh;
+    --pl3-viewport-bottom-space: calc(100vh - var(--pl3-viewport-h));
+    --pl3-gallery-visible-h: calc(var(--pl3-viewport-h) * (var(--pl3-part-gallery) / 100));
+    --pl3-group-modal-bottom-gap: calc(var(--pl3-gallery-visible-h) + var(--pl3-viewport-bottom-space) + 5vh);
     --pl3-share-top-offset: 22vh;
 }
 
@@ -883,7 +886,7 @@ body {
     align-items: flex-start;
     flex-wrap: nowrap;
     perspective: 1000px;
-    padding: 20px 0;
+    padding: 0px 0 15px;
     overflow: visible;
     width: 100%;
     box-sizing: border-box;
@@ -957,7 +960,7 @@ body {
 
 #PL3-group-modal.PL3-modal {
     position: fixed;
-    inset: 0;
+    inset: 0 0 var(--pl3-group-modal-bottom-gap) 0;
     z-index: 9999;
 }
 
@@ -979,8 +982,8 @@ body {
     position: relative;
     width: 92%;
     max-width: 440px;
-    max-height: var(--pl3-modal-max-h);
-    height: min(var(--pl3-modal-max-h), 600px);
+    max-height: calc(100% - var(--pl3-modal-top-offset));
+    height: min(calc(100% - var(--pl3-modal-top-offset)), 600px);
     margin: var(--pl3-modal-top-offset) auto 0;
     background: linear-gradient(180deg, rgba(20, 25, 42, 0.96) 0%, rgba(15, 18, 30, 0.94) 100%);
     border-radius: var(--pl3-panel-radius);
@@ -990,7 +993,7 @@ body {
     flex-direction: column;
     overflow: hidden;
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(-36px);
     transition: opacity 0.28s ease, transform 0.28s ease;
 }
 
@@ -1273,13 +1276,13 @@ body {
     flex: 1;
     min-height: 0;
     overflow: hidden;
-    padding: 0 5px 5px;
+    padding: 0 0 15px;
     perspective: 1200px;
 }
 
 #PL3-group-modal.PL3-modal--single-view .PL3-groupBody {
     margin-top: 0;
-    padding: 8px;
+    padding: px;
 }
 
 #PL3-group-modal.PL3-modal--single-view .PL3-coverActions {
@@ -1309,7 +1312,7 @@ body {
 
 #PL3-group-modal .PL3-songCardFace--back {
     transform: rotateY(180deg);
-    padding: 10px 10px 16px;
+    padding: 9px;
     background:
         radial-gradient(120% 90% at 12% -4%, rgba(31, 111, 235, 0.20) 0%, rgba(31, 111, 235, 0) 58%),
         radial-gradient(120% 90% at 92% -6%, rgba(140, 70, 255, 0.22) 0%, rgba(140, 70, 255, 0) 58%),
@@ -1484,6 +1487,14 @@ body {
 
     #PL3-group-modal .PL3-songLyrics {
         font-size: 0.98rem;
+    }
+}
+
+@media (max-width: 425px) {
+
+    #PL3-group-modal .PL3-songLinks .ohf-mix-link {
+        width: 28px;
+        height: 28px;
     }
 }
 
