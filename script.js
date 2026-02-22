@@ -406,6 +406,7 @@ class PL3Controller {
         this.el = new PL3DomRegistry(this.section);
         this.galleryShiftRaf = null;
         this.groupScrollRaf = null;
+        this.groupTopSyncTimeout = null;
         this.groupOpenScrollY = 0;
         this.currentMixRow = null;
         this.currentMixPlaceholder = null;
@@ -688,6 +689,11 @@ class PL3Controller {
             if (ev.target.closest('.ohf-mix-link')) return;
             const mixRow = ev.target.closest('[data-pl3-mix-row]');
             if (!mixRow || !this.el.modal.contains(mixRow) || mixRow.hidden) return;
+            if (mixRow.classList.contains('is-active') && this.el.modal.classList.contains('PL3-modal--single-view')) {
+                ev.preventDefault();
+                this.exitSingleView({ animate: true, syncUrl: true });
+                return;
+            }
             ev.preventDefault();
             this.openSingleViewFromRow(mixRow, { animate: true, syncUrl: true });
         }, { passive: false });
@@ -697,6 +703,11 @@ class PL3Controller {
             if (ev.target.closest('.ohf-mix-link')) return;
             const mixRow = ev.target.closest('[data-pl3-mix-row]');
             if (!mixRow || mixRow.hidden) return;
+            if (mixRow.classList.contains('is-active') && this.el.modal.classList.contains('PL3-modal--single-view')) {
+                ev.preventDefault();
+                this.exitSingleView({ animate: true, syncUrl: true });
+                return;
+            }
             ev.preventDefault();
             this.openSingleViewFromRow(mixRow, { animate: true, syncUrl: true });
         }, { passive: false });
@@ -854,6 +865,7 @@ class PL3Controller {
             requestAnimationFrame(() => {
                 modal.classList.add('PL3-modal--opening');
                 this.scrollGroupCardIntoView();
+                this.scheduleGroupTopSync();
 
                 if (initialSingleId) {
                     const targetRow = this.el.mixRows
@@ -868,6 +880,7 @@ class PL3Controller {
     closeModal() {
         const { modal, heroCrop, heroImg, coverOverlay } = this.el;
         if (!modal || modal.hidden) return;
+        this.cancelGroupTopSync();
         this.resetSingleViewState({ syncUrl: false, resetLyrics: true });
         this.cancelGroupScrollAnimation();
         const returnTop = Math.max(0, Math.round(this.groupOpenScrollY || 0));
@@ -1082,6 +1095,21 @@ class PL3Controller {
         if (!this.groupScrollRaf) return;
         window.cancelAnimationFrame(this.groupScrollRaf);
         this.groupScrollRaf = null;
+    }
+
+    cancelGroupTopSync() {
+        if (!this.groupTopSyncTimeout) return;
+        window.clearTimeout(this.groupTopSyncTimeout);
+        this.groupTopSyncTimeout = null;
+    }
+
+    scheduleGroupTopSync(delayMs = 420) {
+        this.cancelGroupTopSync();
+        this.groupTopSyncTimeout = window.setTimeout(() => {
+            this.groupTopSyncTimeout = null;
+            if (!this.el.modal || this.el.modal.hidden) return;
+            this.scrollGroupCardIntoView();
+        }, delayMs);
     }
 
     animateWindowScrollTo(targetTop, durationMs = 380) {
