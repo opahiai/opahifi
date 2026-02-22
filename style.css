@@ -1015,8 +1015,9 @@ body {
 #PL3-group-modal .PL3-groupHero {
     position: relative;
     width: 100%;
-    height: 40%;
-    min-height: 180px;
+    height: 0;
+    min-height: 0;
+    overflow: visible;
     flex-shrink: 0;
 }
 
@@ -1046,49 +1047,25 @@ body {
 #PL3-group-modal .PL3-groupHeroCrop {
     position: relative;
     width: 100%;
-    height: 100%;
-    overflow: hidden;
+    height: 0;
+    overflow: visible;
     border-radius: var(--pl3-panel-radius) var(--pl3-panel-radius) 0 0;
     --pl3-hero-bg: none;
-    background: radial-gradient(120% 120% at 50% 30%, rgba(255, 255, 255, 0.10) 0%, rgba(0, 0, 0, 0.25) 55%, rgba(0, 0, 0, 0.35) 100%);
+    background: none;
 }
 
 /* Blurred cover fill behind the contained artwork (no black side bars) */
 #PL3-group-modal .PL3-groupHeroCrop::before {
-    content: '';
-    position: absolute;
-    inset: -120px;
-    z-index: 0;
-    background-image: var(--pl3-hero-bg);
-    background-size: 160% 160%;
-    background-position: 50% 45%;
-    background-repeat: no-repeat;
-    filter: blur(46px) saturate(1.25) contrast(1.08);
-    opacity: 0.95;
-    transform: scale(1.25);
-    pointer-events: none;
+    display: none;
 }
 
 /* Make the side-fill feel intentional (soft color + vignette) */
 #PL3-group-modal .PL3-groupHeroCrop::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background:
-        radial-gradient(120% 120% at 50% 35%, rgba(255, 255, 255, 0.10) 0%, rgba(0, 0, 0, 0.00) 40%, rgba(0, 0, 0, 0.30) 100%),
-        linear-gradient(90deg, rgba(0, 153, 255, 0.20) 0%, rgba(0, 0, 0, 0.00) 36%, rgba(0, 0, 0, 0.00) 64%, rgba(255, 92, 0, 0.20) 100%);
-    pointer-events: none;
+    display: none;
 }
 
 #PL3-group-modal .PL3-groupHeroCrop img {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    display: block;
+    display: none !important;
 }
 
 #PL3-group-modal .PL3-coverOverlay {
@@ -1100,7 +1077,7 @@ body {
 }
 
 #PL3-group-modal .PL3-coverTitle {
-    display: none;
+    display: none !important;
 }
 
 #PL3-group-modal .PL3-coverTitleLine {
@@ -1282,12 +1259,16 @@ body {
 }
 
 #PL3-group-modal .PL3-groupBody {
-    margin-top: 10px;
+    margin-top: 0;
     flex: 1;
     min-height: 0;
     overflow: hidden;
     padding: 0 0 15px;
     perspective: 1200px;
+}
+
+#PL3-group-modal .PL3-songCardFace--front {
+    padding-top: 46px;
 }
 
 #PL3-group-modal.PL3-modal--single-view .PL3-groupBody {
@@ -1322,7 +1303,7 @@ body {
 
 #PL3-group-modal .PL3-songCardFace--back {
     transform: rotateY(180deg);
-    padding: 9px;
+    padding: 46px 9px 9px;
     background:
         radial-gradient(120% 90% at 12% -4%, rgba(31, 111, 235, 0.20) 0%, rgba(31, 111, 235, 0) 58%),
         radial-gradient(120% 90% at 92% -6%, rgba(140, 70, 255, 0.22) 0%, rgba(140, 70, 255, 0) 58%),

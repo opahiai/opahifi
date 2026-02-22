@@ -638,6 +638,11 @@ class PL3Controller {
             const key = String(btn.getAttribute('data-pl3-group') || '').trim();
             if (!key) return;
             ev.preventDefault();
+
+            if (this.el.modal && !this.el.modal.hidden && this.state.openGroupKey && this.state.openGroupKey !== key) {
+                this.setActiveGalleryButton(null);
+            }
+
             this.openModal(key, btn);
         }, { passive: false });
     }
