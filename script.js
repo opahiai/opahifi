@@ -316,6 +316,9 @@ class PL3DomRegistry {
         this.btnRow = section.querySelector('.PL3-btnRow');
         this.heroBtns = Array.from(section.querySelectorAll('.PL3-heroBtn'));
         this.previewBtn = section.querySelector('[data-pl3-preview]');
+        this.gallery = section.querySelector('.PL3-gallery');
+        this.galleryBtns = Array.from(section.querySelectorAll('.PL3-galleryItemBtn'));
+        this.galleryPart = section.querySelector('.PL3-part--gallery');
         this.streamingBtns = Array.from(document.querySelectorAll('[data-pl3-streaming-popup]'));
         this.modal = document.getElementById('PL3-group-modal');
         this.heroCrop = document.getElementById('PL3-group-hero-crop');
@@ -391,6 +394,9 @@ class PL3Controller {
         this.scrollLock = new PL3ScrollLock();
         this.el = new PL3DomRegistry(this.section);
         this.lyricsCache = new Map();
+        this.galleryShiftRaf = null;
+        this.groupScrollRaf = null;
+        this.groupOpenScrollY = 0;
         this.init();
     }
 
@@ -404,6 +410,9 @@ class PL3Controller {
         this.attachShareEvents();
         this.attachPreviewEvents();
         this.attachStreamingPopupEvents();
+        window.addEventListener('resize', () => {
+            this.queueGalleryShiftSync();
+        }, { passive: true });
         this.openFromUrlIfPresent();
     }
 
@@ -586,7 +595,7 @@ class PL3Controller {
     openFromUrlIfPresent() {
         const key = this.getGroupKeyFromUrl();
         if (!key) return;
-        this.openModal(key, null);
+        this.openModal(key);
         const singleId = this.getSingleIdFromUrl(key);
         if (!singleId) return;
         this.openSingleView(singleId);
@@ -643,7 +652,7 @@ class PL3Controller {
                 this.setActiveGalleryButton(null);
             }
 
-            this.openModal(key, btn);
+            this.openModal(key);
         }, { passive: false });
     }
 
@@ -798,7 +807,7 @@ class PL3Controller {
         this.openShareSheet(url);
     }
 
-    openModal(groupKey, sourceBtn) {
+    openModal(groupKey) {
         const { modal, heroCrop, heroImg } = this.el;
         if (!modal || !heroCrop || !heroImg) return;
         const group = this.model.getGroup(groupKey);
@@ -814,16 +823,19 @@ class PL3Controller {
         modal.classList.remove('PL3-modal--opening');
         modal.hidden = false;
         modal.setAttribute('aria-hidden', 'false');
-        this.lockScroll();
         this.updateHeroImage(group);
 
         this.state.openGroupKey = String(group.key);
         this.setGroupKeyInUrl(this.state.openGroupKey);
-        this.setActiveGalleryButton(sourceBtn || this.section.querySelector(`[data-pl3-group="${String(group.key)}"]`));
+        this.setActiveGalleryButton(this.findGalleryButtonByGroup(group.key));
+        this.setGalleryInteractionLocked(true);
+        this.groupOpenScrollY = window.scrollY || window.pageYOffset || 0;
+        this.lockScroll();
 
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 modal.classList.add('PL3-modal--opening');
+                this.scrollGroupCardIntoView();
             });
         });
     }
@@ -831,20 +843,25 @@ class PL3Controller {
     closeModal() {
         const { modal, heroCrop, heroImg, coverOverlay } = this.el;
         if (!modal || modal.hidden) return;
-
+        this.cancelGroupScrollAnimation();
+        const returnTop = Math.max(0, Math.round(this.groupOpenScrollY || 0));
+        const didSmoothScrollBack = this.animateWindowScrollTo(returnTop, 340);
         modal.classList.remove('PL3-modal--opening');
+        const closeDelay = didSmoothScrollBack ? 340 : 300;
         setTimeout(() => {
             modal.hidden = true;
             modal.setAttribute('aria-hidden', 'true');
             modal.classList.remove('PL3-modal--single-view');
-            this.unlockScroll();
 
             this.state.openGroupKey = null;
             this.state.openSingleId = null;
             this.setGroupKeyInUrl(null);
             this.setActiveGalleryButton(null);
+            this.setGalleryInteractionLocked(false);
             this.closeSingleView(true);
             this.syncCoverActionMode();
+            this.unlockScroll();
+            this.groupOpenScrollY = 0;
 
             if (heroCrop) {
                 heroCrop.replaceChildren();
@@ -857,7 +874,42 @@ class PL3Controller {
                 heroCrop.style.removeProperty('--pl3-hero-bg');
                 if (coverOverlay) heroCrop.appendChild(coverOverlay);
             }
-        }, 300);
+        }, closeDelay);
+    }
+
+    cancelGroupScrollAnimation() {
+        if (!this.groupScrollRaf) return;
+        window.cancelAnimationFrame(this.groupScrollRaf);
+        this.groupScrollRaf = null;
+    }
+
+    animateWindowScrollTo(targetTop, durationMs = 380) {
+        const startTop = window.scrollY || window.pageYOffset || 0;
+        if (Math.abs(startTop - targetTop) <= 1) return false;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            window.scrollTo({ top: targetTop, behavior: 'auto' });
+            return false;
+        }
+
+        this.cancelGroupScrollAnimation();
+        const startTime = performance.now();
+        const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+        const tick = (now) => {
+            const progress = Math.min(1, (now - startTime) / durationMs);
+            const eased = easeOutCubic(progress);
+            const nextTop = Math.round(startTop + ((targetTop - startTop) * eased));
+            window.scrollTo({ top: nextTop, behavior: 'auto' });
+            if (progress < 1) {
+                this.groupScrollRaf = window.requestAnimationFrame(tick);
+                return;
+            }
+            this.groupScrollRaf = null;
+        };
+
+        this.groupScrollRaf = window.requestAnimationFrame(tick);
+        return true;
     }
 
     updateHeroImage(group) {
@@ -887,6 +939,64 @@ class PL3Controller {
 
         if (nextBtn) nextBtn.classList.add('PL3-galleryItemBtn--active');
         this.state.activeGalleryBtn = nextBtn;
+        this.queueGalleryShiftSync();
+    }
+
+    setGalleryInteractionLocked(locked) {
+        const isLocked = !!locked;
+        if (this.el.gallery) this.el.gallery.classList.toggle('PL3-gallery--locked', isLocked);
+        this.el.galleryBtns.forEach((btn) => {
+            btn.disabled = isLocked;
+            if (isLocked) btn.setAttribute('aria-disabled', 'true');
+            else btn.removeAttribute('aria-disabled');
+        });
+    }
+
+    queueGalleryShiftSync() {
+        if (this.galleryShiftRaf) cancelAnimationFrame(this.galleryShiftRaf);
+        this.galleryShiftRaf = requestAnimationFrame(() => {
+            this.galleryShiftRaf = null;
+            this.syncActiveGalleryLayout();
+        });
+    }
+
+    syncActiveGalleryLayout() {
+        const gallery = this.el.gallery;
+        if (!gallery) return;
+
+        gallery.style.setProperty('--pl3-gallery-shift', '0px');
+        const activeBtn = this.state.activeGalleryBtn;
+        if (!activeBtn) return;
+
+        const galleryRect = gallery.getBoundingClientRect();
+        const activeRect = activeBtn.getBoundingClientRect();
+        if (!galleryRect.width || !activeRect.width) return;
+
+        const galleryCenterX = galleryRect.left + (galleryRect.width / 2);
+        const activeCenterX = activeRect.left + (activeRect.width / 2);
+        const shiftX = Math.round(galleryCenterX - activeCenterX);
+        gallery.style.setProperty('--pl3-gallery-shift', `${shiftX}px`);
+    }
+
+    findGalleryButtonByGroup(groupKey) {
+        const safeKey = String(groupKey || '').trim();
+        if (!safeKey) return null;
+        return this.section.querySelector(`.PL3-galleryItemBtn[data-pl3-group="${safeKey}"]`);
+    }
+
+    getGalleryTopPosition() {
+        const galleryPart = this.el.galleryPart;
+        if (!galleryPart) return null;
+        return Math.max(0, Math.round(window.scrollY + galleryPart.getBoundingClientRect().top));
+    }
+
+    scrollGroupCardIntoView(onlyIfBelow = false) {
+        const top = this.getGalleryTopPosition();
+        if (top === null) return false;
+        const currentTop = window.scrollY || window.pageYOffset || 0;
+        if (Math.abs(currentTop - top) <= 3) return false;
+        if (onlyIfBelow && currentTop <= top + 4) return false;
+        return this.animateWindowScrollTo(top);
     }
 
     setTitle(lines) {
