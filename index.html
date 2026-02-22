@@ -20,80 +20,6 @@
         gtag('js', new Date());
         gtag('config', 'G-LHJPDBZDMB');
     </script>
-    <style>
-        /* 3D Gallery Overrides */
-        .PL3-part--gallery .PL3-gallery {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: flex-start;
-            flex-wrap: nowrap;
-            perspective: 1000px;
-            padding: 20px 0;
-            overflow: visible;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .PL3-galleryItemBtn {
-            position: relative;
-            width: 110px;
-            height: 110px;
-            flex-shrink: 0;
-            border: none;
-            background: transparent;
-            padding: 0;
-            margin-right: -50px;
-            transform-style: preserve-3d;
-            transform: perspective(1000px) rotateY(-30deg) scale(0.9);
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s 0.2s;
-            cursor: pointer;
-            z-index: 1;
-            border-radius: 6px;
-            box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .PL3-galleryItemBtn:last-child {
-            margin-right: 0;
-        }
-
-        .PL3-galleryItemBtn:hover,
-        .PL3-galleryItemBtn:focus-visible {
-            transform: perspective(1000px) rotateY(0deg) scale(1.2) translateZ(30px);
-            z-index: 100;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s;
-            outline: none;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
-        }
-
-        .PL3-galleryImg {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 6px;
-            display: block;
-        }
-
-        /* Ensure parent doesn't clip the 3D effects */
-        .PL3-part--gallery {
-            overflow: visible;
-            z-index: 10;
-            position: relative;
-        }
-
-        /* Prevent horizontal scroll on the main section */
-        .PL3-section {
-            overflow-x: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .PL3-galleryItemBtn {
-                width: 80px;
-                height: 80px;
-                margin-right: -35px;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -285,117 +211,134 @@
                                 <span class="PL3-coverShareIcon" aria-hidden="true"><i
                                         class="fa-solid fa-share-nodes"></i></span>
                             </button>
-                            <button class="PL3-coverClose PL3-coverIconBtn" type="button" data-pl3-close-group
-                                aria-label="Close"></button>
+                            <div class="PL3-coverRight">
+                                <button class="PL3-coverBack PL3-coverIconBtn" type="button" data-pl3-song-back
+                                    aria-label="Back to songs">
+                                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                                </button>
+                                <button class="PL3-coverClose PL3-coverIconBtn" type="button" data-pl3-close-group
+                                    aria-label="Close"></button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="PL3-groupBody">
-                <div class="PL3-members" id="PL3-mixes" aria-label="Mixes">
-                    <div class="PL3-memberEmpty" id="PL3-mixes-empty" aria-live="polite" hidden></div>
+                <div class="PL3-songCard" id="PL3-song-card">
+                    <div class="PL3-songCardFace PL3-songCardFace--front">
+                        <div class="PL3-members" id="PL3-mixes" aria-label="Mixes">
+                            <div class="PL3-memberEmpty" id="PL3-mixes-empty" aria-live="polite" hidden></div>
 
-                    <!-- Static placeholders (JS only updates attrs/text + hides unused) -->
-                    <div class="ohf-mix-row" role="listitem" data-pl3-mix-row hidden>
-                        <img class="ohf-mix-art" data-pl3-mix-art src="" alt="" hidden>
-                        <div class="ohf-mix-meta">
-                            <div class="ohf-mix-name" data-pl3-mix-name></div>
-                            <div class="ohf-mix-icons" aria-label="Links">
-                                <a class="ohf-mix-link" data-pl3-platform="Spotify" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Spotify" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/spotify/FFFFFF"
-                                        alt="Spotify" title="Spotify">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Apple Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Apple Music" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/apple/FFFFFF" alt="Apple"
-                                        title="Apple Music">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="YouTube Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="YouTube Music" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtubemusic/FFFFFF"
-                                        alt="YouTube Music" title="YouTube Music">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Amazon Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Amazon Music" hidden>
-                                    <i class="fa-brands fa-amazon ohf-mix-icon ohf-mix-icon--fa ohf-mix-icon--amazon"
-                                        aria-hidden="true"></i>
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Other" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="YouTube" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtube/FFFFFF"
-                                        alt="YouTube" title="YouTube">
-                                </a>
+                            <div class="ohf-mix-row" role="listitem" data-pl3-mix-row hidden>
+                                <img class="ohf-mix-art" data-pl3-mix-art src="" alt="" hidden>
+                                <div class="ohf-mix-meta">
+                                    <div class="ohf-mix-name" data-pl3-mix-name></div>
+                                    <div class="ohf-mix-icons" aria-label="Links">
+                                        <a class="ohf-mix-link" data-pl3-platform="Spotify" href="#" target="_blank" rel="noopener noreferrer" aria-label="Spotify" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/spotify/FFFFFF" alt="Spotify" title="Spotify">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Apple Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="Apple Music" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/apple/FFFFFF" alt="Apple" title="Apple Music">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="YouTube Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube Music" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtubemusic/FFFFFF" alt="YouTube Music" title="YouTube Music">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Amazon Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="Amazon Music" hidden>
+                                            <i class="fa-brands fa-amazon ohf-mix-icon ohf-mix-icon--fa ohf-mix-icon--amazon" aria-hidden="true"></i>
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Other" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtube/FFFFFF" alt="YouTube" title="YouTube">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ohf-mix-row" role="listitem" data-pl3-mix-row hidden>
+                                <img class="ohf-mix-art" data-pl3-mix-art src="" alt="" hidden>
+                                <div class="ohf-mix-meta">
+                                    <div class="ohf-mix-name" data-pl3-mix-name></div>
+                                    <div class="ohf-mix-icons" aria-label="Links">
+                                        <a class="ohf-mix-link" data-pl3-platform="Spotify" href="#" target="_blank" rel="noopener noreferrer" aria-label="Spotify" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/spotify/FFFFFF" alt="Spotify" title="Spotify">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Apple Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="Apple Music" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/apple/FFFFFF" alt="Apple" title="Apple Music">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="YouTube Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube Music" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtubemusic/FFFFFF" alt="YouTube Music" title="YouTube Music">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Amazon Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="Amazon Music" hidden>
+                                            <i class="fa-brands fa-amazon ohf-mix-icon ohf-mix-icon--fa ohf-mix-icon--amazon" aria-hidden="true"></i>
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Other" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtube/FFFFFF" alt="YouTube" title="YouTube">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ohf-mix-row" role="listitem" data-pl3-mix-row hidden>
+                                <img class="ohf-mix-art" data-pl3-mix-art src="" alt="" hidden>
+                                <div class="ohf-mix-meta">
+                                    <div class="ohf-mix-name" data-pl3-mix-name></div>
+                                    <div class="ohf-mix-icons" aria-label="Links">
+                                        <a class="ohf-mix-link" data-pl3-platform="Spotify" href="#" target="_blank" rel="noopener noreferrer" aria-label="Spotify" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/spotify/FFFFFF" alt="Spotify" title="Spotify">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Apple Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="Apple Music" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/apple/FFFFFF" alt="Apple" title="Apple Music">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="YouTube Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube Music" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtubemusic/FFFFFF" alt="YouTube Music" title="YouTube Music">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Amazon Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="Amazon Music" hidden>
+                                            <i class="fa-brands fa-amazon ohf-mix-icon ohf-mix-icon--fa ohf-mix-icon--amazon" aria-hidden="true"></i>
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-platform="Other" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtube/FFFFFF" alt="YouTube" title="YouTube">
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="ohf-mix-row" role="listitem" data-pl3-mix-row hidden>
-                        <img class="ohf-mix-art" data-pl3-mix-art src="" alt="" hidden>
-                        <div class="ohf-mix-meta">
-                            <div class="ohf-mix-name" data-pl3-mix-name></div>
-                            <div class="ohf-mix-icons" aria-label="Links">
-                                <a class="ohf-mix-link" data-pl3-platform="Spotify" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Spotify" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/spotify/FFFFFF"
-                                        alt="Spotify" title="Spotify">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Apple Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Apple Music" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/apple/FFFFFF" alt="Apple"
-                                        title="Apple Music">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="YouTube Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="YouTube Music" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtubemusic/FFFFFF"
-                                        alt="YouTube Music" title="YouTube Music">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Amazon Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Amazon Music" hidden>
-                                    <i class="fa-brands fa-amazon ohf-mix-icon ohf-mix-icon--fa ohf-mix-icon--amazon"
-                                        aria-hidden="true"></i>
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Other" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="YouTube" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtube/FFFFFF"
-                                        alt="YouTube" title="YouTube">
-                                </a>
+                    <div class="PL3-songCardFace PL3-songCardFace--back" aria-live="polite">
+                        <div class="PL3-songDetail" id="PL3-song-detail">
+                            <div class="PL3-songHeader">
+                                <img class="PL3-songArt" id="PL3-song-art" src="" alt="" loading="lazy" hidden>
+                                <div class="PL3-songHeaderMeta">
+                                    <div class="PL3-songName" id="PL3-song-name"></div>
+                                    <div class="ohf-mix-icons PL3-songLinks" id="PL3-song-links" aria-label="Song links">
+                                        <a class="ohf-mix-link" data-pl3-song-platform="Spotify" href="#" target="_blank" rel="noopener noreferrer" aria-label="Spotify" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/spotify/FFFFFF" alt="Spotify" title="Spotify">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-song-platform="Apple Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="Apple Music" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/apple/FFFFFF" alt="Apple" title="Apple Music">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-song-platform="YouTube Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube Music" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtubemusic/FFFFFF" alt="YouTube Music" title="YouTube Music">
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-song-platform="Amazon Music" href="#" target="_blank" rel="noopener noreferrer" aria-label="Amazon Music" hidden>
+                                            <i class="fa-brands fa-amazon ohf-mix-icon ohf-mix-icon--fa ohf-mix-icon--amazon" aria-hidden="true"></i>
+                                        </a>
+                                        <a class="ohf-mix-link" data-pl3-song-platform="Other" href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" hidden>
+                                            <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtube/FFFFFF" alt="YouTube" title="YouTube">
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="ohf-mix-row" role="listitem" data-pl3-mix-row hidden>
-                        <img class="ohf-mix-art" data-pl3-mix-art src="" alt="" hidden>
-                        <div class="ohf-mix-meta">
-                            <div class="ohf-mix-name" data-pl3-mix-name></div>
-                            <div class="ohf-mix-icons" aria-label="Links">
-                                <a class="ohf-mix-link" data-pl3-platform="Spotify" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Spotify" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/spotify/FFFFFF"
-                                        alt="Spotify" title="Spotify">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Apple Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Apple Music" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/apple/FFFFFF" alt="Apple"
-                                        title="Apple Music">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="YouTube Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="YouTube Music" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtubemusic/FFFFFF"
-                                        alt="YouTube Music" title="YouTube Music">
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Amazon Music" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="Amazon Music" hidden>
-                                    <i class="fa-brands fa-amazon ohf-mix-icon ohf-mix-icon--fa ohf-mix-icon--amazon"
-                                        aria-hidden="true"></i>
-                                </a>
-                                <a class="ohf-mix-link" data-pl3-platform="Other" href="#" target="_blank"
-                                    rel="noopener noreferrer" aria-label="YouTube" hidden>
-                                    <img class="ohf-mix-icon" src="https://cdn.simpleicons.org/youtube/FFFFFF"
-                                        alt="YouTube" title="YouTube">
-                                </a>
-                            </div>
+                            <section class="PL3-songSection" id="PL3-song-about-section" hidden>
+                                <h3 class="PL3-songSectionTitle">About</h3>
+                                <p class="PL3-songSectionText" id="PL3-song-about"></p>
+                            </section>
+
+                            <section class="PL3-songSection" id="PL3-song-lyrics-section" hidden>
+                                <h3 class="PL3-songSectionTitle">Lyrics</h3>
+                                <pre class="PL3-songLyrics" id="PL3-song-lyrics"></pre>
+                            </section>
                         </div>
                     </div>
                 </div>

@@ -232,6 +232,7 @@
             title: 'Full-Mindness',
             version: 'Opa Mayhem Mix',
             image: 'img/music/main_full_mindness.png',
+            lyricsPath: 'lyrics/full-mindness.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z',
                 'Other': 'https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh',
@@ -295,6 +296,7 @@ class PL3StateModel {
     constructor() {
         this.expandedBtn = null;
         this.openGroupKey = null;
+        this.openSingleId = null;
         this.shareUrl = '';
         this.previewVideoId = '';
         this.previewMuted = false;
@@ -312,8 +314,16 @@ class PL3DomRegistry {
         this.heroCrop = document.getElementById('PL3-group-hero-crop');
         this.heroImg = document.getElementById('PL3-group-hero-img');
         this.titleEl = document.getElementById('PL3-group-title');
+        this.songCard = document.getElementById('PL3-song-card');
         this.mixesEl = document.getElementById('PL3-mixes');
         this.emptyEl = document.getElementById('PL3-mixes-empty');
+        this.songArt = document.getElementById('PL3-song-art');
+        this.songName = document.getElementById('PL3-song-name');
+        this.songLinks = Array.from(document.querySelectorAll('[data-pl3-song-platform]'));
+        this.songAboutSection = document.getElementById('PL3-song-about-section');
+        this.songAbout = document.getElementById('PL3-song-about');
+        this.songLyricsSection = document.getElementById('PL3-song-lyrics-section');
+        this.songLyrics = document.getElementById('PL3-song-lyrics');
         this.shareModal = document.getElementById('PL3-share-modal');
         this.shareInput = document.getElementById('PL3-share-url');
         this.previewModal = document.getElementById('PL3-preview-modal');
@@ -322,6 +332,7 @@ class PL3DomRegistry {
 
         this.modalPanel = this.modal?.querySelector('.PL3-modalPanel');
         this.coverOverlay = this.heroCrop?.querySelector('.PL3-coverOverlay');
+        this.coverBackBtn = this.modal?.querySelector('[data-pl3-song-back]');
         this.titleLine1 = this.titleEl?.querySelector('[data-pl3-title-line="1"]');
         this.titleLine2 = this.titleEl?.querySelector('[data-pl3-title-line="2"]');
         this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
@@ -371,14 +382,17 @@ class PL3Controller {
         this.state = new PL3StateModel();
         this.scrollLock = new PL3ScrollLock();
         this.el = new PL3DomRegistry(this.section);
+        this.lyricsCache = new Map();
         this.init();
     }
 
     init() {
         if (!this.section) return;
+        this.syncCoverActionMode();
         this.attachButtonEvents();
         this.attachGalleryEvents();
         this.attachModalEvents();
+        this.attachSongDetailEvents();
         this.attachShareEvents();
         this.attachPreviewEvents();
         this.attachStreamingPopupEvents();
@@ -616,6 +630,39 @@ class PL3Controller {
         }, { passive: true });
     }
 
+    attachSongDetailEvents() {
+        if (this.el.mixesEl) {
+            this.el.mixesEl.addEventListener('click', (ev) => {
+                const row = ev.target.closest('[data-pl3-mix-row]');
+                if (!row || row.hidden || !this.el.mixesEl.contains(row)) return;
+                if (ev.target.closest('a[data-pl3-platform]')) return;
+                ev.preventDefault();
+                const singleId = String(row.getAttribute('data-pl3-single-id') || '').trim();
+                if (!singleId) return;
+                this.openSingleView(singleId);
+            }, { passive: false });
+
+            this.el.mixesEl.addEventListener('keydown', (ev) => {
+                const row = ev.target.closest('[data-pl3-mix-row]');
+                if (!row || row.hidden || !this.el.mixesEl.contains(row)) return;
+                if (ev.key !== 'Enter' && ev.key !== ' ') return;
+                ev.preventDefault();
+                const singleId = String(row.getAttribute('data-pl3-single-id') || '').trim();
+                if (!singleId) return;
+                this.openSingleView(singleId);
+            });
+        }
+
+        if (this.el.modal) {
+            this.el.modal.addEventListener('click', (ev) => {
+                const backBtn = ev.target.closest('[data-pl3-song-back]');
+                if (!backBtn || !this.el.modal.contains(backBtn)) return;
+                ev.preventDefault();
+                this.closeSingleView();
+            }, { passive: false });
+        }
+    }
+
     // === Share ===
     attachShareEvents() {
         if (this.el.modal) {
@@ -696,13 +743,19 @@ class PL3Controller {
         if (!key) return;
         const g = this.model.getGroup(key);
         if (!g) return;
-        const url = this.model.buildGroupUrl(key);
+        const currentSingle = this.state.openSingleId ? g.singlesById?.[this.state.openSingleId] : null;
+        const singleLinks = currentSingle?.links || {};
+        const preferred = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
+        const singleUrl = preferred.map(p => singleLinks[p]).find(Boolean) || '';
+        const url = singleUrl || this.model.buildGroupUrl(key);
+        const shareTitle = currentSingle?.version || currentSingle?.title || g.title || 'OpaHiFi';
+        const shareText = currentSingle ? `${shareTitle}` : (g.title || 'OpaHiFi group');
 
         try {
             if (navigator.share) {
                 await navigator.share({
-                    title: g.title || 'OpaHiFi',
-                    text: g.title || 'OpaHiFi group',
+                    title: shareTitle || 'OpaHiFi',
+                    text: shareText,
                     url
                 });
                 return;
@@ -720,6 +773,10 @@ class PL3Controller {
         const group = this.model.getGroup(groupKey);
         if (!group || group.isComingSoon) return;
 
+        modal.classList.remove('PL3-modal--single-view');
+        this.closeSingleView(true);
+        this.state.openSingleId = null;
+        this.syncCoverActionMode();
         this.setTitle(group.titleLines || [group.title]);
         this.renderMixes(group);
 
@@ -747,10 +804,14 @@ class PL3Controller {
         setTimeout(() => {
             modal.hidden = true;
             modal.setAttribute('aria-hidden', 'true');
+            modal.classList.remove('PL3-modal--single-view');
             this.unlockScroll();
 
             this.state.openGroupKey = null;
+            this.state.openSingleId = null;
             this.setGroupKeyInUrl(null);
+            this.closeSingleView(true);
+            this.syncCoverActionMode();
 
             if (heroCrop) {
                 heroCrop.replaceChildren();
@@ -811,6 +872,9 @@ class PL3Controller {
 
     clearMixRow({ row, art, name, links }) {
         row.hidden = true;
+        row.removeAttribute('data-pl3-single-id');
+        row.setAttribute('tabindex', '-1');
+        row.setAttribute('aria-label', '');
         if (art) { art.hidden = true; art.src = ''; art.alt = ''; }
         if (name) name.textContent = '';
         links.forEach(a => { a.hidden = true; a.href = '#'; });
@@ -821,6 +885,9 @@ class PL3Controller {
         const artSrc = single.image || group.cover || '';
         const singleLinks = single.links || {};
         row.hidden = false;
+        row.setAttribute('data-pl3-single-id', String(single.id || ''));
+        row.setAttribute('tabindex', '0');
+        row.setAttribute('aria-label', `Open ${mixName}`);
         if (art) { art.hidden = false; art.src = artSrc; art.alt = `${mixName} cover`; }
         if (name) name.textContent = mixName;
         platforms.forEach(p => {
@@ -830,6 +897,76 @@ class PL3Controller {
             link.hidden = !url;
             link.href = url || '#';
         });
+    }
+
+    async openSingleView(singleId) {
+        const group = this.model.getGroup(this.state.openGroupKey);
+        if (!group) return;
+        const single = group.singlesById?.[singleId];
+        if (!single) return;
+
+        const title = String(single.version || single.title || 'Song').trim();
+        const image = String(single.image || group.cover || '').trim();
+        const links = single.links || {};
+        const platforms = this.model.getPlatformOrder();
+
+        if (this.el.songArt) {
+            this.el.songArt.hidden = !image;
+            this.el.songArt.src = image;
+            this.el.songArt.alt = image ? `${title} cover` : '';
+        }
+        if (this.el.songName) this.el.songName.textContent = title;
+
+        platforms.forEach((platform) => {
+            const anchor = this.el.songLinks.find(a => a.getAttribute('data-pl3-song-platform') === platform);
+            if (!anchor) return;
+            const url = String(links[platform] || '').trim();
+            anchor.hidden = !url;
+            anchor.href = url || '#';
+        });
+
+        const aboutText = String(single.about || '').trim();
+        if (this.el.songAboutSection) this.el.songAboutSection.hidden = !aboutText;
+        if (this.el.songAbout) this.el.songAbout.textContent = aboutText;
+
+        let lyricsText = String(single.lyrics || '').trim();
+        if (!lyricsText) {
+            const lyricsPath = String(single.lyricsPath || '').trim();
+            if (lyricsPath) {
+                if (this.lyricsCache.has(lyricsPath)) {
+                    lyricsText = this.lyricsCache.get(lyricsPath) || '';
+                } else {
+                    try {
+                        const res = await fetch(lyricsPath);
+                        lyricsText = res.ok ? (await res.text()) : '';
+                    } catch {
+                        lyricsText = '';
+                    }
+                    this.lyricsCache.set(lyricsPath, lyricsText);
+                }
+            }
+        }
+
+        if (this.el.songLyricsSection) this.el.songLyricsSection.hidden = false;
+        if (this.el.songLyrics) this.el.songLyrics.textContent = lyricsText || 'Lyrics coming soon.';
+
+        this.state.openSingleId = String(single.id || '');
+        if (this.el.songCard) this.el.songCard.classList.add('is-flipped');
+        if (this.el.modal) this.el.modal.classList.add('PL3-modal--single-view');
+        this.syncCoverActionMode();
+    }
+
+    closeSingleView(silent = false) {
+        this.state.openSingleId = null;
+        if (this.el.songCard) this.el.songCard.classList.remove('is-flipped');
+        if (this.el.modal) this.el.modal.classList.remove('PL3-modal--single-view');
+        this.syncCoverActionMode();
+        if (silent) return;
+    }
+
+    syncCoverActionMode() {
+        const inSingleMode = !!this.state.openSingleId;
+        if (this.el.coverBackBtn) this.el.coverBackBtn.hidden = !inSingleMode;
     }
 
     showEmpty(msg) { if (this.el.emptyEl) { this.el.emptyEl.textContent = msg || ''; this.el.emptyEl.hidden = false; } }
