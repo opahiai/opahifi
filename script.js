@@ -325,6 +325,7 @@ class PL3DomRegistry {
         this.emptyEl = document.getElementById('PL3-mixes-empty');
         this.songArt = document.getElementById('PL3-song-art');
         this.songName = document.getElementById('PL3-song-name');
+        this.songVersion = document.getElementById('PL3-song-version');
         this.songLinks = Array.from(document.querySelectorAll('[data-pl3-song-platform]'));
         this.songAboutSection = document.getElementById('PL3-song-about-section');
         this.songAbout = document.getElementById('PL3-song-about');
@@ -929,7 +930,8 @@ class PL3Controller {
         const single = group.singlesById?.[singleId];
         if (!single) return;
 
-        const title = String(single.version || single.title || 'Song').trim();
+        const songName = String(single.title || group.title || 'Song').trim();
+        const versionName = String(single.version || 'Main Version').trim();
         const image = String(single.image || group.cover || '').trim();
         const links = single.links || {};
         const platforms = this.model.getPlatformOrder();
@@ -937,9 +939,10 @@ class PL3Controller {
         if (this.el.songArt) {
             this.el.songArt.hidden = !image;
             this.el.songArt.src = image;
-            this.el.songArt.alt = image ? `${title} cover` : '';
+            this.el.songArt.alt = image ? `${songName} cover` : '';
         }
-        if (this.el.songName) this.el.songName.textContent = title;
+        if (this.el.songName) this.el.songName.textContent = songName;
+        if (this.el.songVersion) this.el.songVersion.textContent = versionName;
 
         platforms.forEach((platform) => {
             const anchor = this.el.songLinks.find(a => a.getAttribute('data-pl3-song-platform') === platform);
