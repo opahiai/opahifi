@@ -274,6 +274,12 @@
     };
 })();
 
+const PL3GSAP = (typeof window !== 'undefined' && window.gsap) ? window.gsap : null;
+const PL3Flip = (typeof window !== 'undefined' && window.Flip) ? window.Flip : null;
+if (PL3GSAP && PL3Flip && typeof PL3GSAP.registerPlugin === 'function') {
+    try { PL3GSAP.registerPlugin(PL3Flip); } catch { /* ignore */ }
+}
+
 class PL3MusicModel {
     constructor(data = window.musicDataGrouped) {
         this.data = data || { groups: [], platformOrder: [], singlesById: {} };
@@ -288,12 +294,20 @@ class PL3MusicModel {
         return this.data?.platformOrder?.length ? this.data.platformOrder : this.defaultPlatformOrder;
     }
 
-    buildGroupUrl(groupKey) {
+    getSingle(groupKey, singleId) {
+        const group = this.getGroup(groupKey);
+        if (!group || !singleId) return null;
+        return group.singlesById?.[String(singleId)] || null;
+    }
+
+    buildGroupUrl(groupKey, singleId = null) {
         const safeKey = encodeURIComponent(String(groupKey || ''));
+        const safeSingleId = singleId ? encodeURIComponent(String(singleId)) : '';
+        const suffix = safeSingleId ? `?pl3s=${safeSingleId}` : '';
         try {
-            return `${window.location.origin}/s/${safeKey}`;
+            return `${window.location.origin}/s/${safeKey}${suffix}`;
         } catch (e) {
-            return `/s/${safeKey}`;
+            return `/s/${safeKey}${suffix}`;
         }
     }
 }
@@ -303,6 +317,8 @@ class PL3StateModel {
         this.expandedBtn = null;
         this.activeGalleryBtn = null;
         this.openGroupKey = null;
+        this.openSingleId = null;
+        this.singleViewLocked = false;
         this.shareUrl = '';
         this.previewVideoId = '';
         this.previewMuted = false;
@@ -325,6 +341,12 @@ class PL3DomRegistry {
         this.titleEl = document.getElementById('PL3-group-title');
         this.mixesEl = document.getElementById('PL3-mixes');
         this.emptyEl = document.getElementById('PL3-mixes-empty');
+        this.backBtn = document.getElementById('PL3-group-back-btn');
+        this.songCard = document.getElementById('PL3-song-card');
+        this.songCardTrack = document.getElementById('PL3-song-card-track');
+        this.songDetailCard = document.getElementById('PL3-song-detail-card');
+        this.songHeaderTarget = document.getElementById('PL3-song-header-target');
+        this.lyricsText = document.getElementById('PL3-song-lyrics-text');
         this.shareModal = document.getElementById('PL3-share-modal');
         this.shareInput = document.getElementById('PL3-share-url');
         this.previewModal = document.getElementById('PL3-preview-modal');
@@ -385,6 +407,10 @@ class PL3Controller {
         this.galleryShiftRaf = null;
         this.groupScrollRaf = null;
         this.groupOpenScrollY = 0;
+        this.currentMixRow = null;
+        this.currentMixPlaceholder = null;
+        this.cardSlideTween = null;
+        this.lyricsCache = new Map();
         this.init();
     }
 
@@ -553,15 +579,25 @@ class PL3Controller {
     }
 
     getSingleIdFromUrl(groupKey) {
-        return null;
+        try {
+            const g = this.model.getGroup(groupKey);
+            if (!g) return null;
+            const u = new URL(window.location.href);
+            const singleId = (u.searchParams.get('pl3s') || '').trim();
+            if (!singleId) return null;
+            return g.singlesById?.[singleId] ? singleId : null;
+        } catch {
+            return null;
+        }
     }
 
-    setGroupKeyInUrl(groupKeyOrNull) {
+    setGroupKeyInUrl(groupKeyOrNull, singleIdOrNull = null) {
         try {
             const u = new URL(window.location.href);
             if (groupKeyOrNull) u.searchParams.set('pl3', String(groupKeyOrNull));
             else u.searchParams.delete('pl3');
-            u.searchParams.delete('pl3s');
+            if (groupKeyOrNull && singleIdOrNull) u.searchParams.set('pl3s', String(singleIdOrNull));
+            else u.searchParams.delete('pl3s');
             window.history.replaceState({}, '', u.toString());
         } catch {
             // ignore
@@ -571,7 +607,8 @@ class PL3Controller {
     openFromUrlIfPresent() {
         const key = this.getGroupKeyFromUrl();
         if (!key) return;
-        this.openModal(key);
+        const singleId = this.getSingleIdFromUrl(key);
+        this.openModal(key, { initialSingleId: singleId });
     }
 
     // === Button Expansion ===
@@ -634,9 +671,34 @@ class PL3Controller {
     attachModalEvents() {
         if (!this.el.modal) return;
         this.el.modal.addEventListener('click', (ev) => {
-            if (!ev.target.closest('[data-pl3-close-group]') || !this.el.modal.contains(ev.target)) return;
+            const closeBtn = ev.target.closest('[data-pl3-close-group]');
+            if (closeBtn && this.el.modal.contains(closeBtn)) {
+                ev.preventDefault();
+                this.closeModal();
+                return;
+            }
+
+            const backBtn = ev.target.closest('[data-pl3-back-group]');
+            if (backBtn && this.el.modal.contains(backBtn)) {
+                ev.preventDefault();
+                this.exitSingleView({ animate: true, syncUrl: true });
+                return;
+            }
+
+            if (ev.target.closest('.ohf-mix-link')) return;
+            const mixRow = ev.target.closest('[data-pl3-mix-row]');
+            if (!mixRow || !this.el.modal.contains(mixRow) || mixRow.hidden) return;
             ev.preventDefault();
-            this.closeModal();
+            this.openSingleViewFromRow(mixRow, { animate: true, syncUrl: true });
+        }, { passive: false });
+
+        this.el.modal.addEventListener('keydown', (ev) => {
+            if (ev.key !== 'Enter' && ev.key !== ' ') return;
+            if (ev.target.closest('.ohf-mix-link')) return;
+            const mixRow = ev.target.closest('[data-pl3-mix-row]');
+            if (!mixRow || mixRow.hidden) return;
+            ev.preventDefault();
+            this.openSingleViewFromRow(mixRow, { animate: true, syncUrl: true });
         }, { passive: false });
 
         document.addEventListener('pointerdown', (ev) => {
@@ -736,9 +798,14 @@ class PL3Controller {
         if (!key) return;
         const g = this.model.getGroup(key);
         if (!g) return;
-        const url = this.model.buildGroupUrl(key);
-        const shareTitle = g.title || 'OpaHiFi';
-        const shareText = g.title || 'OpaHiFi group';
+        const singleId = this.state.openSingleId;
+        const single = singleId ? this.model.getSingle(key, singleId) : null;
+        const versionName = single?.version || 'Main Version';
+        const url = this.model.buildGroupUrl(key, single?.id || null);
+        const shareTitle = single ? `${single.title || g.title || 'OpaHiFi'} - ${versionName}` : (g.title || 'OpaHiFi');
+        const shareText = single
+            ? `${single.title || g.title || 'OpaHiFi'} (${versionName})`
+            : (g.title || 'OpaHiFi group');
 
         try {
             if (navigator.share) {
@@ -756,14 +823,19 @@ class PL3Controller {
         this.openShareSheet(url);
     }
 
-    openModal(groupKey) {
+    openModal(groupKey, opts = {}) {
         const { modal, heroCrop, heroImg } = this.el;
         if (!modal || !heroCrop || !heroImg) return;
         const group = this.model.getGroup(groupKey);
         if (!group || group.isComingSoon) return;
+        const initialSingleId = opts?.initialSingleId || null;
+
+        this.resetSingleViewState({ syncUrl: false, resetLyrics: true });
 
         this.setTitle(group.titleLines || [group.title]);
         this.renderMixes(group);
+        this.setSongTrackPosition(0);
+        modal.classList.remove('PL3-modal--single-view');
 
         modal.classList.remove('PL3-modal--opening');
         modal.hidden = false;
@@ -771,7 +843,8 @@ class PL3Controller {
         this.updateHeroImage(group);
 
         this.state.openGroupKey = String(group.key);
-        this.setGroupKeyInUrl(this.state.openGroupKey);
+        this.state.openSingleId = null;
+        this.setGroupKeyInUrl(this.state.openGroupKey, null);
         this.setActiveGalleryButton(this.findGalleryButtonByGroup(group.key));
         this.setGalleryInteractionLocked(true);
         this.groupOpenScrollY = window.scrollY || window.pageYOffset || 0;
@@ -781,6 +854,13 @@ class PL3Controller {
             requestAnimationFrame(() => {
                 modal.classList.add('PL3-modal--opening');
                 this.scrollGroupCardIntoView();
+
+                if (initialSingleId) {
+                    const targetRow = this.el.mixRows
+                        .find((entry) => entry.row.getAttribute('data-pl3-single-id') === String(initialSingleId) && !entry.row.hidden)
+                        ?.row || null;
+                    if (targetRow) this.openSingleViewFromRow(targetRow, { animate: false, syncUrl: true });
+                }
             });
         });
     }
@@ -788,17 +868,20 @@ class PL3Controller {
     closeModal() {
         const { modal, heroCrop, heroImg, coverOverlay } = this.el;
         if (!modal || modal.hidden) return;
+        this.resetSingleViewState({ syncUrl: false, resetLyrics: true });
         this.cancelGroupScrollAnimation();
         const returnTop = Math.max(0, Math.round(this.groupOpenScrollY || 0));
         const didSmoothScrollBack = this.animateWindowScrollTo(returnTop, 340);
         modal.classList.remove('PL3-modal--opening');
+        modal.classList.remove('PL3-modal--single-view');
         const closeDelay = didSmoothScrollBack ? 340 : 300;
         setTimeout(() => {
             modal.hidden = true;
             modal.setAttribute('aria-hidden', 'true');
 
             this.state.openGroupKey = null;
-            this.setGroupKeyInUrl(null);
+            this.state.openSingleId = null;
+            this.setGroupKeyInUrl(null, null);
             this.setActiveGalleryButton(null);
             this.setGalleryInteractionLocked(false);
             this.unlockScroll();
@@ -816,6 +899,183 @@ class PL3Controller {
                 if (coverOverlay) heroCrop.appendChild(coverOverlay);
             }
         }, closeDelay);
+    }
+
+    isReducedMotion() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    getFlipStateForElement(el) {
+        if (!el || !PL3GSAP || !PL3Flip || this.isReducedMotion()) return null;
+        try {
+            return PL3Flip.getState(el);
+        } catch {
+            return null;
+        }
+    }
+
+    setSongTrackPosition(xPercent) {
+        const track = this.el.songCardTrack;
+        if (!track) return;
+        const safeX = Number.isFinite(xPercent) ? xPercent : 0;
+        if (PL3GSAP) {
+            PL3GSAP.set(track, { xPercent: safeX });
+            return;
+        }
+        track.style.transform = `translate3d(${safeX}%, 0, 0)`;
+    }
+
+    animateSongTrackTo(xPercent, durationMs = 420) {
+        const track = this.el.songCardTrack;
+        if (!track) return;
+        if (this.cardSlideTween) {
+            this.cardSlideTween.kill();
+            this.cardSlideTween = null;
+        }
+
+        const safeX = Number.isFinite(xPercent) ? xPercent : 0;
+        if (!PL3GSAP || this.isReducedMotion() || durationMs <= 0) {
+            this.setSongTrackPosition(safeX);
+            return;
+        }
+
+        this.cardSlideTween = PL3GSAP.to(track, {
+            xPercent: safeX,
+            duration: durationMs / 1000,
+            ease: 'power2.inOut',
+            onComplete: () => { this.cardSlideTween = null; }
+        });
+    }
+
+    applyFlipFromState(flipState, durationMs = 440) {
+        if (!flipState || !PL3GSAP || !PL3Flip || this.isReducedMotion() || durationMs <= 0) return;
+        PL3Flip.from(flipState, {
+            duration: durationMs / 1000,
+            ease: 'power2.inOut',
+            nested: true,
+            prune: true
+        });
+    }
+
+    setLyricsText(text) {
+        if (!this.el.lyricsText) return;
+        this.el.lyricsText.textContent = String(text || '');
+    }
+
+    async loadLyricsText(single) {
+        const path = String(single?.lyricsPath || '').trim();
+        if (!path) return 'Lyrics coming soon.';
+        if (this.lyricsCache.has(path)) return this.lyricsCache.get(path);
+
+        try {
+            const res = await fetch(path, { cache: 'no-store' });
+            if (!res.ok) throw new Error(`Lyrics not found: ${path}`);
+            const txt = (await res.text()).trim() || 'Lyrics coming soon.';
+            this.lyricsCache.set(path, txt);
+            return txt;
+        } catch {
+            return 'Lyrics coming soon.';
+        }
+    }
+
+    ensureMixRowPlaceholder(row) {
+        if (!row) return;
+        if (this.currentMixPlaceholder && this.currentMixPlaceholder.parentNode) {
+            this.currentMixPlaceholder.remove();
+        }
+        const placeholder = document.createElement('div');
+        placeholder.className = 'PL3-mix-placeholder';
+        placeholder.setAttribute('aria-hidden', 'true');
+        const h = Math.max(1, Math.round(row.getBoundingClientRect().height || row.offsetHeight || 81));
+        placeholder.style.setProperty('--pl3-mix-placeholder-h', `${h}px`);
+        row.insertAdjacentElement('afterend', placeholder);
+        this.currentMixPlaceholder = placeholder;
+        this.currentMixRow = row;
+    }
+
+    restoreCurrentMixRow({ animate = false } = {}) {
+        const row = this.currentMixRow;
+        if (!row) return;
+        const flipState = this.getFlipStateForElement(row);
+        const placeholder = this.currentMixPlaceholder;
+        if (placeholder && placeholder.parentNode) {
+            placeholder.replaceWith(row);
+        } else if (this.el.mixesEl) {
+            this.el.mixesEl.appendChild(row);
+        }
+        row.classList.remove('is-active');
+        this.currentMixRow = null;
+        this.currentMixPlaceholder = null;
+        if (animate) this.applyFlipFromState(flipState, 420);
+    }
+
+    resetSingleViewState({ syncUrl = false, resetLyrics = false } = {}) {
+        this.state.singleViewLocked = false;
+        this.restoreCurrentMixRow({ animate: false });
+        if (this.cardSlideTween) {
+            this.cardSlideTween.kill();
+            this.cardSlideTween = null;
+        }
+        if (this.el.songHeaderTarget) this.el.songHeaderTarget.replaceChildren();
+        if (resetLyrics) this.setLyricsText('');
+        if (this.el.modal) this.el.modal.classList.remove('PL3-modal--single-view');
+        this.setSongTrackPosition(0);
+        this.state.openSingleId = null;
+        if (syncUrl && this.state.openGroupKey) {
+            this.setGroupKeyInUrl(this.state.openGroupKey, null);
+        }
+    }
+
+    async openSingleViewFromRow(rowEl, { animate = true, syncUrl = true } = {}) {
+        if (!rowEl || rowEl.hidden || this.state.singleViewLocked) return;
+        const groupKey = this.state.openGroupKey;
+        if (!groupKey) return;
+
+        const singleId = String(rowEl.getAttribute('data-pl3-single-id') || '').trim();
+        if (!singleId) return;
+        const group = this.model.getGroup(groupKey);
+        const single = this.model.getSingle(groupKey, singleId);
+        if (!group || !single) return;
+
+        if (this.state.openSingleId && this.state.openSingleId !== singleId) {
+            this.resetSingleViewState({ syncUrl: false, resetLyrics: false });
+        }
+        if (this.state.openSingleId === singleId && this.el.modal?.classList.contains('PL3-modal--single-view')) return;
+
+        this.state.singleViewLocked = true;
+        const flipState = this.getFlipStateForElement(rowEl);
+        this.ensureMixRowPlaceholder(rowEl);
+        if (this.el.songHeaderTarget) this.el.songHeaderTarget.replaceChildren(rowEl);
+
+        rowEl.classList.add('is-active');
+        if (this.el.modal) this.el.modal.classList.add('PL3-modal--single-view');
+        this.state.openSingleId = singleId;
+        if (syncUrl) this.setGroupKeyInUrl(groupKey, singleId);
+
+        this.setLyricsText('Loading lyrics...');
+        this.animateSongTrackTo(-100, animate ? 440 : 0);
+        this.applyFlipFromState(flipState, animate ? 460 : 0);
+        this.state.singleViewLocked = false;
+
+        const lyrics = await this.loadLyricsText(single);
+        if (this.state.openSingleId === singleId) {
+            this.setLyricsText(lyrics);
+        }
+    }
+
+    exitSingleView({ animate = true, syncUrl = true } = {}) {
+        if (!this.state.openSingleId || this.state.singleViewLocked) return;
+        this.state.singleViewLocked = true;
+        this.restoreCurrentMixRow({ animate });
+        if (this.el.songHeaderTarget) this.el.songHeaderTarget.replaceChildren();
+        this.setLyricsText('');
+        if (this.el.modal) this.el.modal.classList.remove('PL3-modal--single-view');
+        this.animateSongTrackTo(0, animate ? 420 : 0);
+        this.state.openSingleId = null;
+        if (syncUrl && this.state.openGroupKey) {
+            this.setGroupKeyInUrl(this.state.openGroupKey, null);
+        }
+        this.state.singleViewLocked = false;
     }
 
     cancelGroupScrollAnimation() {
@@ -984,7 +1244,7 @@ class PL3Controller {
         const singleLinks = single.links || {};
         row.hidden = false;
         row.setAttribute('data-pl3-single-id', String(single.id || ''));
-        row.setAttribute('tabindex', '-1');
+        row.setAttribute('tabindex', '0');
         row.setAttribute('aria-label', mixName);
         row.classList.remove('is-active', 'is-collapsed', 'is-before', 'is-after');
         if (art) { art.hidden = false; art.src = artSrc; art.alt = `${mixName} cover`; }

@@ -50,18 +50,21 @@ export default {
         // Share landing: /s/<groupKey>
         if (url.pathname.startsWith("/s/")) {
             const key = decodeURIComponent(url.pathname.slice(3)).replaceAll("/", "");
+            const singleId = (url.searchParams.get("pl3s") || "").trim();
             const meta = SHARE[key] || {
                 title: "OpaHiFi",
                 imagePath: "/img/music/opahiai_album.png",
                 description: "OpaHiFi music."
             };
 
-            const shareUrl = `${url.origin}/s/${encodeURIComponent(key)}`;
+            const shareUrl = new URL(`/s/${encodeURIComponent(key)}`, url.origin);
+            if (singleId) shareUrl.searchParams.set("pl3s", singleId);
             const imageUrl = new URL(meta.imagePath, url.origin).toString();
 
             // Your app expects ?pl3=<key> to open the modal
             const appUrl = new URL(url.origin + "/");
             if (key) appUrl.searchParams.set("pl3", key);
+            if (singleId) appUrl.searchParams.set("pl3s", singleId);
 
             const html = `<!doctype html>
 <html lang="en">
@@ -74,7 +77,7 @@ export default {
   <meta property="og:type" content="website" />
   <meta property="og:title" content="${esc(meta.title)}" />
   <meta property="og:description" content="${esc(meta.description)}" />
-  <meta property="og:url" content="${esc(shareUrl)}" />
+  <meta property="og:url" content="${esc(shareUrl.toString())}" />
   <meta property="og:image" content="${esc(imageUrl)}" />
 
   <meta name="twitter:card" content="summary_large_image" />

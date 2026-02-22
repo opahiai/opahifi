@@ -1149,8 +1149,8 @@ body {
 }
 
 #PL3-group-modal .PL3-coverIconBtn {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border: 1px solid rgba(71, 19, 204, 0);
     border-radius: 999px;
     padding: 0;
@@ -1300,12 +1300,47 @@ body {
     min-height: 0;
     overflow: hidden;
     padding: 0 0 15px;
-    perspective: 1200px;
+    position: static;
 }
 
-#PL3-group-modal .PL3-songCardFace--front {
-    padding-top: 46px;
-    overflow: hidden;
+#PL3-group-modal .PL3-edgeBackBtn {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 74px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(10, 16, 40, 0.92) 0%, rgba(7, 12, 30, 0.92) 100%);
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.45);
+    transition: opacity 0.22s ease, transform 0.22s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+#PL3-group-modal .PL3-edgeBackBtn:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: linear-gradient(180deg, rgba(14, 24, 58, 0.95) 0%, rgba(9, 16, 38, 0.95) 100%);
+}
+
+#PL3-group-modal .PL3-edgeBackBtn:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.7);
+    outline-offset: 2px;
+}
+
+#PL3-group-modal.PL3-modal--single-view .PL3-edgeBackBtn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-50%);
 }
 
 #PL3-group-modal.PL3-modal--single-view .PL3-groupBody {
@@ -1322,177 +1357,97 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    transform-style: flat;
+    overflow: hidden;
 }
 
-#PL3-group-modal .PL3-songCard.is-flipped {
-    transform: none;
+#PL3-group-modal .PL3-songCardTrack {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
 }
 
 #PL3-group-modal .PL3-songCardFace {
-    position: absolute;
-    inset: 0;
-    -webkit-backface-visibility: visible;
-    backface-visibility: visible;
-    transition: opacity 0.24s ease;
+    flex: 0 0 100%;
+    min-width: 100%;
+    width: 100%;
+    min-height: 0;
 }
 
-#PL3-group-modal.PL3-modal--single-view .PL3-songCard {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    height: 100%;
-    overflow: hidden;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songCardFace {
-    position: relative;
-    inset: auto;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songCardFace--front {
-    flex: 0 0 auto;
-    max-height: 30vh;
-    overflow: hidden;
+#PL3-group-modal .PL3-songCardFace--front {
+    padding: 46px 10px 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #PL3-group-modal .PL3-songCardFace--back {
-    transform: none;
-    padding: 46px 9px 9px;
+    padding: 46px 10px 12px;
     background:
         radial-gradient(120% 90% at 12% -4%, rgba(31, 111, 235, 0.20) 0%, rgba(31, 111, 235, 0) 58%),
         radial-gradient(120% 90% at 92% -6%, rgba(140, 70, 255, 0.22) 0%, rgba(140, 70, 255, 0) 58%),
         linear-gradient(180deg, rgba(7, 12, 34, 0.96) 0%, rgba(4, 8, 24, 0.96) 100%);
-    opacity: 0;
-    pointer-events: none;
-    overflow: auto;
-}
-
-#PL3-group-modal .PL3-songCard.is-flipped .PL3-songCardFace--front {
-    opacity: 0;
-    pointer-events: none;
-}
-
-#PL3-group-modal .PL3-songCard.is-flipped .PL3-songCardFace--back {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songCard.is-flipped .PL3-songCardFace--front {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songCard.is-flipped .PL3-songCardFace--back {
-    opacity: 1;
-    pointer-events: auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 #PL3-group-modal .PL3-songDetail {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songDetail {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     padding-top: 8px;
     height: 100%;
     min-height: 0;
-    overflow: hidden;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songCardFace--back {
-    flex: 1 1 auto;
-    min-height: 0;
-    padding: 46px 9px 12px;
-    overflow: hidden;
-}
-
-#PL3-group-modal.PL3-modal--single-view #PL3-song-about-section {
-    max-height: 24vh;
-    overflow: auto;
-}
-
-#PL3-group-modal.PL3-modal--single-view #PL3-song-lyrics-section {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songLyrics {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: auto;
-    padding-right: 6px;
 }
 
 #PL3-group-modal .PL3-songHeader {
-    display: grid;
-    grid-template-columns: 96px minmax(0, 1fr);
-    gap: 12px;
-    align-items: start;
-    border-radius: 16px;
-    padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    background: linear-gradient(180deg, rgba(17, 28, 64, 0.50) 0%, rgba(10, 18, 44, 0.42) 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    min-height: 96px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
 }
 
-#PL3-group-modal.PL3-modal--single-view .PL3-songHeader {
+#PL3-group-modal .PL3-songHeader:empty {
     display: none;
 }
 
-#PL3-group-modal .PL3-songArt {
-    width: 96px;
-    height: 96px;
+#PL3-group-modal #PL3-song-header-target .ohf-mix-row {
+    margin: 0;
+    padding-right: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: linear-gradient(180deg, rgba(20, 34, 78, 0.52) 0%, rgba(12, 21, 54, 0.45) 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    cursor: default;
+}
+
+#PL3-group-modal #PL3-song-header-target .ohf-mix-row::after {
+    display: none;
+}
+
+#PL3-group-modal #PL3-song-header-target .ohf-mix-name {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+#PL3-group-modal.PL3-modal--single-view #PL3-song-header-target .ohf-mix-row {
+    margin-left: 50px;
+    width: calc(100% - 50px);
+}
+
+#PL3-group-modal #PL3-song-lyrics-section {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: start;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
     border-radius: 14px;
-    object-fit: cover;
-    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
-}
-
-#PL3-group-modal .PL3-songHeaderMeta {
-    min-width: 0;
-}
-
-#PL3-group-modal .PL3-songName {
-    font-weight: 800;
-    font-size: clamp(1.45rem, 4.2vw, 2rem);
-    line-height: 1.06;
-    margin-bottom: 2px;
-    color: rgba(255, 255, 255, 0.95);
-    letter-spacing: -0.01em;
-}
-
-#PL3-group-modal .PL3-songVersion {
-    font-size: 0.95rem;
-    line-height: 1.2;
-    color: rgba(203, 218, 255, 0.82);
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-#PL3-group-modal .PL3-songLinks {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 5px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 2px;
-}
-
-#PL3-group-modal .PL3-songLinks .ohf-mix-link {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 auto;
-    border-color: rgba(255, 255, 255, 0.18);
-    background: rgba(4, 9, 28, 0.52);
-}
-
-#PL3-group-modal .PL3-songLinks .ohf-mix-link:hover {
-    background: rgba(14, 24, 58, 0.76);
-    border-color: rgba(154, 185, 255, 0.65);
-    transform: translateY(-1px);
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    align-self: stretch;
 }
 
 #PL3-group-modal .PL3-songSection {
@@ -1501,6 +1456,11 @@ body {
     padding: 14px;
     background: linear-gradient(180deg, rgba(11, 19, 46, 0.74) 0%, rgba(5, 10, 31, 0.76) 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 20px rgba(0, 0, 0, 0.25);
+    min-height: 0;
+    overflow: hidden;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
 }
 
 #PL3-group-modal .PL3-songSectionTitle {
@@ -1512,13 +1472,6 @@ body {
     letter-spacing: 0.08em;
 }
 
-#PL3-group-modal .PL3-songSectionText {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.93);
-    line-height: 1.4;
-    white-space: pre-wrap;
-}
-
 #PL3-group-modal .PL3-songLyrics {
     margin: 0;
     color: rgba(240, 245, 255, 0.95);
@@ -1526,74 +1479,78 @@ body {
     white-space: pre-wrap;
     font-family: inherit;
     font-size: 1.03rem;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+    padding-right: 6px;
 }
 
-#PL3-group-modal .PL3-songCardFace--back {
+#PL3-group-modal.PL3-modal--single-view .PL3-edgeBackBtn {
+    opacity: 1;
+    pointer-events: auto;
+    left: 12px;
+    top: 94px;
+    width: 38px;
+    height: 38px;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    font-size: 28px;
+    z-index: 8;
+}
+
+#PL3-group-modal .PL3-songLyrics {
     scrollbar-width: thin;
     scrollbar-color: rgba(104, 132, 216, 0.9) rgba(9, 15, 40, 0.75);
 }
 
-#PL3-group-modal .PL3-songCardFace--back::-webkit-scrollbar {
-    width: 12px;
-}
-
-#PL3-group-modal .PL3-songCardFace--back::-webkit-scrollbar-track {
-    background: linear-gradient(180deg, rgba(9, 15, 40, 0.82) 0%, rgba(6, 10, 28, 0.86) 100%);
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-#PL3-group-modal .PL3-songCardFace--back::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(121, 151, 236, 0.96) 0%, rgba(80, 102, 196, 0.96) 100%);
-    border-radius: 999px;
-    border: 2px solid rgba(8, 14, 36, 0.95);
-}
-
-#PL3-group-modal .PL3-songCardFace--back::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(146, 178, 255, 0.97) 0%, rgba(103, 126, 226, 0.97) 100%);
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songLyrics {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(104, 132, 216, 0.9) rgba(9, 15, 40, 0.75);
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-songLyrics::-webkit-scrollbar {
+#PL3-group-modal .PL3-songLyrics::-webkit-scrollbar {
     width: 10px;
 }
 
-#PL3-group-modal.PL3-modal--single-view .PL3-songLyrics::-webkit-scrollbar-track {
+#PL3-group-modal .PL3-songLyrics::-webkit-scrollbar-track {
     background: linear-gradient(180deg, rgba(9, 15, 40, 0.82) 0%, rgba(6, 10, 28, 0.86) 100%);
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-#PL3-group-modal.PL3-modal--single-view .PL3-songLyrics::-webkit-scrollbar-thumb {
+#PL3-group-modal .PL3-songLyrics::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, rgba(121, 151, 236, 0.96) 0%, rgba(80, 102, 196, 0.96) 100%);
     border-radius: 999px;
     border: 2px solid rgba(8, 14, 36, 0.95);
 }
 
 @media (max-width: 520px) {
-    #PL3-group-modal .PL3-songHeader {
-        grid-template-columns: 86px 1fr;
-        gap: 10px;
-        padding: 9px;
+    #PL3-group-modal .PL3-edgeBackBtn {
+        left: 6px;
+        width: 32px;
+        height: 62px;
+        font-size: 26px;
     }
 
-    #PL3-group-modal .PL3-songArt {
-        width: 86px;
-        height: 86px;
+    #PL3-group-modal #PL3-song-header-target .ohf-mix-row {
+        padding-right: 8px;
     }
 
-    #PL3-group-modal .PL3-songName {
-        font-size: 1.7rem;
-        margin-bottom: 8px;
+    #PL3-group-modal.PL3-modal--single-view .PL3-edgeBackBtn {
+        left: 10px;
+        top: 92px;
+        width: 30px;
+        height: 30px;
+        font-size: 24px;
     }
 
-    #PL3-group-modal .PL3-songLinks .ohf-mix-link {
-        width: 34px;
-        height: 34px;
+    #PL3-group-modal.PL3-modal--single-view #PL3-song-header-target .ohf-mix-row {
+        margin-left: 35px;
+        width: calc(100% - 35px);
+    }
+
+    #PL3-group-modal .ohf-mix-name {
+        font-size: 1.15rem;
     }
 
     #PL3-group-modal .PL3-songLyrics {
@@ -1602,8 +1559,7 @@ body {
 }
 
 @media (max-width: 425px) {
-
-    #PL3-group-modal .PL3-songLinks .ohf-mix-link {
+    #PL3-group-modal .ohf-mix-link {
         width: 28px;
         height: 28px;
     }
@@ -1656,40 +1612,23 @@ body {
     color: rgba(255, 255, 255, 0.92);
 }
 
-#PL3-group-modal.PL3-modal--single-view .ohf-mix-row.is-active::after {
+#PL3-group-modal .ohf-mix-row.is-active::after {
     opacity: 0;
 }
 
-#PL3-group-modal.PL3-modal--single-view .ohf-mix-row.is-active {
+#PL3-group-modal .ohf-mix-row.is-active {
     border: 1px solid rgba(255, 255, 255, 0.18);
     background: linear-gradient(180deg, rgba(20, 34, 78, 0.52) 0%, rgba(12, 21, 54, 0.45) 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-#PL3-group-modal.PL3-modal--single-view .ohf-mix-row.is-collapsed {
-    margin: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    max-height: 0;
-    opacity: 0;
-    border-width: 0;
-    pointer-events: none;
-}
-
-#PL3-group-modal.PL3-modal--single-view .ohf-mix-row.is-collapsed::after {
-    opacity: 0;
-}
-
-#PL3-group-modal.PL3-modal--single-view .ohf-mix-row.is-collapsed.is-before {
-    transform: translateY(-28px);
-}
-
-#PL3-group-modal.PL3-modal--single-view .ohf-mix-row.is-collapsed.is-after {
-    transform: translateY(28px);
-}
-
 #PL3-group-modal .ohf-mix-row[hidden] {
     display: none;
+}
+
+#PL3-group-modal .PL3-mix-placeholder {
+    height: var(--pl3-mix-placeholder-h, 81px);
+    border-radius: 16px;
 }
 
 #PL3-group-modal .ohf-mix-row:focus-visible {
@@ -1731,8 +1670,8 @@ body {
 }
 
 #PL3-group-modal .ohf-mix-link {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
