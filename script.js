@@ -134,7 +134,7 @@
             key: GROUP.FULL_MINDNESS,
             title: 'Full-Mindness',
             titleLines: ['FULL-', 'MINDNESS'],
-            cover: 'img/music/main_fullmindness.png',
+            cover: 'img/music/main_full_mindness.png',
             songIds: [],
             singlesById: {},
 
@@ -231,7 +231,7 @@
             groupKey: GROUP.FULL_MINDNESS,
             title: 'Full-Mindness',
             version: 'Opa Mayhem Mix',
-            image: 'img/music/main_fullmindness.png',
+            image: 'img/music/main_full_mindness.png',
             links: {}
         }
     };

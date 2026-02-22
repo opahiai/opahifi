@@ -22,15 +22,15 @@
     </script>
     <style>
         /* 3D Gallery Overrides */
-        .PL3-gallery {
-            display: flex !important;
-            flex-direction: row !important;
+        .PL3-part--gallery .PL3-gallery {
+            display: flex;
+            flex-direction: row;
             justify-content: center;
             align-items: center;
-            flex-wrap: nowrap !important;
+            flex-wrap: nowrap;
             perspective: 1000px;
-            padding: 30px 30px;
-            overflow: visible !important;
+            padding: 20px 0;
+            overflow: visible;
             width: 100%;
             box-sizing: border-box;
         }
@@ -76,9 +76,14 @@
 
         /* Ensure parent doesn't clip the 3D effects */
         .PL3-part--gallery {
-            overflow: visible !important;
+            overflow: visible;
             z-index: 10;
             position: relative;
+        }
+
+        /* Prevent horizontal scroll on the main section */
+        .PL3-section {
+            overflow-x: hidden;
         }
 
         @media (max-width: 768px) {
