@@ -9,6 +9,11 @@ body {
     background: #050711;
     color: #fff;
     overflow-x: hidden;
+    background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(31, 111, 235, 0.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(140, 70, 255, 0.16), transparent 55%),
+        radial-gradient(900px 520px at 25% 85%, rgba(239, 68, 68, 0.18), transparent 60%),
+        linear-gradient(180deg, #060914 0%, #050711 100%);
 }
 
 :root {
@@ -59,11 +64,7 @@ body {
 #p_listen3.PL3-section {
     height: var(--pl3-viewport-h);
     box-sizing: border-box;
-    background:
-        radial-gradient(1200px 600px at 20% 10%, rgba(31, 111, 235, 0.18), transparent 60%),
-        radial-gradient(900px 500px at 80% 30%, rgba(140, 70, 255, 0.16), transparent 55%),
-        radial-gradient(900px 520px at 25% 85%, rgba(239, 68, 68, 0.18), transparent 60%),
-        linear-gradient(180deg, #060914 0%, #050711 100%);
+
     overflow: hidden;
 }
 
@@ -894,7 +895,7 @@ body {
     align-items: flex-start;
     flex-wrap: nowrap;
     perspective: 1000px;
-    padding: 0 18px 15px;
+    padding: 0;
     overflow: visible;
     width: 100%;
     box-sizing: border-box;
@@ -973,9 +974,7 @@ body {
 }
 
 @media (max-width: 768px) {
-    .PL3-part--gallery .PL3-gallery {
-        padding: 0 12px 15px;
-    }
+
 
     .PL3-galleryItemBtn {
         width: 80px;
@@ -990,7 +989,8 @@ body {
     --pl3-circle-btn-size: 30px;
     --pl3-circle-icon-size: 16px;
     width: 100%;
-    max-width: var(--pl3-card-max-width);
+    max-width: 375px;
+    max-width: 385px;
     margin: 0 auto;
     padding: var(--pl3-gap-sm) var(--pl3-part-padding) var(--pl3-part-padding);
     box-sizing: border-box;
@@ -1382,6 +1382,7 @@ body {
     display: flex;
     flex-direction: column;
     padding-top: 0;
+    gap: 8px;
     flex: 1 1 auto;
     min-height: 0;
 }
@@ -1543,7 +1544,7 @@ body {
     height: var(--pl3-circle-btn-size);
     border: 1px solid rgb(255 255 255 / 11%);
     border-radius: 999px;
-    background: rgba(6, 11, 30, 0.52);
+    background: rgba(14, 56, 226, 0.52);
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -1640,6 +1641,21 @@ body {
     border-color: rgba(255, 255, 255, 0.22);
 }
 
+#PL3-group-modal .ohf-mix-link.is-disabled,
+#PL3-group-modal .ohf-mix-link[aria-disabled="true"] {
+    opacity: 0.38;
+    filter: grayscale(1);
+    border-color: rgba(255, 255, 255, 0.10);
+    background: rgba(0, 0, 0, 0.14);
+    cursor: not-allowed;
+}
+
+#PL3-group-modal .ohf-mix-link.is-disabled:hover,
+#PL3-group-modal .ohf-mix-link[aria-disabled="true"]:hover {
+    border-color: rgba(255, 255, 255, 0.10);
+    background: rgba(0, 0, 0, 0.14);
+}
+
 #PL3-group-modal .ohf-mix-icon {
     width: var(--pl3-circle-icon-size);
     height: var(--pl3-circle-icon-size);
@@ -1651,13 +1667,15 @@ body {
 
 .PL3-videoButtons {
     opacity: 0;
+    display: none;
 }
 
-@media (min-width: 425px) {
+@media (min-width: 375px) {
     #PL3-group-modal .ohf-mix-icons {
-        gap: 15px;
+        gap: 10px;
     }
 }
+
 
 #PL3-group-modal.PL3-modal--single-view .PL3-coverActions .PL3-coverBack {
     display: inline-flex;

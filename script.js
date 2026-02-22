@@ -408,6 +408,7 @@ class PL3Controller {
         this.groupScrollRaf = null;
         this.groupTopSyncTimeout = null;
         this.groupOpenScrollY = 0;
+        this.modalCloseTimer = null;
         this.currentMixRow = null;
         this.currentMixPlaceholder = null;
         this.cardSlideTween = null;
@@ -650,20 +651,26 @@ class PL3Controller {
         this.state.expandedBtn = null;
     }
 
+    isGroupModalBusy() {
+        return !!(this.el.modal && !this.el.modal.hidden) || !!this.modalCloseTimer;
+    }
+
     // === Gallery ===
     attachGalleryEvents() {
         this.section.addEventListener('click', (ev) => {
             const btn = ev.target.closest('[data-pl3-group]');
             if (!btn || !this.section.contains(btn)) return;
-            if (this.el.modal && !this.el.modal.hidden) return;
             const key = String(btn.getAttribute('data-pl3-group') || '').trim();
             if (!key) return;
-            ev.preventDefault();
 
-            if (this.el.modal && !this.el.modal.hidden && this.state.openGroupKey && this.state.openGroupKey !== key) {
-                this.setActiveGalleryButton(null);
+            if (this.isGroupModalBusy()) {
+                ev.preventDefault();
+                ev.stopImmediatePropagation();
+                this.closeModal();
+                return;
             }
 
+            ev.preventDefault();
             this.openModal(key);
         }, { passive: false });
     }
@@ -837,6 +844,10 @@ class PL3Controller {
     openModal(groupKey, opts = {}) {
         const { modal, heroCrop, heroImg } = this.el;
         if (!modal || !heroCrop || !heroImg) return;
+        if (this.modalCloseTimer) {
+            clearTimeout(this.modalCloseTimer);
+            this.modalCloseTimer = null;
+        }
         const group = this.model.getGroup(groupKey);
         if (!group || group.isComingSoon) return;
         const initialSingleId = opts?.initialSingleId || null;
@@ -879,7 +890,7 @@ class PL3Controller {
 
     closeModal() {
         const { modal, heroCrop, heroImg, coverOverlay } = this.el;
-        if (!modal || modal.hidden) return;
+        if (!modal || modal.hidden || this.modalCloseTimer) return;
         this.cancelGroupTopSync();
         this.resetSingleViewState({ syncUrl: false, resetLyrics: true });
         this.cancelGroupScrollAnimation();
@@ -888,7 +899,8 @@ class PL3Controller {
         modal.classList.remove('PL3-modal--opening');
         modal.classList.remove('PL3-modal--single-view');
         const closeDelay = didSmoothScrollBack ? 340 : 300;
-        setTimeout(() => {
+        this.modalCloseTimer = window.setTimeout(() => {
+            this.modalCloseTimer = null;
             modal.hidden = true;
             modal.setAttribute('aria-hidden', 'true');
 
@@ -1189,11 +1201,16 @@ class PL3Controller {
         });
     }
 
+    isCompactGalleryMode() {
+        return window.matchMedia('(max-width: 768px)').matches;
+    }
+
     syncActiveGalleryLayout() {
         const gallery = this.el.gallery;
         if (!gallery) return;
 
         gallery.style.setProperty('--pl3-gallery-shift', '0px');
+        if (this.isCompactGalleryMode()) return;
         const activeBtn = this.state.activeGalleryBtn;
         if (!activeBtn) return;
 
@@ -1263,7 +1280,13 @@ class PL3Controller {
         row.classList.remove('is-active', 'is-collapsed', 'is-before', 'is-after');
         if (art) { art.hidden = true; art.src = ''; art.alt = ''; }
         if (name) name.textContent = '';
-        links.forEach(a => { a.hidden = true; a.href = '#'; });
+        links.forEach((a) => {
+            a.hidden = true;
+            a.removeAttribute('href');
+            a.classList.remove('is-disabled');
+            a.removeAttribute('aria-disabled');
+            a.removeAttribute('tabindex');
+        });
     }
 
     populateMixRow({ row, art, name, links }, single, group, platforms) {
@@ -1281,8 +1304,18 @@ class PL3Controller {
             const link = links.find(a => a.getAttribute('data-pl3-platform') === p);
             if (!link) return;
             const url = singleLinks[p] || '';
-            link.hidden = !url;
-            link.href = url || '#';
+            link.hidden = false;
+            if (url) {
+                link.href = url;
+                link.classList.remove('is-disabled');
+                link.removeAttribute('aria-disabled');
+                link.removeAttribute('tabindex');
+            } else {
+                link.removeAttribute('href');
+                link.classList.add('is-disabled');
+                link.setAttribute('aria-disabled', 'true');
+                link.setAttribute('tabindex', '-1');
+            }
         });
     }
 
