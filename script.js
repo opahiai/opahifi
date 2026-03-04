@@ -318,14 +318,58 @@ class PL3MusicModel {
         return group.singlesById?.[String(singleId)] || null;
     }
 
+    slugifyShareToken(value) {
+        return String(value || '')
+            .trim()
+            .toLowerCase()
+            .replace(/['’]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    resolveSingleId(groupKey, token) {
+        const group = this.getGroup(groupKey);
+        if (!group || !token) return null;
+
+        const rawToken = String(token).trim();
+        if (!rawToken) return null;
+        if (group.singlesById?.[rawToken]) return rawToken;
+
+        const normalized = this.slugifyShareToken(rawToken);
+        if (!normalized) return null;
+
+        const ids = Array.isArray(group.songIds) && group.songIds.length
+            ? group.songIds
+            : Object.keys(group.singlesById || {});
+
+        for (const id of ids) {
+            const single = group.singlesById?.[id];
+            if (!single) continue;
+            const byId = this.slugifyShareToken(single.id);
+            const byVersion = this.slugifyShareToken(single.version || '');
+            if (normalized === byId || (byVersion && normalized === byVersion)) {
+                return single.id;
+            }
+        }
+
+        return null;
+    }
+
     buildGroupUrl(groupKey, singleId = null) {
-        const safeKey = encodeURIComponent(String(groupKey || ''));
-        const safeSingleId = singleId ? encodeURIComponent(String(singleId)) : '';
-        const suffix = safeSingleId ? `?pl3s=${safeSingleId}` : '';
+        const safeKey = encodeURIComponent(String(groupKey || '').trim());
+        const rawSingleId = singleId ? String(singleId).trim() : '';
+        let shareToken = '';
+        if (rawSingleId) {
+            const single = this.getSingle(groupKey, rawSingleId);
+            const versionSlug = this.slugifyShareToken(single?.version || '');
+            shareToken = versionSlug || rawSingleId;
+        }
+        const safeSingleToken = shareToken ? encodeURIComponent(shareToken) : '';
+        const path = safeSingleToken ? `/s/${safeKey}/${safeSingleToken}` : `/s/${safeKey}`;
         try {
-            return `${window.location.origin}/s/${safeKey}${suffix}`;
+            return `${window.location.origin}${path}`;
         } catch (e) {
-            return `/s/${safeKey}${suffix}`;
+            return path;
         }
     }
 }
@@ -603,9 +647,9 @@ class PL3Controller {
             const g = this.model.getGroup(groupKey);
             if (!g) return null;
             const u = new URL(window.location.href);
-            const singleId = (u.searchParams.get('pl3s') || '').trim();
-            if (!singleId) return null;
-            return g.singlesById?.[singleId] ? singleId : null;
+            const token = (u.searchParams.get('pl3s') || '').trim();
+            if (!token) return null;
+            return this.model.resolveSingleId(groupKey, token);
         } catch {
             return null;
         }

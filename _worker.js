@@ -47,24 +47,40 @@ export default {
     async fetch(request, env) {
         const url = new URL(request.url);
 
-        // Share landing: /s/<groupKey>
+        // Share landing: /s/<groupKey>[/<singleToken>]
         if (url.pathname.startsWith("/s/")) {
-            const key = decodeURIComponent(url.pathname.slice(3)).replaceAll("/", "");
-            const singleId = (url.searchParams.get("pl3s") || "").trim();
+            const rawPath = url.pathname.slice(3);
+            const pathParts = rawPath.split("/").filter(Boolean);
+            let key = "";
+            let singleToken = "";
+            try {
+                key = decodeURIComponent(pathParts[0] || "").replaceAll("/", "").trim();
+            } catch {
+                key = "";
+            }
+            try {
+                singleToken = decodeURIComponent(pathParts[1] || "").replaceAll("/", "").trim();
+            } catch {
+                singleToken = "";
+            }
+            // Backwards compatibility for existing query-param share links.
+            if (!singleToken) singleToken = (url.searchParams.get("pl3s") || "").trim();
             const meta = SHARE[key] || {
                 title: "OpaHiFi",
                 imagePath: "/img/music/opahiai_album.png",
                 description: "OpaHiFi music."
             };
 
-            const shareUrl = new URL(`/s/${encodeURIComponent(key)}`, url.origin);
-            if (singleId) shareUrl.searchParams.set("pl3s", singleId);
+            const sharePath = singleToken
+                ? `/s/${encodeURIComponent(key)}/${encodeURIComponent(singleToken)}`
+                : `/s/${encodeURIComponent(key)}`;
+            const shareUrl = new URL(sharePath, url.origin);
             const imageUrl = new URL(meta.imagePath, url.origin).toString();
 
             // Your app expects ?pl3=<key> to open the modal
             const appUrl = new URL(url.origin + "/");
             if (key) appUrl.searchParams.set("pl3", key);
-            if (singleId) appUrl.searchParams.set("pl3s", singleId);
+            if (singleToken) appUrl.searchParams.set("pl3s", singleToken);
 
             const html = `<!doctype html>
 <html lang="en">
