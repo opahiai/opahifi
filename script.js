@@ -72,7 +72,8 @@
     });
 
     const SINGLE = Object.freeze({
-        OLD_LOVE_STORY: 'old-love-story',
+        OLD_LOVE_STORY_DESERT_DISCO_DUET: 'old-love-story',
+        OLD_LOVE_STORY_OPA_MAX_MIX: 'old-love-story-opa-max-mix',
         OPA_PA_PA_PARTY: 'opa-pa-pa-party',
         GLITTAA: 'glittaa',
         SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
@@ -147,12 +148,12 @@
     }
 
     const singlesById = {
-        [SINGLE.OLD_LOVE_STORY]: {
-            id: SINGLE.OLD_LOVE_STORY,
+        [SINGLE.OLD_LOVE_STORY_DESERT_DISCO_DUET]: {
+            id: SINGLE.OLD_LOVE_STORY_DESERT_DISCO_DUET,
             groupKey: GROUP.OLD_LOVE_STORY,
             title: 'Old Love Story',
-            version: 'Desert Disco Duet',
-            image: 'img/music/oldlovestory_opa-max-mix.png',
+            version: 'Desert Disco Duet Remix',
+            image: 'img/music/oldlovestory_desert_disco_duet.png',
             lyricsPath: 'lyrics/old-love-story.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE',
@@ -160,6 +161,21 @@
                 'Spotify': 'https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII',
                 'Apple Music': 'https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028',
                 'Other': 'https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq'
+            }
+        },
+        [SINGLE.OLD_LOVE_STORY_OPA_MAX_MIX]: {
+            id: SINGLE.OLD_LOVE_STORY_OPA_MAX_MIX,
+            groupKey: GROUP.OLD_LOVE_STORY,
+            title: 'Old Love Story',
+            version: 'Opa Max Mix',
+            image: 'img/music/oldlovestory_opa-max-mix.png',
+            lyricsPath: 'lyrics/old-love-story.txt',
+            links: {
+                'YouTube Music': 'https://music.youtube.com/watch?v=m7wP4U97FC8',
+                'Amazon Music': 'https://music.amazon.com/albums/B0GHC1X6R3',
+                'Spotify': 'https://open.spotify.com/track/3GZsz52AKg9ml2mMtC6EEw',
+                'Apple Music': 'https://music.apple.com/ng/song/old-love-story-opa-max-mix/1869842718',
+                'Other': 'https://youtu.be/m7wP4U97FC8'
             }
         },
         [SINGLE.OPA_PA_PA_PARTY]: {
@@ -243,13 +259,15 @@
                 'YouTube Music': 'https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z',
                 'Other': 'https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh',
                 'Spotify': 'https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960',
-                'Amazon Music': 'https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653'
+                'Amazon Music': 'https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653',
+                'Apple Music': 'https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886'
             }
         }
     };
 
     const singleIdsInOrder = [
-        SINGLE.OLD_LOVE_STORY,
+        SINGLE.OLD_LOVE_STORY_DESERT_DISCO_DUET,
+        SINGLE.OLD_LOVE_STORY_OPA_MAX_MIX,
         SINGLE.OPA_PA_PA_PARTY,
         SINGLE.GLITTAA,
         SINGLE.SPLENDA_LOVE_RABBIT_HELL,
