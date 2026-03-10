@@ -18,8 +18,6 @@
         if (el.dataset.pl3Action) return 'pl3_action_' + sanitize(el.dataset.pl3Action);
         if (el.dataset.pl3Group) return 'pl3_group_' + sanitize(el.dataset.pl3Group);
         if (el.hasAttribute('data-pl3-preview')) return ctxActionKey ? 'pl3_' + ctxActionKey + '_preview' : 'pl3_preview';
-        if (el.hasAttribute('data-pl3-share-group')) return 'pl3_share_open';
-        if (el.hasAttribute('data-pl3-share-copy')) return 'pl3_share_copy';
         if (el.hasAttribute('data-pl3-preview-sound')) return 'pl3_preview_sound';
 
         if (el.dataset.pl3Platform) {
@@ -45,7 +43,7 @@
 
     document.addEventListener('click', (e) => {
         const el = e.target.closest(
-            '[data-track],a,button,[role="button"],[data-pl3-action],[data-pl3-group],[data-pl3-preview],[data-pl3-share-group],[data-pl3-share-copy],[data-pl3-preview-sound],[data-pl3-platform]'
+            '[data-track],a,button,[role="button"],[data-pl3-action],[data-pl3-group],[data-pl3-preview],[data-pl3-preview-sound],[data-pl3-platform]'
         );
         if (!el) return;
         if (typeof window.gtag !== 'function') return;
@@ -292,143 +290,28 @@
     };
 })();
 
-const PL3GSAP = (typeof window !== 'undefined' && window.gsap) ? window.gsap : null;
-const PL3Flip = (typeof window !== 'undefined' && window.Flip) ? window.Flip : null;
-if (PL3GSAP && PL3Flip && typeof PL3GSAP.registerPlugin === 'function') {
-    try { PL3GSAP.registerPlugin(PL3Flip); } catch { /* ignore */ }
-}
-
-class PL3MusicModel {
-    constructor(data = window.musicDataGrouped) {
-        this.data = data || { groups: [], platformOrder: [], singlesById: {} };
-        this.defaultPlatformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
-    }
-
-    getGroup(key) {
-        return this.data?.groups?.find((group) => String(group.key) === String(key)) || null;
-    }
-
-    getPlatformOrder() {
-        return this.data?.platformOrder?.length ? this.data.platformOrder : this.defaultPlatformOrder;
-    }
-
-    getSingle(groupKey, singleId) {
-        const group = this.getGroup(groupKey);
-        if (!group || !singleId) return null;
-        return group.singlesById?.[String(singleId)] || null;
-    }
-
-    slugifyShareToken(value) {
-        return String(value || '')
-            .trim()
-            .toLowerCase()
-            .replace(/['’]/g, '')
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
-    }
-
-    resolveSingleId(groupKey, token) {
-        const group = this.getGroup(groupKey);
-        if (!group || !token) return null;
-
-        const rawToken = String(token).trim();
-        if (!rawToken) return null;
-        if (group.singlesById?.[rawToken]) return rawToken;
-
-        const normalized = this.slugifyShareToken(rawToken);
-        if (!normalized) return null;
-
-        const ids = Array.isArray(group.songIds) && group.songIds.length
-            ? group.songIds
-            : Object.keys(group.singlesById || {});
-
-        for (const id of ids) {
-            const single = group.singlesById?.[id];
-            if (!single) continue;
-            const byId = this.slugifyShareToken(single.id);
-            const byVersion = this.slugifyShareToken(single.version || '');
-            if (normalized === byId || (byVersion && normalized === byVersion)) {
-                return single.id;
-            }
-        }
-
-        return null;
-    }
-
-    buildGroupUrl(groupKey, singleId = null) {
-        const safeKey = encodeURIComponent(String(groupKey || '').trim());
-        const rawSingleId = singleId ? String(singleId).trim() : '';
-        let shareToken = '';
-        if (rawSingleId) {
-            const single = this.getSingle(groupKey, rawSingleId);
-            const versionSlug = this.slugifyShareToken(single?.version || '');
-            shareToken = versionSlug || rawSingleId;
-        }
-        const safeSingleToken = shareToken ? encodeURIComponent(shareToken) : '';
-        const path = safeSingleToken ? `/s/${safeKey}/${safeSingleToken}` : `/s/${safeKey}`;
-        try {
-            return `${window.location.origin}${path}`;
-        } catch (e) {
-            return path;
-        }
-    }
-}
-
-class PL3StateModel {
-    constructor() {
-        this.expandedBtn = null;
-        this.activeGalleryBtn = null;
-        this.openGroupKey = null;
-        this.openSingleId = null;
-        this.singleViewLocked = false;
-        this.shareUrl = '';
-        this.previewVideoId = '';
-        this.previewMuted = false;
-    }
-}
-
 class PL3DomRegistry {
     constructor(section) {
         this.section = section;
+        this.headerPart = section.querySelector('.PL3-part--header');
+        this.buttonsPart = section.querySelector('.PL3-part--buttons');
+        this.highlightPart = section.querySelector('.PL3-part--highlight');
+        this.galleryPart = section.querySelector('.PL3-part--gallery');
         this.btnRow = section.querySelector('.PL3-btnRow');
         this.heroBtns = Array.from(section.querySelectorAll('.PL3-heroBtn'));
         this.previewBtn = section.querySelector('[data-pl3-preview]');
         this.gallery = section.querySelector('.PL3-gallery');
         this.galleryBtns = Array.from(section.querySelectorAll('.PL3-galleryItemBtn'));
-        this.galleryPart = section.querySelector('.PL3-part--gallery');
+        this.groupPanel = section.querySelector('#PL3-group-panel');
+        this.groupPanelArtDock = section.querySelector('[data-pl3-group-art-dock]');
+        this.groupPanelTitle = section.querySelector('[data-pl3-group-title]');
+        this.groupPanelVersions = section.querySelector('[data-pl3-group-versions]');
+        this.groupPanelCloseBtn = section.querySelector('[data-pl3-group-close]');
         this.streamingBtns = Array.from(document.querySelectorAll('[data-pl3-streaming-popup]'));
-        this.modal = document.getElementById('PL3-group-modal');
-        this.heroCrop = document.getElementById('PL3-group-hero-crop');
-        this.heroImg = document.getElementById('PL3-group-hero-img');
-        this.titleEl = document.getElementById('PL3-group-title');
-        this.mixesEl = document.getElementById('PL3-mixes');
-        this.emptyEl = document.getElementById('PL3-mixes-empty');
-        this.backBtn = document.getElementById('PL3-group-back-btn');
-        this.songCard = document.getElementById('PL3-song-card');
-        this.songCardTrack = document.getElementById('PL3-song-card-track');
-        this.songDetailCard = document.getElementById('PL3-song-detail-card');
-        this.songHeaderTarget = document.getElementById('PL3-song-header-target');
-        this.lyricsText = document.getElementById('PL3-song-lyrics-text');
-        this.shareModal = document.getElementById('PL3-share-modal');
-        this.shareInput = document.getElementById('PL3-share-url');
         this.previewModal = document.getElementById('PL3-preview-modal');
         this.previewIframe = document.getElementById('PL3-preview-iframe');
         this.streamingModal = document.getElementById('PL3-streaming-modal');
-
-        this.modalPanel = this.modal?.querySelector('.PL3-modalPanel');
-        this.coverOverlay = this.heroCrop?.querySelector('.PL3-coverOverlay');
-        this.titleLine1 = this.titleEl?.querySelector('[data-pl3-title-line="1"]');
-        this.titleLine2 = this.titleEl?.querySelector('[data-pl3-title-line="2"]');
         this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
-
-        this.mixRows = this.mixesEl
-            ? Array.from(this.mixesEl.querySelectorAll('[data-pl3-mix-row]')).map((row) => ({
-                row,
-                art: row.querySelector('[data-pl3-mix-art]'),
-                name: row.querySelector('[data-pl3-mix-name]'),
-                links: Array.from(row.querySelectorAll('[data-pl3-platform]'))
-            }))
-            : [];
     }
 }
 
@@ -456,46 +339,73 @@ class PL3ScrollLock {
     }
 }
 
-// PL3 Controller Class - orchestrates UI + model + state
-class PL3Controller {
-    constructor(sectionId, model = new PL3MusicModel()) {
-        this.section = document.getElementById(sectionId);
-        if (!this.section) return;
-
-        this.model = model;
-        this.state = new PL3StateModel();
-        this.scrollLock = new PL3ScrollLock();
-        this.el = new PL3DomRegistry(this.section);
-        this.galleryShiftRaf = null;
-        this.groupScrollRaf = null;
-        this.groupTopSyncTimeout = null;
-        this.groupOpenScrollY = 0;
-        this.modalCloseTimer = null;
-        this.currentMixRow = null;
-        this.currentMixPlaceholder = null;
-        this.cardSlideTween = null;
-        this.lyricsCache = new Map();
-        this.init();
+class PL3HeaderSection {
+    constructor(dom) {
+        this.dom = dom;
     }
 
     init() {
-        if (!this.section) return;
-        this.attachButtonEvents();
-        this.attachGalleryEvents();
-        this.attachModalEvents();
-        this.attachShareEvents();
-        this.attachPreviewEvents();
-        this.attachStreamingPopupEvents();
-        window.addEventListener('resize', () => {
-            this.queueGalleryShiftSync();
-        }, { passive: true });
-        this.openFromUrlIfPresent();
+        if (!this.dom.headerPart) return;
+        // Header is static for now; this class owns future header-specific behavior.
+    }
+}
+
+class PL3ButtonsSection {
+    constructor(dom, callbacks = {}) {
+        this.dom = dom;
+        this.expandedBtn = null;
+        this.lockScroll = callbacks.lockScroll || (() => { });
+        this.unlockScroll = callbacks.unlockScroll || (() => { });
     }
 
-    // === Streaming Services Popup ===
+    init() {
+        if (!this.dom.btnRow) return;
+        this.dom.btnRow.addEventListener('click', this.onButtonRowClick, { passive: true });
+        this.attachStreamingPopupEvents();
+    }
+
+    onButtonRowClick = (ev) => {
+        const btn = ev.target.closest('.PL3-heroBtn');
+        if (!btn) return;
+        const action = btn.getAttribute('data-pl3-action');
+        const isCloseBtn = ev.target.closest('[data-pl3-close-btn]');
+
+        if (action === 'shop' && !isCloseBtn) {
+            window.location.href = 'https://shop.opahifi.com';
+            return;
+        }
+        if (isCloseBtn) {
+            this.collapseAllButtons();
+            return;
+        }
+        if (action === 'listen' || action === 'follow') {
+            this.expandedBtn === btn ? this.collapseAllButtons() : this.expandButton(btn);
+        }
+    };
+
+    expandButton(btn) {
+        this.collapseAllButtons();
+        btn.classList.add('PL3-heroBtn--expanded');
+        const icons = btn.querySelector('.PL3-heroBtn-icons');
+        if (icons) icons.hidden = false;
+        this.dom.heroBtns.forEach((b) => {
+            if (b !== btn) b.classList.add('PL3-heroBtn--collapsed');
+        });
+        this.expandedBtn = btn;
+    }
+
+    collapseAllButtons() {
+        this.dom.heroBtns.forEach((b) => {
+            b.classList.remove('PL3-heroBtn--expanded', 'PL3-heroBtn--collapsed');
+            const icons = b.querySelector('.PL3-heroBtn-icons');
+            if (icons) icons.hidden = true;
+        });
+        this.expandedBtn = null;
+    }
+
     attachStreamingPopupEvents() {
-        if (this.el.streamingBtns && this.el.streamingBtns.length > 0) {
-            this.el.streamingBtns.forEach(btn => {
+        if (this.dom.streamingBtns && this.dom.streamingBtns.length > 0) {
+            this.dom.streamingBtns.forEach(btn => {
                 btn.addEventListener('click', (ev) => {
                     ev.preventDefault();
                     this.openStreamingPopup();
@@ -503,7 +413,7 @@ class PL3Controller {
             });
         }
 
-        const m = this.el.streamingModal;
+        const m = this.dom.streamingModal;
         if (m) {
             m.addEventListener('click', (ev) => {
                 if (!ev.target.closest('[data-pl3-streaming-close]') || !m.contains(ev.target)) return;
@@ -513,13 +423,13 @@ class PL3Controller {
         }
 
         window.addEventListener('keydown', (ev) => {
-            if (!this.el.streamingModal || this.el.streamingModal.hidden || ev.key !== 'Escape') return;
+            if (!this.dom.streamingModal || this.dom.streamingModal.hidden || ev.key !== 'Escape') return;
             this.closeStreamingPopup();
         }, { passive: true });
     }
 
     openStreamingPopup() {
-        const m = this.el.streamingModal;
+        const m = this.dom.streamingModal;
         if (!m) return;
         m.hidden = false;
         m.removeAttribute('aria-hidden');
@@ -527,28 +437,43 @@ class PL3Controller {
     }
 
     closeStreamingPopup() {
-        const m = this.el.streamingModal;
+        const m = this.dom.streamingModal;
         if (!m) return;
         m.hidden = true;
         m.setAttribute('aria-hidden', 'true');
         this.unlockScroll();
     }
+}
+
+class PL3HighlightSection {
+    constructor(dom, callbacks = {}) {
+        this.dom = dom;
+        this.lockScroll = callbacks.lockScroll || (() => { });
+        this.unlockScroll = callbacks.unlockScroll || (() => { });
+        this.previewVideoId = '';
+        this.previewMuted = false;
+    }
+
+    init() {
+        if (!this.dom.highlightPart) return;
+        this.attachPreviewEvents();
+    }
 
     // === Preview (embedded YouTube) ===
     attachPreviewEvents() {
-        if (this.el.previewBtn) {
-            this.el.previewBtn.addEventListener('click', (ev) => {
+        if (this.dom.previewBtn) {
+            this.dom.previewBtn.addEventListener('click', (ev) => {
                 ev.preventDefault();
                 this.openPreviewModal('https://www.youtube.com/embed/videoseries?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF');
             }, { passive: false });
         }
 
-        const m = this.el.previewModal;
+        const m = this.dom.previewModal;
         if (m) {
             m.addEventListener('click', (ev) => {
                 if (ev.target.closest('[data-pl3-preview-sound]')) {
                     ev.preventDefault();
-                    this.state.previewMuted = !this.state.previewMuted;
+                    this.previewMuted = !this.previewMuted;
                     this.applyPreviewIframeSrc();
                     this.syncPreviewSoundUi();
                     return;
@@ -560,19 +485,19 @@ class PL3Controller {
         }
 
         window.addEventListener('keydown', (ev) => {
-            if (!this.el.previewModal || this.el.previewModal.hidden || ev.key !== 'Escape') return;
+            if (!this.dom.previewModal || this.dom.previewModal.hidden || ev.key !== 'Escape') return;
             this.closePreviewModal();
         }, { passive: true });
     }
 
     openPreviewModal(videoId) {
-        const m = this.el.previewModal;
+        const m = this.dom.previewModal;
         if (!m) return;
         const id = String(videoId || '').trim();
         if (!id) return;
 
-        this.state.previewVideoId = id;
-        this.state.previewMuted = false;
+        this.previewVideoId = id;
+        this.previewMuted = false;
         this.applyPreviewIframeSrc();
         this.syncPreviewSoundUi();
 
@@ -583,11 +508,12 @@ class PL3Controller {
                 m.classList.add('PL3-preview--open');
             });
         });
+        this.lockScroll();
     }
 
     applyPreviewIframeSrc() {
-        const id = String(this.state.previewVideoId || '').trim();
-        if (!id || !this.el.previewIframe) return;
+        const id = String(this.previewVideoId || '').trim();
+        if (!id || !this.dom.previewIframe) return;
 
         let src;
         if (id.includes('youtube.com/embed/videoseries')) {
@@ -597,16 +523,16 @@ class PL3Controller {
             const playlistId = url.searchParams.get('list');
             src = `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&modestbranding=1&controls=1`;
         } else {
-            const mute = this.state.previewMuted ? 1 : 0;
+            const mute = this.previewMuted ? 1 : 0;
             src = `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
         }
-        this.el.previewIframe.src = src;
+        this.dom.previewIframe.src = src;
     }
 
     syncPreviewSoundUi() {
-        const btn = this.el.previewSoundBtn;
+        const btn = this.dom.previewSoundBtn;
         if (!btn) return;
-        const isMuted = !!this.state.previewMuted;
+        const isMuted = !!this.previewMuted;
         btn.setAttribute('aria-pressed', isMuted ? 'true' : 'false');
         btn.setAttribute('aria-label', isMuted ? 'Unmute preview' : 'Mute preview');
         const icon = btn.querySelector('i');
@@ -617,781 +543,383 @@ class PL3Controller {
     }
 
     closePreviewModal() {
-        const m = this.el.previewModal;
+        const m = this.dom.previewModal;
         if (!m || m.hidden) return;
         m.classList.remove('PL3-preview--open');
         setTimeout(() => {
             m.hidden = true;
             m.setAttribute('aria-hidden', 'true');
-            if (this.el.previewIframe) this.el.previewIframe.src = '';
-            this.state.previewVideoId = '';
+            if (this.dom.previewIframe) this.dom.previewIframe.src = '';
+            this.previewVideoId = '';
         }, 240);
+        this.unlockScroll();
     }
+}
 
-    // === URL deep link ===
-    getGroupKeyFromUrl() {
-        try {
-            const u = new URL(window.location.href);
-            const key = (u.searchParams.get('pl3') || '').trim();
-            if (!key) return null;
-            const g = this.model.getGroup(key);
-            if (!g || g.isComingSoon) return null;
-            return String(g.key);
-        } catch {
-            return null;
+class PL3GroupPanel {
+    constructor(dom) {
+        this.dom = dom;
+        this.data = window.musicDataGrouped || {};
+        this.platformOrder = Array.isArray(this.data.platformOrder) ? this.data.platformOrder : [];
+        this.singlesById = this.data.singlesById || {};
+        this.groupsByKey = {};
+        const groups = Array.isArray(this.data.groups) ? this.data.groups : [];
+        groups.forEach((group) => {
+            if (group?.key) this.groupsByKey[group.key] = group;
+        });
+
+        this.activeGroupKey = '';
+        this.activeSourceBtn = null;
+        this.activeSourceImg = null;
+
+        this.flipReady = !!(
+            window.gsap &&
+            window.Flip &&
+            typeof window.Flip.getState === 'function' &&
+            typeof window.Flip.from === 'function'
+        );
+        if (this.flipReady) {
+            window.gsap.registerPlugin(window.Flip);
         }
     }
 
-    getSingleIdFromUrl(groupKey) {
-        try {
-            const g = this.model.getGroup(groupKey);
-            if (!g) return null;
-            const u = new URL(window.location.href);
-            const token = (u.searchParams.get('pl3s') || '').trim();
-            if (!token) return null;
-            return this.model.resolveSingleId(groupKey, token);
-        } catch {
-            return null;
+    init() {
+        if (!this.dom.groupPanel) return;
+        if (this.dom.groupPanelCloseBtn) {
+            this.dom.groupPanelCloseBtn.addEventListener('click', this.onCloseClick, { passive: false });
         }
+        window.addEventListener('keydown', this.onKeyDown, { passive: true });
     }
 
-    setGroupKeyInUrl(groupKeyOrNull, singleIdOrNull = null) {
-        try {
-            const u = new URL(window.location.href);
-            if (groupKeyOrNull) u.searchParams.set('pl3', String(groupKeyOrNull));
-            else u.searchParams.delete('pl3');
-            if (groupKeyOrNull && singleIdOrNull) u.searchParams.set('pl3s', String(singleIdOrNull));
-            else u.searchParams.delete('pl3s');
-            window.history.replaceState({}, '', u.toString());
-        } catch {
-            // ignore
-        }
+    onCloseClick = (ev) => {
+        ev.preventDefault();
+        this.close();
+    };
+
+    onKeyDown = (ev) => {
+        if (ev.key !== 'Escape' || !this.isOpen()) return;
+        this.close();
+    };
+
+    isOpen() {
+        return !!this.dom.groupPanel?.classList.contains('PL3-groupPanel--open');
     }
 
-    openFromUrlIfPresent() {
-        const key = this.getGroupKeyFromUrl();
+    openFromTrigger(triggerBtn, groupKey) {
+        if (!this.dom.groupPanel || !this.dom.groupPanelArtDock) return;
+        const key = String(groupKey || '').trim();
         if (!key) return;
-        const singleId = this.getSingleIdFromUrl(key);
-        this.openModal(key, { initialSingleId: singleId });
+        if (this.isOpen() && this.activeGroupKey === key && this.activeSourceImg) return;
+
+        const sourceBtn = this.resolveSourceArtButton(triggerBtn, key);
+        if (!sourceBtn) return;
+
+        this.renderGroup(key);
+        if (this.activeSourceBtn && this.activeSourceBtn !== sourceBtn) {
+            this.restoreSourceArt({ animate: false });
+        }
+        this.moveSourceArtToPanel(sourceBtn, key);
+        this.openPanelShell();
     }
 
-    // === Button Expansion ===
-    attachButtonEvents() {
-        if (!this.el.btnRow) return;
-        this.el.btnRow.addEventListener('click', (ev) => {
-            const btn = ev.target.closest('.PL3-heroBtn');
-            if (!btn) return;
-            const action = btn.getAttribute('data-pl3-action');
-            const isCloseBtn = ev.target.closest('[data-pl3-close-btn]');
-
-            if (action === 'shop' && !isCloseBtn) {
-                window.location.href = 'https://shop.opahifi.com';
-                return;
-            }
-            if (isCloseBtn) return this.collapseAllButtons();
-            if (action === 'listen' || action === 'follow') {
-                this.state.expandedBtn === btn ? this.collapseAllButtons() : this.expandButton(btn);
-            }
-        }, { passive: true });
+    close() {
+        if (!this.isOpen() && !this.activeSourceBtn) return;
+        this.restoreSourceArt({ animate: true });
+        this.closePanelShell();
+        this.activeGroupKey = '';
+        this.syncGallerySelection('');
     }
 
-    expandButton(btn) {
-        this.collapseAllButtons();
-        btn.classList.add('PL3-heroBtn--expanded');
-        const icons = btn.querySelector('.PL3-heroBtn-icons');
-        if (icons) icons.hidden = false;
-        this.el.heroBtns.forEach(b => b !== btn && b.classList.add('PL3-heroBtn--collapsed'));
-        this.state.expandedBtn = btn;
-    }
-
-    collapseAllButtons() {
-        this.el.heroBtns.forEach(b => {
-            b.classList.remove('PL3-heroBtn--expanded', 'PL3-heroBtn--collapsed');
-            const icons = b.querySelector('.PL3-heroBtn-icons');
-            if (icons) icons.hidden = true;
-        });
-        this.state.expandedBtn = null;
-    }
-
-    isGroupModalBusy() {
-        return !!(this.el.modal && !this.el.modal.hidden) || !!this.modalCloseTimer;
-    }
-
-    // === Gallery ===
-    attachGalleryEvents() {
-        this.section.addEventListener('click', (ev) => {
-            const btn = ev.target.closest('[data-pl3-group]');
-            if (!btn || !this.section.contains(btn)) return;
-            const key = String(btn.getAttribute('data-pl3-group') || '').trim();
-            if (!key) return;
-
-            if (this.isGroupModalBusy()) {
-                ev.preventDefault();
-                ev.stopImmediatePropagation();
-                this.closeModal();
-                return;
-            }
-
-            ev.preventDefault();
-            this.openModal(key);
-        }, { passive: false });
-    }
-
-    // === Modal ===
-    attachModalEvents() {
-        if (!this.el.modal) return;
-        this.el.modal.addEventListener('click', (ev) => {
-            const closeBtn = ev.target.closest('[data-pl3-close-group]');
-            if (closeBtn && this.el.modal.contains(closeBtn)) {
-                ev.preventDefault();
-                this.closeModal();
-                return;
-            }
-
-            const backBtn = ev.target.closest('[data-pl3-back-group]');
-            if (backBtn && this.el.modal.contains(backBtn)) {
-                ev.preventDefault();
-                this.exitSingleView({ animate: true, syncUrl: true });
-                return;
-            }
-
-            if (ev.target.closest('.ohf-mix-link')) return;
-            const mixRow = ev.target.closest('[data-pl3-mix-row]');
-            if (!mixRow || !this.el.modal.contains(mixRow) || mixRow.hidden) return;
-            if (mixRow.classList.contains('is-active') && this.el.modal.classList.contains('PL3-modal--single-view')) {
-                ev.preventDefault();
-                this.exitSingleView({ animate: true, syncUrl: true });
-                return;
-            }
-            ev.preventDefault();
-            this.openSingleViewFromRow(mixRow, { animate: true, syncUrl: true });
-        }, { passive: false });
-
-        this.el.modal.addEventListener('keydown', (ev) => {
-            if (ev.key !== 'Enter' && ev.key !== ' ') return;
-            if (ev.target.closest('.ohf-mix-link')) return;
-            const mixRow = ev.target.closest('[data-pl3-mix-row]');
-            if (!mixRow || mixRow.hidden) return;
-            if (mixRow.classList.contains('is-active') && this.el.modal.classList.contains('PL3-modal--single-view')) {
-                ev.preventDefault();
-                this.exitSingleView({ animate: true, syncUrl: true });
-                return;
-            }
-            ev.preventDefault();
-            this.openSingleViewFromRow(mixRow, { animate: true, syncUrl: true });
-        }, { passive: false });
-
-        document.addEventListener('pointerdown', (ev) => {
-            if (!this.el.modal || this.el.modal.hidden) return;
-
-            if (typeof ev.button === 'number' && ev.button !== 0) return;
-            const target = ev.target;
-            if (!(target instanceof Element)) return;
-            if (target.closest('#PL3-group-modal .PL3-modalPanel')) return;
-            this.closeModal();
-        }, { passive: true });
-
-        window.addEventListener('keydown', (ev) => {
-            if (!this.el.modal || this.el.modal.hidden || ev.key !== 'Escape') return;
-            this.closeModal();
-        }, { passive: true });
-    }
-
-
-    // === Share ===
-    attachShareEvents() {
-        if (this.el.modal) {
-            this.el.modal.addEventListener('click', (ev) => {
-                const btn = ev.target.closest('[data-pl3-share-group]');
-                if (!btn || !this.el.modal.contains(btn)) return;
-                ev.preventDefault();
-                this.shareCurrentGroup();
-            }, { passive: false });
+    resolveSourceArtButton(triggerBtn, groupKey) {
+        if (!triggerBtn) return null;
+        if (triggerBtn.classList.contains('PL3-galleryItemBtn') || triggerBtn.classList.contains('PL3-upcomingArtWrap')) {
+            return triggerBtn;
         }
 
-        if (this.el.shareModal) {
-            this.el.shareModal.addEventListener('click', (ev) => {
-                if (ev.target.closest('[data-pl3-share-close]')) {
-                    ev.preventDefault();
-                    this.closeShareSheet();
-                    return;
-                }
-                if (ev.target.closest('[data-pl3-share-copy]')) {
-                    ev.preventDefault();
-                    this.copyShareUrl();
-                    return;
-                }
-            }, { passive: false });
-        }
+        const upcoming = triggerBtn.closest('.PL3-upcoming');
+        const upcomingArt = upcoming?.querySelector(`.PL3-upcomingArtWrap[data-pl3-group="${groupKey}"]`);
+        if (upcomingArt) return upcomingArt;
+
+        return this.dom.section.querySelector(`.PL3-galleryItemBtn[data-pl3-group="${groupKey}"]`);
     }
 
-    openShareSheet(url) {
-        const m = this.el.shareModal;
-        if (!m) return;
-        this.state.shareUrl = url || '';
-        if (this.el.shareInput) this.el.shareInput.value = this.state.shareUrl;
-        m.hidden = false;
-        m.setAttribute('aria-hidden', 'false');
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                m.classList.add('PL3-share--open');
-            });
-        });
-    }
+    moveSourceArtToPanel(sourceBtn, groupKey) {
+        const sourceImg = sourceBtn.querySelector('img');
+        if (!sourceImg) return;
 
-    closeShareSheet() {
-        const m = this.el.shareModal;
-        if (!m || m.hidden) return;
-        m.classList.remove('PL3-share--open');
-        setTimeout(() => {
-            m.hidden = true;
-            m.setAttribute('aria-hidden', 'true');
-        }, 240);
-    }
-
-    async copyShareUrl() {
-        const url = this.state.shareUrl || (this.el.shareInput ? this.el.shareInput.value : '') || '';
-        if (!url) return;
-        try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                await navigator.clipboard.writeText(url);
-                return;
-            }
-        } catch {
-            // fall back below
-        }
-
-        const ta = document.createElement('textarea');
-        ta.value = url;
-        ta.setAttribute('readonly', '');
-        ta.style.position = 'fixed';
-        ta.style.left = '-9999px';
-        ta.style.top = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); } catch { /* ignore */ }
-        ta.remove();
-    }
-
-    async shareCurrentGroup() {
-        const key = this.state.openGroupKey;
-        if (!key) return;
-        const g = this.model.getGroup(key);
-        if (!g) return;
-        const singleId = this.state.openSingleId;
-        const single = singleId ? this.model.getSingle(key, singleId) : null;
-        const versionName = single?.version || 'Main Version';
-        const url = this.model.buildGroupUrl(key, single?.id || null);
-        const shareTitle = single ? `${single.title || g.title || 'OpaHiFi'} - ${versionName}` : (g.title || 'OpaHiFi');
-        const shareText = single
-            ? `${single.title || g.title || 'OpaHiFi'} (${versionName})`
-            : (g.title || 'OpaHiFi group');
-
-        try {
-            if (navigator.share) {
-                await navigator.share({
-                    title: shareTitle || 'OpaHiFi',
-                    text: shareText,
-                    url
-                });
-                return;
-            }
-        } catch {
-            // user cancelled or unsupported; fall back
-        }
-
-        this.openShareSheet(url);
-    }
-
-    openModal(groupKey, opts = {}) {
-        const { modal, heroCrop, heroImg } = this.el;
-        if (!modal || !heroCrop || !heroImg) return;
-        if (this.modalCloseTimer) {
-            clearTimeout(this.modalCloseTimer);
-            this.modalCloseTimer = null;
-        }
-        const group = this.model.getGroup(groupKey);
-        if (!group || group.isComingSoon) return;
-        const initialSingleId = opts?.initialSingleId || null;
-
-        this.resetSingleViewState({ syncUrl: false, resetLyrics: true });
-
-        this.setTitle(group.titleLines || [group.title]);
-        this.renderMixes(group);
-        this.setSongTrackPosition(0);
-        modal.classList.remove('PL3-modal--single-view');
-
-        modal.classList.remove('PL3-modal--opening');
-        modal.hidden = false;
-        modal.setAttribute('aria-hidden', 'false');
-        this.updateHeroImage(group);
-
-        this.state.openGroupKey = String(group.key);
-        this.state.openSingleId = null;
-        this.setGroupKeyInUrl(this.state.openGroupKey, null);
-        this.setActiveGalleryButton(this.findGalleryButtonByGroup(group.key));
-        this.setGalleryInteractionLocked(true);
-        this.groupOpenScrollY = window.scrollY || window.pageYOffset || 0;
-        this.lockScroll();
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                modal.classList.add('PL3-modal--opening');
-                this.scrollGroupCardIntoView();
-                this.scheduleGroupTopSync();
-
-                if (initialSingleId) {
-                    const targetRow = this.el.mixRows
-                        .find((entry) => entry.row.getAttribute('data-pl3-single-id') === String(initialSingleId) && !entry.row.hidden)
-                        ?.row || null;
-                    if (targetRow) this.openSingleViewFromRow(targetRow, { animate: false, syncUrl: true });
-                }
-            });
-        });
-    }
-
-    closeModal() {
-        const { modal, heroCrop, heroImg, coverOverlay } = this.el;
-        if (!modal || modal.hidden || this.modalCloseTimer) return;
-        this.cancelGroupTopSync();
-        this.resetSingleViewState({ syncUrl: false, resetLyrics: true });
-        this.cancelGroupScrollAnimation();
-        const returnTop = Math.max(0, Math.round(this.groupOpenScrollY || 0));
-        const didSmoothScrollBack = this.animateWindowScrollTo(returnTop, 340);
-        modal.classList.remove('PL3-modal--opening');
-        modal.classList.remove('PL3-modal--single-view');
-        const closeDelay = didSmoothScrollBack ? 340 : 300;
-        this.modalCloseTimer = window.setTimeout(() => {
-            this.modalCloseTimer = null;
-            modal.hidden = true;
-            modal.setAttribute('aria-hidden', 'true');
-
-            this.state.openGroupKey = null;
-            this.state.openSingleId = null;
-            this.setGroupKeyInUrl(null, null);
-            this.setActiveGalleryButton(null);
-            this.setGalleryInteractionLocked(false);
-            this.unlockScroll();
-            this.groupOpenScrollY = 0;
-
-            if (heroCrop) {
-                heroCrop.replaceChildren();
-                if (heroImg) {
-                    heroImg.hidden = true;
-                    heroImg.src = '';
-                    heroImg.alt = '';
-                    heroCrop.appendChild(heroImg);
-                }
-                heroCrop.style.removeProperty('--pl3-hero-bg');
-                if (coverOverlay) heroCrop.appendChild(coverOverlay);
-            }
-        }, closeDelay);
-    }
-
-    isReducedMotion() {
-        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    }
-
-    getFlipStateForElement(el) {
-        if (!el || !PL3GSAP || !PL3Flip || this.isReducedMotion()) return null;
-        try {
-            return PL3Flip.getState(el);
-        } catch {
-            return null;
-        }
-    }
-
-    setSongTrackPosition(xPercent) {
-        const track = this.el.songCardTrack;
-        if (!track) return;
-        const safeX = Number.isFinite(xPercent) ? xPercent : 0;
-        if (PL3GSAP) {
-            PL3GSAP.set(track, { xPercent: safeX });
-            return;
-        }
-        track.style.transform = `translate3d(${safeX}%, 0, 0)`;
-    }
-
-    animateSongTrackTo(xPercent, durationMs = 420) {
-        const track = this.el.songCardTrack;
-        if (!track) return;
-        if (this.cardSlideTween) {
-            this.cardSlideTween.kill();
-            this.cardSlideTween = null;
-        }
-
-        const safeX = Number.isFinite(xPercent) ? xPercent : 0;
-        if (!PL3GSAP || this.isReducedMotion() || durationMs <= 0) {
-            this.setSongTrackPosition(safeX);
+        const alreadyDocked = sourceImg.parentElement === this.dom.groupPanelArtDock;
+        if (alreadyDocked) {
+            this.activeGroupKey = groupKey;
+            this.syncGallerySelection(groupKey);
             return;
         }
 
-        this.cardSlideTween = PL3GSAP.to(track, {
-            xPercent: safeX,
-            duration: durationMs / 1000,
-            ease: 'power2.inOut',
-            onComplete: () => { this.cardSlideTween = null; }
+        const flipState = this.flipReady ? window.Flip.getState(sourceImg) : null;
+
+        sourceBtn.classList.add('PL3-artHost--detached');
+        sourceImg.classList.add('PL3-groupArtInPanel');
+        this.dom.groupPanelArtDock.replaceChildren(sourceImg);
+
+        this.activeSourceBtn = sourceBtn;
+        this.activeSourceImg = sourceImg;
+        this.activeGroupKey = groupKey;
+        this.syncGallerySelection(groupKey);
+
+        if (flipState) {
+            window.Flip.from(flipState, {
+                duration: 0.58,
+                ease: 'power2.inOut',
+                absolute: true,
+                nested: true
+            });
+        }
+    }
+
+    restoreSourceArt({ animate } = {}) {
+        const sourceBtn = this.activeSourceBtn;
+        const sourceImg = this.activeSourceImg;
+        if (!sourceBtn || !sourceImg) return;
+
+        const flipState = animate && this.flipReady ? window.Flip.getState(sourceImg) : null;
+        sourceBtn.classList.remove('PL3-artHost--detached');
+        sourceImg.classList.remove('PL3-groupArtInPanel');
+
+        sourceBtn.replaceChildren(sourceImg);
+
+        if (flipState) {
+            window.Flip.from(flipState, {
+                duration: 0.46,
+                ease: 'power2.inOut',
+                absolute: true,
+                nested: true
+            });
+        }
+
+        this.activeSourceBtn = null;
+        this.activeSourceImg = null;
+    }
+
+    openPanelShell() {
+        if (!this.dom.groupPanel) return;
+        this.dom.groupPanel.setAttribute('aria-hidden', 'false');
+        this.dom.groupPanel.classList.add('PL3-groupPanel--open');
+    }
+
+    closePanelShell() {
+        if (!this.dom.groupPanel) return;
+        this.dom.groupPanel.classList.remove('PL3-groupPanel--open');
+        this.dom.groupPanel.setAttribute('aria-hidden', 'true');
+        this.dom.groupPanelArtDock?.replaceChildren();
+    }
+
+    syncGallerySelection(groupKey) {
+        const key = String(groupKey || '');
+        this.dom.galleryBtns.forEach((btn) => {
+            const hasArt = !!btn.querySelector('.PL3-galleryImg');
+            const isSelected = key && btn.getAttribute('data-pl3-group') === key && hasArt;
+            btn.classList.toggle('PL3-galleryItemBtn--active', !!isSelected);
         });
     }
 
-    applyFlipFromState(flipState, durationMs = 440) {
-        if (!flipState || !PL3GSAP || !PL3Flip || this.isReducedMotion() || durationMs <= 0) return;
-        PL3Flip.from(flipState, {
-            duration: durationMs / 1000,
-            ease: 'power2.inOut',
-            nested: true,
-            prune: true
+    renderGroup(groupKey) {
+        const group = this.groupsByKey[groupKey];
+        if (this.dom.groupPanelTitle) {
+            this.dom.groupPanelTitle.textContent = group?.title || this.humanizeGroupKey(groupKey);
+        }
+
+        const versionsWrap = this.dom.groupPanelVersions;
+        if (!versionsWrap) return;
+        versionsWrap.replaceChildren();
+        versionsWrap.classList.add('PL3-groupVersionList');
+
+        const songIds = Array.isArray(group?.songIds) ? group.songIds : [];
+        songIds.forEach((songId) => {
+            const song = this.singlesById[songId];
+            if (!song) return;
+
+            const versionLabel = String(song.version || 'Original').trim();
+            const row = document.createElement('article');
+            row.className = 'PL3-groupVersionItem';
+
+            const art = document.createElement('img');
+            art.className = 'PL3-groupVersionArt';
+            art.src = song.image || group?.cover || 'img/music/opahiai_album.png';
+            art.alt = `${group?.title || 'Release'} ${versionLabel} cover`;
+            art.loading = 'lazy';
+            art.onerror = () => { art.src = 'img/music/opahiai_album.png'; };
+
+            const body = document.createElement('div');
+            body.className = 'PL3-groupVersionBody';
+
+            const name = document.createElement('div');
+            name.className = 'PL3-groupVersionName';
+            name.textContent = versionLabel;
+
+            const tray = document.createElement('div');
+            tray.className = 'PL3-groupVersionTray';
+            this.platformOrder.forEach((platform) => {
+                const url = song.links?.[platform] || '';
+                tray.appendChild(this.createPlatformEntry(platform, url, versionLabel));
+            });
+
+            body.append(name, tray);
+            row.append(art, body, this.createDrilldownEntry(song.links || {}, versionLabel));
+            versionsWrap.appendChild(row);
         });
-    }
 
-    setLyricsText(text) {
-        if (!this.el.lyricsText) return;
-        this.el.lyricsText.textContent = String(text || '');
-    }
-
-    async loadLyricsText(single) {
-        const path = String(single?.lyricsPath || '').trim();
-        if (!path) return 'Lyrics coming soon.';
-        if (this.lyricsCache.has(path)) return this.lyricsCache.get(path);
-
-        try {
-            const res = await fetch(path, { cache: 'no-store' });
-            if (!res.ok) throw new Error(`Lyrics not found: ${path}`);
-            const txt = (await res.text()).trim() || 'Lyrics coming soon.';
-            this.lyricsCache.set(path, txt);
-            return txt;
-        } catch {
-            return 'Lyrics coming soon.';
+        if (versionsWrap.childElementCount < 1) {
+            const empty = document.createElement('div');
+            empty.className = 'PL3-groupVersionEmpty';
+            empty.textContent = 'No versions yet';
+            versionsWrap.appendChild(empty);
         }
     }
 
-    ensureMixRowPlaceholder(row) {
-        if (!row) return;
-        if (this.currentMixPlaceholder && this.currentMixPlaceholder.parentNode) {
-            this.currentMixPlaceholder.remove();
+    pickPrimaryLink(links) {
+        for (const name of this.platformOrder) {
+            const url = links[name];
+            if (url) return { platform: name, url };
         }
-        const placeholder = document.createElement('div');
-        placeholder.className = 'PL3-mix-placeholder';
-        placeholder.setAttribute('aria-hidden', 'true');
-        const h = Math.max(1, Math.round(row.getBoundingClientRect().height || row.offsetHeight || 81));
-        placeholder.style.setProperty('--pl3-mix-placeholder-h', `${h}px`);
-        row.insertAdjacentElement('afterend', placeholder);
-        this.currentMixPlaceholder = placeholder;
-        this.currentMixRow = row;
+        const entries = Object.entries(links || {});
+        if (entries.length < 1) return null;
+        const [platform, url] = entries[0];
+        return { platform, url };
     }
 
-    restoreCurrentMixRow({ animate = false } = {}) {
-        const row = this.currentMixRow;
-        if (!row) return;
-        const flipState = this.getFlipStateForElement(row);
-        const placeholder = this.currentMixPlaceholder;
-        if (placeholder && placeholder.parentNode) {
-            placeholder.replaceWith(row);
-        } else if (this.el.mixesEl) {
-            this.el.mixesEl.appendChild(row);
-        }
-        row.classList.remove('is-active');
-        this.currentMixRow = null;
-        this.currentMixPlaceholder = null;
-        if (animate) this.applyFlipFromState(flipState, 420);
-    }
+    createPlatformEntry(platform, url, versionLabel) {
+        const hasUrl = !!String(url || '').trim();
+        const item = document.createElement(hasUrl ? 'a' : 'span');
+        item.className = `PL3-groupVersionPlatform${hasUrl ? '' : ' PL3-groupVersionPlatform--disabled'}`;
+        item.setAttribute('aria-label', hasUrl ? `${versionLabel} on ${platform}` : `${platform} unavailable`);
+        item.title = platform;
 
-    resetSingleViewState({ syncUrl = false, resetLyrics = false } = {}) {
-        this.state.singleViewLocked = false;
-        this.restoreCurrentMixRow({ animate: false });
-        if (this.cardSlideTween) {
-            this.cardSlideTween.kill();
-            this.cardSlideTween = null;
-        }
-        if (this.el.songHeaderTarget) this.el.songHeaderTarget.replaceChildren();
-        if (resetLyrics) this.setLyricsText('');
-        if (this.el.modal) this.el.modal.classList.remove('PL3-modal--single-view');
-        this.setSongTrackPosition(0);
-        this.state.openSingleId = null;
-        if (syncUrl && this.state.openGroupKey) {
-            this.setGroupKeyInUrl(this.state.openGroupKey, null);
-        }
-    }
-
-    async openSingleViewFromRow(rowEl, { animate = true, syncUrl = true } = {}) {
-        if (!rowEl || rowEl.hidden || this.state.singleViewLocked) return;
-        const groupKey = this.state.openGroupKey;
-        if (!groupKey) return;
-
-        const singleId = String(rowEl.getAttribute('data-pl3-single-id') || '').trim();
-        if (!singleId) return;
-        const group = this.model.getGroup(groupKey);
-        const single = this.model.getSingle(groupKey, singleId);
-        if (!group || !single) return;
-
-        if (this.state.openSingleId && this.state.openSingleId !== singleId) {
-            this.resetSingleViewState({ syncUrl: false, resetLyrics: false });
-        }
-        if (this.state.openSingleId === singleId && this.el.modal?.classList.contains('PL3-modal--single-view')) return;
-
-        this.state.singleViewLocked = true;
-        const flipState = this.getFlipStateForElement(rowEl);
-        this.ensureMixRowPlaceholder(rowEl);
-        if (this.el.songHeaderTarget) this.el.songHeaderTarget.replaceChildren(rowEl);
-
-        rowEl.classList.add('is-active');
-        if (this.el.modal) this.el.modal.classList.add('PL3-modal--single-view');
-        this.state.openSingleId = singleId;
-        if (syncUrl) this.setGroupKeyInUrl(groupKey, singleId);
-
-        this.setLyricsText('Loading lyrics...');
-        this.animateSongTrackTo(-100, animate ? 440 : 0);
-        this.applyFlipFromState(flipState, animate ? 460 : 0);
-        this.state.singleViewLocked = false;
-
-        const lyrics = await this.loadLyricsText(single);
-        if (this.state.openSingleId === singleId) {
-            this.setLyricsText(lyrics);
-        }
-    }
-
-    exitSingleView({ animate = true, syncUrl = true } = {}) {
-        if (!this.state.openSingleId || this.state.singleViewLocked) return;
-        this.state.singleViewLocked = true;
-        this.restoreCurrentMixRow({ animate });
-        if (this.el.songHeaderTarget) this.el.songHeaderTarget.replaceChildren();
-        this.setLyricsText('');
-        if (this.el.modal) this.el.modal.classList.remove('PL3-modal--single-view');
-        this.animateSongTrackTo(0, animate ? 420 : 0);
-        this.state.openSingleId = null;
-        if (syncUrl && this.state.openGroupKey) {
-            this.setGroupKeyInUrl(this.state.openGroupKey, null);
-        }
-        this.state.singleViewLocked = false;
-    }
-
-    cancelGroupScrollAnimation() {
-        if (!this.groupScrollRaf) return;
-        window.cancelAnimationFrame(this.groupScrollRaf);
-        this.groupScrollRaf = null;
-    }
-
-    cancelGroupTopSync() {
-        if (!this.groupTopSyncTimeout) return;
-        window.clearTimeout(this.groupTopSyncTimeout);
-        this.groupTopSyncTimeout = null;
-    }
-
-    scheduleGroupTopSync(delayMs = 420) {
-        this.cancelGroupTopSync();
-        this.groupTopSyncTimeout = window.setTimeout(() => {
-            this.groupTopSyncTimeout = null;
-            if (!this.el.modal || this.el.modal.hidden) return;
-            this.scrollGroupCardIntoView();
-        }, delayMs);
-    }
-
-    animateWindowScrollTo(targetTop, durationMs = 380) {
-        const startTop = window.scrollY || window.pageYOffset || 0;
-        if (Math.abs(startTop - targetTop) <= 1) return false;
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) {
-            window.scrollTo({ top: targetTop, behavior: 'auto' });
-            return false;
+        if (hasUrl) {
+            item.href = url;
+            item.target = '_blank';
+            item.rel = 'noopener';
+            item.dataset.pl3Platform = platform;
+        } else {
+            item.setAttribute('aria-disabled', 'true');
         }
 
-        this.cancelGroupScrollAnimation();
-        const startTime = performance.now();
-        const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+        item.appendChild(this.createPlatformIcon(platform));
+        return item;
+    }
 
-        const tick = (now) => {
-            const progress = Math.min(1, (now - startTime) / durationMs);
-            const eased = easeOutCubic(progress);
-            const nextTop = Math.round(startTop + ((targetTop - startTop) * eased));
-            window.scrollTo({ top: nextTop, behavior: 'auto' });
-            if (progress < 1) {
-                this.groupScrollRaf = window.requestAnimationFrame(tick);
-                return;
-            }
-            this.groupScrollRaf = null;
+    createPlatformIcon(platform) {
+        const iconUrlByPlatform = {
+            'Spotify': 'https://cdn.simpleicons.org/spotify/FFFFFF',
+            'Apple Music': 'https://cdn.simpleicons.org/apple/FFFFFF',
+            'YouTube Music': 'https://cdn.simpleicons.org/youtubemusic/FFFFFF'
         };
 
-        this.groupScrollRaf = window.requestAnimationFrame(tick);
-        return true;
-    }
-
-    updateHeroImage(group) {
-        const { heroCrop, heroImg, coverOverlay } = this.el;
-        heroCrop.replaceChildren();
-        if (heroImg) heroCrop.appendChild(heroImg);
-        if (coverOverlay) heroCrop.appendChild(coverOverlay);
-        const cover = group.cover || '';
-        if (heroImg) {
-            heroImg.hidden = !cover;
-            heroImg.src = cover;
-            heroImg.alt = cover ? `${group.title || 'Group'} cover` : '';
+        if (iconUrlByPlatform[platform]) {
+            const img = document.createElement('img');
+            img.className = 'PL3-groupVersionPlatformIcon';
+            img.src = iconUrlByPlatform[platform];
+            img.alt = '';
+            img.loading = 'lazy';
+            return img;
         }
 
-        if (heroCrop) {
-            heroCrop.style.setProperty('--pl3-hero-bg', cover ? `url("${cover}")` : 'none');
+        const icon = document.createElement('i');
+        if (platform === 'Amazon Music') {
+            icon.className = 'fa-brands fa-amazon PL3-groupVersionPlatformIcon';
+        } else {
+            icon.className = 'fa-solid fa-link PL3-groupVersionPlatformIcon';
         }
+        icon.setAttribute('aria-hidden', 'true');
+        return icon;
     }
 
-    setActiveGalleryButton(btnOrNull) {
-        const prev = this.state.activeGalleryBtn;
-        if (prev) prev.classList.remove('PL3-galleryItemBtn--active');
+    createDrilldownEntry(links, versionLabel) {
+        const targetLink = this.pickPrimaryLink(links || {});
+        const hasUrl = !!targetLink?.url;
+        const arrow = document.createElement(hasUrl ? 'a' : 'span');
+        arrow.className = `PL3-groupVersionArrow${hasUrl ? '' : ' PL3-groupVersionArrow--disabled'}`;
+        arrow.setAttribute('aria-label', hasUrl ? `Open ${versionLabel}` : `${versionLabel} unavailable`);
 
-        const nextBtn = btnOrNull && btnOrNull.classList
-            ? btnOrNull
-            : null;
-
-        if (nextBtn) nextBtn.classList.add('PL3-galleryItemBtn--active');
-        this.state.activeGalleryBtn = nextBtn;
-        this.queueGalleryShiftSync();
-    }
-
-    setGalleryInteractionLocked(locked) {
-        const isLocked = !!locked;
-        if (this.el.gallery) this.el.gallery.classList.toggle('PL3-gallery--locked', isLocked);
-        this.el.galleryBtns.forEach((btn) => {
-            btn.disabled = isLocked;
-            if (isLocked) btn.setAttribute('aria-disabled', 'true');
-            else btn.removeAttribute('aria-disabled');
-        });
-    }
-
-    queueGalleryShiftSync() {
-        if (this.galleryShiftRaf) cancelAnimationFrame(this.galleryShiftRaf);
-        this.galleryShiftRaf = requestAnimationFrame(() => {
-            this.galleryShiftRaf = null;
-            this.syncActiveGalleryLayout();
-        });
-    }
-
-    isCompactGalleryMode() {
-        return window.matchMedia('(max-width: 768px)').matches;
-    }
-
-    syncActiveGalleryLayout() {
-        const gallery = this.el.gallery;
-        if (!gallery) return;
-
-        gallery.style.setProperty('--pl3-gallery-shift', '0px');
-        if (this.isCompactGalleryMode()) return;
-        const activeBtn = this.state.activeGalleryBtn;
-        if (!activeBtn) return;
-
-        const galleryRect = gallery.getBoundingClientRect();
-        const activeRect = activeBtn.getBoundingClientRect();
-        if (!galleryRect.width || !activeRect.width) return;
-
-        const galleryCenterX = galleryRect.left + (galleryRect.width / 2);
-        const activeCenterX = activeRect.left + (activeRect.width / 2);
-        const shiftX = Math.round(galleryCenterX - activeCenterX);
-        gallery.style.setProperty('--pl3-gallery-shift', `${shiftX}px`);
-    }
-
-    findGalleryButtonByGroup(groupKey) {
-        const safeKey = String(groupKey || '').trim();
-        if (!safeKey) return null;
-        return this.section.querySelector(`.PL3-galleryItemBtn[data-pl3-group="${safeKey}"]`);
-    }
-
-    getGalleryTopPosition() {
-        const galleryPart = this.el.galleryPart;
-        if (!galleryPart) return null;
-        return Math.max(0, Math.round(window.scrollY + galleryPart.getBoundingClientRect().top));
-    }
-
-    scrollGroupCardIntoView(onlyIfBelow = false) {
-        const top = this.getGalleryTopPosition();
-        if (top === null) return false;
-        const currentTop = window.scrollY || window.pageYOffset || 0;
-        if (Math.abs(currentTop - top) <= 3) return false;
-        if (onlyIfBelow && currentTop <= top + 4) return false;
-        return this.animateWindowScrollTo(top);
-    }
-
-
-    setTitle(lines) {
-        const { titleLine1, titleLine2 } = this.el;
-        if (!titleLine1) return;
-        const arr = Array.isArray(lines) ? lines.filter(Boolean).map(String) : [];
-        titleLine1.textContent = arr[0] || '';
-        if (titleLine2) {
-            titleLine2.textContent = arr[1] || '';
-            titleLine2.hidden = !arr[1];
+        if (hasUrl) {
+            arrow.href = targetLink.url;
+            arrow.target = '_blank';
+            arrow.rel = 'noopener';
+            arrow.dataset.pl3Platform = targetLink.platform;
+        } else {
+            arrow.setAttribute('aria-disabled', 'true');
         }
+
+        const icon = document.createElement('i');
+        icon.className = 'fa-solid fa-chevron-right';
+        icon.setAttribute('aria-hidden', 'true');
+        arrow.appendChild(icon);
+        return arrow;
     }
 
-    renderMixes(group) {
-        this.el.mixRows.forEach(r => this.clearMixRow(r));
-        if (!group) return this.showEmpty('Missing group.');
-        const ids = Array.isArray(group.songIds) ? group.songIds : [];
-        if (!ids.length) return this.showEmpty('Mixes list coming soon.');
+    humanizeGroupKey(key) {
+        return String(key || '')
+            .split('-')
+            .filter(Boolean)
+            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ');
+    }
+}
 
-        this.hideEmpty();
-        const platforms = this.model.getPlatformOrder();
-        const max = Math.min(this.el.mixRows.length, ids.length);
-        for (let i = 0; i < max; i++) {
-            const single = group.singlesById?.[ids[i]];
-            single ? this.populateMixRow(this.el.mixRows[i], single, group, platforms) : this.clearMixRow(this.el.mixRows[i]);
-        }
+class PL3GallerySection {
+    constructor(dom, callbacks = {}) {
+        this.dom = dom;
+        this.onGroupSelect = callbacks.onGroupSelect || (() => { });
     }
 
-    clearMixRow({ row, art, name, links }) {
-        row.hidden = true;
-        row.removeAttribute('data-pl3-single-id');
-        row.setAttribute('tabindex', '-1');
-        row.setAttribute('aria-label', '');
-        row.classList.remove('is-active', 'is-collapsed', 'is-before', 'is-after');
-        if (art) { art.hidden = true; art.src = ''; art.alt = ''; }
-        if (name) name.textContent = '';
-        links.forEach((a) => {
-            a.hidden = true;
-            a.removeAttribute('href');
-            a.classList.remove('is-disabled');
-            a.removeAttribute('aria-disabled');
-            a.removeAttribute('tabindex');
+    init() {
+        if (!this.dom.section) return;
+        this.dom.section.addEventListener('click', this.onSectionClick, { passive: false });
+    }
+
+    onSectionClick = (ev) => {
+        const btn = ev.target.closest('[data-pl3-group]');
+        if (!btn || !this.dom.section.contains(btn)) return;
+        ev.preventDefault();
+        this.onGroupSelect(btn, btn.getAttribute('data-pl3-group') || '');
+    };
+}
+
+// PL3 Controller Class - UI orchestration
+class PL3Controller {
+    constructor(sectionId) {
+        this.section = document.getElementById(sectionId);
+        if (!this.section) return;
+
+        this.scrollLock = new PL3ScrollLock();
+        this.el = new PL3DomRegistry(this.section);
+        this.headerSection = new PL3HeaderSection(this.el);
+        this.buttonsSection = new PL3ButtonsSection(this.el, {
+            lockScroll: () => this.lockScroll(),
+            unlockScroll: () => this.unlockScroll()
         });
-    }
-
-    populateMixRow({ row, art, name, links }, single, group, platforms) {
-        const mixName = single.version || 'Main Version';
-        const artSrc = single.image || group.cover || '';
-        const singleLinks = single.links || {};
-        row.hidden = false;
-        row.setAttribute('data-pl3-single-id', String(single.id || ''));
-        row.setAttribute('tabindex', '0');
-        row.setAttribute('aria-label', mixName);
-        row.classList.remove('is-active', 'is-collapsed', 'is-before', 'is-after');
-        if (art) { art.hidden = false; art.src = artSrc; art.alt = `${mixName} cover`; }
-        if (name) name.textContent = mixName;
-        platforms.forEach(p => {
-            const link = links.find(a => a.getAttribute('data-pl3-platform') === p);
-            if (!link) return;
-            const url = singleLinks[p] || '';
-            link.hidden = false;
-            if (url) {
-                link.href = url;
-                link.classList.remove('is-disabled');
-                link.removeAttribute('aria-disabled');
-                link.removeAttribute('tabindex');
-            } else {
-                link.removeAttribute('href');
-                link.classList.add('is-disabled');
-                link.setAttribute('aria-disabled', 'true');
-                link.setAttribute('tabindex', '-1');
-            }
+        this.highlightSection = new PL3HighlightSection(this.el, {
+            lockScroll: () => this.lockScroll(),
+            unlockScroll: () => this.unlockScroll()
         });
+        this.groupPanelSection = new PL3GroupPanel(this.el);
+        this.gallerySection = new PL3GallerySection(this.el, {
+            onGroupSelect: (btn, groupKey) => this.groupPanelSection.openFromTrigger(btn, groupKey)
+        });
+
+        this.init();
     }
 
+    init() {
+        if (!this.section) return;
+        this.headerSection.init();
+        this.buttonsSection.init();
+        this.highlightSection.init();
+        this.groupPanelSection.init();
+        this.gallerySection.init();
+    }
 
-
-
-
-
-    showEmpty(msg) { if (this.el.emptyEl) { this.el.emptyEl.textContent = msg || ''; this.el.emptyEl.hidden = false; } }
-    hideEmpty() { if (this.el.emptyEl) { this.el.emptyEl.textContent = ''; this.el.emptyEl.hidden = true; } }
     lockScroll() { this.scrollLock.lock(); }
     unlockScroll() { this.scrollLock.unlock(); }
 }
-
 window.initPL3 = function () { window.PL3Instance = new PL3Controller('p_listen3'); };
 
 if (document.readyState === 'loading') {
@@ -1399,3 +927,4 @@ if (document.readyState === 'loading') {
 } else {
     window.initPL3();
 }
+

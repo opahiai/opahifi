@@ -25,15 +25,17 @@ body {
     --pl3-gap-md: 10px;
     --pl3-gap-sm: 8px;
 
-    /* Vertical split knobs (unitless numbers out of 100). These should sum to 100. */
-    --pl3-part-entity: 33;
-    --pl3-part-upcoming: 33;
-    --pl3-part-gallery: 30;
+    /* 4-screen section split (unitless numbers out of 100). These should sum to 100. */
+    --pl3-section-header: 24;
+    --pl3-section-buttons: 14;
+    --pl3-section-highlight: 32;
+    --pl3-section-gallery: 30;
 
     /* Derived percentages for grid usage */
-    --pl3-part-entity-pct: calc(var(--pl3-part-entity) * 1%);
-    --pl3-part-upcoming-pct: calc(var(--pl3-part-upcoming) * 1%);
-    --pl3-part-gallery-pct: calc(var(--pl3-part-gallery) * 1%);
+    --pl3-section-header-pct: calc(var(--pl3-section-header) * 1%);
+    --pl3-section-buttons-pct: calc(var(--pl3-section-buttons) * 1%);
+    --pl3-section-highlight-pct: calc(var(--pl3-section-highlight) * 1%);
+    --pl3-section-gallery-pct: calc(var(--pl3-section-gallery) * 1%);
 
     /* Gallery layout */
     --pl3-gallery-gap: var(--pl3-gap-md);
@@ -48,7 +50,7 @@ body {
     --pl3-modal-top-offset: 0px;
     --pl3-modal-max-h: 75vh;
     --pl3-viewport-bottom-space: calc(100vh - var(--pl3-viewport-h));
-    --pl3-gallery-visible-h: calc(var(--pl3-viewport-h) * (var(--pl3-part-gallery) / 100));
+    --pl3-gallery-visible-h: calc(var(--pl3-viewport-h) * (var(--pl3-section-gallery) / 100));
     --pl3-viewport-h-buffer: calc(var(--pl3-viewport-h) - 5vh);
     --pl3-group-card-h: calc(var(--pl3-viewport-h-buffer) - var(--pl3-gallery-visible-h));
     --pl3-group-modal-bottom-gap: calc(var(--pl3-gallery-visible-h) + var(--pl3-viewport-bottom-space) + 14vh);
@@ -71,7 +73,7 @@ body {
 /* tileSize = min(30vw, galleryHeight / 2.5) */
 #p_listen3 {
     --pl3-available-h: var(--pl3-viewport-h);
-    --pl3-gallery-h: calc(var(--pl3-available-h) * (var(--pl3-part-gallery) / 100));
+    --pl3-gallery-h: calc(var(--pl3-available-h) * (var(--pl3-section-gallery) / 100));
     --pl3-gallery-tile-size: min(30vw, calc(var(--pl3-gallery-h) / 3));
 }
 
@@ -96,13 +98,30 @@ body {
     height: 100%;
     display: grid;
     grid-template-rows:
-        minmax(0, var(--pl3-part-entity-pct)) minmax(0, var(--pl3-part-upcoming-pct)) minmax(0, var(--pl3-part-gallery-pct));
+        minmax(0, var(--pl3-section-header-pct)) minmax(0, var(--pl3-section-buttons-pct)) minmax(0, var(--pl3-section-highlight-pct)) minmax(0, var(--pl3-section-gallery-pct));
 }
 
 .PL3-part {
     padding: var(--pl3-part-padding);
     box-sizing: border-box;
     /* over flow: hidden; */
+}
+
+.PL3-part--header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.PL3-part--buttons {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.PL3-part--highlight {
+    display: flex;
+    align-items: stretch;
 }
 
 .PL3-part--gallery {
@@ -116,15 +135,6 @@ body {
     font-size: 2rem;
     font-weight: 800;
     margin-bottom: var(--pl3-gap-sm);
-}
-
-/* ===== Top (30%) ===== */
-.PL3-top {
-    height: 100%;
-    display: grid;
-    grid-template-rows: auto auto;
-    row-gap: var(--pl3-gap-md);
-    align-content: end;
 }
 
 .PL3-heroRow {
@@ -847,6 +857,243 @@ body {
     display: block;
 }
 
+/* ===== Group Top Panel ===== */
+.PL3-card {
+    position: relative;
+}
+
+.PL3-groupPanel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--pl3-gallery-visible-h);
+    z-index: 20;
+    padding: 0 12px 6px;
+    transform: translateY(-110%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.34s ease;
+}
+
+.PL3-groupPanel.PL3-groupPanel--open {
+    transform: translateY(0%);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.PL3-groupPanelInner {
+    position: relative;
+    height: 100%;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background:
+        radial-gradient(130% 120% at 18% 0%, rgba(89, 123, 255, 0.45), rgba(6, 16, 41, 0.55) 52%),
+        linear-gradient(180deg, rgba(10, 19, 48, 0.92), rgba(7, 14, 35, 0.9));
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(9px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+}
+
+.PL3-groupPanelTop {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.PL3-groupPanelArtDock {
+    width: min(36vw, 148px);
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    overflow: visible;
+}
+
+.PL3-groupPanelMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.PL3-groupPanelEyebrow {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.74);
+}
+
+.PL3-groupPanelTitle {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #fff;
+}
+
+.PL3-groupPanelVersions {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    flex-direction: column;
+    overflow: auto;
+    padding-right: 4px;
+}
+
+.PL3-groupVersionItem {
+    display: grid;
+    grid-template-columns: 44px 1fr 30px;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.07);
+    padding: 6px;
+}
+
+.PL3-groupVersionArt {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+}
+
+.PL3-groupVersionBody {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.PL3-groupVersionName {
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.PL3-groupVersionTray {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.PL3-groupVersionPlatform {
+    width: 23px;
+    height: 23px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex: 0 0 auto;
+}
+
+.PL3-groupVersionPlatform:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.PL3-groupVersionPlatform--disabled {
+    opacity: 0.34;
+    pointer-events: none;
+}
+
+.PL3-groupVersionPlatformIcon {
+    width: 13px;
+    height: 13px;
+    display: block;
+}
+
+.PL3-groupVersionArrow {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    justify-self: end;
+}
+
+.PL3-groupVersionArrow:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.PL3-groupVersionArrow--disabled {
+    opacity: 0.34;
+    pointer-events: none;
+}
+
+.PL3-groupVersionEmpty {
+    font-size: 0.84rem;
+    color: rgba(255, 255, 255, 0.75);
+    padding: 8px 4px;
+}
+
+.PL3-groupPanelEdgeClose {
+    position: absolute;
+    left: 50%;
+    bottom: -18px;
+    transform: translateX(-50%);
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(22, 35, 83, 0.98), rgba(9, 18, 44, 0.96));
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    z-index: 140;
+}
+
+.PL3-groupPanelEdgeClose:hover {
+    filter: brightness(1.14);
+}
+
+.PL3-groupArtInPanel {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    transform: none;
+    box-shadow: none;
+    border-radius: 14px;
+    cursor: default;
+    position: relative;
+    z-index: 120;
+}
+
+.PL3-groupArtInPanel:hover,
+.PL3-groupArtInPanel:focus-visible {
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
 /* ===== Bottom (40%) ===== */
 .PL3-gallery {
     flex: 1;
@@ -942,6 +1189,16 @@ body {
     filter: brightness(1.06) saturate(1.06);
 }
 
+.PL3-galleryItemBtn.PL3-artHost--detached,
+.PL3-galleryItemBtn.PL3-artHost--detached:hover,
+.PL3-galleryItemBtn.PL3-artHost--detached:focus-visible,
+.PL3-galleryItemBtn.PL3-artHost--detached.PL3-galleryItemBtn--active {
+    pointer-events: none;
+    box-shadow: none;
+    filter: none;
+    z-index: 0;
+}
+
 .PL3-part--gallery .PL3-gallery.PL3-gallery--locked .PL3-galleryItemBtn {
     pointer-events: none;
     cursor: default;
@@ -965,7 +1222,7 @@ body {
 
 .PL3-part--gallery {
     overflow: visible;
-    z-index: 10;
+    z-index: 40;
     position: relative;
 }
 
@@ -981,702 +1238,4 @@ body {
         height: 80px;
         margin-right: -35px;
     }
-}
-
-/* ===== PL3 Group Modal ===== */
-#PL3-group-modal {
-    --pl3-panel-radius: 18px;
-    --pl3-circle-btn-size: 30px;
-    --pl3-circle-icon-size: 16px;
-    width: 100%;
-    max-width: 375px;
-    max-width: 385px;
-    margin: 0 auto;
-    padding: var(--pl3-gap-sm) var(--pl3-part-padding) var(--pl3-part-padding);
-    box-sizing: border-box;
-}
-
-@media (min-width: 900px) {
-    #PL3-group-modal {
-        --pl3-circle-btn-size: 36px;
-        --pl3-circle-icon-size: 18px;
-    }
-}
-
-#PL3-group-modal.PL3-modal[hidden] {
-    display: none;
-}
-
-#PL3-group-modal.PL3-modal {
-    position: relative;
-    inset: auto;
-    z-index: 2;
-}
-
-#PL3-group-modal .PL3-modalOverlay {
-    display: none;
-}
-
-#PL3-group-modal .PL3-modalPanel {
-    position: relative;
-    width: 100%;
-    max-width: none;
-    height: var(--pl3-group-card-h);
-    max-height: var(--pl3-group-card-h);
-    margin: 0;
-    background: linear-gradient(180deg, rgba(20, 25, 42, 0.96) 0%, rgba(15, 18, 30, 0.94) 100%);
-    border-radius: var(--pl3-panel-radius);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.24s ease, transform 0.28s ease, height 0.28s ease, max-height 0.28s ease, border-radius 0.28s ease;
-}
-
-#PL3-group-modal.PL3-modal--opening .PL3-modalPanel {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-#PL3-group-modal.PL3-modal--single-view {
-    padding: 0;
-    z-index: 24;
-}
-
-#PL3-group-modal::after {
-    content: '';
-    display: block;
-    height: 0;
-    transition: height 0.38s ease;
-}
-
-#PL3-group-modal.PL3-modal--opening::after {
-    height: var(--pl3-group-modal-bottom-gap);
-}
-
-#PL3-group-modal.PL3-modal--single-view::after {
-    height: var(--pl3-group-modal-bottom-gap);
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-modalPanel {
-    height: var(--pl3-group-card-h);
-    max-height: var(--pl3-group-card-h);
-    transform: translateY(0);
-    border-radius: var(--pl3-panel-radius);
-}
-
-#PL3-group-modal .PL3-groupHero {
-    position: relative;
-    width: 100%;
-    height: 0;
-    min-height: 0;
-    overflow: visible;
-    flex-shrink: 0;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-groupHero {
-    display: block;
-    height: 0;
-    min-height: 0;
-    overflow: visible;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-groupHeroCrop {
-    height: 0;
-    overflow: visible;
-    background: none;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-groupHeroCrop::before,
-#PL3-group-modal.PL3-modal--single-view .PL3-groupHeroCrop::after {
-    display: none;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-groupHeroCrop img,
-#PL3-group-modal.PL3-modal--single-view .PL3-coverTitle {
-    display: none !important;
-}
-
-#PL3-group-modal .PL3-groupHeroCrop {
-    position: relative;
-    width: 100%;
-    height: 0;
-    overflow: visible;
-    border-radius: var(--pl3-panel-radius) var(--pl3-panel-radius) 0 0;
-    --pl3-hero-bg: none;
-    background: none;
-}
-
-/* Blurred cover fill behind the contained artwork (no black side bars) */
-#PL3-group-modal .PL3-groupHeroCrop::before {
-    display: none;
-}
-
-/* Make the side-fill feel intentional (soft color + vignette) */
-#PL3-group-modal .PL3-groupHeroCrop::after {
-    display: none;
-}
-
-#PL3-group-modal .PL3-groupHeroCrop img {
-    display: none !important;
-}
-
-#PL3-group-modal .PL3-coverOverlay {
-    position: absolute;
-    inset: 0;
-    padding: 10px;
-    pointer-events: none;
-    z-index: 2;
-}
-
-#PL3-group-modal .PL3-coverTitle {
-    display: none !important;
-}
-
-#PL3-group-modal .PL3-coverTitleLine {
-    display: block;
-    font-size: clamp(2rem, 6.2vw, 46px);
-}
-
-#PL3-group-modal .PL3-coverActions {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    z-index: 3;
-    pointer-events: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-#PL3-group-modal .PL3-coverRight {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-#PL3-group-modal .PL3-coverActions .PL3-coverBack {
-    display: none;
-}
-
-/* Hide any legacy in-body back button so Back only appears next to X */
-#PL3-group-modal .PL3-songBackBtn {
-    display: none !important;
-}
-
-#PL3-group-modal .PL3-coverIconBtn {
-    width: var(--pl3-circle-btn-size);
-    height: var(--pl3-circle-btn-size);
-    border: 1px solid rgba(71, 19, 204, 0);
-    border-radius: 999px;
-    padding: 0;
-    background: rgba(90, 89, 92, 0.261);
-    color: rgba(255, 255, 255, 0.98);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.287);
-    transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
-}
-
-#PL3-group-modal .PL3-coverIconBtn:hover {
-    background: rgba(0, 0, 0, 0.66);
-    border-color: rgba(255, 255, 255, 0.45);
-    transform: translateY(-1px);
-}
-
-#PL3-group-modal .PL3-coverIconBtn:active {
-    transform: translateY(0);
-}
-
-#PL3-group-modal .PL3-coverIconBtn:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.6);
-    outline-offset: 2px;
-}
-
-#PL3-group-modal .PL3-coverShareIcon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.06);
-}
-
-#PL3-group-modal .PL3-coverShareIcon i {
-    font-size: var(--pl3-circle-icon-size);
-}
-
-/* ===== Share Sheet ===== */
-#PL3-share-modal[hidden] {
-    display: none;
-}
-
-#PL3-share-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 10000;
-}
-
-#PL3-share-modal .PL3-shareOverlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.72);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    opacity: 0;
-    transition: opacity 0.20s ease;
-}
-
-#PL3-share-modal.PL3-share--open .PL3-shareOverlay {
-    opacity: 1;
-}
-
-#PL3-share-modal .PL3-sharePanel {
-    position: relative;
-    width: min(92vw, 520px);
-    margin: var(--pl3-share-top-offset) auto 0;
-    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.60);
-    padding: 14px;
-    opacity: 0;
-    transform: translateY(22px);
-    transition: opacity 0.22s ease, transform 0.22s ease;
-}
-
-#PL3-share-modal.PL3-share--open .PL3-sharePanel {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-#PL3-share-modal .PL3-shareTitle {
-    font-weight: 900;
-    font-size: 1.05rem;
-    margin-bottom: 6px;
-}
-
-#PL3-share-modal .PL3-shareHint {
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 0.92rem;
-    margin-bottom: 12px;
-}
-
-#PL3-share-modal .PL3-shareRow {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-    align-items: center;
-}
-
-#PL3-share-modal .PL3-shareInput {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(0, 0, 0, 0.35);
-    color: rgba(255, 255, 255, 0.95);
-    outline: none;
-}
-
-#PL3-share-modal .PL3-shareCopy,
-#PL3-share-modal .PL3-shareClose {
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.98);
-    cursor: pointer;
-    font-weight: 800;
-}
-
-#PL3-share-modal .PL3-shareCopy:hover,
-#PL3-share-modal .PL3-shareClose:hover {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-#PL3-share-modal .PL3-shareActions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 12px;
-}
-
-#PL3-group-modal .PL3-coverClose::after {
-    content: '\00D7';
-    font-weight: 900;
-    font-size: 24px;
-    line-height: 1;
-}
-
-#PL3-group-modal .PL3-groupBody {
-    margin-top: 0;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    padding: 0 0 15px;
-    position: static;
-}
-
-#PL3-group-modal .PL3-edgeBackBtn {
-    display: none !important;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-groupBody {
-    margin-top: 0;
-    padding: 0 0 12px;
-}
-
-#PL3-group-modal.PL3-modal--single-view .PL3-coverActions {
-    left: 14px;
-    right: 24px;
-}
-
-#PL3-group-modal .PL3-songCard {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-#PL3-group-modal .PL3-songCardTrack {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: stretch;
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
-}
-
-#PL3-group-modal .PL3-songCardFace {
-    flex: 0 0 100%;
-    min-width: 100%;
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-}
-
-#PL3-group-modal .PL3-songCardFace--front {
-    padding: 46px 10px 8px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-#PL3-group-modal .PL3-songCardFace--back {
-    padding: 46px 10px 16px;
-    background:
-        radial-gradient(120% 90% at 12% -4%, rgba(31, 111, 235, 0.20) 0%, rgba(31, 111, 235, 0) 58%),
-        radial-gradient(120% 90% at 92% -6%, rgba(140, 70, 255, 0.22) 0%, rgba(140, 70, 255, 0) 58%),
-        linear-gradient(180deg, rgba(7, 12, 34, 0.96) 0%, rgba(4, 8, 24, 0.96) 100%);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-#PL3-group-modal .PL3-songDetail {
-    display: flex;
-    flex-direction: column;
-    padding-top: 0;
-    gap: 8px;
-    flex: 1 1 auto;
-    min-height: 0;
-}
-
-#PL3-group-modal .PL3-songHeader {
-    flex: 0 0 auto;
-    min-height: 0;
-    overflow: hidden;
-    position: relative;
-    z-index: 2;
-}
-
-#PL3-group-modal .PL3-songHeader:empty {
-    display: none;
-}
-
-#PL3-group-modal #PL3-song-header-target .ohf-mix-row {
-    margin: 0;
-    padding-right: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: linear-gradient(180deg, rgba(20, 34, 78, 0.52) 0%, rgba(12, 21, 54, 0.45) 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-}
-
-#PL3-group-modal #PL3-song-header-target .ohf-mix-row::after {
-    display: inline-flex;
-}
-
-#PL3-group-modal #PL3-song-header-target .ohf-mix-name {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-}
-
-#PL3-group-modal #PL3-song-lyrics-section {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
-    border-radius: 14px;
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    align-self: stretch;
-}
-
-#PL3-group-modal .PL3-songSection {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    padding: 14px;
-    background: linear-gradient(180deg, rgba(11, 19, 46, 0.74) 0%, rgba(5, 10, 31, 0.76) 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 20px rgba(0, 0, 0, 0.25);
-    min-height: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-}
-
-#PL3-group-modal .PL3-songSectionTitle {
-    margin: 0 0 10px;
-    font-size: 1rem;
-    font-weight: 800;
-    color: rgba(219, 230, 255, 0.92);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-#PL3-group-modal .PL3-songLyrics {
-    margin: 0;
-    color: rgba(240, 245, 255, 0.95);
-    line-height: 1.38;
-    white-space: pre-wrap;
-    font-family: inherit;
-    font-size: 1.03rem;
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
-    overflow-y: auto;
-    overflow-x: hidden;
-    width: 100%;
-    padding-right: 6px;
-    padding-bottom: 8px;
-}
-
-#PL3-group-modal .PL3-songLyrics {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(104, 132, 216, 0.9) rgba(9, 15, 40, 0.75);
-}
-
-#PL3-group-modal .PL3-songLyrics::-webkit-scrollbar {
-    width: 10px;
-}
-
-#PL3-group-modal .PL3-songLyrics::-webkit-scrollbar-track {
-    background: linear-gradient(180deg, rgba(9, 15, 40, 0.82) 0%, rgba(6, 10, 28, 0.86) 100%);
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-#PL3-group-modal .PL3-songLyrics::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(121, 151, 236, 0.96) 0%, rgba(80, 102, 196, 0.96) 100%);
-    border-radius: 999px;
-    border: 2px solid rgba(8, 14, 36, 0.95);
-}
-
-@media (max-width: 520px) {
-    #PL3-group-modal #PL3-song-header-target .ohf-mix-row {
-        padding-right: 8px;
-    }
-
-    #PL3-group-modal .ohf-mix-name {
-        font-size: 1.15rem;
-    }
-
-    #PL3-group-modal .PL3-songLyrics {
-        font-size: 0.98rem;
-    }
-}
-
-#PL3-group-modal .PL3-members {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#PL3-group-modal .PL3-memberEmpty {
-    color: rgba(255, 255, 255, 0.75);
-    padding: 20px;
-    text-align: center;
-}
-
-#PL3-group-modal .ohf-mix-row {
-    display: grid;
-    grid-template-columns: 70px 1fr;
-    gap: 5px;
-    align-items: center;
-    border-radius: 16px;
-    padding: 3px calc(var(--pl3-circle-btn-size) + 5px) 3px 3px;
-    margin: 0;
-    max-height: 110px;
-    opacity: 1;
-    transform: none;
-    transition: transform 0.28s ease, opacity 0.24s ease, max-height 0.28s ease, margin 0.28s ease, padding 0.28s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-
-#PL3-group-modal .ohf-mix-row::after {
-    content: '›';
-    position: absolute;
-    right: 3px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: calc(var(--pl3-circle-btn-size) * 0.63);
-    height: var(--pl3-circle-btn-size);
-    border: 1px solid rgb(255 255 255 / 11%);
-    border-radius: 999px;
-    background: rgba(14, 56, 226, 0.52);
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    font-size: calc(var(--pl3-circle-icon-size) + 6px);
-    line-height: 1;
-    font-weight: 800;
-    color: rgba(255, 255, 255, 0.62);
-    pointer-events: none;
-    box-shadow: 0 10px 22px rgb(137 39 39 / 13%);
-    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-    align-content: center;
-}
-
-#PL3-group-modal .ohf-mix-row:hover::after,
-#PL3-group-modal .ohf-mix-row:focus-visible::after {
-    color: rgba(255, 255, 255, 0.92);
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(14, 24, 58, 0.76);
-}
-
-#PL3-group-modal .ohf-mix-row.is-active::after {
-    content: '‹';
-    opacity: 1;
-}
-
-#PL3-group-modal .ohf-mix-row.is-active {
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: linear-gradient(180deg, rgba(20, 34, 78, 0.52) 0%, rgba(12, 21, 54, 0.45) 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-#PL3-group-modal .ohf-mix-row[hidden] {
-    display: none;
-}
-
-#PL3-group-modal .PL3-mix-placeholder {
-    height: var(--pl3-mix-placeholder-h, 81px);
-    border-radius: 16px;
-}
-
-#PL3-group-modal .ohf-mix-row:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-}
-
-
-
-#PL3-group-modal .ohf-mix-art {
-    width: 65px;
-    height: 65px;
-    border-radius: 15px;
-    object-fit: cover;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-}
-
-#PL3-group-modal .ohf-mix-meta {
-    min-width: 0;
-}
-
-#PL3-group-modal .ohf-mix-name {
-    font-weight: 700;
-    font-size: 1.3rem;
-    line-height: 1.2;
-    margin-bottom: 8px;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: rgba(255, 255, 255, 0.95);
-}
-
-#PL3-group-modal .ohf-mix-icons {
-    display: flex;
-    gap: 3px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-#PL3-group-modal .ohf-mix-link {
-    width: var(--pl3-circle-btn-size);
-    height: var(--pl3-circle-btn-size);
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(0, 0, 0, 0.20);
-    color: rgba(255, 255, 255, 0.95);
-    text-decoration: none;
-}
-
-#PL3-group-modal .ohf-mix-link:hover {
-    background: rgba(0, 0, 0, 0.30);
-    border-color: rgba(255, 255, 255, 0.22);
-}
-
-#PL3-group-modal .ohf-mix-link.is-disabled,
-#PL3-group-modal .ohf-mix-link[aria-disabled="true"] {
-    opacity: 0.38;
-    filter: grayscale(1);
-    border-color: rgba(255, 255, 255, 0.10);
-    background: rgba(0, 0, 0, 0.14);
-    cursor: not-allowed;
-}
-
-#PL3-group-modal .ohf-mix-link.is-disabled:hover,
-#PL3-group-modal .ohf-mix-link[aria-disabled="true"]:hover {
-    border-color: rgba(255, 255, 255, 0.10);
-    background: rgba(0, 0, 0, 0.14);
-}
-
-#PL3-group-modal .ohf-mix-icon {
-    width: var(--pl3-circle-icon-size);
-    height: var(--pl3-circle-icon-size);
-}
-
-#PL3-group-modal .ohf-mix-icon--fa {
-    font-size: var(--pl3-circle-icon-size);
-}
-
-.PL3-videoButtons {
-    opacity: 0;
-    display: none;
-}
-
-@media (min-width: 375px) {
-    #PL3-group-modal .ohf-mix-icons {
-        gap: 10px;
-    }
-}
-
-
-#PL3-group-modal.PL3-modal--single-view .PL3-coverActions .PL3-coverBack {
-    display: inline-flex;
 }
