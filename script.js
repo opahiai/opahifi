@@ -66,7 +66,8 @@
         OPA_PA_PA_PARTY: 'opa-pa-pa-party',
         GLITTAA_PHOENIX: 'glittaa-phoenix',
         SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
-        BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy'
+        BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
+        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch'
     });
 
     const SINGLE = Object.freeze({
@@ -77,7 +78,8 @@
         SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
         GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
-        FULL_MINDNESS: 'full-mindness'
+        FULL_MINDNESS: 'full-mindness',
+        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch'
     });
 
     const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
@@ -88,7 +90,7 @@
             key: GROUP.OLD_LOVE_STORY,
             title: 'Old Love Story',
             titleLines: ['OLD LOVE', 'STORY'],
-            cover: 'img/music/main_oldlovestory.png',
+            cover: 'img/music/base/base-oldlovestory.png',
             songIds: [],
             singlesById: {}
         },
@@ -97,7 +99,7 @@
             key: GROUP.OPA_PA_PA_PARTY,
             title: 'Opa pa pa party',
             titleLines: ['OPA PA', 'PA PARTY!'],
-            cover: 'img/music/main_oparty.png',
+            cover: 'img/music/base/base-opapapaparty.png',
             songIds: [],
             singlesById: {}
         },
@@ -106,7 +108,7 @@
             key: GROUP.GLITTAA_PHOENIX,
             title: 'Glittaa Phoenix',
             titleLines: ['GLITTAA', 'PHOENIX!'],
-            cover: 'img/music/main_glitta.png',
+            cover: 'img/music/base/base-glittaaphoenix.png',
             songIds: [],
             singlesById: {}
         },
@@ -115,7 +117,7 @@
             key: GROUP.SPLENDA_LOVE_RABBIT_HELL,
             title: 'Splenda Love Rabbit Hell',
             titleLines: ['SPLENDA LOVE', 'RABBIT HELL'],
-            cover: 'img/music/main_splenda_rabbit.png',
+            cover: 'img/music/base/base-splendaloverabbithell.png',
             songIds: [],
             singlesById: {}
         },
@@ -124,7 +126,7 @@
             key: GROUP.BELIEVE_THE_TRUTH_FAIRY,
             title: 'Believe the Truth fairy',
             titleLines: ['BELIEVE the', 'TRUTH FAIRY'],
-            cover: 'img/music/main_truthfairy.png',
+            cover: 'img/music/base/base-believethetruthfairy.png',
             songIds: [],
             singlesById: {}
         },
@@ -133,10 +135,18 @@
             key: GROUP.FULL_MINDNESS,
             title: 'Full-Mindness',
             titleLines: ['FULL-', 'MINDNESS'],
-            cover: 'img/music/main_full_mindness.png',
+            cover: 'img/music/base/base-fullmindness.png',
             songIds: [],
-            singlesById: {},
-
+            singlesById: {}
+        },
+        {
+            id: 7,
+            key: GROUP.LETS_NOT_DO_BRUNCH,
+            title: 'Let\'s not do Brunch',
+            titleLines: ['LET\'S NOT', 'DO BRUNCH'],
+            cover: 'img/music/base/base-letsnotdobrunch.png',
+            songIds: [],
+            singlesById: {}
         }
     ];
 
@@ -209,7 +219,7 @@
             groupKey: GROUP.SPLENDA_LOVE_RABBIT_HELL,
             title: 'Splenda Love Rabbit Hell',
             version: 'Opa Max Mix',
-            image: 'img/music/main_splenda_rabbit.png',
+            image: 'img/music/splenda_rabbit_max_mix.png',
             lyricsPath: 'lyrics/splenda-love-rabbit-hell.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE',
@@ -251,7 +261,7 @@
             groupKey: GROUP.FULL_MINDNESS,
             title: 'Full-Mindness',
             version: 'Opa Mayhem Mix',
-            image: 'img/music/main_full_mindness.png',
+            image: 'img/music/full_mindness_mix1.png',
             lyricsPath: 'lyrics/full-mindness.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z',
@@ -259,6 +269,19 @@
                 'Spotify': 'https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960',
                 'Amazon Music': 'https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653',
                 'Apple Music': 'https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886'
+            }
+        },
+        [SINGLE.LETS_NOT_DO_BRUNCH]: {
+            id: SINGLE.LETS_NOT_DO_BRUNCH,
+            groupKey: GROUP.LETS_NOT_DO_BRUNCH,
+            title: 'Let\'s not do Brunch',
+            image: 'img/music/base/base-letsnotdobrunch.png',
+            links: {
+                'Spotify': 'https://open.spotify.com/track/10pJOBA2Krl8QiAi7XUGE7?si=66f1ed7937454034',
+                'Apple Music': 'https://music.apple.com/us/album/lets-do-brunch-single/1883970912',
+                'YouTube Music': 'https://music.youtube.com/watch?v=nlRw2m9_Qh4&si=G1BKK_61Wf_EIast',
+                'Amazon Music': 'https://music.amazon.com/albums/B0GS2JC8QD?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_CGFq3eGi1CLBa46vBJBJNB3oc&trackAsin=B0GS23XMP6',
+                'Other': 'https://youtu.be/nlRw2m9_Qh4?si=Xe-ZF1Ogg2ynabpj'
             }
         }
     };
@@ -272,7 +295,9 @@
         SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
         SINGLE.BELIEVE_THE_TRUTH_FAIRY,
         SINGLE.FULL_MINDNESS,
+        SINGLE.LETS_NOT_DO_BRUNCH
     ];
+
 
     for (const id of singleIdsInOrder) {
         const s = singlesById[id];
@@ -304,7 +329,6 @@ class PL3DomRegistry {
         this.galleryBtns = Array.from(section.querySelectorAll('.PL3-galleryItemBtn'));
         this.groupPanel = section.querySelector('#PL3-group-panel');
         this.groupPanelArtDock = section.querySelector('[data-pl3-group-art-dock]');
-        this.groupPanelTitle = section.querySelector('[data-pl3-group-title]');
         this.groupPanelVersions = section.querySelector('[data-pl3-group-versions]');
         this.groupPanelCloseBtn = section.querySelector('[data-pl3-group-close]');
         this.streamingBtns = Array.from(document.querySelectorAll('[data-pl3-streaming-popup]'));
@@ -723,9 +747,6 @@ class PL3GroupPanel {
 
     renderGroup(groupKey) {
         const group = this.groupsByKey[groupKey];
-        if (this.dom.groupPanelTitle) {
-            this.dom.groupPanelTitle.textContent = group?.title || this.humanizeGroupKey(groupKey);
-        }
 
         const versionsWrap = this.dom.groupPanelVersions;
         if (!versionsWrap) return;
@@ -763,7 +784,7 @@ class PL3GroupPanel {
             });
 
             body.append(name, tray);
-            row.append(art, body, this.createDrilldownEntry(song.links || {}, versionLabel));
+            row.append(art, body, this.createDrilldownEntry(versionLabel, song.id));
             versionsWrap.appendChild(row);
         });
 
@@ -787,17 +808,18 @@ class PL3GroupPanel {
     }
 
     createPlatformEntry(platform, url, versionLabel) {
+        const platformLabel = this.displayPlatformName(platform);
         const hasUrl = !!String(url || '').trim();
         const item = document.createElement(hasUrl ? 'a' : 'span');
         item.className = `PL3-groupVersionPlatform${hasUrl ? '' : ' PL3-groupVersionPlatform--disabled'}`;
-        item.setAttribute('aria-label', hasUrl ? `${versionLabel} on ${platform}` : `${platform} unavailable`);
-        item.title = platform;
+        item.setAttribute('aria-label', hasUrl ? `${versionLabel} on ${platformLabel}` : `${platformLabel} unavailable`);
+        item.title = platformLabel;
 
         if (hasUrl) {
             item.href = url;
             item.target = '_blank';
             item.rel = 'noopener';
-            item.dataset.pl3Platform = platform;
+            item.dataset.pl3Platform = platformLabel;
         } else {
             item.setAttribute('aria-disabled', 'true');
         }
@@ -806,11 +828,17 @@ class PL3GroupPanel {
         return item;
     }
 
+    displayPlatformName(platform) {
+        if (platform === 'Other') return 'YouTube';
+        return platform;
+    }
+
     createPlatformIcon(platform) {
         const iconUrlByPlatform = {
             'Spotify': 'https://cdn.simpleicons.org/spotify/FFFFFF',
             'Apple Music': 'https://cdn.simpleicons.org/apple/FFFFFF',
-            'YouTube Music': 'https://cdn.simpleicons.org/youtubemusic/FFFFFF'
+            'YouTube Music': 'https://cdn.simpleicons.org/youtubemusic/FFFFFF',
+            'Other': 'https://cdn.simpleicons.org/youtube/FFFFFF'
         };
 
         if (iconUrlByPlatform[platform]) {
@@ -832,20 +860,13 @@ class PL3GroupPanel {
         return icon;
     }
 
-    createDrilldownEntry(links, versionLabel) {
-        const targetLink = this.pickPrimaryLink(links || {});
-        const hasUrl = !!targetLink?.url;
-        const arrow = document.createElement(hasUrl ? 'a' : 'span');
-        arrow.className = `PL3-groupVersionArrow${hasUrl ? '' : ' PL3-groupVersionArrow--disabled'}`;
-        arrow.setAttribute('aria-label', hasUrl ? `Open ${versionLabel}` : `${versionLabel} unavailable`);
-
-        if (hasUrl) {
-            arrow.href = targetLink.url;
-            arrow.target = '_blank';
-            arrow.rel = 'noopener';
-            arrow.dataset.pl3Platform = targetLink.platform;
-        } else {
-            arrow.setAttribute('aria-disabled', 'true');
+    createDrilldownEntry(versionLabel, songId) {
+        const arrow = document.createElement('button');
+        arrow.type = 'button';
+        arrow.className = 'PL3-groupVersionArrow';
+        arrow.setAttribute('aria-label', `Drill into ${versionLabel}`);
+        if (songId) {
+            arrow.dataset.pl3SongId = songId;
         }
 
         const icon = document.createElement('i');

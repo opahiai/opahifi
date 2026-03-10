@@ -6,6 +6,7 @@
 
 body {
     font-family: 'Oswald', sans-serif;
+    min-height: 100vh;
     background: #050711;
     color: #fff;
     overflow-x: hidden;
@@ -18,12 +19,12 @@ body {
 
 :root {
     /* ===== PL3 (p_listen3) tuning knobs ===== */
-    --pl3-card-max-width: 500px;
-    --pl3-part-padding: 10px;
+    --pl3-part-pad-x: 6px;
+    --pl3-part-pad-y: 6px;
     --pl3-card-radius: 18px;
     --pl3-tile-radius: 14px;
-    --pl3-gap-md: 10px;
-    --pl3-gap-sm: 8px;
+    --pl3-gap-md: 7px;
+    --pl3-gap-sm: 6px;
 
     /* 4-screen section split (unitless numbers out of 100). These should sum to 100. */
     --pl3-section-header: 24;
@@ -41,15 +42,15 @@ body {
     --pl3-gallery-gap: var(--pl3-gap-md);
 
     /* Upcoming section */
-    --pl3-upcoming-size: 20vh;
+    --pl3-upcoming-size: 34vw;
 
     /* Viewport-based dimensions */
-    --pl3-viewport-h: 95vh;
+    --pl3-viewport-h: 100vh;
     --pl3-preview-top-offset: 18vh;
     --pl3-preview-max-h: 52vh;
     --pl3-modal-top-offset: 0px;
     --pl3-modal-max-h: 75vh;
-    --pl3-viewport-bottom-space: calc(100vh - var(--pl3-viewport-h));
+    --pl3-viewport-bottom-space: 0px;
     --pl3-gallery-visible-h: calc(var(--pl3-viewport-h) * (var(--pl3-section-gallery) / 100));
     --pl3-viewport-h-buffer: calc(var(--pl3-viewport-h) - 5vh);
     --pl3-group-card-h: calc(var(--pl3-viewport-h-buffer) - var(--pl3-gallery-visible-h));
@@ -59,7 +60,11 @@ body {
 
 @supports (height: 100dvh) {
     :root {
-        --pl3-viewport-h: 95dvh;
+        --pl3-viewport-h: 100dvh;
+    }
+
+    body {
+        min-height: 100dvh;
     }
 }
 
@@ -87,11 +92,10 @@ body {
 
 .PL3-card {
     width: 100%;
-    max-width: var(--pl3-card-max-width);
     height: 100%;
     border-radius: var(--pl3-card-radius);
     border: none;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .PL3-split {
@@ -102,9 +106,10 @@ body {
 }
 
 .PL3-part {
-    padding: var(--pl3-part-padding);
+    padding: var(--pl3-part-pad-y) var(--pl3-part-pad-x);
     box-sizing: border-box;
-    /* over flow: hidden; */
+    min-width: 0;
+    overflow-x: hidden;
 }
 
 .PL3-part--header {
@@ -132,9 +137,9 @@ body {
 .PL3-subTitle {
     text-align: center;
     color: rgba(255, 255, 255, 0.9);
-    font-size: 2rem;
+    font-size: 1.72rem;
     font-weight: 800;
-    margin-bottom: var(--pl3-gap-sm);
+    margin-bottom: 4px;
 }
 
 .PL3-heroRow {
@@ -149,12 +154,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 18px 0;
+    padding: 8px 0;
 }
 
 .PL3-heroImg {
-    width: clamp(100px, 15vw, 140px);
-    height: clamp(100px, 15vw, 140px);
+    width: 84px;
+    height: 84px;
     object-fit: contain;
     display: block;
     border-radius: 15px;
@@ -173,23 +178,22 @@ body {
 
 .PL3-heroTitle {
     color: #fff;
-    font-size: clamp(3rem, 4.2vw, 5rem);
+    font-size: clamp(2.28rem, 13.5vw, 2.7rem);
     font-weight: 900;
-    line-height: 1.05;
+    line-height: 0.96;
     letter-spacing: -0.02em;
 }
 
 .PL3-heroSlogan {
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 200;
-    line-height: 1.05;
+    line-height: 1.02;
     margin-top: 4px;
 }
 
 .PL3-btnRow {
-    width: 95%;
-    /* max-width: 330px; */
+    width: 100%;
 
     display: flex;
     flex-direction: row;
@@ -209,7 +213,7 @@ body {
     cursor: pointer;
     flex: 1 1 auto;
     min-width: 0;
-    padding: 0 12px;
+    padding: 0 8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -318,8 +322,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    padding: 20px;
+    gap: 8px;
+    padding: 6px;
     box-sizing: border-box;
 }
 
@@ -330,9 +334,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 15px;
+    padding: 8px;
     border: none;
-    border-radius: 20px;
+    border-radius: 14px;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -372,7 +376,7 @@ body {
     height: var(--pl3-upcoming-size);
     object-fit: contain;
     display: block;
-    border-radius: 15px;
+    border-radius: 10px;
     box-shadow: 0 0 30px rgba(31, 111, 235, 0.4), inset 0 0 30px rgba(140, 70, 255, 0.1);
     animation: PL3-upcomingGlow 2s ease-in-out infinite;
     position: relative;
@@ -413,13 +417,15 @@ body {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    min-width: 0;
 }
 
 .PL3-upcomingDesc {
     color: #fff;
-    font-size: 3rem;
+    font-size: clamp(2.06rem, 13.3vw, 2.45rem);
     font-weight: 900;
     line-height: 0.9;
+    overflow-wrap: anywhere;
     text-shadow: 0 0 20px rgba(31, 111, 235, 0.4);
     text-align: center;
     flex-shrink: 0;
@@ -447,14 +453,14 @@ body {
     align-items: center;
     justify-content: center;
     gap: var(--upcoming-btn-gap, 6px);
-    width: var(--upcoming-btn-width, 140px);
+    width: var(--upcoming-btn-width, min(44vw, 136px));
     padding: var(--upcoming-btn-padding, 8px 14px);
     border-radius: var(--upcoming-btn-radius, 20px);
     color: #fff;
     font-size: var(--upcoming-btn-font-size, 12px);
     font-weight: var(--upcoming-btn-font-weight, 700);
     line-height: 1;
-    margin-top: 15px;
+    margin-top: 10px;
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
@@ -549,8 +555,7 @@ body {
     border: 2px solid rgba(140, 70, 255, 0.3);
     border-radius: 24px;
     padding: 40px 32px;
-    max-width: 400px;
-    width: 90%;
+    width: calc(100% - 20px);
     text-align: center;
     box-shadow: 0 20px 60px rgba(31, 111, 235, 0.2), 0 0 40px rgba(140, 70, 255, 0.1);
     animation: slideUp 300ms ease-out;
@@ -869,7 +874,7 @@ body {
     right: 0;
     bottom: var(--pl3-gallery-visible-h);
     z-index: 20;
-    padding: 0 12px 6px;
+    padding: 0 0 6px;
     transform: translateY(-110%);
     opacity: 0;
     pointer-events: none;
@@ -885,8 +890,10 @@ body {
 .PL3-groupPanelInner {
     position: relative;
     height: 100%;
-    border-radius: 16px;
+    border-radius: 0;
     border: 1px solid rgba(255, 255, 255, 0.16);
+    border-left: 0;
+    border-right: 0;
     background:
         radial-gradient(130% 120% at 18% 0%, rgba(89, 123, 255, 0.45), rgba(6, 16, 41, 0.55) 52%),
         linear-gradient(180deg, rgba(10, 19, 48, 0.92), rgba(7, 14, 35, 0.9));
@@ -894,8 +901,8 @@ body {
     backdrop-filter: blur(9px);
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 20px;
+    gap: 8px;
+    padding: 10px 4px 26px;
 }
 
 .PL3-groupPanelTop {
@@ -906,9 +913,9 @@ body {
 }
 
 .PL3-groupPanelArtDock {
-    width: min(36vw, 148px);
+    width: min(52vw, 160px);
     aspect-ratio: 1 / 1;
-    border-radius: 14px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -923,20 +930,7 @@ body {
     gap: 8px;
     flex: 1 1 auto;
     min-height: 0;
-}
-
-.PL3-groupPanelEyebrow {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: rgba(255, 255, 255, 0.74);
-}
-
-.PL3-groupPanelTitle {
-    font-size: clamp(1.2rem, 4vw, 1.8rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: #fff;
+    width: 100%;
 }
 
 .PL3-groupPanelVersions {
@@ -945,23 +939,24 @@ body {
     gap: 8px;
     flex-direction: column;
     overflow: auto;
-    padding-right: 4px;
+    padding-right: 0;
 }
 
 .PL3-groupVersionItem {
     display: grid;
-    grid-template-columns: 44px 1fr 30px;
+    grid-template-columns: 50px 1fr 30px;
     align-items: center;
     gap: 8px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(255, 255, 255, 0.07);
-    padding: 6px;
+    padding: 8px 7px;
+    min-height: 66px;
 }
 
 .PL3-groupVersionArt {
-    width: 44px;
-    height: 44px;
+    width: 50px;
+    height: 50px;
     border-radius: 8px;
     object-fit: cover;
     display: block;
@@ -975,7 +970,7 @@ body {
 }
 
 .PL3-groupVersionName {
-    font-size: 0.86rem;
+    font-size: 0.9rem;
     font-weight: 700;
     line-height: 1.1;
     color: #fff;
@@ -992,8 +987,8 @@ body {
 }
 
 .PL3-groupVersionPlatform {
-    width: 23px;
-    height: 23px;
+    width: 22px;
+    height: 22px;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     background: rgba(255, 255, 255, 0.08);
@@ -1015,8 +1010,8 @@ body {
 }
 
 .PL3-groupVersionPlatformIcon {
-    width: 13px;
-    height: 13px;
+    width: 12px;
+    height: 12px;
     display: block;
 }
 
@@ -1142,31 +1137,34 @@ body {
     align-items: flex-start;
     flex-wrap: nowrap;
     perspective: 1000px;
-    padding: 0;
+    padding: 4px 6px 8px;
     overflow: visible;
     width: 100%;
     box-sizing: border-box;
-    --pl3-gallery-shift: 0px;
-    transform: translateX(var(--pl3-gallery-shift));
-    transition: transform 0.34s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: none;
+    transition: none;
+}
+
+.PL3-part--gallery .PL3-gallery::-webkit-scrollbar {
+    display: none;
 }
 
 .PL3-galleryItemBtn {
     position: relative;
-    width: 110px;
-    height: 110px;
+    width: 60px;
+    height: 60px;
     flex-shrink: 0;
     border: none;
     background: transparent;
     padding: 0;
-    margin-right: -50px;
+    margin-right: -24px;
     transform-style: preserve-3d;
-    transform: perspective(1000px) rotateY(-30deg) scale(0.9);
+    transform: perspective(800px) rotateY(-12deg) scale(0.9);
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s 0.2s, filter 0.22s ease;
     cursor: pointer;
     z-index: 1;
     border-radius: 6px;
-    box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: -3px 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .PL3-galleryItemBtn:last-child {
@@ -1175,17 +1173,17 @@ body {
 
 .PL3-galleryItemBtn:hover,
 .PL3-galleryItemBtn:focus-visible {
-    transform: perspective(1000px) rotateY(0deg) scale(1.2) translateZ(30px);
+    transform: perspective(800px) rotateY(0deg) scale(1.06) translateZ(12px);
     z-index: 100;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s;
     outline: none;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.6);
 }
 
 .PL3-galleryItemBtn.PL3-galleryItemBtn--active {
-    transform: perspective(1000px) rotateY(0deg) translateY(16px) scale(1.46) translateZ(44px);
+    transform: perspective(800px) rotateY(0deg) translateY(6px) scale(1.16) translateZ(18px);
     z-index: 120;
-    box-shadow: 0 22px 44px rgba(0, 0, 0, 0.72);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.58);
     filter: brightness(1.06) saturate(1.06);
 }
 
@@ -1230,12 +1228,240 @@ body {
     overflow-x: hidden;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 361px) {
+    :root {
+        --pl3-part-pad-x: 8px;
+        --pl3-part-pad-y: 8px;
+        --pl3-gap-sm: 8px;
+        --pl3-gap-md: 9px;
+        --pl3-upcoming-size: 30vw;
+    }
 
+    .PL3-card {
+        width: 360px;
+    }
+
+    .PL3-groupPanel {
+        padding: 0 4px 6px;
+    }
+
+    .PL3-groupPanelInner {
+        border-left: 1px solid rgba(255, 255, 255, 0.16);
+        border-right: 1px solid rgba(255, 255, 255, 0.16);
+        padding: 10px 6px 26px;
+    }
+
+    .PL3-heroImg {
+        width: 96px;
+        height: 96px;
+    }
+
+    .PL3-heroTitle {
+        font-size: clamp(2.5rem, 10.2vw, 3.4rem);
+        line-height: 1;
+    }
+
+    .PL3-heroSlogan {
+        font-size: 0.9rem;
+        line-height: 1.04;
+    }
+
+    .PL3-upcomingDesc {
+        font-size: clamp(2.3rem, 11.4vw, 3rem);
+    }
 
     .PL3-galleryItemBtn {
-        width: 80px;
-        height: 80px;
-        margin-right: -35px;
+        width: 72px;
+        height: 72px;
+        margin-right: -32px;
+        transform: perspective(900px) rotateY(-16deg) scale(0.88);
+    }
+
+    .PL3-galleryItemBtn:hover,
+    .PL3-galleryItemBtn:focus-visible {
+        transform: perspective(900px) rotateY(0deg) scale(1.12) translateZ(22px);
+    }
+
+    .PL3-galleryItemBtn.PL3-galleryItemBtn--active {
+        transform: perspective(900px) rotateY(0deg) translateY(10px) scale(1.28) translateZ(30px);
+    }
+
+    .PL3-groupPanelArtDock {
+        width: min(42vw, 148px);
+    }
+
+    .PL3-groupVersionItem {
+        grid-template-columns: 54px 1fr 32px;
+        padding: 8px;
+        gap: 9px;
+        min-height: 72px;
+    }
+
+    .PL3-groupVersionArt {
+        width: 54px;
+        height: 54px;
+    }
+
+    .PL3-groupVersionName {
+        font-size: 0.94rem;
+    }
+
+    .PL3-groupVersionTray {
+        gap: 6px;
+    }
+
+    .PL3-groupVersionPlatform {
+        width: 23px;
+        height: 23px;
+    }
+
+    .PL3-groupVersionPlatformIcon {
+        width: 13px;
+        height: 13px;
+    }
+
+    .PL3-groupVersionArrow {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --pl3-part-pad-x: 10px;
+        --pl3-part-pad-y: 10px;
+        --pl3-gap-md: 10px;
+        --pl3-gap-sm: 8px;
+        --pl3-upcoming-size: 20vh;
+    }
+
+    .PL3-card {
+        width: 500px;
+    }
+
+    .PL3-subTitle {
+        font-size: 2rem;
+        margin-bottom: var(--pl3-gap-sm);
+    }
+
+    .PL3-heroImgWrap {
+        padding: 18px 0;
+    }
+
+    .PL3-heroImg {
+        width: clamp(100px, 15vw, 140px);
+        height: clamp(100px, 15vw, 140px);
+    }
+
+    .PL3-heroTitle {
+        font-size: clamp(3rem, 4.2vw, 5rem);
+        line-height: 1.05;
+    }
+
+    .PL3-heroSlogan {
+        font-size: 1rem;
+        line-height: 1.05;
+    }
+
+    .PL3-btnRow {
+        width: 95%;
+    }
+
+    .PL3-heroBtn {
+        padding: 0 12px;
+    }
+
+    .PL3-upcoming {
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .PL3-upcomingArtWrap {
+        padding: 15px;
+        border-radius: 20px;
+    }
+
+    .PL3-upcomingArt {
+        border-radius: 15px;
+    }
+
+    .PL3-upcomingDesc {
+        font-size: 3rem;
+    }
+
+    .PL3-upcomingBtn {
+        --upcoming-btn-width: 140px;
+        margin-top: 15px;
+    }
+
+    .PL3-groupPanel {
+        padding: 0 12px 6px;
+    }
+
+    .PL3-groupPanelInner {
+        gap: 12px;
+        padding: 20px;
+    }
+
+    .PL3-groupPanelArtDock {
+        width: min(36vw, 148px);
+    }
+
+    .PL3-groupVersionItem {
+        grid-template-columns: 58px 1fr 32px;
+        padding: 9px;
+        gap: 10px;
+        min-height: 78px;
+    }
+
+    .PL3-groupVersionArt {
+        width: 58px;
+        height: 58px;
+    }
+
+    .PL3-groupVersionName {
+        font-size: 1rem;
+    }
+
+    .PL3-groupVersionPlatform {
+        width: 23px;
+        height: 23px;
+    }
+
+    .PL3-groupVersionPlatformIcon {
+        width: 13px;
+        height: 13px;
+    }
+
+    .PL3-groupVersionArrow {
+        width: 32px;
+        height: 32px;
+    }
+
+    .PL3-part--gallery .PL3-gallery {
+        justify-content: center;
+        padding: 0;
+        overflow: visible;
+        --pl3-gallery-shift: 0px;
+        transform: translateX(var(--pl3-gallery-shift));
+        transition: transform 0.34s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .PL3-galleryItemBtn {
+        width: 110px;
+        height: 110px;
+        margin-right: -50px;
+        transform: perspective(1000px) rotateY(-30deg) scale(0.9);
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s 0.2s, filter 0.22s ease;
+    }
+
+    .PL3-galleryItemBtn:hover,
+    .PL3-galleryItemBtn:focus-visible {
+        transform: perspective(1000px) rotateY(0deg) scale(1.2) translateZ(30px);
+    }
+
+    .PL3-galleryItemBtn.PL3-galleryItemBtn--active {
+        transform: perspective(1000px) rotateY(0deg) translateY(16px) scale(1.46) translateZ(44px);
+        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.72);
     }
 }
