@@ -222,6 +222,8 @@
             image: 'img/music/splenda_rabbit_max_mix.png',
             lyricsPath: 'lyrics/splenda-love-rabbit-hell.txt',
             links: {
+                'Spotify': 'https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842',
+                'Apple Music': 'https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650',
                 'YouTube Music': 'https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE',
                 'Amazon Music': 'https://music.amazon.com/albums/B0GJQZXHNL',
                 'Other': 'https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F'
@@ -612,7 +614,43 @@ class PL3GroupPanel {
         if (this.dom.groupPanelCloseBtn) {
             this.dom.groupPanelCloseBtn.addEventListener('click', this.onCloseClick, { passive: false });
         }
+        const shareBtn = this.dom.groupPanel.querySelector('[data-pl3-group-share]');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', () => this.shareGroup(), { passive: true });
+        }
+        // Any click that lands outside the panel closes it
+        this.dom.section.addEventListener('click', this.onSectionClick, { passive: true });
+        // Version row click → overlay drilldown
+        if (this.dom.groupPanelVersions) {
+            this.dom.groupPanelVersions.addEventListener('click', this.onVersionRowClick, { passive: false });
+        }
         window.addEventListener('keydown', this.onKeyDown, { passive: true });
+    }
+
+    shareGroup() {
+        const key = this.activeGroupKey;
+        if (!key) return;
+        const url = `${location.origin}/s/${encodeURIComponent(key)}`;
+        const group = this.groupsByKey[key];
+        const title = group?.title || 'OpaHiFi';
+        const text = `Listen to ${title} by OpaHiFi`;
+
+        if (navigator.share) {
+            navigator.share({ title, text, url }).catch(() => {});
+        } else {
+            navigator.clipboard?.writeText(url).then(() => {
+                const btn = this.dom.groupPanel.querySelector('[data-pl3-group-share]');
+                if (!btn) return;
+                btn.classList.add('PL3-groupPanelShareBtn--copied');
+                const icon = btn.querySelector('i');
+                if (icon) { icon.className = 'fa-solid fa-check'; }
+                clearTimeout(this._shareCopiedTimer);
+                this._shareCopiedTimer = setTimeout(() => {
+                    btn.classList.remove('PL3-groupPanelShareBtn--copied');
+                    if (icon) { icon.className = 'fa-solid fa-share-nodes'; }
+                }, 2000);
+            }).catch(() => {});
+        }
     }
 
     onCloseClick = (ev) => {
@@ -620,8 +658,27 @@ class PL3GroupPanel {
         this.close();
     };
 
+    onSectionClick = (ev) => {
+        if (!this.isOpen()) return;
+        if (ev.target.closest('#PL3-group-panel')) return;
+        if (this._versionOverlay && ev.target.closest('.PL3-versionOverlay')) return;
+        this.close();
+    };
+
+    onVersionRowClick = (ev) => {
+        // Let link clicks pass through
+        if (ev.target.closest('a')) return;
+        const row = ev.target.closest('.PL3-groupVersionItem[data-pl3-song-id]');
+        if (!row) return;
+        ev.preventDefault();
+        if (this._versionOverlay) { this.closeVersionDetail(); return; }
+        this.openVersionDetail(row, row.dataset.pl3SongId);
+    };
+
     onKeyDown = (ev) => {
-        if (ev.key !== 'Escape' || !this.isOpen()) return;
+        if (ev.key !== 'Escape') return;
+        if (this._versionOverlay) { this.closeVersionDetail(); return; }
+        if (!this.isOpen()) return;
         this.close();
     };
 
@@ -648,6 +705,7 @@ class PL3GroupPanel {
 
     close() {
         if (!this.isOpen() && !this.activeSourceBtn) return;
+        this.closeVersionDetail();
         this.restoreSourceArt({ animate: true });
         this.closePanelShell();
         this.activeGroupKey = '';
@@ -761,6 +819,7 @@ class PL3GroupPanel {
             const versionLabel = String(song.version || 'Original').trim();
             const row = document.createElement('article');
             row.className = 'PL3-groupVersionItem';
+            row.dataset.pl3SongId = song.id;
 
             const art = document.createElement('img');
             art.className = 'PL3-groupVersionArt';
@@ -864,16 +923,184 @@ class PL3GroupPanel {
         const arrow = document.createElement('button');
         arrow.type = 'button';
         arrow.className = 'PL3-groupVersionArrow';
-        arrow.setAttribute('aria-label', `Drill into ${versionLabel}`);
+        arrow.setAttribute('aria-label', `Open ${versionLabel} details`);
         if (songId) {
             arrow.dataset.pl3SongId = songId;
         }
 
         const icon = document.createElement('i');
-        icon.className = 'fa-solid fa-chevron-right';
+        icon.className = 'fa-solid fa-chevron-up';
         icon.setAttribute('aria-hidden', 'true');
         arrow.appendChild(icon);
         return arrow;
+    }
+
+    // ── Version Detail Overlay ──────────────────────────────────────────────
+
+    openVersionDetail(row, songId) {
+        if (this._versionOverlay) return;
+        const song = this.singlesById[songId];
+        if (!song) return;
+
+        // 1. Insert a hidden sentinel so we know where to restore the row
+        const sentinel = document.createElement('div');
+        sentinel.hidden = true;
+        row.insertAdjacentElement('afterend', sentinel);
+        this._versionSentinel = sentinel;
+
+        // 2. Capture GSAP Flip state before moving
+        const flipState = this.flipReady ? window.Flip.getState(row) : null;
+
+        // 3. Build overlay DOM
+        const overlay = document.createElement('div');
+        overlay.className = 'PL3-versionOverlay';
+
+        const backdropDiv = document.createElement('div');
+        backdropDiv.className = 'PL3-versionOverlayBackdrop';
+        backdropDiv.addEventListener('click', () => this.closeVersionDetail(), { passive: true });
+
+        const panel = document.createElement('div');
+        panel.className = 'PL3-versionOverlayPanel';
+
+        const slot = document.createElement('div');
+        slot.className = 'PL3-versionRowSlot';
+        slot.setAttribute('data-pl3-row-slot', '');
+
+        const stage = document.createElement('div');
+        stage.className = 'PL3-lyricsStage PL3-lyricsStage--loading';
+        stage.setAttribute('aria-label', 'Lyrics');
+
+        panel.append(slot, stage);
+        overlay.append(backdropDiv, panel);
+
+        // 4. Move row into slot with expanded class; flip arrow to chevron-down
+        row.classList.add('PL3-groupVersionItem--inOverlay');
+        slot.appendChild(row);
+        const openArrowIcon = row.querySelector('.PL3-groupVersionArrow i');
+        if (openArrowIcon) openArrowIcon.className = 'fa-solid fa-chevron-down';
+
+        // 5. Insert overlay as sibling after the panel
+        this.dom.groupPanel.insertAdjacentElement('afterend', overlay);
+        this._versionOverlay = overlay;
+
+        // 6. GSAP Flip: animate row from old position to new
+        if (flipState && this.flipReady) {
+            window.Flip.from(flipState, {
+                duration: 0.52,
+                ease: 'power3.inOut',
+                absolute: true,
+                nested: true
+            });
+        }
+
+        // 7. Slide overlay panel up
+        const gsap = window.gsap;
+        if (gsap) {
+            gsap.fromTo(panel,
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.38, ease: 'power3.out' }
+            );
+        }
+
+        // 8. Fetch + build scroll-driven drum
+        if (song.lyricsPath) {
+            fetch(song.lyricsPath)
+                .then(r => r.ok ? r.text() : Promise.reject())
+                .then(text => {
+                    stage.classList.remove('PL3-lyricsStage--loading');
+                    this._buildDrum(stage, text);
+                })
+                .catch(() => stage.classList.remove('PL3-lyricsStage--loading'));
+        } else {
+            stage.classList.remove('PL3-lyricsStage--loading');
+        }
+    }
+
+    closeVersionDetail() {
+        const overlay = this._versionOverlay;
+        if (!overlay) return;
+        this._versionOverlay = null;
+        this._drumScroller = null;
+
+        const slot = overlay.querySelector('[data-pl3-row-slot]');
+        const row = slot?.firstElementChild;
+
+        const finish = () => {
+            if (row && this._versionSentinel) {
+                const flipState = this.flipReady ? window.Flip.getState(row) : null;
+                row.classList.remove('PL3-groupVersionItem--inOverlay');
+                const closeArrowIcon = row.querySelector('.PL3-groupVersionArrow i');
+                if (closeArrowIcon) closeArrowIcon.className = 'fa-solid fa-chevron-up';
+                this._versionSentinel.insertAdjacentElement('beforebegin', row);
+                this._versionSentinel.remove();
+                this._versionSentinel = null;
+                if (flipState && this.flipReady) {
+                    window.Flip.from(flipState, {
+                        duration: 0.42,
+                        ease: 'power3.inOut',
+                        absolute: true,
+                        nested: true
+                    });
+                }
+            }
+            overlay.remove();
+        };
+
+        const gsap = window.gsap;
+        const panel = overlay.querySelector('.PL3-versionOverlayPanel');
+        if (gsap && panel) {
+            gsap.to(panel, { y: 40, opacity: 0, duration: 0.26, ease: 'power2.in', onComplete: finish });
+        } else {
+            finish();
+        }
+    }
+
+    _buildDrum(stage, rawText) {
+        const rawLines = rawText.split('\n').map(l => l.trim());
+        let s = 0, e = rawLines.length - 1;
+        while (s <= e && !rawLines[s]) s++;
+        while (e >= s && !rawLines[e]) e--;
+        const lines = rawLines.slice(s, e + 1);
+        if (!lines.length) return;
+
+        const LINE_H = 24;
+        const VISIBLE = 7;
+        const N = lines.length;
+        const RADIUS = 80;
+        const STEP_DEG = 360 / N;
+
+        stage.style.height = (LINE_H * VISIBLE) + 'px';
+        stage.style.perspective = '600px';
+
+        const drum = document.createElement('div');
+        drum.className = 'PL3-lyricsDrum';
+        drum.style.setProperty('--line-h', LINE_H + 'px');
+
+        lines.forEach((text, i) => {
+            const face = document.createElement('div');
+            face.className = 'PL3-lyricsLine' + (text === '' ? ' PL3-lyricsLine--blank' : '');
+            face.textContent = text || '\u00A0';
+            face.style.transform = `rotateX(${-(STEP_DEG * i)}deg) translateZ(${RADIUS}px)`;
+            face.style.top = '50%';
+            face.style.marginTop = `-${LINE_H / 2}px`;
+            drum.appendChild(face);
+        });
+
+        const scroller = document.createElement('div');
+        scroller.className = 'PL3-lyricsScroller';
+        const scrollContent = document.createElement('div');
+        scrollContent.className = 'PL3-lyricsScrollContent';
+        scrollContent.style.height = (N * LINE_H) + 'px';
+        scroller.appendChild(scrollContent);
+
+        stage.appendChild(drum);
+        stage.appendChild(scroller);
+        this._drumScroller = scroller;
+
+        scroller.addEventListener('scroll', () => {
+            const angle = -(scroller.scrollTop / LINE_H) * STEP_DEG;
+            drum.style.transform = `translateY(-50%) rotateX(${angle}deg)`;
+        }, { passive: true });
     }
 
     humanizeGroupKey(key) {

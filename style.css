@@ -910,6 +910,38 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     gap: 10px;
+    position: relative;
+}
+
+.PL3-groupPanelShareBtn {
+    position: absolute;
+    top: 0;
+    right: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    z-index: 10;
+}
+
+.PL3-groupPanelShareBtn:hover,
+.PL3-groupPanelShareBtn:focus-visible {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.PL3-groupPanelShareBtn--copied {
+    background: rgba(80, 220, 130, 0.25);
+    border-color: rgba(80, 220, 130, 0.5);
+    color: #6effa8;
 }
 
 .PL3-groupPanelArtDock {
@@ -951,7 +983,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(255, 255, 255, 0.07);
     padding: 8px 7px;
-    min-height: 66px;
+    min-height: 75px;
 }
 
 .PL3-groupVersionArt {
@@ -965,12 +997,12 @@ body {
 .PL3-groupVersionBody {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 9px;
     min-width: 0;
 }
 
 .PL3-groupVersionName {
-    font-size: 0.9rem;
+    font-size: 1.3rem;
     font-weight: 700;
     line-height: 1.1;
     color: #fff;
@@ -982,7 +1014,7 @@ body {
 .PL3-groupVersionTray {
     display: flex;
     flex-wrap: nowrap;
-    gap: 6px;
+    gap: 11px;
     align-items: center;
 }
 
@@ -1250,80 +1282,228 @@ body {
         border-right: 1px solid rgba(255, 255, 255, 0.16);
         padding: 10px 6px 26px;
     }
+}
 
-    .PL3-heroImg {
-        width: 96px;
-        height: 96px;
-    }
+/* ===== Version Detail Overlay ===== */
+.PL3-versionOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--pl3-gallery-visible-h);
+    z-index: 25;
+    pointer-events: auto;
+}
 
-    .PL3-heroTitle {
-        font-size: clamp(2.5rem, 10.2vw, 3.4rem);
-        line-height: 1;
-    }
+.PL3-versionOverlayBackdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+}
 
-    .PL3-heroSlogan {
-        font-size: 0.9rem;
-        line-height: 1.04;
-    }
+.PL3-versionOverlayPanel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(130% 120% at 82% 0%, rgba(100, 20, 160, 0.9), rgba(20, 6, 38, 0.95) 52%),
+        linear-gradient(180deg, rgba(22, 8, 42, 1), rgba(14, 5, 28, 1));
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 8px 16px;
+    gap: 10px;
+    overflow: hidden;
+}
 
-    .PL3-upcomingDesc {
-        font-size: clamp(2.3rem, 11.4vw, 3rem);
-    }
+.PL3-versionOverlayBack {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: inherit;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+}
 
-    .PL3-galleryItemBtn {
-        width: 72px;
-        height: 72px;
-        margin-right: -32px;
-        transform: perspective(900px) rotateY(-16deg) scale(0.88);
-    }
+.PL3-versionOverlayBack:hover {
+    color: #fff;
+}
 
-    .PL3-galleryItemBtn:hover,
-    .PL3-galleryItemBtn:focus-visible {
-        transform: perspective(900px) rotateY(0deg) scale(1.12) translateZ(22px);
-    }
+.PL3-versionRowSlot {
+    flex-shrink: 0;
+}
 
-    .PL3-galleryItemBtn.PL3-galleryItemBtn--active {
-        transform: perspective(900px) rotateY(0deg) translateY(10px) scale(1.28) translateZ(30px);
-    }
+.PL3-groupVersionItem--inOverlay {
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-    .PL3-groupPanelArtDock {
-        width: min(42vw, 148px);
-    }
+.PL3-groupVersionItem--inOverlay .PL3-groupVersionArt {
+    width: 68px;
+    height: 68px;
+    border-radius: 10px;
+}
 
-    .PL3-groupVersionItem {
-        grid-template-columns: 54px 1fr 32px;
-        padding: 8px;
-        gap: 9px;
-        min-height: 72px;
-    }
+.PL3-groupVersionItem--inOverlay .PL3-groupVersionArrow {
+    display: flex;
+    color: rgba(255, 255, 255, 0.5);
+}
 
-    .PL3-groupVersionArt {
-        width: 54px;
-        height: 54px;
-    }
+/* ===== 3D Drum-Roll Lyrics ===== */
+.PL3-lyricsStage {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    clip-path: inset(0);
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+}
 
-    .PL3-groupVersionName {
-        font-size: 0.94rem;
-    }
+.PL3-lyricsDrum {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform-style: preserve-3d;
+    transform: translateY(-50%) rotateX(0deg);
+    pointer-events: none;
+    will-change: transform;
+}
 
-    .PL3-groupVersionTray {
-        gap: 6px;
-    }
+.PL3-lyricsLine {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--line-h, 28px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+    padding: 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
 
-    .PL3-groupVersionPlatform {
-        width: 23px;
-        height: 23px;
-    }
+.PL3-lyricsLine--blank {
+    color: transparent;
+}
 
-    .PL3-groupVersionPlatformIcon {
-        width: 13px;
-        height: 13px;
-    }
+.PL3-lyricsScroller {
+    position: absolute;
+    inset: 0;
+    overflow-y: scroll;
+    z-index: 10;
+    background: transparent;
+    scrollbar-width: none;
+}
 
-    .PL3-groupVersionArrow {
-        width: 30px;
-        height: 30px;
-    }
+.PL3-lyricsScroller::-webkit-scrollbar {
+    display: none;
+}
+
+.PL3-lyricsScrollContent {
+    width: 100%;
+}
+
+
+.PL3-heroImg {
+    width: 96px;
+    height: 96px;
+}
+
+.PL3-heroTitle {
+    font-size: clamp(2.5rem, 10.2vw, 3.4rem);
+    line-height: 1;
+}
+
+.PL3-heroSlogan {
+    font-size: 0.9rem;
+    line-height: 1.04;
+}
+
+.PL3-upcomingDesc {
+    font-size: clamp(2.3rem, 11.4vw, 3rem);
+}
+
+.PL3-galleryItemBtn {
+    width: 72px;
+    height: 72px;
+    margin-right: -32px;
+    transform: perspective(900px) rotateY(-16deg) scale(0.88);
+}
+
+.PL3-galleryItemBtn:hover,
+.PL3-galleryItemBtn:focus-visible {
+    transform: perspective(900px) rotateY(0deg) scale(1.12) translateZ(22px);
+}
+
+.PL3-galleryItemBtn.PL3-galleryItemBtn--active {
+    transform: perspective(900px) rotateY(0deg) translateY(10px) scale(1.28) translateZ(30px);
+}
+
+.PL3-groupPanelArtDock {
+    width: min(42vw, 148px);
+}
+
+.PL3-groupVersionItem {
+    grid-template-columns: 54px 1fr 32px;
+    padding: 8px;
+    gap: 17px;
+    min-height: 82px;
+}
+
+.PL3-groupVersionArt {
+    width: 54px;
+    height: 54px;
+}
+
+.PL3-groupVersionName {
+    font-size: 1.3rem;
+}
+
+.PL3-groupVersionTray {
+    gap: 9px;
+}
+
+.PL3-groupVersionPlatform {
+    width: 23px;
+    height: 23px;
+}
+
+.PL3-groupVersionPlatformIcon {
+    width: 13px;
+    height: 13px;
+}
+
+.PL3-groupVersionArrow {
+    width: 30px;
+    height: 30px;
 }
 
 @media (min-width: 768px) {
