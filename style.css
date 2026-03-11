@@ -1366,60 +1366,33 @@ body {
     color: rgba(255, 255, 255, 0.5);
 }
 
-/* ===== 3D Drum-Roll Lyrics ===== */
+/* ===== Lyrics Scroll ===== */
 .PL3-lyricsStage {
     flex: 1 1 auto;
     min-height: 0;
     position: relative;
     overflow: hidden;
-    clip-path: inset(0);
-    background: rgba(255, 255, 255, 0.04);
     border-radius: 8px;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    background: rgba(0, 0, 0, 0.18);
+    transition: flex-basis 0.3s ease, opacity 0.3s ease;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
 }
 
-.PL3-lyricsDrum {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    transform-style: preserve-3d;
-    transform: translateY(-50%) rotateX(0deg);
-    pointer-events: none;
-    will-change: transform;
-}
-
-.PL3-lyricsLine {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: var(--line-h, 28px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.88);
-    padding: 0 10px;
-    white-space: nowrap;
+.PL3-lyricsStage--collapsed {
+    flex: 0 0 0px;
+    opacity: 0;
+    min-height: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-
-.PL3-lyricsLine--blank {
-    color: transparent;
 }
 
 .PL3-lyricsScroller {
     position: absolute;
-    inset: 0;
-    overflow-y: scroll;
-    z-index: 10;
-    background: transparent;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 28px;
+    overflow-y: auto;
     scrollbar-width: none;
 }
 
@@ -1427,8 +1400,60 @@ body {
     display: none;
 }
 
-.PL3-lyricsScrollContent {
-    width: 100%;
+.PL3-lyricsTrack {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    right: 4px;
+    width: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    cursor: pointer;
+    touch-action: none;
+}
+
+.PL3-lyricsThumb {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 32px;
+    cursor: grab;
+    touch-action: none;
+    transition: top 0.05s linear;
+}
+
+.PL3-lyricsThumbImg {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    display: block;
+    pointer-events: none;
+    user-select: none;
+}
+
+.PL3-lyricsContent {
+    padding: 14px 14px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.PL3-lyricsLine {
+    margin: 0;
+    padding: 3px 0;
+    font-size: 0.76rem;
+    font-weight: 500;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.78);
+    text-align: center;
+}
+
+.PL3-lyricsLine--blank {
+    height: 10px;
+    padding: 0;
 }
 
 
@@ -1474,7 +1499,7 @@ body {
 .PL3-groupVersionItem {
     grid-template-columns: 54px 1fr 32px;
     padding: 8px;
-    gap: 17px;
+    gap: 25px;
     min-height: 82px;
 }
 

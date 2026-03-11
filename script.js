@@ -636,7 +636,7 @@ class PL3GroupPanel {
         const text = `Listen to ${title} by OpaHiFi`;
 
         if (navigator.share) {
-            navigator.share({ title, text, url }).catch(() => {});
+            navigator.share({ title, text, url }).catch(() => { });
         } else {
             navigator.clipboard?.writeText(url).then(() => {
                 const btn = this.dom.groupPanel.querySelector('[data-pl3-group-share]');
@@ -649,7 +649,7 @@ class PL3GroupPanel {
                     btn.classList.remove('PL3-groupPanelShareBtn--copied');
                     if (icon) { icon.className = 'fa-solid fa-share-nodes'; }
                 }, 2000);
-            }).catch(() => {});
+            }).catch(() => { });
         }
     }
 
@@ -966,11 +966,20 @@ class PL3GroupPanel {
         slot.className = 'PL3-versionRowSlot';
         slot.setAttribute('data-pl3-row-slot', '');
 
+        // Stage starts collapsed — expands only after row Flip completes
         const stage = document.createElement('div');
-        stage.className = 'PL3-lyricsStage PL3-lyricsStage--loading';
+        stage.className = 'PL3-lyricsStage PL3-lyricsStage--loading PL3-lyricsStage--collapsed';
         stage.setAttribute('aria-label', 'Lyrics');
 
         panel.append(slot, stage);
+
+        // Move close button into overlay so it sits above the backdrop (z-index fix)
+        const closeBtn = this.dom.groupPanelCloseBtn;
+        if (closeBtn) {
+            this._closeBtnParent = closeBtn.parentElement;
+            overlay.appendChild(closeBtn);
+        }
+
         overlay.append(backdropDiv, panel);
 
         // 4. Move row into slot with expanded class; flip arrow to chevron-down
@@ -983,10 +992,12 @@ class PL3GroupPanel {
         this.dom.groupPanel.insertAdjacentElement('afterend', overlay);
         this._versionOverlay = overlay;
 
+        const FLIP_DURATION = 0.52;
+
         // 6. GSAP Flip: animate row from old position to new
         if (flipState && this.flipReady) {
             window.Flip.from(flipState, {
-                duration: 0.52,
+                duration: FLIP_DURATION,
                 ease: 'power3.inOut',
                 absolute: true,
                 nested: true
@@ -1002,17 +1013,26 @@ class PL3GroupPanel {
             );
         }
 
-        // 8. Fetch + build scroll-driven drum
-        if (song.lyricsPath) {
-            fetch(song.lyricsPath)
-                .then(r => r.ok ? r.text() : Promise.reject())
-                .then(text => {
-                    stage.classList.remove('PL3-lyricsStage--loading');
-                    this._buildDrum(stage, text);
-                })
-                .catch(() => stage.classList.remove('PL3-lyricsStage--loading'));
+        // 8. After Flip completes, expand stage then fetch lyrics
+        const expandDelay = FLIP_DURATION + 0.08;
+        const doExpand = () => {
+            stage.classList.remove('PL3-lyricsStage--collapsed');
+            if (song.lyricsPath) {
+                fetch(song.lyricsPath)
+                    .then(r => r.ok ? r.text() : Promise.reject())
+                    .then(text => {
+                        stage.classList.remove('PL3-lyricsStage--loading');
+                        this._buildDrum(stage, text);
+                    })
+                    .catch(() => stage.classList.remove('PL3-lyricsStage--loading'));
+            } else {
+                stage.classList.remove('PL3-lyricsStage--loading');
+            }
+        };
+        if (gsap) {
+            gsap.delayedCall(expandDelay, doExpand);
         } else {
-            stage.classList.remove('PL3-lyricsStage--loading');
+            setTimeout(doExpand, expandDelay * 1000);
         }
     }
 
@@ -1021,11 +1041,18 @@ class PL3GroupPanel {
         if (!overlay) return;
         this._versionOverlay = null;
         this._drumScroller = null;
+        this._lyricsTween?.kill();
+        this._lyricsTween = null;
 
         const slot = overlay.querySelector('[data-pl3-row-slot]');
         const row = slot?.firstElementChild;
 
         const finish = () => {
+            // Restore close button to its original parent
+            if (this._closeBtnParent && this.dom.groupPanelCloseBtn) {
+                this._closeBtnParent.appendChild(this.dom.groupPanelCloseBtn);
+                this._closeBtnParent = null;
+            }
             if (row && this._versionSentinel) {
                 const flipState = this.flipReady ? window.Flip.getState(row) : null;
                 row.classList.remove('PL3-groupVersionItem--inOverlay');
@@ -1063,44 +1090,82 @@ class PL3GroupPanel {
         const lines = rawLines.slice(s, e + 1);
         if (!lines.length) return;
 
-        const LINE_H = 24;
-        const VISIBLE = 7;
-        const N = lines.length;
-        const RADIUS = 80;
-        const STEP_DEG = 360 / N;
-
-        stage.style.height = (LINE_H * VISIBLE) + 'px';
-        stage.style.perspective = '600px';
-
-        const drum = document.createElement('div');
-        drum.className = 'PL3-lyricsDrum';
-        drum.style.setProperty('--line-h', LINE_H + 'px');
-
-        lines.forEach((text, i) => {
-            const face = document.createElement('div');
-            face.className = 'PL3-lyricsLine' + (text === '' ? ' PL3-lyricsLine--blank' : '');
-            face.textContent = text || '\u00A0';
-            face.style.transform = `rotateX(${-(STEP_DEG * i)}deg) translateZ(${RADIUS}px)`;
-            face.style.top = '50%';
-            face.style.marginTop = `-${LINE_H / 2}px`;
-            drum.appendChild(face);
-        });
-
         const scroller = document.createElement('div');
         scroller.className = 'PL3-lyricsScroller';
-        const scrollContent = document.createElement('div');
-        scrollContent.className = 'PL3-lyricsScrollContent';
-        scrollContent.style.height = (N * LINE_H) + 'px';
-        scroller.appendChild(scrollContent);
 
-        stage.appendChild(drum);
+        const content = document.createElement('div');
+        content.className = 'PL3-lyricsContent';
+
+        lines.forEach(text => {
+            const p = document.createElement('p');
+            p.className = 'PL3-lyricsLine' + (!text ? ' PL3-lyricsLine--blank' : '');
+            p.textContent = text || '';
+            content.appendChild(p);
+        });
+
+        scroller.appendChild(content);
+
+        // Custom Opa scrollbar
+        const track = document.createElement('div');
+        track.className = 'PL3-lyricsTrack';
+        const thumb = document.createElement('div');
+        thumb.className = 'PL3-lyricsThumb';
+        const thumbImg = document.createElement('img');
+        thumbImg.src = 'img/opa/scroller_opa.png';
+        thumbImg.alt = '';
+        thumbImg.className = 'PL3-lyricsThumbImg';
+        thumb.appendChild(thumbImg);
+        track.appendChild(thumb);
+
         stage.appendChild(scroller);
+        stage.appendChild(track);
         this._drumScroller = scroller;
 
-        scroller.addEventListener('scroll', () => {
-            const angle = -(scroller.scrollTop / LINE_H) * STEP_DEG;
-            drum.style.transform = `translateY(-50%) rotateX(${angle}deg)`;
-        }, { passive: true });
+        // Sync thumb position to scroll
+        const syncThumb = () => {
+            const scrollable = scroller.scrollHeight - scroller.clientHeight;
+            const trackH = track.clientHeight;
+            const thumbH = thumb.offsetHeight;
+            const ratio = scrollable > 0 ? scroller.scrollTop / scrollable : 0;
+            thumb.style.top = (ratio * (trackH - thumbH)) + 'px';
+        };
+        scroller.addEventListener('scroll', syncThumb, { passive: true });
+
+        // Touch on thumb or track pauses autoscroll
+        const pauseAuto = () => {
+            this._lyricsTween?.pause();
+        };
+        thumb.addEventListener('pointerdown', pauseAuto);
+        track.addEventListener('pointerdown', (ev) => {
+            pauseAuto();
+            // Jump scroll to tapped position
+            const rect = track.getBoundingClientRect();
+            const thumbH = thumb.offsetHeight;
+            const ratio = Math.max(0, Math.min(1, (ev.clientY - rect.top - thumbH / 2) / (rect.height - thumbH)));
+            const scrollable = scroller.scrollHeight - scroller.clientHeight;
+            scroller.scrollTop = ratio * scrollable;
+        });
+        // Also pause if user manually scrolls
+        scroller.addEventListener('touchstart', pauseAuto, { passive: true });
+        scroller.addEventListener('wheel', pauseAuto, { passive: true });
+
+        // Auto-scroll from top through all lyrics
+        const gsap = window.gsap;
+        if (gsap) {
+            requestAnimationFrame(() => {
+                syncThumb();
+                const scrollable = scroller.scrollHeight - scroller.clientHeight;
+                if (scrollable > 0) {
+                    this._lyricsTween = gsap.to(scroller, {
+                        scrollTop: scrollable,
+                        duration: lines.length * 1.8,
+                        ease: 'none',
+                        delay: 1.2,
+                        onUpdate: syncThumb
+                    });
+                }
+            });
+        }
     }
 
     humanizeGroupKey(key) {
