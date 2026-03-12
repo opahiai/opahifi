@@ -161,7 +161,7 @@
             groupKey: GROUP.OLD_LOVE_STORY,
             title: 'Old Love Story',
             version: 'Desert Disco Duet Remix',
-            image: 'img/music/oldlovestory_desert_disco_duet.png',
+            image: 'img/music/version/oldlovestory_desert-disco-duet.png',
             lyricsPath: 'lyrics/old-love-story.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE',
@@ -655,35 +655,39 @@ class PL3GroupPanel {
 
     onCloseClick = (ev) => {
         ev.preventDefault();
-        this.close();
+        ev.stopPropagation();
+        if (this._panelState === 'song') { this.closeVersionDetail(); return; }
+        if (this._panelState === 'group') { this.close(); }
     };
 
     onSectionClick = (ev) => {
-        if (!this.isOpen()) return;
+        if (this._panelState === 'closed') return;
         if (ev.target.closest('#PL3-group-panel')) return;
-        if (this._versionOverlay && ev.target.closest('.PL3-versionOverlay')) return;
+        if (ev.target.closest('.PL3-versionOverlay')) return;
         this.close();
     };
 
     onVersionRowClick = (ev) => {
-        // Let link clicks pass through
         if (ev.target.closest('a')) return;
         const row = ev.target.closest('.PL3-groupVersionItem[data-pl3-song-id]');
         if (!row) return;
         ev.preventDefault();
-        if (this._versionOverlay) { this.closeVersionDetail(); return; }
         this.openVersionDetail(row, row.dataset.pl3SongId);
     };
 
     onKeyDown = (ev) => {
         if (ev.key !== 'Escape') return;
-        if (this._versionOverlay) { this.closeVersionDetail(); return; }
-        if (!this.isOpen()) return;
-        this.close();
+        if (this._panelState === 'song') { this.closeVersionDetail(); return; }
+        if (this._panelState === 'group') { this.close(); }
     };
 
     isOpen() {
         return !!this.dom.groupPanel?.classList.contains('PL3-groupPanel--open');
+    }
+
+    get _panelState() {
+        if (!this.isOpen()) return 'closed';
+        return this._versionOverlay ? 'song' : 'group';
     }
 
     openFromTrigger(triggerBtn, groupKey) {
@@ -823,10 +827,10 @@ class PL3GroupPanel {
 
             const art = document.createElement('img');
             art.className = 'PL3-groupVersionArt';
-            art.src = song.image || group?.cover || 'img/music/opahiai_album.png';
+            art.src = song.image || group?.cover || 'img/music/opahifi_album.png';
             art.alt = `${group?.title || 'Release'} ${versionLabel} cover`;
             art.loading = 'lazy';
-            art.onerror = () => { art.src = 'img/music/opahiai_album.png'; };
+            art.onerror = () => { art.src = 'img/music/opahifi_album.png'; };
 
             const body = document.createElement('div');
             body.className = 'PL3-groupVersionBody';
@@ -843,7 +847,7 @@ class PL3GroupPanel {
             });
 
             body.append(name, tray);
-            row.append(art, body, this.createDrilldownEntry(versionLabel, song.id));
+            row.append(art, body);
             versionsWrap.appendChild(row);
         });
 
@@ -919,22 +923,6 @@ class PL3GroupPanel {
         return icon;
     }
 
-    createDrilldownEntry(versionLabel, songId) {
-        const arrow = document.createElement('button');
-        arrow.type = 'button';
-        arrow.className = 'PL3-groupVersionArrow';
-        arrow.setAttribute('aria-label', `Open ${versionLabel} details`);
-        if (songId) {
-            arrow.dataset.pl3SongId = songId;
-        }
-
-        const icon = document.createElement('i');
-        icon.className = 'fa-solid fa-chevron-up';
-        icon.setAttribute('aria-hidden', 'true');
-        arrow.appendChild(icon);
-        return arrow;
-    }
-
     // ── Version Detail Overlay ──────────────────────────────────────────────
 
     openVersionDetail(row, songId) {
@@ -948,8 +936,9 @@ class PL3GroupPanel {
         row.insertAdjacentElement('afterend', sentinel);
         this._versionSentinel = sentinel;
 
-        // 2. Capture GSAP Flip state before moving
-        const flipState = this.flipReady ? window.Flip.getState(row) : null;
+        // 2. Capture GSAP Flip state before moving (row + name so both animate smoothly)
+        const _nameEl = row.querySelector('.PL3-groupVersionName');
+        const flipState = this.flipReady ? window.Flip.getState([row, _nameEl].filter(Boolean)) : null;
 
         // 3. Build overlay DOM
         const overlay = document.createElement('div');
@@ -971,23 +960,51 @@ class PL3GroupPanel {
         stage.className = 'PL3-lyricsStage PL3-lyricsStage--loading PL3-lyricsStage--collapsed';
         stage.setAttribute('aria-label', 'Lyrics');
 
+        // Share button — same style as the group panel share button
+        const shareBtn = document.createElement('button');
+        shareBtn.type = 'button';
+        shareBtn.className = 'PL3-groupPanelShareBtn';
+        shareBtn.setAttribute('aria-label', 'Share');
+        const shareIcon = document.createElement('i');
+        shareIcon.className = 'fa-solid fa-share-nodes';
+        shareIcon.setAttribute('aria-hidden', 'true');
+        shareBtn.appendChild(shareIcon);
+        shareBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            const key = this.activeGroupKey;
+            if (!key) return;
+            const url = `${location.origin}/s/${encodeURIComponent(key)}`;
+            const group = this.groupsByKey[key];
+            const title = group?.title || 'OpaHiFi';
+            const text = `Listen to ${title} by OpaHiFi`;
+            if (navigator.share) {
+                navigator.share({ title, text, url }).catch(() => { });
+            } else {
+                navigator.clipboard?.writeText(url).then(() => {
+                    shareBtn.classList.add('PL3-groupPanelShareBtn--copied');
+                    shareIcon.className = 'fa-solid fa-check';
+                    setTimeout(() => {
+                        shareBtn.classList.remove('PL3-groupPanelShareBtn--copied');
+                        shareIcon.className = 'fa-solid fa-share-nodes';
+                    }, 2000);
+                }).catch(() => { });
+            }
+        }, { passive: false });
+
         panel.append(slot, stage);
-
-        // Move close button into overlay so it sits above the backdrop (z-index fix)
-        const closeBtn = this.dom.groupPanelCloseBtn;
-        if (closeBtn) {
-            this._closeBtnParent = closeBtn.parentElement;
-            overlay.appendChild(closeBtn);
-        }
-
         overlay.append(backdropDiv, panel);
 
-        // 4. Move row into slot with expanded class; flip arrow to chevron-down
+        // 4. Move row into slot; share button goes inside the row (top-right via position:absolute)
         row.classList.add('PL3-groupVersionItem--inOverlay');
+        shareBtn.setAttribute('data-pl3-row-share', '');
+        row.appendChild(shareBtn);
         slot.appendChild(row);
-        const openArrowIcon = row.querySelector('.PL3-groupVersionArrow i');
-        if (openArrowIcon) openArrowIcon.className = 'fa-solid fa-chevron-down';
-
+        // Backdrop click closes the overlay
+        overlay.addEventListener('click', (ev) => {
+            if (ev.target.classList.contains('PL3-versionOverlayBackdrop')) {
+                this.closeVersionDetail();
+            }
+        });
         // 5. Insert overlay as sibling after the panel
         this.dom.groupPanel.insertAdjacentElement('afterend', overlay);
         this._versionOverlay = overlay;
@@ -1048,16 +1065,11 @@ class PL3GroupPanel {
         const row = slot?.firstElementChild;
 
         const finish = () => {
-            // Restore close button to its original parent
-            if (this._closeBtnParent && this.dom.groupPanelCloseBtn) {
-                this._closeBtnParent.appendChild(this.dom.groupPanelCloseBtn);
-                this._closeBtnParent = null;
-            }
             if (row && this._versionSentinel) {
-                const flipState = this.flipReady ? window.Flip.getState(row) : null;
+                const _nameEl2 = row.querySelector('.PL3-groupVersionName');
+                const flipState = this.flipReady ? window.Flip.getState([row, _nameEl2].filter(Boolean)) : null;
+                row.querySelector('[data-pl3-row-share]')?.remove();
                 row.classList.remove('PL3-groupVersionItem--inOverlay');
-                const closeArrowIcon = row.querySelector('.PL3-groupVersionArrow i');
-                if (closeArrowIcon) closeArrowIcon.className = 'fa-solid fa-chevron-up';
                 this._versionSentinel.insertAdjacentElement('beforebegin', row);
                 this._versionSentinel.remove();
                 this._versionSentinel = null;
@@ -1131,23 +1143,48 @@ class PL3GroupPanel {
         };
         scroller.addEventListener('scroll', syncThumb, { passive: true });
 
-        // Touch on thumb or track pauses autoscroll
-        const pauseAuto = () => {
-            this._lyricsTween?.pause();
-        };
-        thumb.addEventListener('pointerdown', pauseAuto);
-        track.addEventListener('pointerdown', (ev) => {
-            pauseAuto();
-            // Jump scroll to tapped position
-            const rect = track.getBoundingClientRect();
-            const thumbH = thumb.offsetHeight;
-            const ratio = Math.max(0, Math.min(1, (ev.clientY - rect.top - thumbH / 2) / (rect.height - thumbH)));
-            const scrollable = scroller.scrollHeight - scroller.clientHeight;
-            scroller.scrollTop = ratio * scrollable;
-        });
+        const pauseAuto = () => { this._lyricsTween?.pause(); };
         // Also pause if user manually scrolls
         scroller.addEventListener('touchstart', pauseAuto, { passive: true });
         scroller.addEventListener('wheel', pauseAuto, { passive: true });
+
+        // Full drag on thumb with pointer capture
+        thumb.addEventListener('pointerdown', (ev) => {
+            ev.preventDefault();
+            pauseAuto();
+            thumb.setPointerCapture(ev.pointerId);
+            const startY = ev.clientY;
+            const startTop = parseFloat(thumb.style.top) || 0;
+            const trackH = track.clientHeight;
+            const thumbH = thumb.offsetHeight;
+            const travel = trackH - thumbH;
+
+            const onMove = (e) => {
+                const dy = e.clientY - startY;
+                const newTop = Math.max(0, Math.min(travel, startTop + dy));
+                thumb.style.top = newTop + 'px';
+                const scrollable = scroller.scrollHeight - scroller.clientHeight;
+                scroller.scrollTop = (newTop / travel) * scrollable;
+            };
+            const onUp = () => {
+                thumb.removeEventListener('pointermove', onMove);
+                thumb.removeEventListener('pointerup', onUp);
+            };
+            thumb.addEventListener('pointermove', onMove);
+            thumb.addEventListener('pointerup', onUp);
+        });
+
+        // Tap on track (not thumb) jumps to position
+        track.addEventListener('pointerdown', (ev) => {
+            if (ev.target === thumb || thumb.contains(ev.target)) return;
+            pauseAuto();
+            const rect = track.getBoundingClientRect();
+            const thumbH = thumb.offsetHeight;
+            const travel = rect.height - thumbH;
+            const ratio = Math.max(0, Math.min(1, (ev.clientY - rect.top - thumbH / 2) / travel));
+            const scrollable = scroller.scrollHeight - scroller.clientHeight;
+            scroller.scrollTop = ratio * scrollable;
+        });
 
         // Auto-scroll from top through all lyrics
         const gsap = window.gsap;

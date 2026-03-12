@@ -67,7 +67,7 @@ export default {
             if (!singleToken) singleToken = (url.searchParams.get("pl3s") || "").trim();
             const meta = SHARE[key] || {
                 title: "OpaHiFi",
-                imagePath: "/img/music/opahiai_album.png",
+                imagePath: "/img/music/opahifi_album.png",
                 description: "OpaHiFi music."
             };
 

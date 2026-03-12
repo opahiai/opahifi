@@ -915,8 +915,8 @@ body {
 
 .PL3-groupPanelShareBtn {
     position: absolute;
-    top: 0;
-    right: 4px;
+    top: 5px;
+    right: 5px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -976,7 +976,7 @@ body {
 
 .PL3-groupVersionItem {
     display: grid;
-    grid-template-columns: 50px 1fr 30px;
+    grid-template-columns: 50px 1fr;
     align-items: center;
     gap: 8px;
     border-radius: 10px;
@@ -984,6 +984,12 @@ body {
     background: rgba(255, 255, 255, 0.07);
     padding: 8px 7px;
     min-height: 75px;
+    cursor: pointer;
+    transition: opacity 0.12s;
+}
+
+.PL3-groupVersionItem:active {
+    opacity: 0.7;
 }
 
 .PL3-groupVersionArt {
@@ -1045,29 +1051,8 @@ body {
     width: 12px;
     height: 12px;
     display: block;
-}
-
-.PL3-groupVersionArrow {
-    width: 28px;
-    height: 28px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.24);
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    justify-self: end;
-}
-
-.PL3-groupVersionArrow:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.PL3-groupVersionArrow--disabled {
-    opacity: 0.34;
-    pointer-events: none;
+    font-size: 12px;
+    line-height: 1;
 }
 
 .PL3-groupVersionEmpty {
@@ -1348,28 +1333,107 @@ body {
     flex-shrink: 0;
 }
 
-.PL3-groupVersionItem--inOverlay {
+/* ── Version Detail Row (overlay) ──────────────────────────────────────── */
+/* Default (small): art left | name right — tray wraps to its own full line */
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px 14px;
     background: rgba(255, 255, 255, 0.07);
     border-radius: 12px;
-    padding: 10px;
+    padding: 12px 48px 12px 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    cursor: default;
 }
 
-.PL3-groupVersionItem--inOverlay .PL3-groupVersionArt {
-    width: 68px;
-    height: 68px;
+/* flatten body so name & tray are direct flex children of the row */
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionBody {
+    display: contents;
+}
+
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArt {
+    flex: 0 0 82px;
+    width: 82px;
+    height: 82px;
     border-radius: 10px;
+    align-self: center;
+    order: 1;
 }
 
-.PL3-groupVersionItem--inOverlay .PL3-groupVersionArrow {
-    display: flex;
-    color: rgba(255, 255, 255, 0.5);
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionName {
+    flex: 1 1 0;
+    min-width: 0;
+    align-self: left;
+    order: 2;
+    font-size: 1.5rem;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
 }
 
+/* tray claims 100% width → always wraps to a new line */
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionTray {
+    flex: 0 0 100%;
+    order: 3;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionPlatform {
+    width: 30px;
+    height: 30px;
+}
+
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionPlatformIcon {
+    width: 22px;
+    height: 22px;
+    font-size: 22px;
+}
+
+/* 480px+: name + tray stack vertically to the right of the art */
+@media (min-width: 480px) {
+    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay {
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionBody {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1 1 0;
+        min-width: 0;
+        order: 2;
+    }
+
+    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArt {
+        order: unset;
+        flex: 0 0 82px;
+        align-self: auto;
+    }
+
+    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionName {
+        order: unset;
+        flex: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionTray {
+        flex: none;
+        order: unset;
+    }
+}
+
+/* ── Overlay action bar (share etc.) ─────────────────────────────────────── */
 /* ===== Lyrics Scroll ===== */
 .PL3-lyricsStage {
     flex: 1 1 auto;
     min-height: 0;
+    max-height: 45vh;
     position: relative;
     overflow: hidden;
     border-radius: 8px;
@@ -1421,7 +1485,6 @@ body {
     height: 32px;
     cursor: grab;
     touch-action: none;
-    transition: top 0.05s linear;
 }
 
 .PL3-lyricsThumbImg {
@@ -1613,7 +1676,7 @@ body {
     }
 
     .PL3-groupVersionItem {
-        grid-template-columns: 58px 1fr 32px;
+        grid-template-columns: 58px 1fr;
         padding: 9px;
         gap: 10px;
         min-height: 78px;
@@ -1636,11 +1699,7 @@ body {
     .PL3-groupVersionPlatformIcon {
         width: 13px;
         height: 13px;
-    }
-
-    .PL3-groupVersionArrow {
-        width: 32px;
-        height: 32px;
+        font-size: 13px;
     }
 
     .PL3-part--gallery .PL3-gallery {
