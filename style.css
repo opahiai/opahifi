@@ -1105,7 +1105,7 @@ body {
 .PL3-groupVersionItem {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: stretch;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(255, 255, 255, 0.07);
@@ -1130,6 +1130,7 @@ body {
     width: var(--pl3-version-art-size);
     height: var(--pl3-version-art-size);
     margin-right: 6px;
+    align-self: center;
 }
 
 .PL3-groupVersionArt {
@@ -1146,8 +1147,9 @@ body {
     flex-direction: column;
     flex: 1 1 0;
     min-width: 0;
-    gap: 5px;
-    justify-content: center;
+    gap: 8px;
+    justify-content: flex-start;
+    padding: 1px 0;
 }
 
 .PL3-groupVersionName {
@@ -1166,6 +1168,7 @@ body {
     flex-wrap: nowrap;
     gap: 5px;
     align-items: center;
+    margin-top: auto;
 }
 
 .PL3-groupVersionInfoBtn {
@@ -1184,6 +1187,7 @@ body {
     margin-left: 5px;
     pointer-events: none;
     user-select: none;
+    align-self: center;
 }
 
 .PL3-groupVersionPlatform {
@@ -1456,6 +1460,33 @@ body {
     display: flex;
 }
 
+.PL3-groupPanelSongDetail .PL3-groupVersionBody {
+    flex: 1 1 auto;
+    min-height: 100%;
+    gap: 10px;
+}
+
+.PL3-groupPanelSongDetail .PL3-groupVersionName {
+    font-size: 1.2rem;
+    line-height: 1.1;
+}
+
+.PL3-groupPanelSongDetail .PL3-groupVersionTray {
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.PL3-groupPanelSongDetail .PL3-groupVersionPlatform {
+    width: 26px;
+    height: 26px;
+}
+
+.PL3-groupPanelSongDetail .PL3-groupVersionPlatformIcon {
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+}
+
 .PL3-groupPanelSongStage {
     display: none;
     flex: 1 1 auto;
@@ -1464,36 +1495,6 @@ body {
 
 .PL3-groupPanelInner--detail .PL3-groupPanelSongStage {
     display: block;
-}
-
-.PL3-groupPanelSongDetailName {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #fff;
-    line-height: 1.1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-shrink: 0;
-}
-
-.PL3-groupPanelSongDetailTray {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.PL3-groupPanelSongDetailTray .PL3-groupVersionPlatform {
-    width: 26px;
-    height: 26px;
-}
-
-.PL3-groupPanelSongDetailTray .PL3-groupVersionPlatformIcon {
-    width: 14px;
-    height: 14px;
-    font-size: 14px;
 }
 
 /* ===== Lyrics Scroll ===== */

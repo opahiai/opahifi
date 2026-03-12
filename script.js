@@ -952,22 +952,11 @@ class PL3GroupPanel {
         const detail = document.createElement('div');
         detail.className = 'PL3-groupPanelSongDetail';
 
-        const detailName = document.createElement('div');
-        detailName.className = 'PL3-groupPanelSongDetailName';
-        detailName.textContent = String(song.version || 'Original').trim();
-
-        const detailTray = document.createElement('div');
-        detailTray.className = 'PL3-groupPanelSongDetailTray';
-        this.platformOrder.forEach((platform) => {
-            const url = song.links?.[platform] || '';
-            detailTray.appendChild(this.createPlatformEntry(platform, url, detailName.textContent));
-        });
-
         const stage = document.createElement('div');
         stage.className = 'PL3-groupPanelSongStage PL3-lyricsStage PL3-lyricsStage--loading PL3-lyricsStage--collapsed';
         stage.setAttribute('aria-label', 'Lyrics');
 
-        detail.append(detailName, detailTray);
+        const detailBody = row.querySelector('.PL3-groupVersionBody');
         // Insert header in top row so art (left) and detail (right) are side-by-side
         const panelTop = this.dom.groupPanel.querySelector('.PL3-groupPanelTop');
         (panelTop ?? this.dom.groupPanelVersions.parentElement).appendChild(detail);
@@ -975,33 +964,42 @@ class PL3GroupPanel {
         this.dom.groupPanelVersions.insertAdjacentElement('afterend', stage);
         this._activeDetailEl = detail;
         this._activeDetailStage = stage;
+        this._detailBodyElement = detailBody;
 
-        // GSAP Flip: animate version art from row thumbnail → art dock
-        if (this.flipReady && this.dom.groupPanelArtDock) {
+        // GSAP Flip: animate version art + text body into detail layout
+        if (this.flipReady && this.dom.groupPanelArtDock && detailBody) {
             const versionArt = row.querySelector('.PL3-groupVersionArt');
             if (versionArt) {
-                const flipState = window.Flip.getState(versionArt);
+                detail.style.display = 'flex';
+                const flipState = window.Flip.getState([versionArt, detailBody]);
                 this._detailPrevDockChildren = Array.from(this.dom.groupPanelArtDock.children);
                 this._detailArtElement = versionArt;
                 versionArt.classList.remove('PL3-groupVersionArt');
                 versionArt.classList.add('PL3-groupArtInPanel');
+                detail.appendChild(detailBody);
                 this.dom.groupPanelArtDock.replaceChildren(versionArt);
+                panelInner?.classList.add('PL3-groupPanelInner--detail');
                 window.Flip.from(flipState, {
-                    duration: 0.48,
+                    duration: 0.5,
                     ease: 'power2.inOut',
                     absolute: true,
                     nested: true
                 });
             }
+        } else {
+            if (detailBody) {
+                detail.style.display = 'flex';
+                detail.appendChild(detailBody);
+            }
+            panelInner?.classList.add('PL3-groupPanelInner--detail');
         }
 
-        // Animate: fade versions out, then show detail expanding in
+        // Animate the second-row lyrics stage in after the Flip settles
         const activate = () => {
-            panelInner?.classList.add('PL3-groupPanelInner--detail');
             if (gsap) {
-                gsap.fromTo([detail, stage],
+                gsap.fromTo(stage,
                     { opacity: 0, y: 18 },
-                    { opacity: 1, y: 0, duration: 0.3, ease: 'power3.out', stagger: 0.04, onComplete: expandStage }
+                    { opacity: 1, y: 0, duration: 0.28, ease: 'power3.out', onComplete: expandStage }
                 );
             } else {
                 expandStage();
@@ -1028,8 +1026,8 @@ class PL3GroupPanel {
             }
         };
 
-        if (gsap && versionsEl) {
-            gsap.to(versionsEl, { opacity: 0, y: -10, duration: 0.18, ease: 'power2.in', onComplete: activate });
+        if (gsap && this.flipReady) {
+            gsap.delayedCall(0.18, activate);
         } else {
             activate();
         }
@@ -1038,16 +1036,21 @@ class PL3GroupPanel {
     closeVersionDetail() {
         if (!this._activeDetailRow) return;
 
+        const row = this._activeDetailRow;
+        const detailBody = this._detailBodyElement;
+        const art = this._detailArtElement;
+        const prevDockChildren = this._detailPrevDockChildren;
+
         // Restore version art back to its artWrap before hiding detail
-        if (this._detailArtElement && this.dom.groupPanelArtDock) {
-            const artWrap = this._activeDetailRow.querySelector('.PL3-groupVersionArtWrap');
+        if (art && this.dom.groupPanelArtDock) {
+            const artWrap = row.querySelector('.PL3-groupVersionArtWrap');
             if (artWrap) {
-                this._detailArtElement.classList.remove('PL3-groupArtInPanel');
-                this._detailArtElement.classList.add('PL3-groupVersionArt');
-                artWrap.replaceChildren(this._detailArtElement);
+                art.classList.remove('PL3-groupArtInPanel');
+                art.classList.add('PL3-groupVersionArt');
+                artWrap.replaceChildren(art);
             }
-            if (this._detailPrevDockChildren?.length) {
-                this.dom.groupPanelArtDock.replaceChildren(...this._detailPrevDockChildren);
+            if (prevDockChildren?.length) {
+                this.dom.groupPanelArtDock.replaceChildren(...prevDockChildren);
             }
         }
         this._detailArtElement = null;
@@ -1059,31 +1062,45 @@ class PL3GroupPanel {
         const stage = this._activeDetailStage;
         const gsap = window.gsap;
 
-        this._activeDetailRow = null;
-        this._activeDetailSongId = null;
-        this._activeDetailEl = null;
-        this._activeDetailStage = null;
         this._lyricsTween?.kill();
         this._lyricsTween = null;
         this._drumScroller = null;
 
         const finish = () => {
-            panelInner?.classList.remove('PL3-groupPanelInner--detail');
             detail?.remove();
             stage?.remove();
-            if (versionsEl && gsap) {
-                gsap.fromTo(versionsEl,
-                    { opacity: 0, y: -10 },
-                    { opacity: 1, y: 0, duration: 0.25, ease: 'power3.out' }
-                );
-            } else if (versionsEl) {
-                versionsEl.style.opacity = '';
-            }
+            this._activeDetailRow = null;
+            this._activeDetailSongId = null;
+            this._activeDetailEl = null;
+            this._activeDetailStage = null;
+            this._detailBodyElement = null;
         };
 
-        if (gsap && (detail || stage)) {
-            gsap.to([detail, stage].filter(Boolean), { opacity: 0, y: 12, duration: 0.2, ease: 'power2.in', stagger: 0.02, onComplete: finish });
+        if (detailBody && this.flipReady) {
+            const infoBtn = row?.querySelector('.PL3-groupVersionInfoBtn');
+            const flipTargets = [detailBody, art].filter(Boolean);
+            const flipState = flipTargets.length ? window.Flip.getState(flipTargets) : null;
+            panelInner?.classList.remove('PL3-groupPanelInner--detail');
+            if (row) {
+                if (infoBtn) {
+                    row.insertBefore(detailBody, infoBtn);
+                } else {
+                    row.appendChild(detailBody);
+                }
+            }
+            if (flipState) {
+                window.Flip.from(flipState, {
+                    duration: 0.42,
+                    ease: 'power2.inOut',
+                    absolute: true,
+                    nested: true,
+                    onComplete: finish
+                });
+            } else {
+                finish();
+            }
         } else {
+            panelInner?.classList.remove('PL3-groupPanelInner--detail');
             finish();
         }
     }
