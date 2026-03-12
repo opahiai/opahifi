@@ -161,7 +161,7 @@
             groupKey: GROUP.OLD_LOVE_STORY,
             title: 'Old Love Story',
             version: 'Desert Disco Duet Remix',
-            image: 'img/music/version/oldlovestory_desert-disco-duet.png',
+            image: 'img/music/versions/version-oldlovestory-desertdiscoduet.png',
             lyricsPath: 'lyrics/old-love-story.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE',
@@ -176,7 +176,7 @@
             groupKey: GROUP.OLD_LOVE_STORY,
             title: 'Old Love Story',
             version: 'Opa Max Mix',
-            image: 'img/music/oldlovestory_opa-max-mix.png',
+            image: 'img/music/versions/version-oldlovestory-maxmix.png',
             lyricsPath: 'lyrics/old-love-story.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=m7wP4U97FC8',
@@ -832,6 +832,11 @@ class PL3GroupPanel {
             art.loading = 'lazy';
             art.onerror = () => { art.src = 'img/music/opahifi_album.png'; };
 
+            // Wrap art so the share button can be overlaid on it
+            const artWrap = document.createElement('div');
+            artWrap.className = 'PL3-groupVersionArtWrap';
+            artWrap.appendChild(art);
+
             const body = document.createElement('div');
             body.className = 'PL3-groupVersionBody';
 
@@ -847,7 +852,7 @@ class PL3GroupPanel {
             });
 
             body.append(name, tray);
-            row.append(art, body);
+            row.append(artWrap, body);
             versionsWrap.appendChild(row);
         });
 
@@ -991,13 +996,34 @@ class PL3GroupPanel {
             }
         }, { passive: false });
 
+        // Close button for the overlay row (top-right)
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'PL3-rowCloseBtn';
+        closeBtn.setAttribute('aria-label', 'Close');
+        const closeIcon = document.createElement('span');
+        closeIcon.setAttribute('aria-hidden', 'true');
+        closeIcon.textContent = '×';
+        closeBtn.appendChild(closeIcon);
+        closeBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            this.closeVersionDetail();
+        }, { passive: true });
+
         panel.append(slot, stage);
         overlay.append(backdropDiv, panel);
 
-        // 4. Move row into slot; share button goes inside the row (top-right via position:absolute)
+        // 4. Move row into slot; share button goes on top of art, close stays top-right of row
         row.classList.add('PL3-groupVersionItem--inOverlay');
         shareBtn.setAttribute('data-pl3-row-share', '');
-        row.appendChild(shareBtn);
+        closeBtn.setAttribute('data-pl3-row-close', '');
+        const rowArtWrap = row.querySelector('.PL3-groupVersionArtWrap');
+        if (rowArtWrap) {
+            rowArtWrap.appendChild(shareBtn);
+        } else {
+            row.appendChild(shareBtn);
+        }
+        row.appendChild(closeBtn);
         slot.appendChild(row);
         // Backdrop click closes the overlay
         overlay.addEventListener('click', (ev) => {
@@ -1069,6 +1095,7 @@ class PL3GroupPanel {
                 const _nameEl2 = row.querySelector('.PL3-groupVersionName');
                 const flipState = this.flipReady ? window.Flip.getState([row, _nameEl2].filter(Boolean)) : null;
                 row.querySelector('[data-pl3-row-share]')?.remove();
+                row.querySelector('[data-pl3-row-close]')?.remove();
                 row.classList.remove('PL3-groupVersionItem--inOverlay');
                 this._versionSentinel.insertAdjacentElement('beforebegin', row);
                 this._versionSentinel.remove();

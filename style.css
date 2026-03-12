@@ -4,12 +4,17 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: 'Oswald', sans-serif;
-    min-height: 100vh;
+    height: 100%;
+    overflow: hidden;
     background: #050711;
     color: #fff;
-    overflow-x: hidden;
     background:
         radial-gradient(1200px 600px at 20% 10%, rgba(31, 111, 235, 0.18), transparent 60%),
         radial-gradient(900px 500px at 80% 30%, rgba(140, 70, 255, 0.16), transparent 55%),
@@ -56,15 +61,56 @@ body {
     --pl3-group-card-h: calc(var(--pl3-viewport-h-buffer) - var(--pl3-gallery-visible-h));
     --pl3-group-modal-bottom-gap: calc(var(--pl3-gallery-visible-h) + var(--pl3-viewport-bottom-space) + 14vh);
     --pl3-share-top-offset: 22vh;
+
+    /* ── Navigation bar ── */
+    --pl3-nav-h: 44px;
+    --pl3-nav-pad-x: 14px;
+    --pl3-nav-bg: rgba(7, 14, 35, 0.88);
+    --pl3-nav-border: rgba(255, 255, 255, 0.10);
+    --pl3-nav-blur: 8px;
+    --pl3-nav-brand-size: 1.05rem;
+
+    /* ── Panel outer / inner padding ── */
+    --pl3-panel-pad-x: 0px;
+    --pl3-panel-pad-bottom: 6px;
+    --pl3-panel-inner-pad-x: 4px;
+    --pl3-panel-inner-pad-y: 10px;
+    --pl3-panel-inner-pad-bottom: calc(var(--pl3-panel-close-h) / 2 + 4px);
+    --pl3-panel-inner-gap: 8px;
+
+    /* ── Panel art dock ── */
+    --pl3-panel-art-dock-size: min(52vw, 160px);
+
+    /* ── Panel bottom close button ── */
+    --pl3-panel-close-h: 28px;
+    --pl3-panel-close-w: 72px;
+    --pl3-panel-close-radius: 999px;
+    --pl3-panel-close-font: 1rem;
+    --pl3-panel-close-bg: rgba(255, 255, 255, 0.10);
+    --pl3-panel-close-border: rgba(255, 255, 255, 0.22);
+    --pl3-panel-close-hover-bg: rgba(255, 255, 255, 0.20);
+    --pl3-panel-footer-pad-x: 8px;
+    --pl3-panel-footer-pad-bottom: 10px;
+
+    /* ── Share button on top of art (panel + version screens) ── */
+    --pl3-art-share-size: 28px;
+    --pl3-art-share-offset: 5px;
+    --pl3-art-share-radius: 999px;
+    --pl3-art-share-bg: rgba(0, 0, 0, 0.52);
+    --pl3-art-share-border: rgba(255, 255, 255, 0.18);
+    --pl3-art-share-font: 0.75rem;
+    --pl3-art-share-hover-bg: rgba(0, 0, 0, 0.74);
+
+    /* ── Version overlay row ── */
+    --pl3-overlay-row-pad-right: 50px;
+
+    /* ── Version art wrapper ── */
+    --pl3-version-art-size: 50px;
 }
 
 @supports (height: 100dvh) {
     :root {
         --pl3-viewport-h: 100dvh;
-    }
-
-    body {
-        min-height: 100dvh;
     }
 }
 
@@ -99,7 +145,8 @@ body {
 }
 
 .PL3-split {
-    height: 100%;
+    height: calc(100% - var(--pl3-nav-h));
+    margin-top: var(--pl3-nav-h);
     display: grid;
     grid-template-rows:
         minmax(0, var(--pl3-section-header-pct)) minmax(0, var(--pl3-section-buttons-pct)) minmax(0, var(--pl3-section-highlight-pct)) minmax(0, var(--pl3-section-gallery-pct));
@@ -862,6 +909,38 @@ body {
     display: block;
 }
 
+/* ===== Always-visible navigation bar ===== */
+.PL3-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--pl3-nav-h);
+    z-index: 50;
+    background: var(--pl3-nav-bg);
+    border-bottom: 1px solid var(--pl3-nav-border);
+    backdrop-filter: blur(var(--pl3-nav-blur));
+    -webkit-backdrop-filter: blur(var(--pl3-nav-blur));
+    display: flex;
+    align-items: center;
+}
+
+.PL3-navInner {
+    width: 100%;
+    padding: 0 var(--pl3-nav-pad-x);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.PL3-navBrand {
+    font-size: var(--pl3-nav-brand-size);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.88);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
 /* ===== Group Top Panel ===== */
 .PL3-card {
     position: relative;
@@ -869,12 +948,12 @@ body {
 
 .PL3-groupPanel {
     position: absolute;
-    top: 0;
+    top: var(--pl3-nav-h);
     left: 0;
     right: 0;
     bottom: var(--pl3-gallery-visible-h);
     z-index: 20;
-    padding: 0 0 6px;
+    padding: 0 var(--pl3-panel-pad-x) var(--pl3-panel-pad-bottom);
     transform: translateY(-110%);
     opacity: 0;
     pointer-events: none;
@@ -890,7 +969,7 @@ body {
 .PL3-groupPanelInner {
     position: relative;
     height: 100%;
-    border-radius: 0;
+    border-radius: 0 0 16px 16px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-left: 0;
     border-right: 0;
@@ -899,10 +978,11 @@ body {
         linear-gradient(180deg, rgba(10, 19, 48, 0.92), rgba(7, 14, 35, 0.9));
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(9px);
+    overflow: visible;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 10px 4px 26px;
+    gap: var(--pl3-panel-inner-gap);
+    padding: var(--pl3-panel-inner-pad-y) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
 }
 
 .PL3-groupPanelTop {
@@ -913,40 +993,53 @@ body {
     position: relative;
 }
 
+/* Art dock wrapper — provides the square container and anchors the share button */
+.PL3-groupPanelArtDockWrap {
+    position: relative;
+    flex-shrink: 0;
+    width: var(--pl3-panel-art-dock-size);
+    aspect-ratio: 1 / 1;
+}
+
+/* Share button: soft-pill positioned at bottom-right corner of the art */
 .PL3-groupPanelShareBtn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 0.95rem;
+    width: var(--pl3-art-share-size);
+    height: var(--pl3-art-share-size);
+    border-radius: var(--pl3-art-share-radius);
+    background: var(--pl3-art-share-bg);
+    border: 1px solid var(--pl3-art-share-border);
+    color: rgba(255, 255, 255, 0.80);
+    font-size: var(--pl3-art-share-font);
     cursor: pointer;
-    transition: background 0.18s, color 0.18s;
-    z-index: 10;
+    transition: background 0.16s, color 0.16s;
 }
 
 .PL3-groupPanelShareBtn:hover,
 .PL3-groupPanelShareBtn:focus-visible {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--pl3-art-share-hover-bg);
     color: #fff;
 }
 
 .PL3-groupPanelShareBtn--copied {
-    background: rgba(80, 220, 130, 0.25);
-    border-color: rgba(80, 220, 130, 0.5);
+    background: rgba(80, 220, 130, 0.30);
+    border-color: rgba(80, 220, 130, 0.55);
     color: #6effa8;
 }
 
+/* Share button sits on top of art inside the wrapper */
+.PL3-groupPanelArtDockWrap .PL3-groupPanelShareBtn {
+    position: absolute;
+    bottom: var(--pl3-art-share-offset);
+    right: var(--pl3-art-share-offset);
+    z-index: 130;
+}
+
 .PL3-groupPanelArtDock {
-    width: min(52vw, 160px);
-    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: 100%;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -954,6 +1047,38 @@ body {
     background: rgba(255, 255, 255, 0.08);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
     overflow: visible;
+}
+
+/* Panel footer — close button overflows the bottom edge */
+.PL3-groupPanelFooter {
+    position: absolute;
+    bottom: calc(var(--pl3-panel-close-h) / -2);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+}
+
+.PL3-groupPanelCloseBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--pl3-panel-close-h);
+    width: var(--pl3-panel-close-w);
+    border-radius: var(--pl3-panel-close-radius);
+    background: var(--pl3-panel-close-bg);
+    border: 1px solid var(--pl3-panel-close-border);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: var(--pl3-panel-close-font);
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.16s;
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.PL3-groupPanelCloseBtn:hover {
+    background: var(--pl3-panel-close-hover-bg);
 }
 
 .PL3-groupPanelMeta {
@@ -992,9 +1117,17 @@ body {
     opacity: 0.7;
 }
 
+/* Art wrapper: provides positioning context for the share-on-art button */
+.PL3-groupVersionArtWrap {
+    position: relative;
+    flex-shrink: 0;
+    width: var(--pl3-version-art-size);
+    height: var(--pl3-version-art-size);
+}
+
 .PL3-groupVersionArt {
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    height: 100%;
     border-radius: 8px;
     object-fit: cover;
     display: block;
@@ -1252,6 +1385,8 @@ body {
         --pl3-gap-sm: 8px;
         --pl3-gap-md: 9px;
         --pl3-upcoming-size: 30vw;
+        --pl3-panel-pad-x: 4px;
+        --pl3-panel-inner-pad-x: 6px;
     }
 
     .PL3-card {
@@ -1259,20 +1394,20 @@ body {
     }
 
     .PL3-groupPanel {
-        padding: 0 4px 6px;
+        padding: 0 var(--pl3-panel-pad-x) var(--pl3-panel-pad-bottom);
     }
 
     .PL3-groupPanelInner {
         border-left: 1px solid rgba(255, 255, 255, 0.16);
         border-right: 1px solid rgba(255, 255, 255, 0.16);
-        padding: 10px 6px 26px;
+        padding: var(--pl3-panel-inner-pad-y) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
     }
 }
 
 /* ===== Version Detail Overlay ===== */
 .PL3-versionOverlay {
     position: absolute;
-    top: 0;
+    top: var(--pl3-nav-h);
     left: 0;
     right: 0;
     bottom: var(--pl3-gallery-visible-h);
@@ -1342,7 +1477,8 @@ body {
     gap: 10px 14px;
     background: rgba(255, 255, 255, 0.07);
     border-radius: 12px;
-    padding: 12px 48px 12px 12px;
+    /* extra right padding — now only the close button sits top-right */
+    padding: 12px var(--pl3-overlay-row-pad-right) 12px 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     cursor: default;
@@ -1353,13 +1489,32 @@ body {
     display: contents;
 }
 
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArt {
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArtWrap {
     flex: 0 0 82px;
     width: 82px;
     height: 82px;
     border-radius: 10px;
+    position: relative;
     align-self: center;
     order: 1;
+    overflow: visible;
+}
+
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArtWrap .PL3-groupVersionArt {
+    flex: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    align-self: auto;
+    order: unset;
+}
+
+/* Share button is now on top of art inside the art wrapper */
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArtWrap .PL3-groupPanelShareBtn {
+    position: absolute;
+    bottom: var(--pl3-art-share-offset);
+    right: var(--pl3-art-share-offset);
+    z-index: 120;
 }
 
 .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionName {
@@ -1392,6 +1547,30 @@ body {
     font-size: 22px;
 }
 
+/* Share button is now inside the art wrapper — no longer absolutely positioned in the row */
+
+/* Close button in overlay row (top-right) */
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-rowCloseBtn {
+    position: absolute;
+    top: 6px;
+    right: 4px;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.85);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 121;
+    cursor: pointer;
+}
+
+.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-rowCloseBtn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
 /* 480px+: name + tray stack vertically to the right of the art */
 @media (min-width: 480px) {
     .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay {
@@ -1408,7 +1587,7 @@ body {
         order: 2;
     }
 
-    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArt {
+    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArtWrap {
         order: unset;
         flex: 0 0 82px;
         align-self: auto;
@@ -1555,7 +1734,7 @@ body {
     transform: perspective(900px) rotateY(0deg) translateY(10px) scale(1.28) translateZ(30px);
 }
 
-.PL3-groupPanelArtDock {
+.PL3-groupPanelArtDockWrap {
     width: min(42vw, 148px);
 }
 
@@ -1564,6 +1743,11 @@ body {
     padding: 8px;
     gap: 25px;
     min-height: 82px;
+}
+
+.PL3-groupVersionArtWrap {
+    width: 54px;
+    height: 54px;
 }
 
 .PL3-groupVersionArt {

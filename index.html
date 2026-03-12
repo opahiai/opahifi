@@ -27,6 +27,11 @@
     <section id="p_listen3" class="PL3-section" aria-label="OpaHiFi">
         <div class="PL3-wrap">
             <div class="PL3-card">
+                <nav class="PL3-nav" aria-label="OpaHiFi navigation">
+                    <div class="PL3-navInner">
+                        <span class="PL3-navBrand">OpaHiFi</span>
+                    </div>
+                </nav>
                 <div class="PL3-split">
                     <!-- 1) Header -->
                     <div class="PL3-part PL3-part--header" aria-label="Header">
@@ -196,19 +201,23 @@
                 <div class="PL3-groupPanel" id="PL3-group-panel" aria-hidden="true">
                     <div class="PL3-groupPanelInner">
                         <div class="PL3-groupPanelTop">
-                            <div class="PL3-groupPanelArtDock" data-pl3-group-art-dock aria-hidden="true"></div>
-                            <button class="PL3-groupPanelShareBtn" type="button" data-pl3-group-share
-                                aria-label="Share">
-                                <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-                            </button>
+                            <div class="PL3-groupPanelArtDockWrap">
+                                <div class="PL3-groupPanelArtDock" data-pl3-group-art-dock aria-hidden="true"></div>
+                                <button class="PL3-groupPanelShareBtn" type="button" data-pl3-group-share
+                                    aria-label="Share">
+                                    <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="PL3-groupPanelMeta">
                             <div class="PL3-groupPanelVersions" data-pl3-group-versions></div>
                         </div>
-                        <button class="PL3-groupPanelEdgeClose" type="button" data-pl3-group-close
-                            aria-label="Close panel">
-                            <span aria-hidden="true">^</span>
-                        </button>
+                        <div class="PL3-groupPanelFooter">
+                            <button class="PL3-groupPanelCloseBtn" type="button" data-pl3-group-close
+                                aria-label="Close panel">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
