@@ -72,8 +72,8 @@ body {
 
     /* ── Panel outer / inner padding ── */
     --pl3-panel-pad-x: 0px;
-    --pl3-panel-pad-bottom: 6px;
-    --pl3-panel-inner-pad-x: 4px;
+    --pl3-panel-pad-bottom: 5px;
+    --pl3-panel-inner-pad-x: 5px;
     --pl3-panel-inner-pad-y: 10px;
     --pl3-panel-inner-pad-bottom: calc(var(--pl3-panel-close-h) / 2 + 4px);
     --pl3-panel-inner-gap: 8px;
@@ -81,9 +81,12 @@ body {
     /* ── Panel art dock ── */
     --pl3-panel-art-dock-size: min(52vw, 160px);
 
+    /* ── Shared button height (design for 320px default) ── */
+    --pl3-btn-h: 28px;
+
     /* ── Panel bottom close button ── */
-    --pl3-panel-close-h: 28px;
-    --pl3-panel-close-w: 72px;
+    --pl3-panel-close-h: var(--pl3-btn-h);
+    --pl3-panel-close-w: var(--pl3-btn-h);
     --pl3-panel-close-radius: 999px;
     --pl3-panel-close-font: 1rem;
     --pl3-panel-close-bg: rgba(255, 255, 255, 0.10);
@@ -101,8 +104,8 @@ body {
     --pl3-art-share-font: 0.75rem;
     --pl3-art-share-hover-bg: rgba(0, 0, 0, 0.74);
 
-    /* ── Version overlay row ── */
-    --pl3-overlay-row-pad-right: 50px;
+    /* ── Info button ── */
+    --pl3-info-btn-size: 22px;
 
     /* ── Version art wrapper ── */
     --pl3-version-art-size: 50px;
@@ -982,7 +985,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--pl3-panel-inner-gap);
-    padding: var(--pl3-panel-inner-pad-y) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
+    padding: var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
 }
 
 .PL3-groupPanelTop {
@@ -1100,17 +1103,20 @@ body {
 }
 
 .PL3-groupVersionItem {
-    display: grid;
-    grid-template-columns: 50px 1fr;
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 8px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(255, 255, 255, 0.07);
-    padding: 8px 7px;
-    min-height: 75px;
+    padding: 7px 8px;
     cursor: pointer;
-    transition: opacity 0.12s;
+    transition: opacity 0.12s, background 0.15s;
+    overflow: hidden;
+}
+
+.PL3-groupVersionItem:hover {
+    background: rgba(255, 255, 255, 0.11);
 }
 
 .PL3-groupVersionItem:active {
@@ -1123,6 +1129,7 @@ body {
     flex-shrink: 0;
     width: var(--pl3-version-art-size);
     height: var(--pl3-version-art-size);
+    margin-right: 6px;
 }
 
 .PL3-groupVersionArt {
@@ -1133,17 +1140,21 @@ body {
     display: block;
 }
 
+/* Name + tray column, sits to the right of the art */
 .PL3-groupVersionBody {
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    flex: 1 1 0;
     min-width: 0;
+    gap: 5px;
+    justify-content: center;
 }
 
 .PL3-groupVersionName {
-    font-size: 1.3rem;
+    min-width: 0;
+    font-size: 0.88rem;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1.2;
     color: #fff;
     white-space: nowrap;
     overflow: hidden;
@@ -1153,8 +1164,26 @@ body {
 .PL3-groupVersionTray {
     display: flex;
     flex-wrap: nowrap;
-    gap: 11px;
+    gap: 5px;
     align-items: center;
+}
+
+.PL3-groupVersionInfoBtn {
+    flex: 0 0 var(--pl3-info-btn-size);
+    width: var(--pl3-info-btn-size);
+    height: var(--pl3-info-btn-size);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 5px;
+    pointer-events: none;
+    user-select: none;
 }
 
 .PL3-groupVersionPlatform {
@@ -1387,6 +1416,7 @@ body {
         --pl3-upcoming-size: 30vw;
         --pl3-panel-pad-x: 4px;
         --pl3-panel-inner-pad-x: 6px;
+        --pl3-btn-h: 30px;
     }
 
     .PL3-card {
@@ -1404,210 +1434,68 @@ body {
     }
 }
 
-/* ===== Version Detail Overlay ===== */
-.PL3-versionOverlay {
-    position: absolute;
-    top: var(--pl3-nav-h);
-    left: 0;
-    right: 0;
-    bottom: var(--pl3-gallery-visible-h);
-    z-index: 25;
-    pointer-events: auto;
+/* ===== In-Panel Song Detail (replaces overlay) ===== */
+
+/* In detail mode the panel keeps two rows:
+   row 1 = art left + info column right
+   row 2 = full-width lyrics */
+.PL3-groupPanelInner--detail .PL3-groupPanelVersions {
+    display: none;
 }
 
-.PL3-versionOverlayBackdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(2px);
-    cursor: pointer;
-}
-
-.PL3-versionOverlayPanel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-        radial-gradient(130% 120% at 82% 0%, rgba(100, 20, 160, 0.9), rgba(20, 6, 38, 0.95) 52%),
-        linear-gradient(180deg, rgba(22, 8, 42, 1), rgba(14, 5, 28, 1));
-    border-top: 1px solid rgba(255, 255, 255, 0.16);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(12px);
-    display: flex;
+.PL3-groupPanelSongDetail {
+    display: none;
     flex-direction: column;
-    padding: 10px 8px 16px;
-    gap: 10px;
-    overflow: hidden;
-}
-
-.PL3-versionOverlayBack {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    font-family: inherit;
-    font-size: 0.74rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    cursor: pointer;
-    padding: 0;
-    flex-shrink: 0;
-}
-
-.PL3-versionOverlayBack:hover {
-    color: #fff;
-}
-
-.PL3-versionRowSlot {
-    flex-shrink: 0;
-}
-
-/* ── Version Detail Row (overlay) ──────────────────────────────────────── */
-/* Default (small): art left | name right — tray wraps to its own full line */
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 10px 14px;
-    background: rgba(255, 255, 255, 0.07);
-    border-radius: 12px;
-    /* extra right padding — now only the close button sits top-right */
-    padding: 12px var(--pl3-overlay-row-pad-right) 12px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-    cursor: default;
-}
-
-/* flatten body so name & tray are direct flex children of the row */
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionBody {
-    display: contents;
-}
-
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArtWrap {
-    flex: 0 0 82px;
-    width: 82px;
-    height: 82px;
-    border-radius: 10px;
-    position: relative;
-    align-self: center;
-    order: 1;
-    overflow: visible;
-}
-
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArtWrap .PL3-groupVersionArt {
-    flex: none;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    align-self: auto;
-    order: unset;
-}
-
-/* Share button is now on top of art inside the art wrapper */
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArtWrap .PL3-groupPanelShareBtn {
-    position: absolute;
-    bottom: var(--pl3-art-share-offset);
-    right: var(--pl3-art-share-offset);
-    z-index: 120;
-}
-
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionName {
     flex: 1 1 0;
     min-width: 0;
-    align-self: left;
-    order: 2;
-    font-size: 1.5rem;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
+    gap: 6px;
+    padding: 2px 0;
 }
 
-/* tray claims 100% width → always wraps to a new line */
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionTray {
-    flex: 0 0 100%;
-    order: 3;
-    gap: 16px;
+.PL3-groupPanelInner--detail .PL3-groupPanelSongDetail {
+    display: flex;
+}
+
+.PL3-groupPanelSongStage {
+    display: none;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.PL3-groupPanelInner--detail .PL3-groupPanelSongStage {
+    display: block;
+}
+
+.PL3-groupPanelSongDetailName {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+.PL3-groupPanelSongDetailTray {
+    display: flex;
     flex-wrap: wrap;
-}
-
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionPlatform {
-    width: 30px;
-    height: 30px;
-}
-
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionPlatformIcon {
-    width: 22px;
-    height: 22px;
-    font-size: 22px;
-}
-
-/* Share button is now inside the art wrapper — no longer absolutely positioned in the row */
-
-/* Close button in overlay row (top-right) */
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-rowCloseBtn {
-    position: absolute;
-    top: 6px;
-    right: 4px;
-    width: 34px;
-    height: 34px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.85);
-    display: inline-flex;
+    gap: 8px;
     align-items: center;
-    justify-content: center;
-    z-index: 121;
-    cursor: pointer;
+    flex-shrink: 0;
 }
 
-.PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-rowCloseBtn:hover {
-    background: rgba(255, 255, 255, 0.18);
+.PL3-groupPanelSongDetailTray .PL3-groupVersionPlatform {
+    width: 26px;
+    height: 26px;
 }
 
-/* 480px+: name + tray stack vertically to the right of the art */
-@media (min-width: 480px) {
-    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay {
-        flex-wrap: nowrap;
-        align-items: center;
-    }
-
-    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionBody {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        flex: 1 1 0;
-        min-width: 0;
-        order: 2;
-    }
-
-    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionArtWrap {
-        order: unset;
-        flex: 0 0 82px;
-        align-self: auto;
-    }
-
-    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionName {
-        order: unset;
-        flex: none;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .PL3-versionRowSlot .PL3-groupVersionItem--inOverlay .PL3-groupVersionTray {
-        flex: none;
-        order: unset;
-    }
+.PL3-groupPanelSongDetailTray .PL3-groupVersionPlatformIcon {
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
 }
 
-/* ── Overlay action bar (share etc.) ─────────────────────────────────────── */
 /* ===== Lyrics Scroll ===== */
 .PL3-lyricsStage {
     flex: 1 1 auto;
@@ -1738,13 +1626,6 @@ body {
     width: min(42vw, 148px);
 }
 
-.PL3-groupVersionItem {
-    grid-template-columns: 54px 1fr 32px;
-    padding: 8px;
-    gap: 25px;
-    min-height: 82px;
-}
-
 .PL3-groupVersionArtWrap {
     width: 54px;
     height: 54px;
@@ -1755,27 +1636,15 @@ body {
     height: 54px;
 }
 
-.PL3-groupVersionName {
-    font-size: 1.3rem;
-}
-
-.PL3-groupVersionTray {
-    gap: 9px;
-}
-
 .PL3-groupVersionPlatform {
-    width: 23px;
-    height: 23px;
+    width: 21px;
+    height: 21px;
 }
 
 .PL3-groupVersionPlatformIcon {
-    width: 13px;
-    height: 13px;
-}
-
-.PL3-groupVersionArrow {
-    width: 30px;
-    height: 30px;
+    width: 12px;
+    height: 12px;
+    font-size: 12px;
 }
 
 @media (min-width: 768px) {
@@ -1785,6 +1654,7 @@ body {
         --pl3-gap-md: 10px;
         --pl3-gap-sm: 8px;
         --pl3-upcoming-size: 20vh;
+        --pl3-btn-h: 32px;
     }
 
     .PL3-card {
@@ -1859,20 +1729,14 @@ body {
         width: min(36vw, 148px);
     }
 
-    .PL3-groupVersionItem {
-        grid-template-columns: 58px 1fr;
-        padding: 9px;
-        gap: 10px;
-        min-height: 78px;
+    .PL3-groupVersionArtWrap {
+        width: 58px;
+        height: 58px;
     }
 
     .PL3-groupVersionArt {
         width: 58px;
         height: 58px;
-    }
-
-    .PL3-groupVersionName {
-        font-size: 1rem;
     }
 
     .PL3-groupVersionPlatform {
