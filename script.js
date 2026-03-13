@@ -656,8 +656,7 @@ class PL3GroupPanel {
     onCloseClick = (ev) => {
         ev.preventDefault();
         ev.stopPropagation();
-        if (this._panelState === 'song') { this.closeVersionDetail(); return; }
-        if (this._panelState === 'group') { this.close(); }
+        this.close();
     };
 
     onSectionClick = (ev) => {
@@ -850,7 +849,18 @@ class PL3GroupPanel {
             const infoBtn = document.createElement('div');
             infoBtn.className = 'PL3-groupVersionInfoBtn';
             infoBtn.setAttribute('aria-hidden', 'true');
-            infoBtn.textContent = 'ℹ';
+
+            const infoIcon = document.createElement('span');
+            infoIcon.className = 'PL3-groupVersionInfoGlyph PL3-groupVersionInfoGlyph--info';
+            infoIcon.setAttribute('aria-hidden', 'true');
+            infoIcon.textContent = 'ℹ';
+
+            const backIcon = document.createElement('span');
+            backIcon.className = 'PL3-groupVersionInfoGlyph PL3-groupVersionInfoGlyph--back';
+            backIcon.setAttribute('aria-hidden', 'true');
+            backIcon.innerHTML = '&#8592;';
+
+            infoBtn.append(infoIcon, backIcon);
 
             const body = document.createElement('div');
             body.className = 'PL3-groupVersionBody';
@@ -948,6 +958,19 @@ class PL3GroupPanel {
         const versionsEl = this.dom.groupPanelVersions;
         const gsap = window.gsap;
 
+        if (panelInner) {
+            const panelRect = panelInner.getBoundingClientRect();
+            const rowRect = row.getBoundingClientRect();
+            const originX = (rowRect.left - panelRect.left) + (rowRect.width / 2);
+            const originY = (rowRect.top - panelRect.top) + (rowRect.height / 2);
+            const scaleX = Math.max(0.24, Math.min(0.92, rowRect.width / Math.max(1, panelRect.width)));
+            const scaleY = Math.max(0.1, Math.min(0.42, rowRect.height / Math.max(1, panelRect.height)));
+            panelInner.style.setProperty('--pl3-panel-detail-origin-x', `${originX}px`);
+            panelInner.style.setProperty('--pl3-panel-detail-origin-y', `${originY}px`);
+            panelInner.style.setProperty('--pl3-panel-detail-scale-x', scaleX.toFixed(4));
+            panelInner.style.setProperty('--pl3-panel-detail-scale-y', scaleY.toFixed(4));
+        }
+
         // Build song detail DOM
         const detail = document.createElement('div');
         detail.className = 'PL3-groupPanelSongDetail';
@@ -957,21 +980,49 @@ class PL3GroupPanel {
         stage.setAttribute('aria-label', 'Lyrics');
 
         const detailBody = row.querySelector('.PL3-groupVersionBody');
+        const infoBtn = row.querySelector('.PL3-groupVersionInfoBtn');
+        const detailControls = document.createElement('div');
+        detailControls.className = 'PL3-groupPanelSongDetailControls';
+
+        const versionArt = row.querySelector('.PL3-groupVersionArt');
+        const flipTargets = [versionArt, detailBody, infoBtn].filter(Boolean);
+        const flipState = this.flipReady && flipTargets.length
+            ? window.Flip.getState(flipTargets)
+            : null;
+
+        if (infoBtn) {
+            if (!this._detailInfoBackHandler) {
+                this._detailInfoBackHandler = (ev) => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    this.closeVersionDetail();
+                };
+            }
+
+            infoBtn.classList.add('PL3-groupVersionInfoBtn--back');
+            infoBtn.setAttribute('aria-label', 'Back to versions');
+            infoBtn.setAttribute('role', 'button');
+            infoBtn.removeAttribute('aria-hidden');
+            infoBtn.tabIndex = 0;
+            infoBtn.addEventListener('click', this._detailInfoBackHandler, { passive: false });
+        }
+
+        if (infoBtn) detailControls.appendChild(infoBtn);
         // Insert header in top row so art (left) and detail (right) are side-by-side
         const panelTop = this.dom.groupPanel.querySelector('.PL3-groupPanelTop');
         (panelTop ?? this.dom.groupPanelVersions.parentElement).appendChild(detail);
+        detail.appendChild(detailControls);
         // Insert lyrics stage in the meta row so it spans the full panel width below
         this.dom.groupPanelVersions.insertAdjacentElement('afterend', stage);
         this._activeDetailEl = detail;
         this._activeDetailStage = stage;
         this._detailBodyElement = detailBody;
+        this._detailInfoBtn = infoBtn;
 
         // GSAP Flip: animate version art + text body into detail layout
         if (this.flipReady && this.dom.groupPanelArtDock && detailBody) {
-            const versionArt = row.querySelector('.PL3-groupVersionArt');
             if (versionArt) {
                 detail.style.display = 'flex';
-                const flipState = window.Flip.getState([versionArt, detailBody]);
                 this._detailPrevDockChildren = Array.from(this.dom.groupPanelArtDock.children);
                 this._detailArtElement = versionArt;
                 versionArt.classList.remove('PL3-groupVersionArt');
@@ -1040,24 +1091,9 @@ class PL3GroupPanel {
         const detailBody = this._detailBodyElement;
         const art = this._detailArtElement;
         const prevDockChildren = this._detailPrevDockChildren;
-
-        // Restore version art back to its artWrap before hiding detail
-        if (art && this.dom.groupPanelArtDock) {
-            const artWrap = row.querySelector('.PL3-groupVersionArtWrap');
-            if (artWrap) {
-                art.classList.remove('PL3-groupArtInPanel');
-                art.classList.add('PL3-groupVersionArt');
-                artWrap.replaceChildren(art);
-            }
-            if (prevDockChildren?.length) {
-                this.dom.groupPanelArtDock.replaceChildren(...prevDockChildren);
-            }
-        }
-        this._detailArtElement = null;
-        this._detailPrevDockChildren = null;
+        const infoBtn = this._detailInfoBtn;
 
         const panelInner = this.dom.groupPanel.querySelector('.PL3-groupPanelInner');
-        const versionsEl = this.dom.groupPanelVersions;
         const detail = this._activeDetailEl;
         const stage = this._activeDetailStage;
         const gsap = window.gsap;
@@ -1074,20 +1110,53 @@ class PL3GroupPanel {
             this._activeDetailEl = null;
             this._activeDetailStage = null;
             this._detailBodyElement = null;
+            this._detailArtElement = null;
+            this._detailPrevDockChildren = null;
+            this._detailInfoBtn = null;
         };
 
-        if (detailBody && this.flipReady) {
-            const infoBtn = row?.querySelector('.PL3-groupVersionInfoBtn');
-            const flipTargets = [detailBody, art].filter(Boolean);
-            const flipState = flipTargets.length ? window.Flip.getState(flipTargets) : null;
+        const runReverseFlip = () => {
+            const rowInfoBtn = row?.querySelector('.PL3-groupVersionInfoBtn');
+            const flipTargets = [detailBody, art, infoBtn].filter(Boolean);
+            const flipState = this.flipReady && flipTargets.length ? window.Flip.getState(flipTargets) : null;
+
             panelInner?.classList.remove('PL3-groupPanelInner--detail');
-            if (row) {
-                if (infoBtn) {
-                    row.insertBefore(detailBody, infoBtn);
+
+            if (art && this.dom.groupPanelArtDock) {
+                const artWrap = row.querySelector('.PL3-groupVersionArtWrap');
+                if (artWrap) {
+                    art.classList.remove('PL3-groupArtInPanel');
+                    art.classList.add('PL3-groupVersionArt');
+                    artWrap.replaceChildren(art);
+                }
+                if (prevDockChildren?.length) {
+                    this.dom.groupPanelArtDock.replaceChildren(...prevDockChildren);
                 } else {
-                    row.appendChild(detailBody);
+                    this.dom.groupPanelArtDock.replaceChildren();
                 }
             }
+
+            if (row) {
+                if (detailBody) {
+                    if (rowInfoBtn) {
+                        row.insertBefore(detailBody, rowInfoBtn);
+                    } else {
+                        row.appendChild(detailBody);
+                    }
+                }
+                if (infoBtn) {
+                    infoBtn.classList.remove('PL3-groupVersionInfoBtn--back');
+                    infoBtn.setAttribute('aria-hidden', 'true');
+                    infoBtn.removeAttribute('aria-label');
+                    infoBtn.removeAttribute('role');
+                    infoBtn.tabIndex = -1;
+                    if (this._detailInfoBackHandler) {
+                        infoBtn.removeEventListener('click', this._detailInfoBackHandler);
+                    }
+                    row.appendChild(infoBtn);
+                }
+            }
+
             if (flipState) {
                 window.Flip.from(flipState, {
                     duration: 0.42,
@@ -1099,9 +1168,18 @@ class PL3GroupPanel {
             } else {
                 finish();
             }
+        };
+
+        if (stage && gsap) {
+            gsap.to(stage, {
+                opacity: 0,
+                y: 12,
+                duration: 0.18,
+                ease: 'power2.in',
+                onComplete: runReverseFlip
+            });
         } else {
-            panelInner?.classList.remove('PL3-groupPanelInner--detail');
-            finish();
+            runReverseFlip();
         }
     }
 

@@ -84,10 +84,14 @@ body {
     --pl3-panel-shell-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
     --pl3-panel-shell-detail-border: rgba(203, 164, 255, 0.24);
     --pl3-panel-shell-detail-bg:
-        radial-gradient(160% 135% at 0% 0%, rgba(178, 92, 255, 0.36), rgba(87, 29, 171, 0.24) 34%, rgba(12, 18, 48, 0.18) 72%),
-        radial-gradient(120% 100% at 100% 100%, rgba(73, 21, 145, 0.22), rgba(7, 14, 35, 0) 58%),
-        linear-gradient(180deg, rgba(24, 12, 62, 0.96), rgba(10, 11, 34, 0.94));
+        radial-gradient(165% 145% at 4% 2%, rgba(116, 86, 255, 0.74), rgba(89, 33, 187, 0.48) 34%, rgba(16, 14, 55, 0.18) 72%),
+        radial-gradient(120% 110% at 100% 100%, rgba(233, 87, 171, 0.18), rgba(9, 10, 31, 0) 56%),
+        linear-gradient(180deg, rgba(34, 20, 88, 0.98), rgba(10, 11, 36, 0.97));
     --pl3-panel-shell-detail-shadow: 0 24px 56px rgba(33, 8, 86, 0.34);
+    --pl3-panel-detail-origin-x: 50%;
+    --pl3-panel-detail-origin-y: 22%;
+    --pl3-panel-detail-scale-x: 0.42;
+    --pl3-panel-detail-scale-y: 0.18;
 
     /* ── Panel art dock ── */
     --pl3-panel-art-dock-size: clamp(98px, calc(22vw + 28px), 118px);
@@ -115,34 +119,49 @@ body {
     --pl3-art-share-font: 0.75rem;
     --pl3-art-share-hover-bg: rgba(0, 0, 0, 0.74);
 
-    /* ── Info button ── */
-    --pl3-info-btn-size: clamp(18px, calc(4vw + 5px), 22px);
+    /* ── 320px baseline version-row controls ──
+         Change these values first if you want to tune mobile density.
+         The scale step moves from 0 at 320px to 1 at 360px. */
+    --pl3-mobile-min-width: 320;
+    --pl3-mobile-max-width: 360;
+    --pl3-mobile-fluid-step: clamp(0, calc((100vw - (var(--pl3-mobile-min-width) * 1px)) / ((var(--pl3-mobile-max-width) - var(--pl3-mobile-min-width)) * 1px)), 1);
 
-    /* ── Version art wrapper ── */
-    --pl3-version-art-size: clamp(44px, calc(10vw + 12px), 50px);
-    --pl3-version-platform-size: clamp(20px, calc(4vw + 7px), 22px);
-    --pl3-version-platform-icon-size: calc(var(--pl3-version-platform-size) * 0.55);
-    --pl3-version-detail-platform-size: calc(var(--pl3-version-platform-size) + 4px);
-    --pl3-version-detail-platform-icon-size: calc(var(--pl3-version-platform-icon-size) + 2px);
+    /* Right-side info/back circle */
+    --pl3-info-btn-size: calc(28px + 2px * var(--pl3-mobile-fluid-step));
+
+    /* Left art square inside each version row */
+    --pl3-version-art-size: calc(64px + 4px * var(--pl3-mobile-fluid-step));
+
+    /* Platform circles in the row */
+    --pl3-version-platform-size: calc(30px + 2px * var(--pl3-mobile-fluid-step));
+    --pl3-version-platform-icon-size: calc(15px + 1px * var(--pl3-mobile-fluid-step));
+    --pl3-version-detail-platform-size: calc(var(--pl3-version-platform-size) + 1px);
+    --pl3-version-detail-platform-icon-size: calc(var(--pl3-version-platform-icon-size) + 1px);
+    --pl3-version-platform-gap: calc(7px + 1px * var(--pl3-mobile-fluid-step));
+    --pl3-version-platform-count: 5;
+
+    /* Row structure spacing */
+    --pl3-version-row-gap: calc(5px + 1px * var(--pl3-mobile-fluid-step));
+    --pl3-version-row-pad: calc(6px + 1px * var(--pl3-mobile-fluid-step));
 
     /* ── Version card visuals ── */
     --pl3-version-card-border: rgba(255, 255, 255, 0.16);
     --pl3-version-card-bg:
-        linear-gradient(135deg, rgba(126, 55, 255, 0.34), rgba(41, 16, 88, 0.2) 42%, rgba(255, 255, 255, 0.05) 100%),
-        rgba(255, 255, 255, 0.07);
+        radial-gradient(140% 150% at 0% 0%, rgba(105, 86, 255, 0.34), rgba(74, 33, 164, 0.24) 36%, rgba(19, 18, 57, 0) 76%),
+        linear-gradient(135deg, rgba(43, 31, 99, 0.92), rgba(23, 19, 62, 0.9));
     --pl3-version-card-hover-bg:
-        linear-gradient(135deg, rgba(152, 78, 255, 0.46), rgba(60, 24, 124, 0.28) 44%, rgba(255, 255, 255, 0.08) 100%),
-        rgba(255, 255, 255, 0.1);
+        radial-gradient(140% 150% at 0% 0%, rgba(127, 100, 255, 0.46), rgba(96, 40, 192, 0.3) 38%, rgba(24, 21, 71, 0) 76%),
+        linear-gradient(135deg, rgba(54, 39, 122, 0.96), rgba(29, 24, 78, 0.94));
     --pl3-version-card-shadow: 0 10px 24px rgba(24, 6, 58, 0.22);
     --pl3-version-square-bg:
-        linear-gradient(180deg, rgba(154, 84, 255, 0.4), rgba(81, 26, 162, 0.18));
+        linear-gradient(180deg, rgba(149, 104, 255, 0.5), rgba(78, 31, 171, 0.28));
     --pl3-version-square-border: rgba(210, 172, 255, 0.22);
     --pl3-version-detail-bg:
-        radial-gradient(160% 140% at 0% 0%, rgba(173, 83, 255, 0.38), rgba(88, 28, 170, 0.22) 38%, rgba(10, 19, 48, 0) 72%),
-        linear-gradient(180deg, rgba(36, 16, 80, 0.62), rgba(17, 10, 45, 0.28));
+        radial-gradient(160% 140% at 0% 0%, rgba(137, 98, 255, 0.52), rgba(88, 38, 177, 0.32) 38%, rgba(11, 17, 48, 0) 72%),
+        linear-gradient(180deg, rgba(41, 22, 99, 0.74), rgba(17, 10, 45, 0.36));
     --pl3-version-stage-bg:
-        radial-gradient(140% 120% at 18% 0%, rgba(168, 79, 255, 0.3), rgba(63, 23, 122, 0.16) 38%, rgba(8, 12, 32, 0.08) 78%),
-        rgba(0, 0, 0, 0.18);
+        radial-gradient(140% 120% at 18% 0%, rgba(130, 93, 255, 0.34), rgba(68, 31, 149, 0.18) 40%, rgba(9, 12, 33, 0.08) 80%),
+        linear-gradient(180deg, rgba(13, 15, 42, 0.26), rgba(8, 9, 26, 0.2));
 }
 
 @supports (height: 100dvh) {
@@ -1019,12 +1038,38 @@ body {
     gap: var(--pl3-panel-inner-gap);
     padding: var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
     transition: background 0.34s ease, box-shadow 0.34s ease, border-color 0.34s ease;
+    isolation: isolate;
+}
+
+.PL3-groupPanelInner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--pl3-panel-shell-detail-bg);
+    transform-origin: var(--pl3-panel-detail-origin-x) var(--pl3-panel-detail-origin-y);
+    transform: scale(var(--pl3-panel-detail-scale-x), var(--pl3-panel-detail-scale-y));
+    opacity: 0;
+    transition:
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.34s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.PL3-groupPanelInner>* {
+    position: relative;
+    z-index: 1;
 }
 
 .PL3-groupPanelInner--detail {
     border-color: var(--pl3-panel-shell-detail-border);
-    background: var(--pl3-panel-shell-detail-bg);
     box-shadow: var(--pl3-panel-shell-detail-shadow);
+}
+
+.PL3-groupPanelInner--detail::before {
+    transform: scale(1, 1);
+    opacity: 1;
 }
 
 .PL3-groupPanelTop {
@@ -1142,14 +1187,15 @@ body {
 }
 
 .PL3-groupVersionItem {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: var(--pl3-version-art-size) minmax(0, 1fr) var(--pl3-info-btn-size);
+    column-gap: var(--pl3-version-row-gap);
+    align-items: center;
     border-radius: 10px;
     border: 1px solid var(--pl3-version-card-border);
     background: var(--pl3-version-card-bg);
     box-shadow: var(--pl3-version-card-shadow);
-    padding: 7px 8px;
+    padding: var(--pl3-version-row-pad);
     cursor: pointer;
     transition: opacity 0.12s, background 0.15s, box-shadow 0.15s, border-color 0.15s;
     overflow: hidden;
@@ -1172,7 +1218,7 @@ body {
     flex-shrink: 0;
     width: var(--pl3-version-art-size);
     height: var(--pl3-version-art-size);
-    margin-right: 6px;
+    margin-right: 0;
     align-self: center;
     border-radius: 10px;
     padding: 3px;
@@ -1194,8 +1240,8 @@ body {
     flex-direction: column;
     flex: 1 1 0;
     min-width: 0;
-    gap: 8px;
-    justify-content: flex-start;
+    gap: 6px;
+    justify-content: flex-end;
     padding: 1px 0;
 }
 
@@ -1211,11 +1257,15 @@ body {
 }
 
 .PL3-groupVersionTray {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(var(--pl3-version-platform-count), var(--pl3-version-platform-size));
+    grid-auto-rows: var(--pl3-version-platform-size);
+    gap: var(--pl3-version-platform-gap);
     align-items: center;
     margin-top: auto;
+    justify-content: start;
+    width: calc(var(--pl3-version-platform-count) * var(--pl3-version-platform-size) + (var(--pl3-version-platform-count) - 1) * var(--pl3-version-platform-gap));
+    max-width: 100%;
 }
 
 .PL3-groupVersionInfoBtn {
@@ -1231,10 +1281,34 @@ body {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    margin-left: 5px;
+    margin-left: 0;
     pointer-events: none;
+    -webkit-user-select: none;
     user-select: none;
     align-self: center;
+    transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.PL3-groupVersionInfoGlyph {
+    position: absolute;
+    inset: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.PL3-groupVersionInfoGlyph--info {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.PL3-groupVersionInfoGlyph--back {
+    opacity: 0;
+    transform: translateX(5px);
 }
 
 .PL3-groupVersionPlatform {
@@ -1249,6 +1323,7 @@ body {
     justify-content: center;
     text-decoration: none;
     flex: 0 0 auto;
+    touch-action: manipulation;
 }
 
 .PL3-groupVersionPlatform:hover {
@@ -1469,11 +1544,6 @@ body {
         --pl3-panel-inner-pad-x: 6px;
         --pl3-btn-h: 30px;
         --pl3-panel-art-dock-size: 132px;
-        --pl3-version-art-size: 54px;
-        --pl3-version-platform-size: 21px;
-        --pl3-version-platform-icon-size: 12px;
-        --pl3-version-detail-platform-size: 26px;
-        --pl3-version-detail-platform-icon-size: 14px;
     }
 
     .PL3-card {
@@ -1500,18 +1570,26 @@ body {
     display: none;
 }
 
+.PL3-groupPanelInner--detail {
+    gap: 0;
+}
+
+.PL3-groupPanelInner--detail .PL3-groupPanelTop {
+    padding-bottom: 6px;
+}
+
 .PL3-groupPanelSongDetail {
     display: none;
     flex-direction: column;
     flex: 1 1 0;
     min-width: 0;
-    gap: 6px;
-    padding: 2px 0;
-    border-radius: 14px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-    border: 1px solid rgba(196, 150, 255, 0.18);
-    box-shadow: 0 18px 38px rgba(30, 8, 72, 0.24);
-    padding: 10px 12px 12px;
+    gap: 0;
+    padding: 2px 0 0;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    position: relative;
 }
 
 .PL3-groupPanelInner--detail .PL3-groupPanelSongDetail {
@@ -1521,17 +1599,64 @@ body {
 .PL3-groupPanelSongDetail .PL3-groupVersionBody {
     flex: 1 1 auto;
     min-height: 100%;
-    gap: 10px;
+    justify-content: flex-end;
+    gap: 6px;
+    padding-top: calc(var(--pl3-btn-h) + 4px);
+}
+
+.PL3-groupPanelSongDetailControls {
+    position: absolute;
+    top: -1px;
+    right: 0;
+    display: block;
+    z-index: 2;
+}
+
+.PL3-groupPanelSongDetailControls .PL3-groupVersionInfoBtn {
+    width: var(--pl3-btn-h);
+    height: var(--pl3-btn-h);
+    flex-basis: var(--pl3-btn-h);
+    margin-left: 0;
+    pointer-events: auto;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.PL3-groupVersionInfoBtn--back {
+    border-color: rgba(226, 195, 255, 0.24);
+    background: linear-gradient(180deg, rgba(172, 99, 255, 0.28), rgba(83, 30, 163, 0.18));
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.PL3-groupVersionInfoBtn--back .PL3-groupVersionInfoGlyph--info {
+    opacity: 0;
+    transform: translateX(-5px);
+}
+
+.PL3-groupVersionInfoBtn--back .PL3-groupVersionInfoGlyph--back {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.PL3-groupVersionInfoBtn--back:hover,
+.PL3-groupVersionInfoBtn--back:focus-visible {
+    background: linear-gradient(180deg, rgba(192, 123, 255, 0.34), rgba(99, 38, 188, 0.24));
+    transform: translateX(-1px);
 }
 
 .PL3-groupPanelSongDetail .PL3-groupVersionName {
     font-size: 1.2rem;
     line-height: 1.1;
+    margin-top: auto;
 }
 
 .PL3-groupPanelSongDetail .PL3-groupVersionTray {
-    flex-wrap: wrap;
-    gap: 8px;
+    grid-template-columns: repeat(var(--pl3-version-platform-count), var(--pl3-version-detail-platform-size));
+    grid-auto-rows: var(--pl3-version-detail-platform-size);
+    gap: var(--pl3-version-platform-gap);
+    justify-content: start;
+    width: calc(var(--pl3-version-platform-count) * var(--pl3-version-detail-platform-size) + (var(--pl3-version-platform-count) - 1) * var(--pl3-version-platform-gap));
 }
 
 .PL3-groupPanelSongDetail .PL3-groupVersionPlatform {
@@ -1549,9 +1674,9 @@ body {
     display: none;
     flex: 1 1 auto;
     min-height: 0;
-    border-radius: 14px;
-    border: 1px solid rgba(177, 128, 255, 0.14);
-    box-shadow: 0 18px 34px rgba(20, 7, 50, 0.18);
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
 }
 
 .PL3-groupPanelInner--detail .PL3-groupPanelSongStage {
@@ -1565,11 +1690,15 @@ body {
     max-height: 45vh;
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: 0;
     background: var(--pl3-version-stage-bg);
     transition: flex-basis 0.3s ease, opacity 0.3s ease;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+}
+
+.PL3-groupPanelInner--detail .PL3-lyricsStage {
+    background: transparent;
 }
 
 .PL3-lyricsStage--collapsed {
