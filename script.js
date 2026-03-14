@@ -736,7 +736,14 @@ class PL3GroupPanel {
 
     onKeyDown = (ev) => {
         if (ev.key !== 'Escape') return;
-        if (this._panelState === this.PANEL_STATE.SONG) { this.closeVersionDetail(); return; }
+        if (this._panelState === this.PANEL_STATE.SONG) {
+            if (this._detailHasBackNav === false) {
+                this.close();
+            } else {
+                this.closeVersionDetail();
+            }
+            return;
+        }
         if (this._panelState === this.PANEL_STATE.GROUP) { this.close(); }
     };
 
@@ -775,7 +782,7 @@ class PL3GroupPanel {
                 if (this.activeGroupKey !== groupKey || this._panelState !== this.PANEL_STATE.GROUP) return;
                 const row = this.dom.groupPanelVersions?.querySelector(`[data-pl3-song-id="${songId}"]`);
                 if (!row) return;
-                this.openVersionDetail(row, songId);
+                this.openVersionDetail(row, songId, { hasBackNav: false });
             });
         });
     }
@@ -1099,7 +1106,8 @@ class PL3GroupPanel {
         return this._detailInfoBackHandler;
     }
 
-    createDetailDom(row) {
+    createDetailDom(row, song, options = {}) {
+        const { hasBackNav = true } = options;
         const detail = document.createElement('div');
         detail.className = 'PL3-groupPanelSongDetail';
 
@@ -1116,11 +1124,14 @@ class PL3GroupPanel {
         const groupMeta = this.dom.groupPanel?.querySelector('.PL3-groupPanelGroupMeta') || null;
         const groupTitle = this.dom.groupPanel?.querySelector('.PL3-groupPanelGroupTitle') || null;
         const shouldFlipArt = this.shouldFlipDetailArt(versionArt);
-        const flipArtTarget = shouldFlipArt ? versionArt : dockArt;
+        const useDockArtForDetail = this.shouldUseDockArtForDetail(song, versionArt);
+        const flipArtTarget = shouldFlipArt
+            ? (useDockArtForDetail ? dockArt : versionArt)
+            : dockArt;
         const detailControls = document.createElement('div');
         detailControls.className = 'PL3-groupPanelSongDetailControls';
 
-        if (infoBtn) {
+        if (infoBtn && hasBackNav) {
             infoBtn.classList.add('PL3-groupVersionInfoBtn--back');
             infoBtn.setAttribute('aria-label', 'Back to versions');
             infoBtn.setAttribute('role', 'button');
@@ -1143,7 +1154,9 @@ class PL3GroupPanel {
             dockArt,
             flipArtTarget,
             shouldFlipArt,
-            infoBtn,
+            useDockArtForDetail,
+            infoBtn: hasBackNav ? infoBtn : null,
+            hasBackNav,
             versionArt,
             flipState: this.captureFlipState(
                 flipArtTarget,
@@ -1172,6 +1185,10 @@ class PL3GroupPanel {
         const dockArt = this.dom.groupPanelArtDock?.querySelector('img');
         if (!dockArt || !versionArt) return true;
         return this.getImageIdentity(dockArt) === this.getImageIdentity(versionArt);
+    }
+
+    shouldUseDockArtForDetail(song, versionArt) {
+        return this.shouldAutoOpenSingleVersion(song?.groupKey) && this.shouldFlipDetailArt(versionArt);
     }
 
     animateDetailArtSwap(versionArt, previousDockArt) {
@@ -1255,7 +1272,7 @@ class PL3GroupPanel {
     }
 
     mountDetailDom(detailParts, panelInner) {
-        const { detail, stage, detailBody, versionArt, versionName, versionTray, groupMeta, groupTitle, dockArt, shouldFlipArt, flipState } = detailParts;
+        const { detail, stage, detailBody, versionArt, versionName, versionTray, groupMeta, groupTitle, dockArt, shouldFlipArt, useDockArtForDetail, flipState, hasBackNav } = detailParts;
         (groupMeta ?? this.dom.groupPanelVersions.parentElement).appendChild(detail);
         this.dom.groupPanelVersions.insertAdjacentElement('afterend', stage);
 
@@ -1267,12 +1284,14 @@ class PL3GroupPanel {
         this._detailGroupMetaElement = groupMeta;
         this._detailGroupTitleElement = groupTitle;
         this._detailShouldFlipArt = shouldFlipArt;
+        this._detailUseDockArt = useDockArtForDetail;
+        this._detailHasBackNav = hasBackNav;
         this._detailInfoBtn = detailParts.infoBtn;
 
         if (this.flipReady && this.dom.groupPanelArtDock && detailBody && versionArt) {
             detail.style.display = 'flex';
             this._detailPrevDockChildren = Array.from(this.dom.groupPanelArtDock.children);
-            this._detailArtElement = versionArt;
+            this._detailArtElement = useDockArtForDetail ? dockArt : versionArt;
             const previousDockArt = shouldFlipArt ? null : dockArt;
             if (previousDockArt) {
                 previousDockArt.style.position = 'absolute';
@@ -1284,12 +1303,14 @@ class PL3GroupPanel {
                 previousDockArt.style.pointerEvents = 'none';
                 this.dom.groupPanelArtDock.appendChild(previousDockArt);
             }
-            versionArt.classList.remove('PL3-groupVersionArt');
-            versionArt.classList.add('PL3-groupArtInPanel');
             detail.appendChild(detailBody);
-            this.dom.groupPanelArtDock.replaceChildren(versionArt);
-            if (previousDockArt) {
-                this.dom.groupPanelArtDock.appendChild(previousDockArt);
+            if (!useDockArtForDetail) {
+                versionArt.classList.remove('PL3-groupVersionArt');
+                versionArt.classList.add('PL3-groupArtInPanel');
+                this.dom.groupPanelArtDock.replaceChildren(versionArt);
+                if (previousDockArt) {
+                    this.dom.groupPanelArtDock.appendChild(previousDockArt);
+                }
             }
             panelInner?.classList.add('PL3-groupPanelInner--detail');
             if (flipState) {
@@ -1375,6 +1396,8 @@ class PL3GroupPanel {
             groupMeta: this._detailGroupMetaElement,
             groupTitle: this._detailGroupTitleElement,
             shouldFlipArt: this._detailShouldFlipArt,
+            useDockArtForDetail: this._detailUseDockArt,
+            hasBackNav: this._detailHasBackNav,
             art: this._detailArtElement,
             prevDockChildren: this._detailPrevDockChildren,
             infoBtn: this._detailInfoBtn
@@ -1382,13 +1405,13 @@ class PL3GroupPanel {
     }
 
     restoreDetailLayout(detailState, panelInner) {
-        const { row, detailBody, art, prevDockChildren, infoBtn } = detailState;
+        const { row, detailBody, art, prevDockChildren, infoBtn, useDockArtForDetail } = detailState;
         if (!row) return;
 
         const rowInfoBtn = row.querySelector('.PL3-groupVersionInfoBtn');
         panelInner?.classList.remove('PL3-groupPanelInner--detail');
 
-        if (art && this.dom.groupPanelArtDock) {
+        if (art && this.dom.groupPanelArtDock && !useDockArtForDetail) {
             const artWrap = row.querySelector('.PL3-groupVersionArtWrap');
             if (artWrap) {
                 art.classList.remove('PL3-groupArtInPanel');
@@ -1436,6 +1459,8 @@ class PL3GroupPanel {
         this._detailGroupMetaElement = null;
         this._detailGroupTitleElement = null;
         this._detailShouldFlipArt = null;
+        this._detailUseDockArt = null;
+        this._detailHasBackNav = null;
         this._detailArtElement = null;
         this._detailPrevDockChildren = null;
         this._detailInfoBtn = null;
@@ -1443,7 +1468,8 @@ class PL3GroupPanel {
 
     // ── Version Detail (in-panel) ──────────────────────────────────────────
 
-    openVersionDetail(row, songId) {
+    openVersionDetail(row, songId, options = {}) {
+        const { hasBackNav = true } = options;
         if (this._panelState !== this.PANEL_STATE.GROUP || this._activeDetailRow) return;
         const song = this.singlesById[songId];
         if (!song) return;
@@ -1459,7 +1485,7 @@ class PL3GroupPanel {
         const panelInner = this.getPanelInner();
         this.setDetailMotionVars(panelInner, row);
 
-        const detailParts = this.createDetailDom(row);
+        const detailParts = this.createDetailDom(row, song, { hasBackNav });
         this.mountDetailDom(detailParts, panelInner);
         this.scheduleStageActivation(detailParts.stage, song, transitionId);
     }
