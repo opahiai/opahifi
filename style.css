@@ -1661,9 +1661,10 @@ body {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 3px;
     order: 2;
     flex: 1 1 auto;
+    min-height: var(--pl3-panel-art-dock-size);
     padding-right: calc(var(--pl3-btn-h) + 8px);
     padding-top: 2px;
 }
@@ -1691,6 +1692,7 @@ body {
 .PL3-groupPanelInner--detail .PL3-groupPanelSongDetail {
     display: flex;
     order: 0;
+    flex: 1 1 auto;
     width: 100%;
 }
 
@@ -1699,7 +1701,7 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     gap: 8px;
-    padding-bottom: 6px;
+    padding-bottom: 0;
 }
 
 .PL3-groupPanelSongDetailControls {
@@ -1744,7 +1746,7 @@ body {
 }
 
 .PL3-groupPanelSongDetail .PL3-groupVersionName {
-    font-size: 1.2rem;
+    font-size: 1rem;
     line-height: 1.1;
     margin-top: 0;
     white-space: normal;
@@ -1757,7 +1759,7 @@ body {
     grid-auto-rows: var(--pl3-version-detail-platform-size);
     gap: var(--pl3-version-platform-gap);
     justify-content: start;
-    margin-top: 0;
+    margin-top: auto;
     width: calc(var(--pl3-version-platform-count) * var(--pl3-version-detail-platform-size) + (var(--pl3-version-platform-count) - 1) * var(--pl3-version-platform-gap));
 }
 

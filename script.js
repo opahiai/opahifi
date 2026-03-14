@@ -591,6 +591,12 @@ class PL3GroupPanel {
             GROUP: 'group',
             SONG: 'song'
         });
+        this.VERSION_KIND = Object.freeze({
+            MAIN: 'main'
+        });
+        this.VERSION_LABEL = Object.freeze({
+            [this.VERSION_KIND.MAIN]: 'Main version'
+        });
         this.dom = dom;
         this.data = window.musicDataGrouped || {};
         this.platformOrder = Array.isArray(this.data.platformOrder) ? this.data.platformOrder : [];
@@ -616,6 +622,18 @@ class PL3GroupPanel {
         if (this.flipReady) {
             window.gsap.registerPlugin(window.Flip);
         }
+    }
+
+    getVersionKind(song) {
+        return song?.version ? null : this.VERSION_KIND.MAIN;
+    }
+
+    getVersionLabel(song) {
+        const versionKind = this.getVersionKind(song);
+        if (versionKind) {
+            return this.VERSION_LABEL[versionKind];
+        }
+        return String(song?.version || '').trim();
     }
 
     init() {
@@ -663,8 +681,9 @@ class PL3GroupPanel {
         }
 
         const group = this.groupsByKey[song.groupKey];
-        const versionLabel = String(song.version || 'Original').trim();
-        const shareTitle = `${song.title}${versionLabel && versionLabel !== 'Original' ? ` (${versionLabel})` : ''}`;
+        const versionKind = this.getVersionKind(song);
+        const versionLabel = this.getVersionLabel(song);
+        const shareTitle = `${song.title}${versionKind !== this.VERSION_KIND.MAIN && versionLabel ? ` (${versionLabel})` : ''}`;
         const primaryLink = this.pickPrimaryLink(song.links || {});
         const url = primaryLink?.url || `${location.origin}/s/${encodeURIComponent(song.groupKey)}?song=${encodeURIComponent(song.id)}`;
         const text = group?.title && shareTitle !== group.title
@@ -877,7 +896,7 @@ class PL3GroupPanel {
             const song = this.singlesById[songId];
             if (!song) return;
 
-            const versionLabel = String(song.version || 'Original').trim();
+            const versionLabel = this.getVersionLabel(song);
             const row = document.createElement('article');
             row.className = 'PL3-groupVersionItem';
             row.dataset.pl3SongId = song.id;
