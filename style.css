@@ -48,6 +48,8 @@ body {
 
     /* Upcoming section */
     --pl3-upcoming-size: 34vw;
+    --pl3-upcoming-art-scale: 0.8;
+    --pl3-upcoming-glow-scale: 1.12;
 
     /* Viewport-based dimensions */
     --pl3-viewport-h: 100vh;
@@ -478,28 +480,36 @@ body {
 .PL3-upcomingArtWrap::before {
     content: '';
     position: absolute;
-    inset: 10%;
+    width: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
+    height: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(var(--pl3-upcoming-glow-scale));
     background: linear-gradient(45deg, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444);
     background-size: 400%;
-    border-radius: 18px;
+    border-radius: 24px;
     z-index: -1;
-    opacity: 0.34;
+    opacity: 0.18;
     filter: blur(18px);
-    animation: PL3-upcomingBorderShine 18s linear infinite;
+    animation: PL3-upcomingBorderShine 18s linear infinite, PL3-upcomingHaloDrift 6.8s ease-in-out infinite;
 }
 
 .PL3-upcomingArtWrap::after {
     content: '';
     position: absolute;
-    inset: 14%;
-    border-radius: 20px;
+    width: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
+    height: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(calc(var(--pl3-upcoming-glow-scale) + 0.04));
+    border-radius: 24px;
     background:
-        radial-gradient(circle at 28% 24%, rgba(120, 173, 255, 0.42), transparent 34%),
-        radial-gradient(circle at 72% 78%, rgba(230, 92, 165, 0.28), transparent 38%);
-    filter: blur(16px);
-    opacity: 0.52;
+        radial-gradient(circle at 28% 24%, rgba(120, 173, 255, 0.34), transparent 36%),
+        radial-gradient(circle at 72% 78%, rgba(230, 92, 165, 0.24), transparent 40%);
+    filter: blur(12px);
+    opacity: 0.42;
     z-index: -1;
-    animation: PL3-upcomingHaloDrift 6.8s ease-in-out infinite;
+    animation: PL3-upcomingHaloDrift 6.8s ease-in-out infinite reverse;
 }
 
 .PL3-upcomingArtWrap:hover {
@@ -507,14 +517,14 @@ body {
 }
 
 .PL3-upcomingArt {
-    width: 100%;
-    height: 100%;
+    width: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
+    height: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     display: block;
     border-radius: 18px;
-    box-shadow: 0 0 22px rgba(76, 111, 255, 0.24), 0 0 38px rgba(217, 84, 156, 0.12);
+    box-shadow: 0 0 10px rgba(76, 111, 255, 0.16), 0 0 18px rgba(217, 84, 156, 0.08);
     animation: PL3-upcomingGlow 2.8s ease-in-out infinite, PL3-upcomingFloat 6.4s ease-in-out infinite;
     position: relative;
     z-index: 1;
@@ -866,11 +876,11 @@ body {
 
     0%,
     100% {
-        box-shadow: 0 0 26px rgba(76, 111, 255, 0.24), 0 0 38px rgba(217, 84, 156, 0.12);
+        box-shadow: 0 0 10px rgba(76, 111, 255, 0.16), 0 0 18px rgba(217, 84, 156, 0.08);
     }
 
     50% {
-        box-shadow: 0 0 34px rgba(76, 111, 255, 0.34), 0 0 56px rgba(217, 84, 156, 0.18);
+        box-shadow: 0 0 16px rgba(76, 111, 255, 0.22), 0 0 26px rgba(217, 84, 156, 0.12);
     }
 }
 
@@ -890,13 +900,11 @@ body {
 
     0%,
     100% {
-        transform: translate3d(0, 0, 0) scale(0.98);
-        opacity: 0.42;
+        opacity: 0.34;
     }
 
     50% {
-        transform: translate3d(2px, -3px, 0) scale(1.06);
-        opacity: 0.62;
+        opacity: 0.5;
     }
 }
 
