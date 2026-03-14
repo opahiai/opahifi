@@ -1644,15 +1644,19 @@ body {
 }
 
 .PL3-groupPanelInner--detail .PL3-groupPanelTop {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: flex-start;
     padding-bottom: 6px;
 }
 
 .PL3-groupPanelInner--detail .PL3-groupPanelGroupMeta {
     display: flex;
-    order: 3;
-    flex: 1 1 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    order: 2;
+    flex: 1 1 auto;
     padding-right: 0;
     padding-top: 2px;
 }
@@ -1660,6 +1664,7 @@ body {
 .PL3-groupPanelInner--detail .PL3-groupPanelGroupTitle {
     font-size: clamp(0.98rem, calc(0.86rem + 1.2vw), 1.18rem);
     line-height: 1.02;
+    width: 100%;
 }
 
 .PL3-groupPanelSongDetail {
@@ -1678,15 +1683,16 @@ body {
 
 .PL3-groupPanelInner--detail .PL3-groupPanelSongDetail {
     display: flex;
-    order: 2;
+    order: 0;
+    width: 100%;
 }
 
 .PL3-groupPanelSongDetail .PL3-groupVersionBody {
     flex: 1 1 auto;
-    min-height: 100%;
-    justify-content: flex-end;
-    gap: 6px;
-    padding-top: calc(var(--pl3-btn-h) + 4px);
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    padding-top: calc(var(--pl3-btn-h) + 8px);
 }
 
 .PL3-groupPanelSongDetailControls {
@@ -1733,7 +1739,10 @@ body {
 .PL3-groupPanelSongDetail .PL3-groupVersionName {
     font-size: 1.2rem;
     line-height: 1.1;
-    margin-top: auto;
+    margin-top: 0;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
 }
 
 .PL3-groupPanelSongDetail .PL3-groupVersionTray {
@@ -1741,6 +1750,7 @@ body {
     grid-auto-rows: var(--pl3-version-detail-platform-size);
     gap: var(--pl3-version-platform-gap);
     justify-content: start;
+    margin-top: 0;
     width: calc(var(--pl3-version-platform-count) * var(--pl3-version-detail-platform-size) + (var(--pl3-version-platform-count) - 1) * var(--pl3-version-platform-gap));
 }
 

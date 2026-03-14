@@ -278,6 +278,7 @@
             groupKey: GROUP.LETS_NOT_DO_BRUNCH,
             title: 'Let\'s not do Brunch',
             image: 'img/music/base/base-letsnotdobrunch.png',
+            lyricsPath: 'lyrics/lets-not-do-brunch.txt',
             links: {
                 'Spotify': 'https://open.spotify.com/track/10pJOBA2Krl8QiAi7XUGE7?si=66f1ed7937454034',
                 'Apple Music': 'https://music.apple.com/us/album/lets-do-brunch-single/1883970912',
@@ -636,7 +637,7 @@ class PL3GroupPanel {
     }
 
     shareActivePanel() {
-        if (this._panelState === 'song' && this._activeDetailSongId) {
+        if (this._panelState === this.PANEL_STATE.SONG && this._activeDetailSongId) {
             this.shareVersion(this._activeDetailSongId);
             return;
         }
@@ -1006,6 +1007,231 @@ class PL3GroupPanel {
         return icon;
     }
 
+    getPanelInner() {
+        return this.dom.groupPanel?.querySelector('.PL3-groupPanelInner') || null;
+    }
+
+    setDetailMotionVars(panelInner, row) {
+        if (!panelInner || !row) return;
+        const panelRect = panelInner.getBoundingClientRect();
+        const rowRect = row.getBoundingClientRect();
+        const originX = (rowRect.left - panelRect.left) + (rowRect.width / 2);
+        const originY = (rowRect.top - panelRect.top) + (rowRect.height / 2);
+        const scaleX = Math.max(0.24, Math.min(0.92, rowRect.width / Math.max(1, panelRect.width)));
+        const scaleY = Math.max(0.1, Math.min(0.42, rowRect.height / Math.max(1, panelRect.height)));
+        panelInner.style.setProperty('--pl3-panel-detail-origin-x', `${originX}px`);
+        panelInner.style.setProperty('--pl3-panel-detail-origin-y', `${originY}px`);
+        panelInner.style.setProperty('--pl3-panel-detail-scale-x', scaleX.toFixed(4));
+        panelInner.style.setProperty('--pl3-panel-detail-scale-y', scaleY.toFixed(4));
+    }
+
+    ensureDetailBackHandler() {
+        if (this._detailInfoBackHandler) return this._detailInfoBackHandler;
+        this._detailInfoBackHandler = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.closeVersionDetail();
+        };
+        return this._detailInfoBackHandler;
+    }
+
+    createDetailDom(row) {
+        const detail = document.createElement('div');
+        detail.className = 'PL3-groupPanelSongDetail';
+
+        const stage = document.createElement('div');
+        stage.className = 'PL3-groupPanelSongStage PL3-lyricsStage PL3-lyricsStage--loading PL3-lyricsStage--collapsed';
+        stage.setAttribute('aria-label', 'Lyrics');
+
+        const detailBody = row.querySelector('.PL3-groupVersionBody');
+        const infoBtn = row.querySelector('.PL3-groupVersionInfoBtn');
+        const versionArt = row.querySelector('.PL3-groupVersionArt');
+        const detailControls = document.createElement('div');
+        detailControls.className = 'PL3-groupPanelSongDetailControls';
+
+        if (infoBtn) {
+            infoBtn.classList.add('PL3-groupVersionInfoBtn--back');
+            infoBtn.setAttribute('aria-label', 'Back to versions');
+            infoBtn.setAttribute('role', 'button');
+            infoBtn.removeAttribute('aria-hidden');
+            infoBtn.tabIndex = 0;
+            infoBtn.addEventListener('click', this.ensureDetailBackHandler(), { passive: false });
+            detailControls.appendChild(infoBtn);
+        }
+
+        detail.appendChild(detailControls);
+
+        return {
+            detail,
+            stage,
+            detailBody,
+            infoBtn,
+            versionArt,
+            flipState: this.captureFlipState(versionArt, detailBody, infoBtn)
+        };
+    }
+
+    captureFlipState(...targets) {
+        const activeTargets = targets.filter(Boolean);
+        if (!this.flipReady || !activeTargets.length) return null;
+        return window.Flip.getState(activeTargets);
+    }
+
+    mountDetailDom(detailParts, panelInner) {
+        const { detail, stage, detailBody, versionArt, flipState } = detailParts;
+        const groupMeta = this.dom.groupPanel.querySelector('.PL3-groupPanelGroupMeta');
+        (groupMeta ?? this.dom.groupPanelVersions.parentElement).appendChild(detail);
+        this.dom.groupPanelVersions.insertAdjacentElement('afterend', stage);
+
+        this._activeDetailEl = detail;
+        this._activeDetailStage = stage;
+        this._detailBodyElement = detailBody;
+        this._detailInfoBtn = detailParts.infoBtn;
+
+        if (this.flipReady && this.dom.groupPanelArtDock && detailBody && versionArt) {
+            detail.style.display = 'flex';
+            this._detailPrevDockChildren = Array.from(this.dom.groupPanelArtDock.children);
+            this._detailArtElement = versionArt;
+            versionArt.classList.remove('PL3-groupVersionArt');
+            versionArt.classList.add('PL3-groupArtInPanel');
+            detail.appendChild(detailBody);
+            this.dom.groupPanelArtDock.replaceChildren(versionArt);
+            panelInner?.classList.add('PL3-groupPanelInner--detail');
+            if (flipState) {
+                window.Flip.from(flipState, {
+                    duration: 0.5,
+                    ease: 'power2.inOut',
+                    absolute: true,
+                    nested: true
+                });
+            }
+            return;
+        }
+
+        if (detailBody) {
+            detail.style.display = 'flex';
+            detail.appendChild(detailBody);
+        }
+        this._detailArtElement = versionArt || null;
+        panelInner?.classList.add('PL3-groupPanelInner--detail');
+    }
+
+    scheduleStageActivation(stage, song, transitionId) {
+        const gsap = window.gsap;
+        const expandStage = () => {
+            if (transitionId !== this._transitionId || this._panelState !== this.PANEL_STATE.SONG) return;
+            stage.classList.remove('PL3-lyricsStage--collapsed');
+            if (!song.lyricsPath) {
+                stage.classList.remove('PL3-lyricsStage--loading');
+                return;
+            }
+            fetch(song.lyricsPath)
+                .then(r => r.ok ? r.text() : Promise.reject())
+                .then(text => {
+                    if (transitionId !== this._transitionId || this._activeDetailStage !== stage) return;
+                    stage.classList.remove('PL3-lyricsStage--loading');
+                    this._buildDrum(stage, text);
+                })
+                .catch(() => {
+                    if (transitionId === this._transitionId && this._activeDetailStage === stage) {
+                        stage.classList.remove('PL3-lyricsStage--loading');
+                    }
+                });
+        };
+
+        const activate = () => {
+            if (transitionId !== this._transitionId || this._panelState !== this.PANEL_STATE.SONG) return;
+            if (!gsap) {
+                expandStage();
+                return;
+            }
+            gsap.fromTo(stage,
+                { opacity: 0, y: 18 },
+                { opacity: 1, y: 0, duration: 0.28, ease: 'power3.out', onComplete: expandStage }
+            );
+        };
+
+        if (gsap && this.flipReady) {
+            gsap.delayedCall(0.18, activate);
+            return;
+        }
+        activate();
+    }
+
+    stopLyricsPlayback() {
+        this._lyricsTween?.kill();
+        this._lyricsTween = null;
+        this._drumScroller = null;
+    }
+
+    getActiveDetailSnapshot() {
+        return {
+            row: this._activeDetailRow,
+            songId: this._activeDetailSongId,
+            detail: this._activeDetailEl,
+            stage: this._activeDetailStage,
+            detailBody: this._detailBodyElement,
+            art: this._detailArtElement,
+            prevDockChildren: this._detailPrevDockChildren,
+            infoBtn: this._detailInfoBtn
+        };
+    }
+
+    restoreDetailLayout(detailState, panelInner) {
+        const { row, detailBody, art, prevDockChildren, infoBtn } = detailState;
+        if (!row) return;
+
+        const rowInfoBtn = row.querySelector('.PL3-groupVersionInfoBtn');
+        panelInner?.classList.remove('PL3-groupPanelInner--detail');
+
+        if (art && this.dom.groupPanelArtDock) {
+            const artWrap = row.querySelector('.PL3-groupVersionArtWrap');
+            if (artWrap) {
+                art.classList.remove('PL3-groupArtInPanel');
+                art.classList.add('PL3-groupVersionArt');
+                artWrap.replaceChildren(art);
+            }
+            if (prevDockChildren?.length) {
+                this.dom.groupPanelArtDock.replaceChildren(...prevDockChildren);
+            } else {
+                this.dom.groupPanelArtDock.replaceChildren();
+            }
+        }
+
+        if (detailBody) {
+            if (rowInfoBtn) {
+                row.insertBefore(detailBody, rowInfoBtn);
+            } else {
+                row.appendChild(detailBody);
+            }
+        }
+
+        if (infoBtn) {
+            infoBtn.classList.remove('PL3-groupVersionInfoBtn--back');
+            infoBtn.setAttribute('aria-hidden', 'true');
+            infoBtn.removeAttribute('aria-label');
+            infoBtn.removeAttribute('role');
+            infoBtn.tabIndex = -1;
+            if (this._detailInfoBackHandler) {
+                infoBtn.removeEventListener('click', this._detailInfoBackHandler);
+            }
+            row.appendChild(infoBtn);
+        }
+    }
+
+    clearActiveDetailState(detailState) {
+        detailState.detail?.remove();
+        detailState.stage?.remove();
+        this._activeDetailRow = null;
+        this._activeDetailSongId = null;
+        this._activeDetailEl = null;
+        this._activeDetailStage = null;
+        this._detailBodyElement = null;
+        this._detailArtElement = null;
+        this._detailPrevDockChildren = null;
+        this._detailInfoBtn = null;
+    }
+
     // ── Version Detail (in-panel) ──────────────────────────────────────────
 
     openVersionDetail(row, songId) {
@@ -1021,136 +1247,12 @@ class PL3GroupPanel {
         this._drumScroller = null;
         this._setPanelState(this.PANEL_STATE.SONG);
 
-        const panelInner = this.dom.groupPanel.querySelector('.PL3-groupPanelInner');
-        const versionsEl = this.dom.groupPanelVersions;
-        const gsap = window.gsap;
+        const panelInner = this.getPanelInner();
+        this.setDetailMotionVars(panelInner, row);
 
-        if (panelInner) {
-            const panelRect = panelInner.getBoundingClientRect();
-            const rowRect = row.getBoundingClientRect();
-            const originX = (rowRect.left - panelRect.left) + (rowRect.width / 2);
-            const originY = (rowRect.top - panelRect.top) + (rowRect.height / 2);
-            const scaleX = Math.max(0.24, Math.min(0.92, rowRect.width / Math.max(1, panelRect.width)));
-            const scaleY = Math.max(0.1, Math.min(0.42, rowRect.height / Math.max(1, panelRect.height)));
-            panelInner.style.setProperty('--pl3-panel-detail-origin-x', `${originX}px`);
-            panelInner.style.setProperty('--pl3-panel-detail-origin-y', `${originY}px`);
-            panelInner.style.setProperty('--pl3-panel-detail-scale-x', scaleX.toFixed(4));
-            panelInner.style.setProperty('--pl3-panel-detail-scale-y', scaleY.toFixed(4));
-        }
-
-        // Build song detail DOM
-        const detail = document.createElement('div');
-        detail.className = 'PL3-groupPanelSongDetail';
-
-        const stage = document.createElement('div');
-        stage.className = 'PL3-groupPanelSongStage PL3-lyricsStage PL3-lyricsStage--loading PL3-lyricsStage--collapsed';
-        stage.setAttribute('aria-label', 'Lyrics');
-
-        const detailBody = row.querySelector('.PL3-groupVersionBody');
-        const infoBtn = row.querySelector('.PL3-groupVersionInfoBtn');
-        const detailControls = document.createElement('div');
-        detailControls.className = 'PL3-groupPanelSongDetailControls';
-
-        const versionArt = row.querySelector('.PL3-groupVersionArt');
-        const flipTargets = [versionArt, detailBody, infoBtn].filter(Boolean);
-        const flipState = this.flipReady && flipTargets.length
-            ? window.Flip.getState(flipTargets)
-            : null;
-
-        if (infoBtn) {
-            if (!this._detailInfoBackHandler) {
-                this._detailInfoBackHandler = (ev) => {
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    this.closeVersionDetail();
-                };
-            }
-
-            infoBtn.classList.add('PL3-groupVersionInfoBtn--back');
-            infoBtn.setAttribute('aria-label', 'Back to versions');
-            infoBtn.setAttribute('role', 'button');
-            infoBtn.removeAttribute('aria-hidden');
-            infoBtn.tabIndex = 0;
-            infoBtn.addEventListener('click', this._detailInfoBackHandler, { passive: false });
-        }
-
-        if (infoBtn) detailControls.appendChild(infoBtn);
-        // Insert header in top row so art (left) and detail (right) are side-by-side
-        const panelTop = this.dom.groupPanel.querySelector('.PL3-groupPanelTop');
-        (panelTop ?? this.dom.groupPanelVersions.parentElement).appendChild(detail);
-        detail.appendChild(detailControls);
-        // Insert lyrics stage in the meta row so it spans the full panel width below
-        this.dom.groupPanelVersions.insertAdjacentElement('afterend', stage);
-        this._activeDetailEl = detail;
-        this._activeDetailStage = stage;
-        this._detailBodyElement = detailBody;
-        this._detailInfoBtn = infoBtn;
-
-        // GSAP Flip: animate version art + text body into detail layout
-        if (this.flipReady && this.dom.groupPanelArtDock && detailBody) {
-            if (versionArt) {
-                detail.style.display = 'flex';
-                this._detailPrevDockChildren = Array.from(this.dom.groupPanelArtDock.children);
-                this._detailArtElement = versionArt;
-                versionArt.classList.remove('PL3-groupVersionArt');
-                versionArt.classList.add('PL3-groupArtInPanel');
-                detail.appendChild(detailBody);
-                this.dom.groupPanelArtDock.replaceChildren(versionArt);
-                panelInner?.classList.add('PL3-groupPanelInner--detail');
-                window.Flip.from(flipState, {
-                    duration: 0.5,
-                    ease: 'power2.inOut',
-                    absolute: true,
-                    nested: true
-                });
-            }
-        } else {
-            if (detailBody) {
-                detail.style.display = 'flex';
-                detail.appendChild(detailBody);
-            }
-            panelInner?.classList.add('PL3-groupPanelInner--detail');
-        }
-
-        // Animate the second-row lyrics stage in after the Flip settles
-        const activate = () => {
-            if (transitionId !== this._transitionId || this._panelState !== this.PANEL_STATE.SONG) return;
-            if (gsap) {
-                gsap.fromTo(stage,
-                    { opacity: 0, y: 18 },
-                    { opacity: 1, y: 0, duration: 0.28, ease: 'power3.out', onComplete: expandStage }
-                );
-            } else {
-                expandStage();
-            }
-        };
-
-        const expandStage = () => {
-            if (transitionId !== this._transitionId || this._panelState !== this.PANEL_STATE.SONG) return;
-            stage.classList.remove('PL3-lyricsStage--collapsed');
-            if (song.lyricsPath) {
-                fetch(song.lyricsPath)
-                    .then(r => r.ok ? r.text() : Promise.reject())
-                    .then(text => {
-                        if (transitionId !== this._transitionId || this._activeDetailStage !== stage) return;
-                        stage.classList.remove('PL3-lyricsStage--loading');
-                        this._buildDrum(stage, text);
-                    })
-                    .catch(() => {
-                        if (transitionId === this._transitionId && this._activeDetailStage === stage) {
-                            stage.classList.remove('PL3-lyricsStage--loading');
-                        }
-                    });
-            } else {
-                stage.classList.remove('PL3-lyricsStage--loading');
-            }
-        };
-
-        if (gsap && this.flipReady) {
-            gsap.delayedCall(0.18, activate);
-        } else {
-            activate();
-        }
+        const detailParts = this.createDetailDom(row);
+        this.mountDetailDom(detailParts, panelInner);
+        this.scheduleStageActivation(detailParts.stage, song, transitionId);
     }
 
     closeVersionDetail(options = {}) {
@@ -1158,79 +1260,25 @@ class PL3GroupPanel {
         if (!this._activeDetailRow) return;
 
         const transitionId = this._bumpTransition();
-
-        const row = this._activeDetailRow;
-        const detailBody = this._detailBodyElement;
-        const art = this._detailArtElement;
-        const prevDockChildren = this._detailPrevDockChildren;
-        const infoBtn = this._detailInfoBtn;
-
-        const panelInner = this.dom.groupPanel.querySelector('.PL3-groupPanelInner');
-        const detail = this._activeDetailEl;
-        const stage = this._activeDetailStage;
+        const detailState = this.getActiveDetailSnapshot();
+        const panelInner = this.getPanelInner();
         const gsap = window.gsap;
 
-        this._lyricsTween?.kill();
-        this._lyricsTween = null;
-        this._drumScroller = null;
+        this.stopLyricsPlayback();
 
         const finish = () => {
             if (transitionId !== this._transitionId) return;
-            detail?.remove();
-            stage?.remove();
-            this._activeDetailRow = null;
-            this._activeDetailSongId = null;
-            this._activeDetailEl = null;
-            this._activeDetailStage = null;
-            this._detailBodyElement = null;
-            this._detailArtElement = null;
-            this._detailPrevDockChildren = null;
-            this._detailInfoBtn = null;
+            this.clearActiveDetailState(detailState);
             this._setPanelState(this.PANEL_STATE.GROUP);
         };
 
         const runReverseFlip = () => {
             if (transitionId !== this._transitionId) return;
-            const rowInfoBtn = row?.querySelector('.PL3-groupVersionInfoBtn');
-            const flipTargets = [detailBody, art, infoBtn].filter(Boolean);
-            const flipState = !immediate && this.flipReady && flipTargets.length ? window.Flip.getState(flipTargets) : null;
+            const flipState = immediate
+                ? null
+                : this.captureFlipState(detailState.detailBody, detailState.art, detailState.infoBtn);
 
-            panelInner?.classList.remove('PL3-groupPanelInner--detail');
-
-            if (art && this.dom.groupPanelArtDock) {
-                const artWrap = row.querySelector('.PL3-groupVersionArtWrap');
-                if (artWrap) {
-                    art.classList.remove('PL3-groupArtInPanel');
-                    art.classList.add('PL3-groupVersionArt');
-                    artWrap.replaceChildren(art);
-                }
-                if (prevDockChildren?.length) {
-                    this.dom.groupPanelArtDock.replaceChildren(...prevDockChildren);
-                } else {
-                    this.dom.groupPanelArtDock.replaceChildren();
-                }
-            }
-
-            if (row) {
-                if (detailBody) {
-                    if (rowInfoBtn) {
-                        row.insertBefore(detailBody, rowInfoBtn);
-                    } else {
-                        row.appendChild(detailBody);
-                    }
-                }
-                if (infoBtn) {
-                    infoBtn.classList.remove('PL3-groupVersionInfoBtn--back');
-                    infoBtn.setAttribute('aria-hidden', 'true');
-                    infoBtn.removeAttribute('aria-label');
-                    infoBtn.removeAttribute('role');
-                    infoBtn.tabIndex = -1;
-                    if (this._detailInfoBackHandler) {
-                        infoBtn.removeEventListener('click', this._detailInfoBackHandler);
-                    }
-                    row.appendChild(infoBtn);
-                }
-            }
+            this.restoreDetailLayout(detailState, panelInner);
 
             if (flipState) {
                 window.Flip.from(flipState, {
@@ -1250,8 +1298,8 @@ class PL3GroupPanel {
             return;
         }
 
-        if (stage && gsap) {
-            gsap.to(stage, {
+        if (detailState.stage && gsap) {
+            gsap.to(detailState.stage, {
                 opacity: 0,
                 y: 12,
                 duration: 0.18,
