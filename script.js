@@ -904,7 +904,7 @@ class PL3GroupPanel {
         this.dom.groupPanel.classList.remove('PL3-groupPanel--closeReady');
         this.dom.groupPanel.classList.add('PL3-groupPanel--open');
         this._closeBtnPopTimer = window.setTimeout(() => {
-            if (this._panelState !== this.PANEL_STATE.GROUP || !this.dom.groupPanel?.classList.contains('PL3-groupPanel--open')) return;
+            if (this._panelState === this.PANEL_STATE.CLOSED || !this.dom.groupPanel?.classList.contains('PL3-groupPanel--open')) return;
             this.dom.groupPanel.classList.add('PL3-groupPanel--closeReady');
             this._closeBtnPopTimer = null;
         }, 540);

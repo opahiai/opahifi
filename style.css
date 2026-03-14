@@ -105,7 +105,7 @@ body {
     --pl3-panel-close-h: var(--pl3-btn-h);
     --pl3-panel-close-w: var(--pl3-btn-h);
     --pl3-panel-close-radius: 999px;
-    --pl3-panel-close-font: 1rem;
+    --pl3-panel-close-font: 1.5rem;
     --pl3-panel-close-bg: rgba(255, 255, 255, 0.98);
     --pl3-panel-close-border: rgba(255, 255, 255, 0.82);
     --pl3-panel-close-hover-bg: rgba(255, 236, 236, 0.98);
