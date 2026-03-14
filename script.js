@@ -330,6 +330,8 @@ class PL3DomRegistry {
         this.previewBtn = section.querySelector('[data-pl3-preview]');
         this.gallery = section.querySelector('.PL3-gallery');
         this.galleryBtns = Array.from(section.querySelectorAll('.PL3-galleryItemBtn'));
+        this.playlistPillToggle = section.querySelector('[data-pl3-playlist-toggle]');
+        this.playlistPillLinks = section.querySelector('[data-pl3-playlist-links]');
         this.groupPanel = section.querySelector('#PL3-group-panel');
         this.groupPanelArtDock = section.querySelector('[data-pl3-group-art-dock]');
         this.groupPanelTitle = section.querySelector('[data-pl3-group-title]');
@@ -1788,6 +1790,7 @@ class PL3GallerySection {
     constructor(dom, callbacks = {}) {
         this.dom = dom;
         this.onGroupSelect = callbacks.onGroupSelect || (() => { });
+        this.playlistExpanded = false;
     }
 
     init() {
@@ -1796,11 +1799,55 @@ class PL3GallerySection {
     }
 
     onSectionClick = (ev) => {
+        const playlistToggle = ev.target.closest('[data-pl3-playlist-toggle]');
+        if (playlistToggle) {
+            const isPlaylistLink = ev.target.closest('[data-pl3-playlist-links] a');
+            if (isPlaylistLink) return;
+            ev.preventDefault();
+            this.playlistExpanded ? this.collapsePlaylistPill() : this.expandPlaylistPill();
+            return;
+        }
+
+        const playlistClose = ev.target.closest('[data-pl3-playlist-close]');
+        if (playlistClose) {
+            ev.preventDefault();
+            this.collapsePlaylistPill();
+            return;
+        }
+
+        if (ev.target.closest('[data-pl3-playlist-links]')) return;
+
         const btn = ev.target.closest('[data-pl3-group]');
-        if (!btn || !this.dom.section.contains(btn)) return;
+        if (!btn || !this.dom.section.contains(btn)) {
+            if (this.playlistExpanded) this.collapsePlaylistPill();
+            return;
+        }
+        this.collapsePlaylistPill();
         ev.preventDefault();
         this.onGroupSelect(btn, btn.getAttribute('data-pl3-group') || '');
     };
+
+    expandPlaylistPill() {
+        const toggle = this.dom.playlistPillToggle;
+        const links = this.dom.playlistPillLinks;
+        if (!toggle || !links) return;
+
+        toggle.classList.add('PL3-playlistPill--expanded');
+        toggle.setAttribute('aria-expanded', 'true');
+        links.hidden = false;
+        this.playlistExpanded = true;
+    }
+
+    collapsePlaylistPill() {
+        const toggle = this.dom.playlistPillToggle;
+        const links = this.dom.playlistPillLinks;
+        if (!toggle || !links) return;
+
+        toggle.classList.remove('PL3-playlistPill--expanded');
+        toggle.setAttribute('aria-expanded', 'false');
+        links.hidden = true;
+        this.playlistExpanded = false;
+    }
 }
 
 // PL3 Controller Class - UI orchestration
