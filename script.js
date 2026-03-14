@@ -757,6 +757,29 @@ class PL3GroupPanel {
         return this._transitionId;
     }
 
+    getGroupSongIds(groupKey) {
+        const group = this.groupsByKey[groupKey];
+        return Array.isArray(group?.songIds) ? group.songIds : [];
+    }
+
+    shouldAutoOpenSingleVersion(groupKey) {
+        return this.getGroupSongIds(groupKey).length === 1;
+    }
+
+    queueSingleVersionOpen(groupKey) {
+        const [songId] = this.getGroupSongIds(groupKey);
+        if (!songId) return;
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                if (this.activeGroupKey !== groupKey || this._panelState !== this.PANEL_STATE.GROUP) return;
+                const row = this.dom.groupPanelVersions?.querySelector(`[data-pl3-song-id="${songId}"]`);
+                if (!row) return;
+                this.openVersionDetail(row, songId);
+            });
+        });
+    }
+
     openFromTrigger(triggerBtn, groupKey) {
         if (!this.dom.groupPanel || !this.dom.groupPanelArtDock) return;
         const key = String(groupKey || '').trim();
@@ -778,6 +801,10 @@ class PL3GroupPanel {
         this.renderGroupHeader(key);
         this.moveSourceArtToPanel(sourceBtn, key);
         this.openPanelShell();
+
+        if (this.shouldAutoOpenSingleVersion(key)) {
+            this.queueSingleVersionOpen(key);
+        }
     }
 
     close() {
@@ -1085,8 +1112,11 @@ class PL3GroupPanel {
         const versionTray = row.querySelector('.PL3-groupVersionTray');
         const infoBtn = row.querySelector('.PL3-groupVersionInfoBtn');
         const versionArt = row.querySelector('.PL3-groupVersionArt');
+        const dockArt = this.dom.groupPanelArtDock?.querySelector('img') || null;
         const groupMeta = this.dom.groupPanel?.querySelector('.PL3-groupPanelGroupMeta') || null;
         const groupTitle = this.dom.groupPanel?.querySelector('.PL3-groupPanelGroupTitle') || null;
+        const shouldFlipArt = this.shouldFlipDetailArt(versionArt);
+        const flipArtTarget = shouldFlipArt ? versionArt : dockArt;
         const detailControls = document.createElement('div');
         detailControls.className = 'PL3-groupPanelSongDetailControls';
 
@@ -1110,10 +1140,13 @@ class PL3GroupPanel {
             versionTray,
             groupMeta,
             groupTitle,
+            dockArt,
+            flipArtTarget,
+            shouldFlipArt,
             infoBtn,
             versionArt,
             flipState: this.captureFlipState(
-                versionArt,
+                flipArtTarget,
                 detailBody,
                 versionName,
                 versionTray,
@@ -1130,8 +1163,99 @@ class PL3GroupPanel {
         return window.Flip.getState(activeTargets);
     }
 
+    getImageIdentity(img) {
+        if (!img) return '';
+        return String(img.currentSrc || img.src || '').trim();
+    }
+
+    shouldFlipDetailArt(versionArt) {
+        const dockArt = this.dom.groupPanelArtDock?.querySelector('img');
+        if (!dockArt || !versionArt) return true;
+        return this.getImageIdentity(dockArt) === this.getImageIdentity(versionArt);
+    }
+
+    animateDetailArtSwap(versionArt, previousDockArt) {
+        if (!versionArt) return;
+        const gsap = window.gsap;
+        if (!gsap) {
+            this.resetTransientArtStyles(previousDockArt);
+            previousDockArt?.remove();
+            versionArt.style.removeProperty('opacity');
+            versionArt.style.removeProperty('transform');
+            return;
+        }
+
+        gsap.set(versionArt, { opacity: 0, scale: 0.97 });
+        const timeline = gsap.timeline({
+            delay: 0.36,
+            onComplete: () => {
+                this.resetTransientArtStyles(previousDockArt);
+                previousDockArt?.remove();
+                versionArt.style.removeProperty('opacity');
+                versionArt.style.removeProperty('transform');
+            }
+        });
+
+        if (previousDockArt) {
+            timeline.to(previousDockArt, {
+                opacity: 0,
+                scale: 1.02,
+                duration: 0.18,
+                ease: 'power2.out'
+            }, 0);
+        }
+
+        timeline.to(versionArt, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.14,
+            ease: 'power2.out'
+        }, 0.02);
+    }
+
+    resetTransientArtStyles(img) {
+        if (!img) return;
+        img.style.removeProperty('position');
+        img.style.removeProperty('inset');
+        img.style.removeProperty('width');
+        img.style.removeProperty('height');
+        img.style.removeProperty('object-fit');
+        img.style.removeProperty('border-radius');
+        img.style.removeProperty('pointer-events');
+        img.style.removeProperty('opacity');
+        img.style.removeProperty('transform');
+    }
+
+    getPrimaryDockArt(children) {
+        return (children || []).find((node) => node?.tagName === 'IMG') || null;
+    }
+
+    prepareDockArtReveal(img) {
+        if (!img) return;
+        img.style.opacity = '0';
+        img.style.transform = 'scale(0.97)';
+    }
+
+    animateDockArtReveal(img, delay = 0.3) {
+        if (!img) return;
+        const gsap = window.gsap;
+        if (!gsap) {
+            this.resetTransientArtStyles(img);
+            return;
+        }
+
+        gsap.to(img, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.14,
+            delay,
+            ease: 'power2.out',
+            onComplete: () => this.resetTransientArtStyles(img)
+        });
+    }
+
     mountDetailDom(detailParts, panelInner) {
-        const { detail, stage, detailBody, versionArt, versionName, versionTray, groupMeta, groupTitle, flipState } = detailParts;
+        const { detail, stage, detailBody, versionArt, versionName, versionTray, groupMeta, groupTitle, dockArt, shouldFlipArt, flipState } = detailParts;
         (groupMeta ?? this.dom.groupPanelVersions.parentElement).appendChild(detail);
         this.dom.groupPanelVersions.insertAdjacentElement('afterend', stage);
 
@@ -1142,16 +1266,31 @@ class PL3GroupPanel {
         this._detailTrayElement = versionTray;
         this._detailGroupMetaElement = groupMeta;
         this._detailGroupTitleElement = groupTitle;
+        this._detailShouldFlipArt = shouldFlipArt;
         this._detailInfoBtn = detailParts.infoBtn;
 
         if (this.flipReady && this.dom.groupPanelArtDock && detailBody && versionArt) {
             detail.style.display = 'flex';
             this._detailPrevDockChildren = Array.from(this.dom.groupPanelArtDock.children);
             this._detailArtElement = versionArt;
+            const previousDockArt = shouldFlipArt ? null : dockArt;
+            if (previousDockArt) {
+                previousDockArt.style.position = 'absolute';
+                previousDockArt.style.inset = '0';
+                previousDockArt.style.width = '100%';
+                previousDockArt.style.height = '100%';
+                previousDockArt.style.objectFit = 'cover';
+                previousDockArt.style.borderRadius = '8px';
+                previousDockArt.style.pointerEvents = 'none';
+                this.dom.groupPanelArtDock.appendChild(previousDockArt);
+            }
             versionArt.classList.remove('PL3-groupVersionArt');
             versionArt.classList.add('PL3-groupArtInPanel');
             detail.appendChild(detailBody);
             this.dom.groupPanelArtDock.replaceChildren(versionArt);
+            if (previousDockArt) {
+                this.dom.groupPanelArtDock.appendChild(previousDockArt);
+            }
             panelInner?.classList.add('PL3-groupPanelInner--detail');
             if (flipState) {
                 window.Flip.from(flipState, {
@@ -1161,6 +1300,9 @@ class PL3GroupPanel {
                     scale: true,
                     nested: true
                 });
+            }
+            if (!shouldFlipArt) {
+                this.animateDetailArtSwap(versionArt, previousDockArt);
             }
             return;
         }
@@ -1232,6 +1374,7 @@ class PL3GroupPanel {
             versionTray: this._detailTrayElement,
             groupMeta: this._detailGroupMetaElement,
             groupTitle: this._detailGroupTitleElement,
+            shouldFlipArt: this._detailShouldFlipArt,
             art: this._detailArtElement,
             prevDockChildren: this._detailPrevDockChildren,
             infoBtn: this._detailInfoBtn
@@ -1292,6 +1435,7 @@ class PL3GroupPanel {
         this._detailTrayElement = null;
         this._detailGroupMetaElement = null;
         this._detailGroupTitleElement = null;
+        this._detailShouldFlipArt = null;
         this._detailArtElement = null;
         this._detailPrevDockChildren = null;
         this._detailInfoBtn = null;
@@ -1339,6 +1483,10 @@ class PL3GroupPanel {
 
         const runReverseFlip = () => {
             if (transitionId !== this._transitionId) return;
+            const restoredDockArt = this.getPrimaryDockArt(detailState.prevDockChildren);
+            if (!detailState.shouldFlipArt) {
+                this.prepareDockArtReveal(restoredDockArt);
+            }
             const flipState = immediate
                 ? null
                 : this.captureFlipState(
@@ -1362,7 +1510,11 @@ class PL3GroupPanel {
                     nested: true,
                     onComplete: finish
                 });
+                if (!detailState.shouldFlipArt) {
+                    this.animateDockArtReveal(restoredDockArt, 0.3);
+                }
             } else {
+                this.resetTransientArtStyles(restoredDockArt);
                 finish();
             }
         };

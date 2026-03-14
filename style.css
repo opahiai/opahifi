@@ -48,7 +48,7 @@ body {
 
     /* Upcoming section */
     --pl3-upcoming-size: 34vw;
-    --pl3-upcoming-art-scale: 0.8;
+    --pl3-upcoming-art-scale: 1;
     --pl3-upcoming-glow-scale: 1.12;
 
     /* Viewport-based dimensions */
@@ -247,6 +247,7 @@ body {
     display: flex;
     align-items: stretch;
     min-height: 0;
+    justify-content: center;
 }
 
 .PL3-part--gallery {
@@ -1991,5 +1992,11 @@ body {
     .PL3-galleryItemBtn.PL3-galleryItemBtn--active {
         transform: perspective(1000px) rotateY(0deg) translateY(16px) scale(1.46) translateZ(44px);
         box-shadow: 0 22px 44px rgba(0, 0, 0, 0.72);
+    }
+
+    .PL3-groupPanelInner--detail .PL3-groupPanelGroupTitle {
+        font-size: 1.7rem;
+        line-height: 1.02;
+        width: 100%;
     }
 }
