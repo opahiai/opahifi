@@ -1133,7 +1133,9 @@ body {
 
 .PL3-groupPanelGroupMeta {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
     min-width: 0;
     flex: 1 1 auto;
     padding-right: calc(var(--pl3-art-share-size) + 8px);
@@ -1155,6 +1157,17 @@ body {
 
 .PL3-groupPanelGroupTitleLine {
     display: block;
+}
+
+.PL3-groupPanelGroupCount {
+    margin-top: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+    white-space: nowrap;
 }
 
 /* Art dock wrapper — provides the square container and anchors the share button */
@@ -1350,7 +1363,7 @@ body {
 
 .PL3-groupVersionName {
     min-width: 0;
-    font-size: 0.88rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1.2;
     color: #fff;
@@ -1696,6 +1709,10 @@ body {
     padding-top: 2px;
 }
 
+.PL3-groupPanelInner--detail .PL3-groupPanelGroupCount {
+    display: none;
+}
+
 .PL3-groupPanelInner--detail .PL3-groupPanelGroupTitle {
     font-size: 1.4rem;
     line-height: 1.02;
@@ -1920,9 +1937,10 @@ body {
         --pl3-panel-art-dock-size: 148px;
         --pl3-version-art-size: 58px;
         --pl3-version-platform-size: 23px;
-        --pl3-version-platform-icon-size: 13px;
+        --pl3-version-platform-icon-size: 17px;
         --pl3-version-detail-platform-size: 28px;
-        --pl3-version-detail-platform-icon-size: 16px;
+        --pl3-version-detail-platform-icon-size: 20px;
+        --pl3-version-platform-gap: 16px;
     }
 
     .PL3-card {

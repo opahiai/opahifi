@@ -333,6 +333,7 @@ class PL3DomRegistry {
         this.groupPanel = section.querySelector('#PL3-group-panel');
         this.groupPanelArtDock = section.querySelector('[data-pl3-group-art-dock]');
         this.groupPanelTitle = section.querySelector('[data-pl3-group-title]');
+        this.groupPanelCount = section.querySelector('[data-pl3-group-count]');
         this.groupPanelVersions = section.querySelector('[data-pl3-group-versions]');
         this.groupPanelCloseBtn = section.querySelector('[data-pl3-group-close]');
         this.streamingBtns = Array.from(document.querySelectorAll('[data-pl3-streaming-popup]'));
@@ -637,6 +638,45 @@ class PL3GroupPanel {
         return String(song?.version || '').trim();
     }
 
+    normalizeShareToken(value) {
+        return String(value || '')
+            .trim()
+            .toLowerCase()
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/&/g, ' and ')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    getSongShareToken(song) {
+        return this.normalizeShareToken(this.getVersionLabel(song) || song?.id || '');
+    }
+
+    findSongIdByShareToken(groupKey, token) {
+        const normalizedToken = this.normalizeShareToken(token);
+        if (!groupKey || !normalizedToken) return '';
+
+        for (const songId of this.getGroupSongIds(groupKey)) {
+            const song = this.singlesById[songId];
+            if (!song) continue;
+
+            const candidates = [
+                song.id,
+                this.getSongShareToken(song),
+                this.getVersionLabel(song),
+                song.version,
+                song.title
+            ];
+
+            if (candidates.some((candidate) => this.normalizeShareToken(candidate) === normalizedToken)) {
+                return songId;
+            }
+        }
+
+        return '';
+    }
+
     init() {
         if (!this.dom.groupPanel) return;
         if (this.dom.groupPanelCloseBtn) {
@@ -680,13 +720,19 @@ class PL3GroupPanel {
             this.shareGroup();
             return;
         }
+        if (!song.groupKey) {
+            this.shareGroup();
+            return;
+        }
 
         const group = this.groupsByKey[song.groupKey];
         const versionKind = this.getVersionKind(song);
         const versionLabel = this.getVersionLabel(song);
         const shareTitle = `${song.title}${versionKind !== this.VERSION_KIND.MAIN && versionLabel ? ` (${versionLabel})` : ''}`;
-        const primaryLink = this.pickPrimaryLink(song.links || {});
-        const url = primaryLink?.url || `${location.origin}/s/${encodeURIComponent(song.groupKey)}?song=${encodeURIComponent(song.id)}`;
+        const versionToken = this.getSongShareToken(song);
+        const url = versionToken
+            ? `${location.origin}/s/${encodeURIComponent(song.groupKey)}/${encodeURIComponent(versionToken)}`
+            : `${location.origin}/s/${encodeURIComponent(song.groupKey)}`;
         const text = group?.title && shareTitle !== group.title
             ? `Listen to ${shareTitle} from ${group.title} by OpaHiFi`
             : `Listen to ${shareTitle} by OpaHiFi`;
@@ -774,8 +820,8 @@ class PL3GroupPanel {
         return this.getGroupSongIds(groupKey).length === 1;
     }
 
-    queueSingleVersionOpen(groupKey) {
-        const [songId] = this.getGroupSongIds(groupKey);
+    queueVersionOpen(songId, options = {}) {
+        const { groupKey = this.activeGroupKey, hasBackNav = true } = options;
         if (!songId) return;
 
         requestAnimationFrame(() => {
@@ -783,12 +829,20 @@ class PL3GroupPanel {
                 if (this.activeGroupKey !== groupKey || this._panelState !== this.PANEL_STATE.GROUP) return;
                 const row = this.dom.groupPanelVersions?.querySelector(`[data-pl3-song-id="${songId}"]`);
                 if (!row) return;
-                this.openVersionDetail(row, songId, { hasBackNav: false });
+                this.openVersionDetail(row, songId, { hasBackNav });
             });
         });
     }
 
-    openFromTrigger(triggerBtn, groupKey) {
+    queueSingleVersionOpen(groupKey) {
+        const [songId] = this.getGroupSongIds(groupKey);
+        if (!songId) return;
+
+        this.queueVersionOpen(songId, { groupKey, hasBackNav: false });
+    }
+
+    openFromTrigger(triggerBtn, groupKey, options = {}) {
+        const { skipAutoOpen = false } = options;
         if (!this.dom.groupPanel || !this.dom.groupPanelArtDock) return;
         const key = String(groupKey || '').trim();
         if (!key) return;
@@ -810,9 +864,31 @@ class PL3GroupPanel {
         this.moveSourceArtToPanel(sourceBtn, key);
         this.openPanelShell();
 
-        if (this.shouldAutoOpenSingleVersion(key)) {
+        if (!skipAutoOpen && this.shouldAutoOpenSingleVersion(key)) {
             this.queueSingleVersionOpen(key);
         }
+    }
+
+    openFromShareRoute(groupKey, songToken = '') {
+        const key = String(groupKey || '').trim();
+        if (!key) return false;
+
+        const sourceBtn = this.dom.galleryBtns.find((btn) => btn.getAttribute('data-pl3-group') === key)
+            || this.dom.section.querySelector(`.PL3-upcomingArtWrap[data-pl3-group="${key}"]`)
+            || this.dom.section.querySelector(`.PL3-galleryItemBtn[data-pl3-group="${key}"]`);
+        if (!sourceBtn) return false;
+
+        const songId = songToken ? this.findSongIdByShareToken(key, songToken) : '';
+        this.openFromTrigger(sourceBtn, key, { skipAutoOpen: !!songId });
+
+        if (songId) {
+            this.queueVersionOpen(songId, {
+                groupKey: key,
+                hasBackNav: this.getGroupSongIds(key).length > 1
+            });
+        }
+
+        return true;
     }
 
     close() {
@@ -1010,6 +1086,7 @@ class PL3GroupPanel {
         if (!this.dom.groupPanelTitle) return;
         const group = this.groupsByKey[groupKey];
         const titleEl = this.dom.groupPanelTitle;
+        const countEl = this.dom.groupPanelCount;
         titleEl.replaceChildren();
 
         const lines = Array.isArray(group?.titleLines) && group.titleLines.length
@@ -1018,6 +1095,7 @@ class PL3GroupPanel {
 
         if (!lines.length) {
             titleEl.removeAttribute('aria-label');
+            if (countEl) countEl.textContent = '';
             return;
         }
 
@@ -1028,6 +1106,13 @@ class PL3GroupPanel {
             line.textContent = lineText;
             titleEl.appendChild(line);
         });
+
+        if (countEl) {
+            const versionCount = Array.isArray(group?.songIds) ? group.songIds.length : 0;
+            countEl.textContent = versionCount > 0
+                ? `(${versionCount} version${versionCount === 1 ? '' : 's'})`
+                : '';
+        }
     }
 
     pickPrimaryLink(links) {
@@ -1743,6 +1828,27 @@ class PL3Controller {
         this.init();
     }
 
+    getInitialShareRoute() {
+        const url = new URL(window.location.href);
+        const groupKey = String(url.searchParams.get('pl3') || '').trim();
+        const songToken = String(
+            url.searchParams.get('pl3s')
+            || url.searchParams.get('song')
+            || ''
+        ).trim();
+
+        return { groupKey, songToken };
+    }
+
+    openInitialShareRoute() {
+        const { groupKey, songToken } = this.getInitialShareRoute();
+        if (!groupKey) return;
+
+        requestAnimationFrame(() => {
+            this.groupPanelSection.openFromShareRoute(groupKey, songToken);
+        });
+    }
+
     init() {
         if (!this.section) return;
         this.headerSection.init();
@@ -1750,6 +1856,7 @@ class PL3Controller {
         this.highlightSection.init();
         this.groupPanelSection.init();
         this.gallerySection.init();
+        this.openInitialShareRoute();
     }
 
     lockScroll() { this.scrollLock.lock(); }
