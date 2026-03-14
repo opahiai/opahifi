@@ -940,7 +940,25 @@ class PL3GroupPanel {
     renderGroupHeader(groupKey) {
         if (!this.dom.groupPanelTitle) return;
         const group = this.groupsByKey[groupKey];
-        this.dom.groupPanelTitle.textContent = group?.title || '';
+        const titleEl = this.dom.groupPanelTitle;
+        titleEl.replaceChildren();
+
+        const lines = Array.isArray(group?.titleLines) && group.titleLines.length
+            ? group.titleLines.slice(0, 2)
+            : (group?.title ? [group.title] : []);
+
+        if (!lines.length) {
+            titleEl.removeAttribute('aria-label');
+            return;
+        }
+
+        titleEl.setAttribute('aria-label', group?.title || lines.join(' '));
+        lines.forEach((lineText) => {
+            const line = document.createElement('span');
+            line.className = 'PL3-groupPanelGroupTitleLine';
+            line.textContent = lineText;
+            titleEl.appendChild(line);
+        });
     }
 
     pickPrimaryLink(links) {
@@ -1044,8 +1062,12 @@ class PL3GroupPanel {
         stage.setAttribute('aria-label', 'Lyrics');
 
         const detailBody = row.querySelector('.PL3-groupVersionBody');
+        const versionName = row.querySelector('.PL3-groupVersionName');
+        const versionTray = row.querySelector('.PL3-groupVersionTray');
         const infoBtn = row.querySelector('.PL3-groupVersionInfoBtn');
         const versionArt = row.querySelector('.PL3-groupVersionArt');
+        const groupMeta = this.dom.groupPanel?.querySelector('.PL3-groupPanelGroupMeta') || null;
+        const groupTitle = this.dom.groupPanel?.querySelector('.PL3-groupPanelGroupTitle') || null;
         const detailControls = document.createElement('div');
         detailControls.className = 'PL3-groupPanelSongDetailControls';
 
@@ -1065,9 +1087,21 @@ class PL3GroupPanel {
             detail,
             stage,
             detailBody,
+            versionName,
+            versionTray,
+            groupMeta,
+            groupTitle,
             infoBtn,
             versionArt,
-            flipState: this.captureFlipState(versionArt, detailBody, infoBtn)
+            flipState: this.captureFlipState(
+                versionArt,
+                detailBody,
+                versionName,
+                versionTray,
+                groupMeta,
+                groupTitle,
+                infoBtn
+            )
         };
     }
 
@@ -1078,14 +1112,17 @@ class PL3GroupPanel {
     }
 
     mountDetailDom(detailParts, panelInner) {
-        const { detail, stage, detailBody, versionArt, flipState } = detailParts;
-        const groupMeta = this.dom.groupPanel.querySelector('.PL3-groupPanelGroupMeta');
+        const { detail, stage, detailBody, versionArt, versionName, versionTray, groupMeta, groupTitle, flipState } = detailParts;
         (groupMeta ?? this.dom.groupPanelVersions.parentElement).appendChild(detail);
         this.dom.groupPanelVersions.insertAdjacentElement('afterend', stage);
 
         this._activeDetailEl = detail;
         this._activeDetailStage = stage;
         this._detailBodyElement = detailBody;
+        this._detailNameElement = versionName;
+        this._detailTrayElement = versionTray;
+        this._detailGroupMetaElement = groupMeta;
+        this._detailGroupTitleElement = groupTitle;
         this._detailInfoBtn = detailParts.infoBtn;
 
         if (this.flipReady && this.dom.groupPanelArtDock && detailBody && versionArt) {
@@ -1102,6 +1139,7 @@ class PL3GroupPanel {
                     duration: 0.5,
                     ease: 'power2.inOut',
                     absolute: true,
+                    scale: true,
                     nested: true
                 });
             }
@@ -1171,6 +1209,10 @@ class PL3GroupPanel {
             detail: this._activeDetailEl,
             stage: this._activeDetailStage,
             detailBody: this._detailBodyElement,
+            versionName: this._detailNameElement,
+            versionTray: this._detailTrayElement,
+            groupMeta: this._detailGroupMetaElement,
+            groupTitle: this._detailGroupTitleElement,
             art: this._detailArtElement,
             prevDockChildren: this._detailPrevDockChildren,
             infoBtn: this._detailInfoBtn
@@ -1227,6 +1269,10 @@ class PL3GroupPanel {
         this._activeDetailEl = null;
         this._activeDetailStage = null;
         this._detailBodyElement = null;
+        this._detailNameElement = null;
+        this._detailTrayElement = null;
+        this._detailGroupMetaElement = null;
+        this._detailGroupTitleElement = null;
         this._detailArtElement = null;
         this._detailPrevDockChildren = null;
         this._detailInfoBtn = null;
@@ -1276,7 +1322,15 @@ class PL3GroupPanel {
             if (transitionId !== this._transitionId) return;
             const flipState = immediate
                 ? null
-                : this.captureFlipState(detailState.detailBody, detailState.art, detailState.infoBtn);
+                : this.captureFlipState(
+                    detailState.detailBody,
+                    detailState.versionName,
+                    detailState.versionTray,
+                    detailState.groupMeta,
+                    detailState.groupTitle,
+                    detailState.art,
+                    detailState.infoBtn
+                );
 
             this.restoreDetailLayout(detailState, panelInner);
 
@@ -1285,6 +1339,7 @@ class PL3GroupPanel {
                     duration: 0.42,
                     ease: 'power2.inOut',
                     absolute: true,
+                    scale: true,
                     nested: true,
                     onComplete: finish
                 });
