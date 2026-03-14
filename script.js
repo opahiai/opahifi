@@ -585,6 +585,11 @@ class PL3HighlightSection {
 
 class PL3GroupPanel {
     constructor(dom) {
+        this.PANEL_STATE = Object.freeze({
+            CLOSED: 'closed',
+            GROUP: 'group',
+            SONG: 'song'
+        });
         this.dom = dom;
         this.data = window.musicDataGrouped || {};
         this.platformOrder = Array.isArray(this.data.platformOrder) ? this.data.platformOrder : [];
@@ -598,6 +603,8 @@ class PL3GroupPanel {
         this.activeGroupKey = '';
         this.activeSourceBtn = null;
         this.activeSourceImg = null;
+        this._state = this.PANEL_STATE.CLOSED;
+        this._transitionId = 0;
 
         this.flipReady = !!(
             window.gsap &&
@@ -617,7 +624,7 @@ class PL3GroupPanel {
         }
         const shareBtn = this.dom.groupPanel.querySelector('[data-pl3-group-share]');
         if (shareBtn) {
-            shareBtn.addEventListener('click', () => this.shareGroup(), { passive: true });
+            shareBtn.addEventListener('click', () => this.shareActivePanel(), { passive: true });
         }
         // Any click that lands outside the panel closes it
         this.dom.section.addEventListener('click', this.onSectionClick, { passive: true });
@@ -628,6 +635,14 @@ class PL3GroupPanel {
         window.addEventListener('keydown', this.onKeyDown, { passive: true });
     }
 
+    shareActivePanel() {
+        if (this._panelState === 'song' && this._activeDetailSongId) {
+            this.shareVersion(this._activeDetailSongId);
+            return;
+        }
+        this.shareGroup();
+    }
+
     shareGroup() {
         const key = this.activeGroupKey;
         if (!key) return;
@@ -635,6 +650,31 @@ class PL3GroupPanel {
         const group = this.groupsByKey[key];
         const title = group?.title || 'OpaHiFi';
         const text = `Listen to ${title} by OpaHiFi`;
+
+        this.sharePayload({ title, text, url });
+    }
+
+    shareVersion(songId) {
+        const song = this.singlesById[songId];
+        if (!song) {
+            this.shareGroup();
+            return;
+        }
+
+        const group = this.groupsByKey[song.groupKey];
+        const versionLabel = String(song.version || 'Original').trim();
+        const shareTitle = `${song.title}${versionLabel && versionLabel !== 'Original' ? ` (${versionLabel})` : ''}`;
+        const primaryLink = this.pickPrimaryLink(song.links || {});
+        const url = primaryLink?.url || `${location.origin}/s/${encodeURIComponent(song.groupKey)}?song=${encodeURIComponent(song.id)}`;
+        const text = group?.title && shareTitle !== group.title
+            ? `Listen to ${shareTitle} from ${group.title} by OpaHiFi`
+            : `Listen to ${shareTitle} by OpaHiFi`;
+
+        this.sharePayload({ title: shareTitle, text, url });
+    }
+
+    sharePayload({ title, text, url }) {
+        if (!url) return;
 
         if (navigator.share) {
             navigator.share({ title, text, url }).catch(() => { });
@@ -661,7 +701,7 @@ class PL3GroupPanel {
     };
 
     onSectionClick = (ev) => {
-        if (this._panelState === 'closed') return;
+        if (this._panelState === this.PANEL_STATE.CLOSED) return;
         if (ev.target.closest('#PL3-group-panel')) return;
         this.close();
     };
@@ -676,17 +716,25 @@ class PL3GroupPanel {
 
     onKeyDown = (ev) => {
         if (ev.key !== 'Escape') return;
-        if (this._panelState === 'song') { this.closeVersionDetail(); return; }
-        if (this._panelState === 'group') { this.close(); }
+        if (this._panelState === this.PANEL_STATE.SONG) { this.closeVersionDetail(); return; }
+        if (this._panelState === this.PANEL_STATE.GROUP) { this.close(); }
     };
 
     isOpen() {
-        return !!this.dom.groupPanel?.classList.contains('PL3-groupPanel--open');
+        return this._panelState !== this.PANEL_STATE.CLOSED;
     }
 
     get _panelState() {
-        if (!this.isOpen()) return 'closed';
-        return this._activeDetailRow ? 'song' : 'group';
+        return this._state;
+    }
+
+    _setPanelState(state) {
+        this._state = state;
+    }
+
+    _bumpTransition() {
+        this._transitionId += 1;
+        return this._transitionId;
     }
 
     openFromTrigger(triggerBtn, groupKey) {
@@ -698,18 +746,23 @@ class PL3GroupPanel {
         const sourceBtn = this.resolveSourceArtButton(triggerBtn, key);
         if (!sourceBtn) return;
 
-        this.renderGroup(key);
-        this.renderGroupHeader(key);
+        if (this._panelState === this.PANEL_STATE.SONG) {
+            this.closeVersionDetail({ immediate: true });
+        }
+
         if (this.activeSourceBtn && this.activeSourceBtn !== sourceBtn) {
             this.restoreSourceArt({ animate: false });
         }
+
+        this.renderGroup(key);
+        this.renderGroupHeader(key);
         this.moveSourceArtToPanel(sourceBtn, key);
         this.openPanelShell();
     }
 
     close() {
         if (!this.isOpen() && !this.activeSourceBtn) return;
-        this.closeVersionDetail();
+        this.closeVersionDetail({ immediate: true });
         this.restoreSourceArt({ animate: true });
         this.closePanelShell();
         this.activeGroupKey = '';
@@ -790,6 +843,7 @@ class PL3GroupPanel {
         if (!this.dom.groupPanel) return;
         this.dom.groupPanel.setAttribute('aria-hidden', 'false');
         this.dom.groupPanel.classList.add('PL3-groupPanel--open');
+        this._setPanelState(this.PANEL_STATE.GROUP);
     }
 
     closePanelShell() {
@@ -797,6 +851,7 @@ class PL3GroupPanel {
         this.dom.groupPanel.classList.remove('PL3-groupPanel--open');
         this.dom.groupPanel.setAttribute('aria-hidden', 'true');
         this.dom.groupPanelArtDock?.replaceChildren();
+        this._setPanelState(this.PANEL_STATE.CLOSED);
     }
 
     syncGallerySelection(groupKey) {
@@ -954,14 +1009,17 @@ class PL3GroupPanel {
     // ── Version Detail (in-panel) ──────────────────────────────────────────
 
     openVersionDetail(row, songId) {
-        if (this._activeDetailRow) return;
+        if (this._panelState !== this.PANEL_STATE.GROUP || this._activeDetailRow) return;
         const song = this.singlesById[songId];
         if (!song) return;
+
+        const transitionId = this._bumpTransition();
 
         this._activeDetailRow = row;
         this._activeDetailSongId = songId;
         this._lyricsTween = null;
         this._drumScroller = null;
+        this._setPanelState(this.PANEL_STATE.SONG);
 
         const panelInner = this.dom.groupPanel.querySelector('.PL3-groupPanelInner');
         const versionsEl = this.dom.groupPanelVersions;
@@ -1056,6 +1114,7 @@ class PL3GroupPanel {
 
         // Animate the second-row lyrics stage in after the Flip settles
         const activate = () => {
+            if (transitionId !== this._transitionId || this._panelState !== this.PANEL_STATE.SONG) return;
             if (gsap) {
                 gsap.fromTo(stage,
                     { opacity: 0, y: 18 },
@@ -1067,17 +1126,18 @@ class PL3GroupPanel {
         };
 
         const expandStage = () => {
+            if (transitionId !== this._transitionId || this._panelState !== this.PANEL_STATE.SONG) return;
             stage.classList.remove('PL3-lyricsStage--collapsed');
             if (song.lyricsPath) {
                 fetch(song.lyricsPath)
                     .then(r => r.ok ? r.text() : Promise.reject())
                     .then(text => {
-                        if (this._activeDetailStage !== stage) return;
+                        if (transitionId !== this._transitionId || this._activeDetailStage !== stage) return;
                         stage.classList.remove('PL3-lyricsStage--loading');
                         this._buildDrum(stage, text);
                     })
                     .catch(() => {
-                        if (this._activeDetailStage === stage) {
+                        if (transitionId === this._transitionId && this._activeDetailStage === stage) {
                             stage.classList.remove('PL3-lyricsStage--loading');
                         }
                     });
@@ -1093,8 +1153,11 @@ class PL3GroupPanel {
         }
     }
 
-    closeVersionDetail() {
+    closeVersionDetail(options = {}) {
+        const { immediate = false } = options;
         if (!this._activeDetailRow) return;
+
+        const transitionId = this._bumpTransition();
 
         const row = this._activeDetailRow;
         const detailBody = this._detailBodyElement;
@@ -1112,6 +1175,7 @@ class PL3GroupPanel {
         this._drumScroller = null;
 
         const finish = () => {
+            if (transitionId !== this._transitionId) return;
             detail?.remove();
             stage?.remove();
             this._activeDetailRow = null;
@@ -1122,12 +1186,14 @@ class PL3GroupPanel {
             this._detailArtElement = null;
             this._detailPrevDockChildren = null;
             this._detailInfoBtn = null;
+            this._setPanelState(this.PANEL_STATE.GROUP);
         };
 
         const runReverseFlip = () => {
+            if (transitionId !== this._transitionId) return;
             const rowInfoBtn = row?.querySelector('.PL3-groupVersionInfoBtn');
             const flipTargets = [detailBody, art, infoBtn].filter(Boolean);
-            const flipState = this.flipReady && flipTargets.length ? window.Flip.getState(flipTargets) : null;
+            const flipState = !immediate && this.flipReady && flipTargets.length ? window.Flip.getState(flipTargets) : null;
 
             panelInner?.classList.remove('PL3-groupPanelInner--detail');
 
@@ -1178,6 +1244,11 @@ class PL3GroupPanel {
                 finish();
             }
         };
+
+        if (immediate) {
+            runReverseFlip();
+            return;
+        }
 
         if (stage && gsap) {
             gsap.to(stage, {
