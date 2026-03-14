@@ -331,6 +331,7 @@ class PL3DomRegistry {
         this.galleryBtns = Array.from(section.querySelectorAll('.PL3-galleryItemBtn'));
         this.groupPanel = section.querySelector('#PL3-group-panel');
         this.groupPanelArtDock = section.querySelector('[data-pl3-group-art-dock]');
+        this.groupPanelTitle = section.querySelector('[data-pl3-group-title]');
         this.groupPanelVersions = section.querySelector('[data-pl3-group-versions]');
         this.groupPanelCloseBtn = section.querySelector('[data-pl3-group-close]');
         this.streamingBtns = Array.from(document.querySelectorAll('[data-pl3-streaming-popup]'));
@@ -698,6 +699,7 @@ class PL3GroupPanel {
         if (!sourceBtn) return;
 
         this.renderGroup(key);
+        this.renderGroupHeader(key);
         if (this.activeSourceBtn && this.activeSourceBtn !== sourceBtn) {
             this.restoreSourceArt({ animate: false });
         }
@@ -711,6 +713,7 @@ class PL3GroupPanel {
         this.restoreSourceArt({ animate: true });
         this.closePanelShell();
         this.activeGroupKey = '';
+        this.renderGroupHeader('');
         this.syncGallerySelection('');
     }
 
@@ -876,6 +879,12 @@ class PL3GroupPanel {
             empty.textContent = 'No versions yet';
             versionsWrap.appendChild(empty);
         }
+    }
+
+    renderGroupHeader(groupKey) {
+        if (!this.dom.groupPanelTitle) return;
+        const group = this.groupsByKey[groupKey];
+        this.dom.groupPanelTitle.textContent = group?.title || '';
     }
 
     pickPrimaryLink(links) {
