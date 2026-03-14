@@ -190,7 +190,7 @@
             id: SINGLE.OPA_PA_PA_PARTY,
             groupKey: GROUP.OPA_PA_PA_PARTY,
             title: 'Opa pa pa party',
-            image: 'img/music/main_oparty.png',
+            image: 'img/music/base/base-opapapaparty.png',
             lyricsPath: 'lyrics/opa-pa-pa-party.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw',
@@ -204,7 +204,7 @@
             id: SINGLE.GLITTAA,
             groupKey: GROUP.GLITTAA_PHOENIX,
             title: 'Glittaa Phoenix',
-            image: 'img/music/3_glitta.png',
+            image: 'img/music/base/base-glittaaphoenix.png',
             lyricsPath: 'lyrics/glittaa-pheonix.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17',
@@ -219,7 +219,7 @@
             groupKey: GROUP.SPLENDA_LOVE_RABBIT_HELL,
             title: 'Splenda Love Rabbit Hell',
             version: 'Opa Max Mix',
-            image: 'img/music/splenda_rabbit_max_mix.png',
+            image: 'img/music/versions/version-splendaloverabbithell-maxmix.png',
             lyricsPath: 'lyrics/splenda-love-rabbit-hell.txt',
             links: {
                 'Spotify': 'https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842',
@@ -234,7 +234,7 @@
             groupKey: GROUP.GLITTAA_PHOENIX,
             title: 'GLITTAA Phoenix',
             version: 'Opa Sunrize Max Mix',
-            image: 'img/music/glittaa_max-mix.png',
+            image: 'img/music/versions/version-glittaaphoenix-sunrisemaxmix.png',
             lyricsPath: 'lyrics/glittaa-pheonix.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP',
@@ -248,8 +248,8 @@
             id: SINGLE.BELIEVE_THE_TRUTH_FAIRY,
             groupKey: GROUP.BELIEVE_THE_TRUTH_FAIRY,
             title: 'Believe the Truth Fairy',
-            image: 'img/music/main_truthfairy.png',
-            lyricsPath: 'lyrics/beleive-the-truth-fairy.txt',
+            image: 'img/music/base/base-believethetruthfairy.png',
+            lyricsPath: 'lyrics/believe-the-truth-fairy.txt',
             links: {
                 'Apple Music': 'https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683',
                 'YouTube Music': 'https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj',
@@ -263,7 +263,7 @@
             groupKey: GROUP.FULL_MINDNESS,
             title: 'Full-Mindness',
             version: 'Opa Mayhem Mix',
-            image: 'img/music/full_mindness_mix1.png',
+            image: 'img/music/versions/version-fullmindness-mayhemmix.png',
             lyricsPath: 'lyrics/full-mindness.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z',
@@ -612,6 +612,7 @@ class PL3GroupPanel {
         this.activeSourceImg = null;
         this._state = this.PANEL_STATE.CLOSED;
         this._transitionId = 0;
+        this._closeBtnPopTimer = null;
 
         this.flipReady = !!(
             window.gsap &&
@@ -895,14 +896,29 @@ class PL3GroupPanel {
 
     openPanelShell() {
         if (!this.dom.groupPanel) return;
+        if (this._closeBtnPopTimer) {
+            clearTimeout(this._closeBtnPopTimer);
+            this._closeBtnPopTimer = null;
+        }
         this.dom.groupPanel.setAttribute('aria-hidden', 'false');
+        this.dom.groupPanel.classList.remove('PL3-groupPanel--closeReady');
         this.dom.groupPanel.classList.add('PL3-groupPanel--open');
+        this._closeBtnPopTimer = window.setTimeout(() => {
+            if (this._panelState !== this.PANEL_STATE.GROUP || !this.dom.groupPanel?.classList.contains('PL3-groupPanel--open')) return;
+            this.dom.groupPanel.classList.add('PL3-groupPanel--closeReady');
+            this._closeBtnPopTimer = null;
+        }, 540);
         this._setPanelState(this.PANEL_STATE.GROUP);
     }
 
     closePanelShell() {
         if (!this.dom.groupPanel) return;
+        if (this._closeBtnPopTimer) {
+            clearTimeout(this._closeBtnPopTimer);
+            this._closeBtnPopTimer = null;
+        }
         this.dom.groupPanel.classList.remove('PL3-groupPanel--open');
+        this.dom.groupPanel.classList.remove('PL3-groupPanel--closeReady');
         this.dom.groupPanel.setAttribute('aria-hidden', 'true');
         this.dom.groupPanelArtDock?.replaceChildren();
         this._setPanelState(this.PANEL_STATE.CLOSED);
