@@ -324,13 +324,10 @@ class PL3DomRegistry {
         this.headerPart = section.querySelector('.PL3-part--header');
         this.buttonsPart = section.querySelector('.PL3-part--buttons');
         this.highlightPart = section.querySelector('.PL3-part--highlight');
-        this.highlightTabs = Array.from(section.querySelectorAll('[data-pl3-highlight-tab]'));
-        this.highlightPanels = Array.from(section.querySelectorAll('[data-pl3-highlight-panel]'));
-        this.highlightTrack = section.querySelector('[data-pl3-highlight-track]');
         this.galleryPart = section.querySelector('.PL3-part--gallery');
         this.btnRow = section.querySelector('.PL3-btnRow');
         this.heroBtns = Array.from(section.querySelectorAll('.PL3-heroBtn'));
-        this.previewBtns = Array.from(section.querySelectorAll('[data-pl3-preview]'));
+        this.previewBtn = section.querySelector('[data-pl3-preview]');
         this.gallery = section.querySelector('.PL3-gallery');
         this.galleryBtns = Array.from(section.querySelectorAll('.PL3-galleryItemBtn'));
         this.playlistPillToggle = section.querySelector('[data-pl3-playlist-toggle]');
@@ -486,87 +483,19 @@ class PL3HighlightSection {
         this.unlockScroll = callbacks.unlockScroll || (() => { });
         this.previewVideoId = '';
         this.previewMuted = false;
-        this.tabOrder = ['latest-release', 'videos', 'about'];
-        this.activeTab = this.tabOrder[0];
     }
 
     init() {
         if (!this.dom.highlightPart) return;
-        this.attachTabEvents();
-        this.syncHighlightTabs();
         this.attachPreviewEvents();
-    }
-
-    attachTabEvents() {
-        this.dom.highlightPart.addEventListener('click', (ev) => {
-            const tab = ev.target.closest('[data-pl3-highlight-tab]');
-            if (!tab || !this.dom.highlightPart.contains(tab)) return;
-            ev.preventDefault();
-            this.setActiveTab(tab.getAttribute('data-pl3-highlight-tab') || this.tabOrder[0], { focus: false });
-        }, { passive: false });
-
-        this.dom.highlightPart.addEventListener('keydown', (ev) => {
-            const tab = ev.target.closest('[data-pl3-highlight-tab]');
-            if (!tab) return;
-
-            const currentIndex = this.tabOrder.indexOf(tab.getAttribute('data-pl3-highlight-tab') || '');
-            if (currentIndex === -1) return;
-
-            let nextIndex = currentIndex;
-            if (ev.key === 'ArrowRight') nextIndex = (currentIndex + 1) % this.tabOrder.length;
-            if (ev.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + this.tabOrder.length) % this.tabOrder.length;
-            if (ev.key === 'Home') nextIndex = 0;
-            if (ev.key === 'End') nextIndex = this.tabOrder.length - 1;
-            if (nextIndex === currentIndex && !['Home', 'End'].includes(ev.key)) return;
-
-            ev.preventDefault();
-            this.setActiveTab(this.tabOrder[nextIndex], { focus: true });
-        });
-    }
-
-    setActiveTab(tabName, options = {}) {
-        const nextTab = this.tabOrder.includes(tabName) ? tabName : this.tabOrder[0];
-        this.activeTab = nextTab;
-        this.syncHighlightTabs();
-
-        if (options.focus) {
-            const activeBtn = this.dom.highlightTabs.find((tab) => tab.getAttribute('data-pl3-highlight-tab') === nextTab);
-            activeBtn?.focus();
-        }
-    }
-
-    syncHighlightTabs() {
-        const activeIndex = Math.max(0, this.tabOrder.indexOf(this.activeTab));
-        if (this.dom.highlightTrack) {
-            this.dom.highlightTrack.style.setProperty('--pl3-highlight-index', String(activeIndex));
-        }
-
-        this.dom.highlightTabs.forEach((tab) => {
-            const isActive = tab.getAttribute('data-pl3-highlight-tab') === this.activeTab;
-            tab.classList.toggle('is-active', isActive);
-            tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-            tab.tabIndex = isActive ? 0 : -1;
-        });
-
-        this.dom.highlightPanels.forEach((panel) => {
-            const isActive = panel.getAttribute('data-pl3-highlight-panel') === this.activeTab;
-            panel.classList.toggle('is-active', isActive);
-            panel.setAttribute('aria-hidden', isActive ? 'false' : 'true');
-        });
     }
 
     // === Preview (embedded YouTube) ===
     attachPreviewEvents() {
-        if (this.dom.highlightPart) {
-            this.dom.highlightPart.addEventListener('click', (ev) => {
-                const trigger = ev.target.closest('[data-pl3-preview]');
-                if (!trigger || !this.dom.highlightPart.contains(trigger)) return;
+        if (this.dom.previewBtn) {
+            this.dom.previewBtn.addEventListener('click', (ev) => {
                 ev.preventDefault();
-                this.openPreviewModal(
-                    trigger.getAttribute('data-pl3-preview-src')
-                    || trigger.getAttribute('href')
-                    || 'https://www.youtube.com/embed/videoseries?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF'
-                );
+                this.openPreviewModal('https://www.youtube.com/embed/videoseries?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF');
             }, { passive: false });
         }
 
@@ -624,14 +553,6 @@ class PL3HighlightSection {
             const url = new URL(id);
             const playlistId = url.searchParams.get('list');
             src = `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&modestbranding=1&controls=1`;
-        } else if (id.includes('youtu.be/') || id.includes('youtube.com/watch') || id.includes('youtube.com/shorts/')) {
-            const url = new URL(id);
-            const shortMatch = url.pathname.match(/\/shorts\/([^/?#]+)/);
-            const videoId = url.hostname.includes('youtu.be')
-                ? url.pathname.replace(/^\//, '').split('/')[0]
-                : (url.searchParams.get('v') || shortMatch?.[1] || '');
-            const mute = this.previewMuted ? 1 : 0;
-            src = `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
         } else {
             const mute = this.previewMuted ? 1 : 0;
             src = `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&mute=${mute}&playsinline=1&rel=0&controls=1&modestbranding=1`;
