@@ -474,6 +474,8 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--pl3-gallery-pill-gap);
+    position: relative;
+    overflow: visible;
 }
 
 .PL3-subTitle {
@@ -486,6 +488,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    position: relative;
+    flex: 0 0 auto;
+    width: min(72vw, 120px);
+    overflow: visible;
+    height: 28px;
 }
 
 .PL3-playlistPill {
@@ -493,8 +500,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0px;
-    width: min(72vw, 120px);
-    padding: 8px 14px;
+    width: 100%;
+    padding: 4px 14px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.25);
@@ -521,8 +528,15 @@ body {
 }
 
 .PL3-playlistPill.PL3-playlistPill--expanded {
-    width: min(92vw, 420px);
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 160px;
+    transform: translateY(-50%);
     justify-content: flex-start;
+    z-index: 8;
+    height: 28px;
+    overflow: visible;
 }
 
 .PL3-playlistPillLabel {
@@ -564,18 +578,35 @@ body {
     display: none;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 7px;
     width: 100%;
+    position: relative;
 }
 
 .PL3-playlistPill.PL3-playlistPill--expanded .PL3-playlistPillIcons {
     display: inline-flex;
 }
 
+.PL3-playlistPill.PL3-playlistPill--expanded:hover {
+    transform: translateY(calc(-50% - 1px));
+}
+
 .PL3-playlistPillPrefix {
-    color: #4a1d2f;
-    font-size: 0.76rem;
-    font-weight: 900;
+    position: absolute;
+    left: 5px;
+    top: -20px;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    /* border: 1px solid rgba(214, 177, 255, 0.28); */
+    /* background: linear-gradient(180deg, rgba(58, 20, 93, 0.98), rgba(26, 10, 48, 0.98)); */
+    box-shadow: 0 8px 16px rgba(10, 4, 24, 0.32);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     white-space: nowrap;
 }
 
@@ -583,8 +614,8 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 25px;
+    height: 25px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.94);
     border: 1px solid rgba(255, 255, 255, 0.88);
@@ -600,10 +631,10 @@ body {
 }
 
 .PL3-playlistPill .PL3-heroBtn-close {
-    margin-left: 10px;
-    padding-left: 10px;
+    margin-left: 5px;
+    padding-left: 5px;
     border-left-color: rgba(74, 29, 47, 0.18);
-    color: rgba(74, 29, 47, 0.82);
+    color: rgba(255, 255, 255, 0.94);
 }
 
 .PL3-playlistPillIcon {
@@ -789,9 +820,8 @@ body {
 /* Social only: keep icons centered + nicely spaced (don't shove left) */
 .PL3-heroBtn[data-pl3-action="follow"].PL3-heroBtn--expanded .PL3-heroBtn-icons {
     justify-content: center;
-    gap: 35px;
-    flex-wrap: wrap;
-    row-gap: 10px;
+    gap: 5px;
+
 }
 
 .PL3-heroBtn--expanded .PL3-heroBtn-icons {
@@ -1438,8 +1468,13 @@ body {
     width: auto;
 }
 
+/* Collapse inter-pill gaps when one is expanded so pill fills full row */
+.PL3-navInner .PL3-btnRow:has(.PL3-heroBtn--expanded) {
+    gap: 0;
+}
+
 .PL3-navInner .PL3-heroBtn {
-    height: 28px;
+    height: var(--pl3-nav-pill-h);
     border-radius: 999px;
     font-size: clamp(10px, 2.6vw, 12px);
     padding: 0 11px;
@@ -1448,9 +1483,9 @@ body {
 }
 
 .PL3-navInner .PL3-heroBtn.PL3-heroBtn--expanded {
-    flex: 4 1 auto;
+    flex: 1 1 auto;
     min-width: 0;
-    max-width: 72%;
+    padding: 0;
 }
 
 /* ===== Group Top Panel ===== */

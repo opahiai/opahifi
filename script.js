@@ -417,8 +417,6 @@ class PL3ButtonsSection {
     expandButton(btn) {
         this.collapseAllButtons();
         btn.classList.add('PL3-heroBtn--expanded');
-        const icons = btn.querySelector('.PL3-heroBtn-icons');
-        if (icons) icons.hidden = false;
         this.dom.heroBtns.forEach((b) => {
             if (b !== btn) b.classList.add('PL3-heroBtn--collapsed');
         });
@@ -428,8 +426,6 @@ class PL3ButtonsSection {
     collapseAllButtons() {
         this.dom.heroBtns.forEach((b) => {
             b.classList.remove('PL3-heroBtn--expanded', 'PL3-heroBtn--collapsed');
-            const icons = b.querySelector('.PL3-heroBtn-icons');
-            if (icons) icons.hidden = true;
         });
         this.expandedBtn = null;
     }
@@ -1181,10 +1177,10 @@ class PL3GroupPanel {
 
     createPlatformIcon(platform) {
         const iconUrlByPlatform = {
-            'Spotify': 'https://cdn.simpleicons.org/spotify/FFFFFF',
-            'Apple Music': 'https://cdn.simpleicons.org/apple/FFFFFF',
-            'YouTube Music': 'https://cdn.simpleicons.org/youtubemusic/FFFFFF',
-            'Other': 'https://cdn.simpleicons.org/youtube/FFFFFF'
+            'Spotify': 'img/ico/spotify-white.svg',
+            'Apple Music': 'img/ico/apple-white.svg',
+            'YouTube Music': 'img/ico/youtubemusic-white.svg',
+            'Other': 'img/ico/youtube-white.svg'
         };
 
         if (iconUrlByPlatform[platform]) {
