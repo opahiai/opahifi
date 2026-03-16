@@ -51,6 +51,9 @@ body {
     --pl3-upcoming-art-scale: 0.8;
     --pl3-upcoming-glow-scale: 1.12;
 
+    /* Grid section gap */
+    --pl3-split-gap: 3.5vh;
+
     /* Viewport-based dimensions */
     --pl3-viewport-h: 100vh;
     --pl3-preview-top-offset: 18vh;
@@ -58,7 +61,7 @@ body {
     --pl3-modal-top-offset: 0px;
     --pl3-modal-max-h: 75vh;
     --pl3-viewport-bottom-space: 0px;
-    --pl3-gallery-visible-h: calc(var(--pl3-viewport-h) * (var(--pl3-section-gallery) / 100));
+    --pl3-gallery-visible-h: calc(var(--pl3-viewport-h) * (var(--pl3-section-gallery) / 100) + var(--pl3-split-gap));
     --pl3-viewport-h-buffer: calc(var(--pl3-viewport-h) - 5vh);
     --pl3-group-card-h: calc(var(--pl3-viewport-h-buffer) - var(--pl3-gallery-visible-h));
     --pl3-group-modal-bottom-gap: calc(var(--pl3-gallery-visible-h) + var(--pl3-viewport-bottom-space) + 14vh);
@@ -75,6 +78,7 @@ body {
     /* ── Panel outer / inner padding ── */
     --pl3-panel-pad-x: 0px;
     --pl3-panel-pad-bottom: 5px;
+    --pl3-panel-inner-pad-top: clamp(12px, calc(8px + 1.2vw), 16px);
     --pl3-panel-inner-pad-x: clamp(4px, calc(2px + 0.9vw), 5px);
     --pl3-panel-inner-pad-y: clamp(8px, calc(5px + 1.4vw), 10px);
     --pl3-panel-inner-pad-bottom: calc(var(--pl3-panel-close-h) / 2 + 4px);
@@ -214,7 +218,7 @@ body {
     flex: 1 1 auto;
     min-height: 0;
     display: grid;
-    gap: 3.5%;
+    gap: var(--pl3-split-gap);
     grid-template-rows:
         minmax(0, var(--pl3-section-header-pct)) minmax(0, var(--pl3-section-highlight-pct)) minmax(0, var(--pl3-section-gallery-pct));
 }
@@ -369,6 +373,94 @@ body {
 .PL3-tabPlaceholder i {
     font-size: 1.5rem;
     opacity: 0.45;
+}
+
+/* ===== Video tab grid ===== */
+
+.PL3-videoGrid {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.PL3-videoCard {
+    flex: 1 1 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    padding: 8px 4px;
+    box-sizing: border-box;
+}
+
+.PL3-videoCard+.PL3-videoCard {
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.PL3-videoThumb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+.PL3-videoCard::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(6, 9, 28, 0.78) 0%, rgba(6, 9, 28, 0) 45%, rgba(6, 9, 28, 0.6) 100%);
+    pointer-events: none;
+}
+
+.PL3-videoTitle {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(0.65rem, 2.8vw, 0.88rem);
+    font-weight: 900;
+    line-height: 1.1;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+    margin-top: 4px;
+}
+
+.PL3-videoWatchBtn {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.PL3-videoWatchBtn i {
+    font-size: 9px;
+}
+
+.PL3-videoWatchBtn:hover {
+    background: rgba(0, 0, 0, 0.55);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
 }
 
 .PL3-part--gallery {
@@ -1400,7 +1492,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--pl3-panel-inner-gap);
-    padding: var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
+    padding: var(--pl3-panel-inner-pad-top) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
     transition: background 0.34s ease, box-shadow 0.34s ease, border-color 0.34s ease;
     isolation: isolate;
 }
