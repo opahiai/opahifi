@@ -258,20 +258,24 @@ body {
     min-height: 0;
 }
 
+.PL3-galleryHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--pl3-gallery-pill-gap);
+}
+
 .PL3-subTitle {
-    text-align: center;
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.72rem;
     font-weight: 800;
-    margin-bottom: var(--pl3-gallery-title-gap);
 }
 
 .PL3-playlistPillWrap {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     height: 34px;
-    margin: 0 0 var(--pl3-gallery-pill-gap);
 }
 
 .PL3-playlistPill {
@@ -2126,7 +2130,6 @@ body {
 
     .PL3-subTitle {
         font-size: 2rem;
-        margin-bottom: var(--pl3-gap-sm);
     }
 
     .PL3-heroImgWrap {
