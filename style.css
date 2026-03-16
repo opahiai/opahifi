@@ -32,9 +32,9 @@ body {
     --pl3-gap-sm: 6px;
 
     /* 4-screen section split (unitless numbers out of 100). These should sum to 100. */
-    --pl3-section-header: 24;
-    --pl3-section-buttons: 10;
-    --pl3-section-highlight: 29;
+    --pl3-section-header: 20;
+    --pl3-section-buttons: 7;
+    --pl3-section-highlight: 26;
     --pl3-section-gallery: 37;
 
     /* Derived percentages for grid usage */
@@ -50,7 +50,7 @@ body {
 
     /* Upcoming section */
     --pl3-upcoming-size: 34vw;
-    --pl3-upcoming-art-scale: 1;
+    --pl3-upcoming-art-scale: 0.8;
     --pl3-upcoming-glow-scale: 1.12;
 
     /* Viewport-based dimensions */
@@ -236,6 +236,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 0;
+    padding: 0;
 }
 
 .PL3-part--buttons {
@@ -283,7 +284,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    width: min(72vw, 230px);
+    width: min(72vw, 150px);
     height: 34px;
     padding: 0 14px;
     border: 1px solid rgba(255, 255, 255, 0.82);
@@ -396,6 +397,7 @@ body {
 }
 
 .PL3-heroRow {
+    position: relative;
     display: flex;
     gap: var(--pl3-gap-md);
     align-items: center;
@@ -405,6 +407,10 @@ body {
     max-height: 100%;
     min-height: 0;
     overflow: hidden;
+    border-radius: var(--pl3-tile-radius);
+    background:
+        linear-gradient(180deg, rgba(5, 7, 17, 0.28), rgba(5, 7, 17, 0.62)),
+        url("img/opa/cover.png") center / cover no-repeat;
 }
 
 .PL3-heroImgWrap {
@@ -428,6 +434,8 @@ body {
 }
 
 .PL3-heroText {
+    position: relative;
+    z-index: 1;
     flex: 0 0 auto;
     height: auto;
     min-width: 0;
@@ -437,6 +445,7 @@ body {
     gap: 4px;
     justify-content: center;
     text-align: center;
+    margin-left: 50%;
 }
 
 .PL3-heroTitle {
@@ -449,8 +458,8 @@ body {
 
 .PL3-heroSlogan {
     color: #fff;
-    font-size: 0.8rem;
-    font-weight: 200;
+    font-size: 1rem;
+    font-weight: 300;
     line-height: 1.02;
     margin-top: 4px;
 }
@@ -467,7 +476,7 @@ body {
 }
 
 .PL3-heroBtn {
-    height: clamp(32px, 7.2vw, 38px);
+    height: clamp(22px, 7.2vw, 30px);
     border-radius: var(--pl3-tile-radius);
     border: none;
     color: #fff;
@@ -684,7 +693,7 @@ body {
 
 .PL3-upcomingDesc {
     color: #fff;
-    font-size: clamp(2.06rem, 13.3vw, 2.45rem);
+    font-size: clamp(1.7rem, 13.3vw, 2.25rem);
     font-weight: 900;
     line-height: 0.9;
     overflow-wrap: anywhere;
