@@ -29,7 +29,7 @@
             <div class="PL3-card">
                 <nav class="PL3-nav" aria-label="OpaHiFi navigation">
                     <div class="PL3-navInner">
-                        <span class="PL3-navBrand">OpaHiFi</span>
+                        <div class="PL3-heroTitle">OpaHiFi</div>
                     </div>
                 </nav>
                 <div class="PL3-split">
@@ -37,7 +37,7 @@
                     <div class="PL3-part PL3-part--header" aria-label="Header">
                         <div class="PL3-heroRow" aria-label="Hero">
                             <div class="PL3-heroText" aria-label="Title and slogan">
-                                <div class="PL3-heroTitle">OpaHiFi</div>
+
                                 <div class="PL3-heroSlogan">Authentic sound for when <br> the world gets too loud.
                                 </div>
                             </div>
@@ -116,26 +116,65 @@
 
                     <!-- 3) Highlight -->
                     <div class="PL3-part PL3-part--highlight" aria-label="Highlight">
-                        <div class="PL3-upcoming" aria-label="Upcoming single">
-                            <!-- Left: Image -->
-                            <button class="PL3-upcomingArtWrap" type="button" aria-label="Open Full-Mindness"
-                                data-pl3-group="full-mindness">
-                                <img class="PL3-upcomingArt" src="img/music/base/base-fullmindness.png"
-                                    alt="Upcoming single cover" loading="lazy"
-                                    onerror="this.src='img/music/opahifi_album.png'">
-                            </button>
+                        <div class="PL3-tabs" data-pl3-tabs>
 
-                            <!-- Right: Drop Message and Buttons -->
-                            <div class="PL3-upcomingRight">
-                                <div class="PL3-upcomingDesc">Latest<br>Release</div>
-                                <div class="PL3-upcomingButtons" aria-label="Release actions">
-                                    <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
-                                        data-pl3-group="full-mindness" aria-label="Open Full-Mindness">
-                                        <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                        <span>Listen</span>
-                                    </button>
+                            <!-- Left: Tab navigation -->
+                            <div class="PL3-tabNav" role="tablist" aria-label="Content sections">
+                                <button class="PL3-tabBtn" role="tab" aria-selected="true"
+                                    aria-controls="PL3-tabPanel-release" data-pl3-tab="release">
+                                    <span class="PL3-tabLabel">Focus</span>
+                                </button>
+                                <button class="PL3-tabBtn" role="tab" aria-selected="false"
+                                    aria-controls="PL3-tabPanel-videos" data-pl3-tab="videos">
+                                    <span class="PL3-tabLabel">Videos</span>
+                                </button>
+                                <button class="PL3-tabBtn" role="tab" aria-selected="false"
+                                    aria-controls="PL3-tabPanel-about" data-pl3-tab="about">
+                                    <span class="PL3-tabLabel">About</span>
+                                </button>
+                            </div>
+
+                            <!-- Right: Tab panels -->
+                            <div class="PL3-tabPanels">
+                                <div class="PL3-tabPanel" id="PL3-tabPanel-release" role="tabpanel"
+                                    aria-label="Latest Release">
+                                    <div class="PL3-upcoming" aria-label="Upcoming single">
+                                        <!-- Left: Image -->
+                                        <button class="PL3-upcomingArtWrap" type="button"
+                                            aria-label="Open Full-Mindness" data-pl3-group="full-mindness">
+                                            <img class="PL3-upcomingArt" src="img/music/base/base-fullmindness.png"
+                                                alt="Upcoming single cover" loading="lazy"
+                                                onerror="this.src='img/music/opahifi_album.png'">
+                                        </button>
+                                        <!-- Right: Drop Message and Buttons -->
+                                        <div class="PL3-upcomingRight">
+                                            <div class="PL3-upcomingDesc">Latest<br>Release</div>
+                                            <div class="PL3-upcomingButtons" aria-label="Release actions">
+                                                <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
+                                                    data-pl3-group="full-mindness" aria-label="Open Full-Mindness">
+                                                    <i class="fa-solid fa-play" aria-hidden="true"></i>
+                                                    <span>Listen</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="PL3-tabPanel" id="PL3-tabPanel-videos" role="tabpanel" aria-label="Videos"
+                                    hidden>
+                                    <div class="PL3-tabPlaceholder">
+                                        <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                                        <span>Videos coming soon</span>
+                                    </div>
+                                </div>
+                                <div class="PL3-tabPanel" id="PL3-tabPanel-about" role="tabpanel" aria-label="About"
+                                    hidden>
+                                    <div class="PL3-tabPlaceholder">
+                                        <i class="fa-solid fa-music" aria-hidden="true"></i>
+                                        <span>About OpaHiFi</span>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 

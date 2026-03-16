@@ -487,7 +487,32 @@ class PL3HighlightSection {
 
     init() {
         if (!this.dom.highlightPart) return;
+        this.attachTabEvents();
         this.attachPreviewEvents();
+    }
+
+    // === Tabs ===
+    attachTabEvents() {
+        const container = this.dom.highlightPart.querySelector('[data-pl3-tabs]');
+        if (!container) return;
+        const btns = Array.from(container.querySelectorAll('[role="tab"]'));
+        const panels = Array.from(container.querySelectorAll('[role="tabpanel"]'));
+        if (!btns.length) return;
+
+        const activate = (btn) => {
+            btns.forEach(b => b.setAttribute('aria-selected', b === btn ? 'true' : 'false'));
+            panels.forEach(p => { p.hidden = p.id !== btn.getAttribute('aria-controls'); });
+        };
+
+        btns.forEach((btn, i) => {
+            btn.addEventListener('click', () => activate(btn));
+            btn.addEventListener('keydown', (ev) => {
+                let next = -1;
+                if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') next = (i - 1 + btns.length) % btns.length;
+                if (ev.key === 'ArrowDown' || ev.key === 'ArrowRight') next = (i + 1) % btns.length;
+                if (next >= 0) { btns[next].focus(); activate(btns[next]); }
+            });
+        });
     }
 
     // === Preview (embedded YouTube) ===
