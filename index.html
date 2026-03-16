@@ -116,24 +116,110 @@
 
                     <!-- 3) Highlight -->
                     <div class="PL3-part PL3-part--highlight" aria-label="Highlight">
-                        <div class="PL3-upcoming" aria-label="Upcoming single">
-                            <!-- Left: Image -->
-                            <button class="PL3-upcomingArtWrap" type="button" aria-label="Open Full-Mindness"
-                                data-pl3-group="full-mindness">
-                                <img class="PL3-upcomingArt" src="img/music/base/base-fullmindness.png"
-                                    alt="Upcoming single cover" loading="lazy"
-                                    onerror="this.src='img/music/opahifi_album.png'">
-                            </button>
+                        <div class="PL3-highlightTabs" aria-label="Highlight carousel">
+                            <div class="PL3-highlightTabList" role="tablist" aria-label="Highlight tabs">
+                                <button class="PL3-highlightTab is-active" type="button" role="tab"
+                                    id="PL3-highlight-tab-latest" aria-selected="true"
+                                    aria-controls="PL3-highlight-panel-latest" data-pl3-highlight-tab="latest-release">
+                                    Latest Release
+                                </button>
+                                <button class="PL3-highlightTab" type="button" role="tab" id="PL3-highlight-tab-videos"
+                                    aria-selected="false" aria-controls="PL3-highlight-panel-videos"
+                                    data-pl3-highlight-tab="videos" tabindex="-1">
+                                    Videos
+                                </button>
+                                <button class="PL3-highlightTab" type="button" role="tab" id="PL3-highlight-tab-about"
+                                    aria-selected="false" aria-controls="PL3-highlight-panel-about"
+                                    data-pl3-highlight-tab="about" tabindex="-1">
+                                    About
+                                </button>
+                            </div>
 
-                            <!-- Right: Drop Message and Buttons -->
-                            <div class="PL3-upcomingRight">
-                                <div class="PL3-upcomingDesc">Latest<br>Release</div>
-                                <div class="PL3-upcomingButtons" aria-label="Release actions">
-                                    <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
-                                        data-pl3-group="full-mindness" aria-label="Open Full-Mindness">
-                                        <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                        <span>Listen</span>
-                                    </button>
+                            <div class="PL3-highlightCarousel" aria-live="polite">
+                                <div class="PL3-highlightTrack" data-pl3-highlight-track>
+                                    <section class="PL3-highlightPanel PL3-highlightPanel--latest is-active"
+                                        role="tabpanel" id="PL3-highlight-panel-latest"
+                                        aria-labelledby="PL3-highlight-tab-latest"
+                                        data-pl3-highlight-panel="latest-release">
+                                        <div class="PL3-upcoming" aria-label="Latest release">
+                                            <button class="PL3-upcomingArtWrap" type="button"
+                                                aria-label="Open Full-Mindness" data-pl3-group="full-mindness">
+                                                <img class="PL3-upcomingArt" src="img/music/base/base-fullmindness.png"
+                                                    alt="Full-Mindness cover" loading="lazy"
+                                                    onerror="this.src='img/music/opahifi_album.png'">
+                                            </button>
+
+                                            <div class="PL3-upcomingRight">
+                                                <div class="PL3-upcomingDesc">Latest<br>Release</div>
+                                                <div class="PL3-upcomingButtons" aria-label="Release actions">
+                                                    <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
+                                                        data-pl3-group="full-mindness" aria-label="Open Full-Mindness">
+                                                        <i class="fa-solid fa-play" aria-hidden="true"></i>
+                                                        <span>Listen</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="PL3-highlightPanel PL3-highlightPanel--videos" role="tabpanel"
+                                        id="PL3-highlight-panel-videos" aria-labelledby="PL3-highlight-tab-videos"
+                                        data-pl3-highlight-panel="videos" aria-hidden="true">
+                                        <div class="PL3-videoCard">
+                                            <div class="PL3-highlightEyebrow">Video Picks</div>
+                                            <div class="PL3-videoTitle">Watch the latest OpaHiFi visuals.</div>
+                                            <div class="PL3-videoText">Open the newest video in the preview player or
+                                                jump out to the full YouTube channel.</div>
+                                            <div class="PL3-videoActions" aria-label="Video actions">
+                                                <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
+                                                    data-pl3-preview
+                                                    data-pl3-preview-src="https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh"
+                                                    aria-label="Watch Full-Mindness video preview">
+                                                    <i class="fa-solid fa-circle-play" aria-hidden="true"></i>
+                                                    <span>Full-Mindness</span>
+                                                </button>
+                                                <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
+                                                    data-pl3-preview
+                                                    data-pl3-preview-src="https://www.youtube.com/embed/videoseries?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF"
+                                                    aria-label="Play OpaHiFi playlist preview">
+                                                    <i class="fa-solid fa-film" aria-hidden="true"></i>
+                                                    <span>Playlist</span>
+                                                </button>
+                                                <a class="PL3-videoLink" href="https://www.youtube.com/@OpaHiFi"
+                                                    target="_blank" rel="noopener"
+                                                    aria-label="Open OpaHiFi YouTube channel">
+                                                    <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                                                    <span>YouTube</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="PL3-highlightPanel PL3-highlightPanel--about" role="tabpanel"
+                                        id="PL3-highlight-panel-about" aria-labelledby="PL3-highlight-tab-about"
+                                        data-pl3-highlight-panel="about" aria-hidden="true">
+                                        <div class="PL3-aboutCard">
+                                            <div class="PL3-highlightEyebrow">About</div>
+                                            <div class="PL3-aboutTitle">OpaHiFi in one place.</div>
+                                            <div class="PL3-aboutText">Authentic sound for when the world gets too loud.
+                                                Start with the latest release, jump into the videos tab, or browse the
+                                                full release wall below.</div>
+                                            <div class="PL3-aboutActions" aria-label="About actions">
+                                                <a class="PL3-aboutLink"
+                                                    href="https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP"
+                                                    target="_blank" rel="noopener" aria-label="Open OpaHiFi on Spotify">
+                                                    <i class="fa-brands fa-spotify" aria-hidden="true"></i>
+                                                    <span>Spotify</span>
+                                                </a>
+                                                <a class="PL3-aboutLink" href="https://instagram.com/opahifi"
+                                                    target="_blank" rel="noopener"
+                                                    aria-label="Open OpaHiFi on Instagram">
+                                                    <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                                                    <span>Instagram</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </section>
                                 </div>
                             </div>
                         </div>
