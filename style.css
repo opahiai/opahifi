@@ -33,8 +33,8 @@ body {
 
     /* 4-screen section split (unitless numbers out of 100). These should sum to 100. */
     --pl3-section-header: 20;
-    --pl3-section-buttons: 7;
-    --pl3-section-highlight: 26;
+    --pl3-section-buttons: 8;
+    --pl3-section-highlight: 35;
     --pl3-section-gallery: 37;
 
     /* Derived percentages for grid usage */
@@ -408,9 +408,12 @@ body {
     min-height: 0;
     overflow: hidden;
     border-radius: var(--pl3-tile-radius);
-    background:
+    background-image:
         linear-gradient(180deg, rgba(5, 7, 17, 0.28), rgba(5, 7, 17, 0.62)),
-        url("img/opa/cover.png") center / cover no-repeat;
+        url("img/opa/cover.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .PL3-heroImgWrap {
