@@ -1953,13 +1953,7 @@ class PL3Controller {
     lockScroll() { this.scrollLock.lock(); }
     unlockScroll() { this.scrollLock.unlock(); }
 }
-window.initPL3 = function () {
-    window.PL3Instance = new PL3Controller('p_listen3');
-    // DEV: auto-open group panel for quick testing — remove before deploy
-    setTimeout(() => {
-        window.PL3Instance?.groupPanelSection?.openFromShareRoute('lets-not-do-brunch', '');
-    }, 300);
-};
+window.initPL3 = function () { window.PL3Instance = new PL3Controller('p_listen3'); };
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', window.initPL3);
