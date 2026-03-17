@@ -520,6 +520,17 @@ class PL3HighlightSection {
             }, { passive: false });
         }
 
+        // Video card Watch buttons with a specific playlist
+        const videoPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-videos');
+        if (videoPanel) {
+            videoPanel.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('[data-pl3-video-embed]');
+                if (!btn) return;
+                ev.preventDefault();
+                this.openPreviewModal(btn.getAttribute('data-pl3-video-embed'));
+            }, { passive: false });
+        }
+
         const m = this.dom.previewModal;
         if (m) {
             m.addEventListener('click', (ev) => {

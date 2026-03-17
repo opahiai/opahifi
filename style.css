@@ -75,6 +75,11 @@ body {
     --pl3-nav-blur: 8px;
     --pl3-nav-brand-size: 1.05rem;
 
+    /* ── Pill max widths ── */
+    --pl3-pill-listen-max-w: 200px;
+    --pl3-pill-follow-max-w: 180px;
+    --pl3-pill-playlist-max-w: 140px;
+
     /* ── Panel outer / inner padding ── */
     --pl3-panel-pad-x: 0px;
     --pl3-panel-pad-bottom: 5px;
@@ -490,9 +495,9 @@ body {
     justify-content: flex-end;
     position: relative;
     flex: 0 0 auto;
-    width: min(72vw, 120px);
+    width: var(--pl3-pill-playlist-max-w);
     overflow: visible;
-    height: 28px;
+    height: 30px;
 }
 
 .PL3-playlistPill {
@@ -514,6 +519,7 @@ body {
     transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
     overflow: hidden;
     white-space: nowrap;
+    height: 30px;
 }
 
 .PL3-playlistPill:hover {
@@ -531,7 +537,7 @@ body {
     position: absolute;
     top: 50%;
     right: 0;
-    width: 160px;
+    width: var(--pl3-pill-playlist-max-w);
     transform: translateY(-50%);
     justify-content: flex-start;
     z-index: 8;
@@ -594,7 +600,7 @@ body {
 .PL3-playlistPillPrefix {
     position: absolute;
     left: 5px;
-    top: -20px;
+    bottom: 100%;
     display: inline-flex;
     align-items: center;
     padding: 3px 10px;
@@ -745,24 +751,21 @@ body {
 }
 
 .PL3-heroBtn {
-    height: clamp(22px, 7.2vw, 30px);
-    border-radius: var(--pl3-tile-radius);
+    height: 30px;
+    border-radius: 999px;
     border: none;
     color: #fff;
-    font-size: clamp(12px, 3.2vw, 15px);
+    font-size: clamp(10px, 2.6vw, 12px);
     font-weight: 900;
     cursor: pointer;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
-    padding: 0 8px;
+    padding: 0 11px;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: all 0.35s ease;
+    transition: filter 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
 }
 
 .PL3-heroBtn[data-pl3-action="listen"] {
@@ -779,81 +782,97 @@ body {
 }
 
 .PL3-heroBtn:hover {
-    transform: translateY(-1px);
     filter: brightness(1.15);
 }
 
 .PL3-heroBtn.PL3-heroBtn--expanded {
-    flex: 4 1 auto;
-    justify-content: flex-start;
+    flex: 1 1 auto;
+    padding: 0 8px;
+    gap: 5px;
+}
+
+.PL3-heroBtn[data-pl3-action="listen"].PL3-heroBtn--expanded {
+    max-width: var(--pl3-pill-listen-max-w);
+}
+
+.PL3-heroBtn[data-pl3-action="follow"].PL3-heroBtn--expanded {
+    max-width: var(--pl3-pill-follow-max-w);
 }
 
 .PL3-heroBtn.PL3-heroBtn--collapsed {
-    flex: 0 0 0px;
-    padding: 0;
-    min-width: 0;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.PL3-heroBtn-text {
-    display: inline;
+    display: none;
 }
 
 .PL3-heroBtn--expanded .PL3-heroBtn-text {
     display: none;
 }
 
-.PL3-heroBtn--collapsed .PL3-heroBtn-text {
-    display: none;
-}
-
+/* Icon row */
 .PL3-heroBtn-icons {
     display: none;
     align-items: center;
-    gap: 12px;
-    flex-wrap: nowrap;
-    width: 100%;
-    justify-content: space-between;
-}
-
-/* Social only: keep icons centered + nicely spaced (don't shove left) */
-.PL3-heroBtn[data-pl3-action="follow"].PL3-heroBtn--expanded .PL3-heroBtn-icons {
-    justify-content: center;
     gap: 5px;
-
+    width: 100%;
 }
 
 .PL3-heroBtn--expanded .PL3-heroBtn-icons {
     display: flex;
 }
 
+/* 25px circle per icon link */
+.PL3-heroBtn-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    text-decoration: none;
+    transition: transform 0.16s ease, background 0.16s ease;
+}
+
+.PL3-heroBtn-icons a:hover,
+.PL3-heroBtn-icons a:focus-visible {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.26);
+}
+
 .PL3-heroBtn-icon {
-    width: 26px;
-    height: 26px;
-    opacity: 0.9;
-    transition: opacity 0.2s;
+    width: 14px;
+    height: 14px;
+    display: block;
+    object-fit: contain;
 }
 
 .PL3-heroBtn-icon.fa-amazon {
     width: auto;
-    font-size: 25px;
+    height: auto;
+    font-size: 14px;
     color: #fff;
 }
 
-.PL3-heroBtn-icon:hover {
-    opacity: 1;
-}
-
+/* X close: plain text, right-aligned, separator line */
 .PL3-heroBtn-close {
-    margin-left: 16px;
-    padding-left: 16px;
-    border-left: 1px solid rgba(255, 255, 255, 0.25);
-    font-size: 22px;
-    font-weight: 900;
-    opacity: 0.8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    padding: 0 2px 0 8px;
+    height: 100%;
+    border-left: 1px solid rgba(255, 255, 255, 0.22);
+    font-size: 18px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.80);
     cursor: pointer;
     flex-shrink: 0;
+    line-height: 1;
+}
+
+.PL3-heroBtn-close:hover {
+    color: #fff;
 }
 
 /* ===== Middle (30%) ===== */
@@ -1459,7 +1478,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Nav pill button overrides */
+/* Nav pill row layout */
 .PL3-navInner .PL3-btnRow {
     flex: 1 1 auto;
     min-width: 0;
@@ -1468,24 +1487,8 @@ body {
     width: auto;
 }
 
-/* Collapse inter-pill gaps when one is expanded so pill fills full row */
 .PL3-navInner .PL3-btnRow:has(.PL3-heroBtn--expanded) {
     gap: 0;
-}
-
-.PL3-navInner .PL3-heroBtn {
-    height: var(--pl3-nav-pill-h);
-    border-radius: 999px;
-    font-size: clamp(10px, 2.6vw, 12px);
-    padding: 0 11px;
-    flex: 0 0 auto;
-    min-width: 0;
-}
-
-.PL3-navInner .PL3-heroBtn.PL3-heroBtn--expanded {
-    flex: 1 1 auto;
-    min-width: 0;
-    padding: 0;
 }
 
 /* ===== Group Top Panel ===== */
