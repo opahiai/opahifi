@@ -81,11 +81,11 @@ body {
     --pl3-pill-playlist-max-w: 140px;
 
     /* ── About / Cycle section colors ── */
-    --cycle-pain:   #60a5fa;
+    --cycle-pain: #60a5fa;
     --cycle-pain-light: #bfdbfe;
-    --cycle-power:  #c084fc;
+    --cycle-power: #c084fc;
     --cycle-power-light: #f3e8ff;
-    --cycle-party:  #f87171;
+    --cycle-party: #f87171;
     --cycle-party-light: #fecaca;
     --cycle-people: #a78bfa;
     --cycle-people-light: #ede9fe;
@@ -429,14 +429,36 @@ body {
 .cycle-pillar {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     min-width: 0;
 }
 
-.cycle-pillar--pain  { grid-area: 1 / 1 / 2 / 2; text-align: left; }
-.cycle-pillar--power { grid-area: 1 / 2 / 2 / 3; text-align: right; }
-.cycle-pillar--party { grid-area: 2 / 2 / 3 / 3; text-align: right; }
-.cycle-pillar--people { grid-area: 2 / 1 / 3 / 2; text-align: left; }
+.cycle-pillar--top {
+    justify-content: flex-start;
+}
+
+.cycle-pillar--bottom {
+    justify-content: flex-end;
+}
+
+.cycle-pillar--pain {
+    grid-area: 1 / 1 / 2 / 2;
+    text-align: left;
+}
+
+.cycle-pillar--power {
+    grid-area: 1 / 2 / 2 / 3;
+    text-align: right;
+}
+
+.cycle-pillar--party {
+    grid-area: 2 / 2 / 3 / 3;
+    text-align: right;
+}
+
+.cycle-pillar--people {
+    grid-area: 2 / 1 / 3 / 2;
+    text-align: left;
+}
 
 .cycle-pillar h3 {
     font-family: 'Oswald', sans-serif;
@@ -444,17 +466,27 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin: 0 0 2px;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
 }
 
-.cycle-pillar--pain  h3 { background-image: linear-gradient(135deg, var(--cycle-pain-light), var(--cycle-pain)); }
-.cycle-pillar--power h3 { background-image: linear-gradient(135deg, var(--cycle-power-light), var(--cycle-power)); }
-.cycle-pillar--party h3 { background-image: linear-gradient(135deg, var(--cycle-party-light), var(--cycle-party)); }
-.cycle-pillar--people h3 { background-image: linear-gradient(135deg, var(--cycle-people-light), var(--cycle-people)); }
+.cycle-pillar--pain h3 {
+    background-image: linear-gradient(135deg, var(--cycle-pain-light), var(--cycle-pain));
+}
+
+.cycle-pillar--power h3 {
+    background-image: linear-gradient(135deg, var(--cycle-power-light), var(--cycle-power));
+}
+
+.cycle-pillar--party h3 {
+    background-image: linear-gradient(135deg, var(--cycle-party-light), var(--cycle-party));
+}
+
+.cycle-pillar--people h3 {
+    background-image: linear-gradient(135deg, var(--cycle-people-light), var(--cycle-people));
+}
 
 .cycle-pillar p {
     font-size: clamp(7px, 1.8vw, 8.5px);
@@ -473,25 +505,6 @@ body {
     color: rgba(255, 255, 255, 0.92);
     font-weight: 600;
     margin-bottom: 2px;
-}
-
-@media (min-width: 375px) {
-    .cycle-grid {
-        padding: 14px;
-    }
-
-    .cycle-pillar h3 {
-        font-size: clamp(22px, 5.5vw, 30px);
-        margin-bottom: 4px;
-    }
-
-    .cycle-pillar p {
-        font-size: clamp(8.5px, 2.2vw, 10px);
-    }
-
-    .cycle-pillar p span:first-child {
-        margin-bottom: 3px;
-    }
 }
 
 /* ===== Video tab grid ===== */
@@ -2263,33 +2276,6 @@ body {
     overflow-x: hidden;
 }
 
-@media (min-width: 361px) {
-    :root {
-        --pl3-part-pad-x: 8px;
-        --pl3-part-pad-y: 8px;
-        --pl3-gap-sm: 8px;
-        --pl3-gap-md: 9px;
-        --pl3-upcoming-size: 30vw;
-        --pl3-panel-pad-x: 4px;
-        --pl3-panel-inner-pad-x: 6px;
-        --pl3-btn-h: 30px;
-        --pl3-panel-art-dock-size: 132px;
-    }
-
-    .PL3-card {
-        width: 360px;
-    }
-
-    .PL3-groupPanel {
-        padding: 0 var(--pl3-panel-pad-x) var(--pl3-panel-pad-bottom);
-    }
-
-    .PL3-groupPanelInner {
-        border-left: 1px solid rgba(255, 255, 255, 0.16);
-        border-right: 1px solid rgba(255, 255, 255, 0.16);
-        padding: var(--pl3-panel-inner-pad-y) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
-    }
-}
 
 /* ===== In-Panel Song Detail (replaces overlay) ===== */
 
@@ -2538,6 +2524,67 @@ body {
     height: 10px;
     padding: 0;
 }
+
+
+@media (min-width: 361px) {
+    :root {
+        --pl3-part-pad-x: 8px;
+        --pl3-part-pad-y: 8px;
+        --pl3-gap-sm: 8px;
+        --pl3-gap-md: 9px;
+        --pl3-upcoming-size: 30vw;
+        --pl3-panel-pad-x: 4px;
+        --pl3-panel-inner-pad-x: 6px;
+        --pl3-btn-h: 30px;
+        --pl3-panel-art-dock-size: 132px;
+    }
+
+    .PL3-card {
+        width: 360px;
+    }
+
+    .PL3-groupPanel {
+        padding: 0 var(--pl3-panel-pad-x) var(--pl3-panel-pad-bottom);
+    }
+
+    .PL3-groupPanelInner {
+        border-left: 1px solid rgba(255, 255, 255, 0.16);
+        border-right: 1px solid rgba(255, 255, 255, 0.16);
+        padding: var(--pl3-panel-inner-pad-y) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
+    }
+}
+
+
+@media (min-width: 375px) {
+
+    .PL3-card {
+        width: 374px;
+    }
+
+    .cycle-grid {
+        padding: 14px;
+    }
+
+    .cycle-pillar h3 {
+        font-size: clamp(22px, 5.5vw, 30px);
+    }
+
+    .cycle-pillar p {
+        font-size: clamp(8.5px, 2.2vw, 10px);
+    }
+
+    .cycle-pillar p span:first-child {
+        margin-bottom: 3px;
+    }
+}
+
+
+@media (min-width: 425px) {
+    .PL3-card {
+        width: 400px;
+    }
+}
+
 
 
 @media (min-width: 768px) {
