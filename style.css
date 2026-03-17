@@ -278,7 +278,7 @@ body {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    width: 50px;
+    width: 20%;
     gap: 4px;
     z-index: 1;
     justify-content: flex-start;
@@ -287,7 +287,7 @@ body {
 
 .PL3-tabBtn {
     flex: 0 0 auto;
-    height: 52px;
+    height: 25%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -913,12 +913,12 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%) scale(var(--pl3-upcoming-glow-scale));
-    background: linear-gradient(45deg, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444, #1f6feb, #8c46ff, #ef4444);
+    background: linear-gradient(45deg, #ff6bbd, #c44dff, #ff9f43, #ff6bbd, #c44dff, #ff9f43, #ff6bbd, #c44dff, #ff9f43);
     background-size: 400%;
     border-radius: 24px;
     z-index: -1;
-    opacity: 0.18;
-    filter: blur(18px);
+    opacity: 0.36;
+    filter: blur(20px);
     animation: PL3-upcomingBorderShine 18s linear infinite, PL3-upcomingHaloDrift 6.8s ease-in-out infinite;
 }
 
@@ -952,8 +952,8 @@ body {
     object-fit: contain;
     display: block;
     border-radius: 18px;
-    box-shadow: 0 0 10px rgba(76, 111, 255, 0.16), 0 0 18px rgba(217, 84, 156, 0.08);
-    animation: PL3-upcomingGlow 2.8s ease-in-out infinite, PL3-upcomingFloat 6.4s ease-in-out infinite;
+    box-shadow: 0 0 14px rgba(196, 77, 255, 0.30), 0 0 26px rgba(255, 107, 189, 0.20);
+    animation: PL3-upcomingGlow 2.8s ease-in-out infinite, PL3-upcomingPulse 3.8s ease-in-out infinite;
     position: relative;
     z-index: 1;
     transform-origin: center center;
@@ -1184,18 +1184,20 @@ body {
 .PL3-streamingServices {
     font-size: 48px;
     margin-top: 10px;
-    animation: float 3s ease-in-out infinite;
+    animation: PL3-streamingPulse 2.4s ease-in-out infinite;
 }
 
-@keyframes float {
+@keyframes PL3-streamingPulse {
 
     0%,
     100% {
-        transform: translateY(0px);
+        transform: scale(1);
+        opacity: 1;
     }
 
     50% {
-        transform: translateY(-10px);
+        transform: scale(1.12);
+        opacity: 0.85;
     }
 }
 
@@ -1304,11 +1306,11 @@ body {
 
     0%,
     100% {
-        box-shadow: 0 0 10px rgba(76, 111, 255, 0.16), 0 0 18px rgba(217, 84, 156, 0.08);
+        box-shadow: 0 0 14px rgba(196, 77, 255, 0.30), 0 0 26px rgba(255, 107, 189, 0.20);
     }
 
     50% {
-        box-shadow: 0 0 16px rgba(76, 111, 255, 0.22), 0 0 26px rgba(217, 84, 156, 0.12);
+        box-shadow: 0 0 22px rgba(196, 77, 255, 0.50), 0 0 38px rgba(255, 107, 189, 0.34);
     }
 }
 
@@ -1340,13 +1342,11 @@ body {
 
     0%,
     100% {
-        opacity: 1;
         transform: scale(1);
     }
 
     50% {
-        opacity: 0.98;
-        transform: scale(1.01);
+        transform: scale(1.04);
     }
 }
 

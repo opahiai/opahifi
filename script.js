@@ -531,6 +531,18 @@ class PL3HighlightSection {
             }, { passive: false });
         }
 
+        // Release panel Preview button
+        const releasePanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-release');
+        if (releasePanel) {
+            releasePanel.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('[data-pl3-video-embed]');
+                if (!btn) return;
+                ev.preventDefault();
+                ev.stopPropagation();
+                this.openPreviewModal(btn.getAttribute('data-pl3-video-embed'));
+            }, { passive: false });
+        }
+
         const m = this.dom.previewModal;
         if (m) {
             m.addEventListener('click', (ev) => {
@@ -1941,7 +1953,13 @@ class PL3Controller {
     lockScroll() { this.scrollLock.lock(); }
     unlockScroll() { this.scrollLock.unlock(); }
 }
-window.initPL3 = function () { window.PL3Instance = new PL3Controller('p_listen3'); };
+window.initPL3 = function () {
+    window.PL3Instance = new PL3Controller('p_listen3');
+    // DEV: auto-open group panel for quick testing — remove before deploy
+    setTimeout(() => {
+        window.PL3Instance?.groupPanelSection?.openFromShareRoute('lets-not-do-brunch', '');
+    }, 300);
+};
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', window.initPL3);
