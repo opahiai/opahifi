@@ -47,7 +47,6 @@ body {
     --pl3-gallery-pill-gap: 8px;
 
     /* Upcoming section */
-    --pl3-upcoming-size: 34vw;
     --pl3-upcoming-art-scale: 0.8;
     --pl3-upcoming-glow-scale: 1.12;
 
@@ -81,14 +80,14 @@ body {
     --pl3-pill-playlist-max-w: 140px;
 
     /* ── About / Cycle section colors ── */
-    --cycle-pain: #60a5fa;
-    --cycle-pain-light: #bfdbfe;
-    --cycle-power: #c084fc;
-    --cycle-power-light: #f3e8ff;
-    --cycle-party: #f87171;
-    --cycle-party-light: #fecaca;
-    --cycle-people: #a78bfa;
-    --cycle-people-light: #ede9fe;
+    --cycle-pain: #f21818;
+    --cycle-pain-light: #f95959;
+    --cycle-power: #cf0fff;
+    --cycle-power-light: #ca5af2;
+    --cycle-party: #003cff;
+    --cycle-party-light: #476ce7;
+    --cycle-people: #ea7a17;
+    --cycle-people-light: #f7c170;
 
     /* ── Panel outer / inner padding ── */
     --pl3-panel-pad-x: 0px;
@@ -206,7 +205,6 @@ body {
     --pl3-header-h: calc(var(--pl3-available-h) * (var(--pl3-section-header) / 100));
     --pl3-highlight-h: calc(var(--pl3-available-h) * (var(--pl3-section-highlight) / 100));
     --pl3-hero-img-size: min(30vw, calc(var(--pl3-header-h) * 0.7));
-    --pl3-upcoming-size: min(34vw, calc(var(--pl3-highlight-h) * 0.64));
 }
 
 .PL3-wrap {
@@ -362,6 +360,8 @@ body {
     display: flex;
     width: 100%;
     height: 100%;
+    min-width: 0;
+    min-height: 0;
     box-sizing: border-box;
 }
 
@@ -1011,19 +1011,21 @@ body {
 
 /* ===== Middle (30%) ===== */
 .PL3-upcoming {
+    width: 100%;
     height: 100%;
     min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 6px;
+    gap: 14px;
+    padding: 14px 18px;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .PL3-upcomingArtWrap {
-    height: var(--pl3-upcoming-size);
-    width: var(--pl3-upcoming-size);
+    width: min(42%, 180px);
+    aspect-ratio: 1 / 1;
     overflow: visible;
     display: flex;
     align-items: center;
@@ -1037,13 +1039,14 @@ body {
     z-index: 2;
     flex-shrink: 0;
     cursor: pointer;
+
 }
 
 .PL3-upcomingArtWrap::before {
     content: '';
     position: absolute;
-    width: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
-    height: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
+    width: calc(100% * var(--pl3-upcoming-art-scale));
+    height: calc(100% * var(--pl3-upcoming-art-scale));
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%) scale(var(--pl3-upcoming-glow-scale));
@@ -1059,8 +1062,8 @@ body {
 .PL3-upcomingArtWrap::after {
     content: '';
     position: absolute;
-    width: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
-    height: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
+    width: calc(100% * var(--pl3-upcoming-art-scale));
+    height: calc(100% * var(--pl3-upcoming-art-scale));
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%) scale(calc(var(--pl3-upcoming-glow-scale) + 0.04));
@@ -1079,8 +1082,8 @@ body {
 }
 
 .PL3-upcomingArt {
-    width: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
-    height: calc(var(--pl3-upcoming-size) * var(--pl3-upcoming-art-scale));
+    width: calc(100% * var(--pl3-upcoming-art-scale));
+    height: calc(100% * var(--pl3-upcoming-art-scale));
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
@@ -1106,27 +1109,27 @@ body {
 .PL3-upcomingRight {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    flex-shrink: 0;
+    flex: 1 1 0;
     min-width: 0;
 }
 
 .PL3-upcomingDesc {
     color: #fff;
-    font-size: clamp(1.7rem, 13.3vw, 2.25rem);
+    font-size: 2rem;
     font-weight: 900;
     line-height: 0.9;
     overflow-wrap: anywhere;
     text-shadow: 0 0 20px rgba(31, 111, 235, 0.4);
-    text-align: center;
+    text-align: left;
     flex-shrink: 0;
 }
 
 .PL3-upcomingButtons {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 4px;
     flex-shrink: 0;
@@ -1145,7 +1148,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: var(--upcoming-btn-gap, 6px);
-    width: var(--upcoming-btn-width, min(44vw, 110px));
+    min-width: 96px;
+    width: min(100%, var(--upcoming-btn-width, 132px));
     padding: var(--upcoming-btn-padding, 8px 14px);
     border-radius: var(--upcoming-btn-radius, 20px);
     color: #fff;
@@ -2532,7 +2536,6 @@ body {
         --pl3-part-pad-y: 8px;
         --pl3-gap-sm: 8px;
         --pl3-gap-md: 9px;
-        --pl3-upcoming-size: 30vw;
         --pl3-panel-pad-x: 4px;
         --pl3-panel-inner-pad-x: 6px;
         --pl3-btn-h: 30px;
@@ -2570,7 +2573,7 @@ body {
     }
 
     .cycle-pillar p {
-        font-size: clamp(8.5px, 2.2vw, 10px);
+        font-size: clamp(8.5px, 2.2vw, 12px);
     }
 
     .cycle-pillar p span:first-child {
@@ -2593,7 +2596,6 @@ body {
         --pl3-part-pad-y: 10px;
         --pl3-gap-md: 10px;
         --pl3-gap-sm: 8px;
-        --pl3-upcoming-size: 20vh;
         --pl3-btn-h: 32px;
         --pl3-panel-art-dock-size: 148px;
         --pl3-version-art-size: 58px;
@@ -2634,14 +2636,9 @@ body {
         padding: 0 12px;
     }
 
-    .PL3-upcoming {
-        gap: 15px;
-        padding: 20px;
-    }
-
     .PL3-upcomingArtWrap {
-        padding: 15px;
         border-radius: 20px;
+        width: min(44%, 200px);
     }
 
     .PL3-upcomingArt {
@@ -2649,7 +2646,7 @@ body {
     }
 
     .PL3-upcomingDesc {
-        font-size: 3rem;
+        font-size: 2.6rem;
     }
 
     .PL3-upcomingBtn {
