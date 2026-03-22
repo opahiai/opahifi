@@ -45,8 +45,6 @@ body {
     --pl3-section-gallery-pct: calc(var(--pl3-section-gallery) * 1%);
 
     /* Gallery layout */
-    --pl3-gallery-gap: var(--pl3-gap-md);
-    --pl3-gallery-title-gap: 4px;
     --pl3-gallery-pill-gap: 8px;
 
     /* Upcoming section */
@@ -200,11 +198,8 @@ body {
     overflow: hidden;
 }
 
-/* tileSize = min(30vw, galleryHeight / 2.5) */
 #p_listen3 {
     --pl3-available-h: var(--pl3-viewport-h);
-    --pl3-gallery-h: calc(var(--pl3-available-h) * (var(--pl3-section-gallery) / 100));
-    --pl3-gallery-tile-size: min(30vw, calc(var(--pl3-gallery-h) / 3));
     --pl3-header-h: calc(var(--pl3-available-h) * (var(--pl3-section-header) / 100));
     --pl3-highlight-h: calc(var(--pl3-available-h) * (var(--pl3-section-highlight) / 100));
     --pl3-hero-img-size: min(30vw, calc(var(--pl3-header-h) * 0.7));
@@ -926,7 +921,6 @@ body {
 .PL3-heroBtn,
 .PL3-tabBtn,
 .PL3-upcomingBtn,
-.PL3-galleryItemBtn,
 .PL3-playlistPill,
 .PL3-groupPanelShareBtn,
 .PL3-groupPanelCloseBtn,
@@ -2194,135 +2188,6 @@ button {
     filter: none;
 }
 
-/* ===== Bottom (40%) ===== */
-.PL3-gallery {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--pl3-gallery-gap);
-}
-
-.PL3-galleryRow {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--pl3-gallery-gap);
-}
-
-.PL3-galleryItemBtn {
-    width: var(--pl3-gallery-tile-size);
-    height: var(--pl3-gallery-tile-size);
-    border: none;
-    background: transparent;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.PL3-galleryImg {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    border-radius: 15px;
-}
-
-/* ===== 3D Gallery Overrides (moved from index.html) ===== */
-.PL3-part--gallery .PL3-gallery {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-    perspective: 1000px;
-    padding: 4px 6px 8px;
-    overflow: visible;
-    width: 100%;
-    box-sizing: border-box;
-    transform: none;
-    transition: none;
-}
-
-.PL3-part--gallery .PL3-gallery::-webkit-scrollbar {
-    display: none;
-}
-
-.PL3-galleryItemBtn {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    border: none;
-    background: transparent;
-    padding: 0;
-    margin-right: -24px;
-    transform-style: preserve-3d;
-    transform: perspective(800px) rotateY(-12deg) scale(0.9);
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s 0.2s, filter 0.22s ease;
-    cursor: pointer;
-    z-index: 1;
-    border-radius: 6px;
-    box-shadow: -3px 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-.PL3-galleryItemBtn:last-child {
-    margin-right: 0;
-}
-
-.PL3-galleryItemBtn:hover,
-.PL3-galleryItemBtn:focus-visible {
-    transform: perspective(800px) rotateY(0deg) scale(1.06) translateZ(12px);
-    z-index: 100;
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s;
-    outline: none;
-    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.6);
-}
-
-.PL3-galleryItemBtn.PL3-galleryItemBtn--active {
-    transform: perspective(800px) rotateY(0deg) translateY(6px) scale(1.16) translateZ(18px);
-    z-index: 120;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.58);
-    filter: brightness(1.06) saturate(1.06);
-}
-
-.PL3-galleryItemBtn.PL3-artHost--detached,
-.PL3-galleryItemBtn.PL3-artHost--detached:hover,
-.PL3-galleryItemBtn.PL3-artHost--detached:focus-visible,
-.PL3-galleryItemBtn.PL3-artHost--detached.PL3-galleryItemBtn--active {
-    pointer-events: none;
-    box-shadow: none;
-    filter: none;
-    z-index: 0;
-}
-
-.PL3-part--gallery .PL3-gallery.PL3-gallery--locked .PL3-galleryItemBtn {
-    pointer-events: none;
-    cursor: default;
-}
-
-.PL3-part--gallery .PL3-gallery .PL3-galleryItemBtn:disabled {
-    opacity: 1;
-}
-
-.PL3-part--gallery .PL3-gallery.PL3-gallery--locked .PL3-galleryItemBtn:not(.PL3-galleryItemBtn--active) {
-    filter: saturate(0.68) brightness(0.65) contrast(0.92);
-}
-
-.PL3-galleryImg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 6px;
-    display: block;
-}
-
 .PL3-part--gallery {
     overflow: visible;
     z-index: 40;
@@ -2751,33 +2616,6 @@ button {
     .PL3-groupPanelInner {
         gap: 12px;
         padding: 20px;
-    }
-
-    .PL3-part--gallery .PL3-gallery {
-        justify-content: center;
-        padding: 0;
-        overflow: visible;
-        --pl3-gallery-shift: 0px;
-        transform: translateX(var(--pl3-gallery-shift));
-        transition: transform 0.34s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .PL3-galleryItemBtn {
-        width: 110px;
-        height: 110px;
-        margin-right: -50px;
-        transform: perspective(1000px) rotateY(-30deg) scale(0.9);
-        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s 0.2s, filter 0.22s ease;
-    }
-
-    .PL3-galleryItemBtn:hover,
-    .PL3-galleryItemBtn:focus-visible {
-        transform: perspective(1000px) rotateY(0deg) scale(1.2) translateZ(30px);
-    }
-
-    .PL3-galleryItemBtn.PL3-galleryItemBtn--active {
-        transform: perspective(1000px) rotateY(0deg) translateY(16px) scale(1.46) translateZ(44px);
-        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.72);
     }
 
     .PL3-groupPanelInner--detail .PL3-groupPanelGroupTitle {
