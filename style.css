@@ -35,9 +35,9 @@ body {
     --pl3-tab-nav-top-width: calc(100% - (var(--pl3-tab-nav-inline-offset) * 2));
 
     /* 3-screen section split (unitless numbers out of 100). These should sum to 100. */
-    --pl3-section-header: 18;
-    --pl3-section-highlight: 39;
-    --pl3-section-gallery: 31;
+    --pl3-section-header: 17;
+    --pl3-section-highlight: 38;
+    --pl3-section-gallery: 36;
 
     /* Derived percentages for grid usage */
     --pl3-section-header-pct: calc(var(--pl3-section-header) * 1%);
@@ -519,7 +519,7 @@ body {
 
 .cycle-pillar h3 {
     font-family: 'Oswald', sans-serif;
-    font-size: clamp(18px, 5vw, 26px);
+    font-size: clamp(22px, 5vw, 26px);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -546,7 +546,7 @@ body {
 }
 
 .cycle-pillar p {
-    font-size: clamp(7px, 1.8vw, 8.5px);
+    font-size: clamp(10px, 1.8vw, 8.5px);
     line-height: 1.5;
     color: rgba(255, 255, 255, 0.60);
     margin: 0;
@@ -663,13 +663,15 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 0;
+    gap: var(--pl3-gallery-pill-gap);
 }
 
 .PL3-galleryHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--pl3-gallery-pill-gap);
+    flex: 0 0 auto;
+    margin-bottom: 0;
     position: relative;
     overflow: visible;
 }
@@ -682,7 +684,7 @@ body {
 
 .PL3-gallery {
     container-type: size;
-    flex: 1 1 auto;
+    flex: 1 1 0%;
     min-height: 0;
     --pl3-gallery-inline-room:
         calc(100cqw - (2 * var(--pl3-gallery-pad-inline)) - ((var(--pl3-gallery-top-count) - 1) * var(--pl3-gallery-col-gap)));
@@ -703,9 +705,7 @@ body {
     align-items: stretch;
     gap: 0;
     padding:
-        var(--pl3-gallery-pad-block-start)
-        var(--pl3-gallery-pad-inline)
-        var(--pl3-gallery-pad-block-end);
+        var(--pl3-gallery-pad-block-start) var(--pl3-gallery-pad-inline) var(--pl3-gallery-pad-block-end);
     overflow: visible;
     isolation: isolate;
 }
@@ -2739,8 +2739,8 @@ button {
         --pl3-gap-md: 10px;
         --pl3-gap-sm: 8px;
         --pl3-section-header: 19;
-        --pl3-section-highlight: 40;
-        --pl3-section-gallery: 29;
+        --pl3-section-highlight: 37;
+        --pl3-section-gallery: 37;
         --pl3-split-gap: 2.6vh;
         --pl3-btn-h: 32px;
         --pl3-panel-art-dock-size: 148px;
@@ -2820,5 +2820,26 @@ button {
         font-size: 1.7rem;
         line-height: 1.02;
         width: 100%;
+    }
+
+    :root {
+        --pl3-gallery-pill-gap: 10px;
+        --pl3-gallery-unit-max: 6.6rem;
+        --pl3-gallery-pad-block-start: 0.18rem;
+        --pl3-gallery-pad-block-end: 0.08rem;
+    }
+
+    .PL3-galleryHeader {
+        position: relative;
+        z-index: 2;
+        align-items: flex-end;
+    }
+
+    .PL3-gallery {
+        justify-content: flex-start;
+        overflow-x: visible;
+        overflow-y: hidden;
+        position: relative;
+        z-index: 1;
     }
 }
