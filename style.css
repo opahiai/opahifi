@@ -49,11 +49,11 @@ body {
     --pl3-gallery-top-count: 4;
     --pl3-gallery-bottom-count: 3;
     --pl3-gallery-rows: 2;
-    --pl3-gallery-row-overlap-factor: 0.34;
+    --pl3-gallery-row-overlap-factor: 0.22;
     --pl3-gallery-hex-ratio: 0.8660254;
     --pl3-gallery-unit-min: 4.45rem;
     --pl3-gallery-unit-max: 8.7rem;
-    --pl3-gallery-col-gap: 0rem;
+    --pl3-gallery-col-gap: clamp(0.08rem, 0.24cqw, 0.16rem);
     --pl3-gallery-pad-inline: clamp(0.08rem, 0.35cqw, 0.24rem);
     --pl3-gallery-pad-block-start: clamp(0.05rem, 0.2cqh, 0.16rem);
     --pl3-gallery-pad-block-end: clamp(0.04rem, 0.18cqh, 0.14rem);
