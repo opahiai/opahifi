@@ -2042,6 +2042,7 @@ button {
 }
 
 .PL3-groupPanelArtDock {
+    position: relative;
     width: 100%;
     height: 100%;
     border-radius: 10px;
@@ -2372,6 +2373,8 @@ button {
     width: 100%;
     height: 100%;
     margin: 0;
+    display: block;
+    object-fit: cover;
     transform: none;
     box-shadow: none;
     border-radius: 14px;

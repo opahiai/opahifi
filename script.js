@@ -660,6 +660,9 @@ class PL3GroupPanel {
         this._state = this.PANEL_STATE.CLOSED;
         this._transitionId = 0;
         this._closeBtnPopTimer = null;
+        this._queuedVersionOpenTimer = null;
+        this._artSwapTimeline = null;
+        this.ART_DOCK_FLIP_MS = 580;
 
         this.flipReady = !!(
             window.gsap &&
@@ -862,29 +865,72 @@ class PL3GroupPanel {
         return Array.isArray(group?.songIds) ? group.songIds : [];
     }
 
+    clearQueuedVersionOpen() {
+        if (this._queuedVersionOpenTimer == null) return;
+        window.clearTimeout(this._queuedVersionOpenTimer);
+        this._queuedVersionOpenTimer = null;
+    }
+
+    clearActiveArtSwap() {
+        if (!this._artSwapTimeline) return;
+        this._artSwapTimeline.kill();
+        this._artSwapTimeline = null;
+    }
+
+    hasDistinctSingleVersionArt(groupKey) {
+        if (!this.shouldAutoOpenSingleVersion(groupKey)) return false;
+        const [songId] = this.getGroupSongIds(groupKey);
+        const song = this.singlesById[songId];
+        const group = this.groupsByKey[groupKey];
+        const songImage = String(song?.image || '').trim();
+        const groupCover = String(group?.cover || '').trim();
+        return !!(songImage && groupCover && songImage !== groupCover);
+    }
+
+    getSingleVersionAutoOpenDelay(groupKey) {
+        if (!this.flipReady) return 0;
+        return this.hasDistinctSingleVersionArt(groupKey) ? this.ART_DOCK_FLIP_MS : 0;
+    }
+
     shouldAutoOpenSingleVersion(groupKey) {
         return this.getGroupSongIds(groupKey).length === 1;
     }
 
     queueVersionOpen(songId, options = {}) {
-        const { groupKey = this.activeGroupKey, hasBackNav = true, skipArtFlip = false } = options;
+        const { groupKey = this.activeGroupKey, hasBackNav = true, skipArtFlip = false, delayMs = 0 } = options;
         if (!songId) return;
 
-        requestAnimationFrame(() => {
+        const scheduleOpen = () => {
+            this._queuedVersionOpenTimer = null;
             requestAnimationFrame(() => {
-                if (this.activeGroupKey !== groupKey || this._panelState !== this.PANEL_STATE.GROUP) return;
-                const row = this.dom.groupPanelVersions?.querySelector(`[data-pl3-song-id="${songId}"]`);
-                if (!row) return;
-                this.openVersionDetail(row, songId, { hasBackNav, skipArtFlip });
+                requestAnimationFrame(() => {
+                    if (this.activeGroupKey !== groupKey || this._panelState !== this.PANEL_STATE.GROUP) return;
+                    const row = this.dom.groupPanelVersions?.querySelector(`[data-pl3-song-id="${songId}"]`);
+                    if (!row) return;
+                    this.openVersionDetail(row, songId, { hasBackNav, skipArtFlip });
+                });
             });
-        });
+        };
+
+        this.clearQueuedVersionOpen();
+        if (delayMs > 0) {
+            this._queuedVersionOpenTimer = window.setTimeout(scheduleOpen, delayMs);
+            return;
+        }
+
+        scheduleOpen();
     }
 
     queueSingleVersionOpen(groupKey) {
         const [songId] = this.getGroupSongIds(groupKey);
         if (!songId) return;
 
-        this.queueVersionOpen(songId, { groupKey, hasBackNav: false, skipArtFlip: true });
+        this.queueVersionOpen(songId, {
+            groupKey,
+            hasBackNav: false,
+            skipArtFlip: true,
+            delayMs: this.getSingleVersionAutoOpenDelay(groupKey)
+        });
     }
 
     openFromTrigger(triggerBtn, groupKey, options = {}) {
@@ -893,6 +939,9 @@ class PL3GroupPanel {
         const key = String(groupKey || '').trim();
         if (!key) return;
         if (this.isOpen() && this.activeGroupKey === key && this.activeSourceImg) return;
+
+        this.clearQueuedVersionOpen();
+        this.clearActiveArtSwap();
 
         const sourceBtn = this.resolveSourceArtButton(triggerBtn, key);
         if (!sourceBtn) return;
@@ -941,6 +990,8 @@ class PL3GroupPanel {
 
     close() {
         if (!this.isOpen() && !this.activeSourceBtn) return;
+        this.clearQueuedVersionOpen();
+        this.clearActiveArtSwap();
         this.closeVersionDetail({ immediate: true });
         this.restoreSourceArt({ animate: true });
         this.closePanelShell();
@@ -1037,6 +1088,8 @@ class PL3GroupPanel {
 
     closePanelShell() {
         if (!this.dom.groupPanel) return;
+        this.clearQueuedVersionOpen();
+        this.clearActiveArtSwap();
         if (this._closeBtnPopTimer) {
             clearTimeout(this._closeBtnPopTimer);
             this._closeBtnPopTimer = null;
@@ -1345,30 +1398,31 @@ class PL3GroupPanel {
     animateDetailArtSwap(versionArt, previousDockArt) {
         if (!versionArt) return;
         const gsap = window.gsap;
-        if (!gsap) {
+        const cleanup = () => {
             this.resetTransientArtStyles(previousDockArt);
             previousDockArt?.remove();
-            versionArt.style.removeProperty('opacity');
-            versionArt.style.removeProperty('transform');
+            this.resetTransientArtStyles(versionArt);
+            this._artSwapTimeline = null;
+        };
+
+        this.clearActiveArtSwap();
+        if (!gsap) {
+            cleanup();
             return;
         }
 
-        gsap.set(versionArt, { opacity: 0, scale: 0.97 });
         const timeline = gsap.timeline({
-            delay: 0.36,
-            onComplete: () => {
-                this.resetTransientArtStyles(previousDockArt);
-                previousDockArt?.remove();
-                versionArt.style.removeProperty('opacity');
-                versionArt.style.removeProperty('transform');
-            }
+            delay: 0.08,
+            onComplete: cleanup,
+            onInterrupt: cleanup
         });
+        this._artSwapTimeline = timeline;
 
         if (previousDockArt) {
             timeline.to(previousDockArt, {
                 opacity: 0,
                 scale: 1.02,
-                duration: 0.18,
+                duration: 0.16,
                 ease: 'power2.out'
             }, 0);
         }
@@ -1376,9 +1430,28 @@ class PL3GroupPanel {
         timeline.to(versionArt, {
             opacity: 1,
             scale: 1,
-            duration: 0.14,
+            duration: 0.16,
             ease: 'power2.out'
         }, 0.02);
+    }
+
+    prepareDockArtOverlay(img, options = {}) {
+        if (!img) return;
+        const { zIndex = 120, opacity = null, scale = null } = options;
+        img.style.position = 'absolute';
+        img.style.inset = '0';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '8px';
+        img.style.pointerEvents = 'none';
+        img.style.zIndex = String(zIndex);
+        if (opacity != null) {
+            img.style.opacity = String(opacity);
+        }
+        if (scale != null) {
+            img.style.transform = `scale(${scale})`;
+        }
     }
 
     resetTransientArtStyles(img) {
@@ -1392,6 +1465,7 @@ class PL3GroupPanel {
         img.style.removeProperty('pointer-events');
         img.style.removeProperty('opacity');
         img.style.removeProperty('transform');
+        img.style.removeProperty('z-index');
     }
 
     getPrimaryDockArt(children) {
@@ -1445,19 +1519,15 @@ class PL3GroupPanel {
             this._detailArtElement = useDockArtForDetail ? dockArt : versionArt;
             const previousDockArt = shouldFlipArt ? null : dockArt;
             if (previousDockArt) {
-                previousDockArt.style.position = 'absolute';
-                previousDockArt.style.inset = '0';
-                previousDockArt.style.width = '100%';
-                previousDockArt.style.height = '100%';
-                previousDockArt.style.objectFit = 'cover';
-                previousDockArt.style.borderRadius = '8px';
-                previousDockArt.style.pointerEvents = 'none';
-                this.dom.groupPanelArtDock.appendChild(previousDockArt);
+                this.prepareDockArtOverlay(previousDockArt, { zIndex: 121, opacity: 1, scale: 1 });
             }
             detail.appendChild(detailBody);
             if (!useDockArtForDetail) {
                 versionArt.classList.remove('PL3-groupVersionArt');
                 versionArt.classList.add('PL3-groupArtInPanel');
+                if (!shouldFlipArt) {
+                    this.prepareDockArtOverlay(versionArt, { zIndex: 120, opacity: 0, scale: 0.97 });
+                }
                 this.dom.groupPanelArtDock.replaceChildren(versionArt);
                 if (previousDockArt) {
                     this.dom.groupPanelArtDock.appendChild(previousDockArt);
@@ -1625,6 +1695,7 @@ class PL3GroupPanel {
         const song = this.singlesById[songId];
         if (!song) return;
 
+        this.clearActiveArtSwap();
         const transitionId = this._bumpTransition();
 
         this._activeDetailRow = row;
@@ -1645,6 +1716,7 @@ class PL3GroupPanel {
         const { immediate = false } = options;
         if (!this._activeDetailRow) return;
 
+        this.clearActiveArtSwap();
         const transitionId = this._bumpTransition();
         const detailState = this.getActiveDetailSnapshot();
         const panelInner = this.getPanelInner();
