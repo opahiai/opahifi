@@ -116,7 +116,6 @@ body {
 
     /* ── Panel outer / inner padding ── */
     --pl3-panel-pad-x: 0px;
-    --pl3-panel-pad-bottom: 5px;
     --pl3-panel-inner-pad-top: clamp(12px, calc(8px + 1.2vw), 16px);
     --pl3-panel-inner-pad-x: clamp(4px, calc(2px + 0.9vw), 5px);
     --pl3-panel-inner-pad-y: clamp(8px, calc(5px + 1.4vw), 10px);
@@ -680,6 +679,8 @@ body {
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.72rem;
     font-weight: 800;
+    line-height: 0.8;
+    align-self: flex-start;
 }
 
 .PL3-gallery {
@@ -701,7 +702,7 @@ body {
     --pl3-gallery-row-overlap: calc(var(--pl3-gallery-item-h) * var(--pl3-gallery-row-overlap-factor));
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: stretch;
     gap: 0;
     padding:
@@ -829,12 +830,16 @@ body {
 .PL3-galleryItemBtn.PL3-artHost--detached:hover,
 .PL3-galleryItemBtn.PL3-artHost--detached:focus-visible,
 .PL3-galleryItemBtn.PL3-artHost--detached.PL3-galleryItemBtn--active {
-    opacity: 0;
+    opacity: 1;
     pointer-events: none;
-    box-shadow: none;
+    box-shadow: var(--pl3-gallery-shadow);
     filter: none;
-    transform: scale(0.92);
+    transform: translateY(0) scale(1);
     z-index: 0;
+}
+
+.PL3-galleryItemBtn.PL3-artHost--detached::after {
+    opacity: 0;
 }
 
 .PL3-part--gallery .PL3-gallery.PL3-gallery--locked .PL3-galleryItemBtn {
@@ -1882,7 +1887,6 @@ button {
     right: 0;
     bottom: var(--pl3-gallery-visible-h);
     z-index: 20;
-    padding: 0 var(--pl3-panel-pad-x) var(--pl3-panel-pad-bottom);
     transform: translateY(-110%);
     opacity: 0;
     pointer-events: none;
@@ -1907,9 +1911,10 @@ button {
     backdrop-filter: blur(9px);
     overflow: visible;
     display: flex;
+    padding: var(--pl3-panel-inner-pad-y) 10px var(--pl3-panel-inner-pad-bottom);
+
     flex-direction: column;
     gap: var(--pl3-panel-inner-gap);
-    padding: var(--pl3-panel-inner-pad-top) var(--pl3-panel-inner-pad-x) var(--pl3-panel-inner-pad-bottom);
     transition: background 0.34s ease, box-shadow 0.34s ease, border-color 0.34s ease;
     isolation: isolate;
 }
@@ -2658,9 +2663,6 @@ button {
         width: 360px;
     }
 
-    .PL3-groupPanel {
-        padding: 0 var(--pl3-panel-pad-x) var(--pl3-panel-pad-bottom);
-    }
 
     .PL3-groupPanelInner {
         border-left: 1px solid rgba(255, 255, 255, 0.16);
@@ -2805,10 +2807,6 @@ button {
     .PL3-upcomingBtn {
         --upcoming-btn-width: 140px;
         margin-top: 15px;
-    }
-
-    .PL3-groupPanel {
-        padding: 0 12px 6px;
     }
 
     .PL3-groupPanelInner {

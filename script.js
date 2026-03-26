@@ -867,7 +867,7 @@ class PL3GroupPanel {
     }
 
     queueVersionOpen(songId, options = {}) {
-        const { groupKey = this.activeGroupKey, hasBackNav = true } = options;
+        const { groupKey = this.activeGroupKey, hasBackNav = true, skipArtFlip = false } = options;
         if (!songId) return;
 
         requestAnimationFrame(() => {
@@ -875,7 +875,7 @@ class PL3GroupPanel {
                 if (this.activeGroupKey !== groupKey || this._panelState !== this.PANEL_STATE.GROUP) return;
                 const row = this.dom.groupPanelVersions?.querySelector(`[data-pl3-song-id="${songId}"]`);
                 if (!row) return;
-                this.openVersionDetail(row, songId, { hasBackNav });
+                this.openVersionDetail(row, songId, { hasBackNav, skipArtFlip });
             });
         });
     }
@@ -884,7 +884,7 @@ class PL3GroupPanel {
         const [songId] = this.getGroupSongIds(groupKey);
         if (!songId) return;
 
-        this.queueVersionOpen(songId, { groupKey, hasBackNav: false });
+        this.queueVersionOpen(songId, { groupKey, hasBackNav: false, skipArtFlip: true });
     }
 
     openFromTrigger(triggerBtn, groupKey, options = {}) {
@@ -928,9 +928,11 @@ class PL3GroupPanel {
         this.openFromTrigger(sourceBtn, key, { skipAutoOpen: !!songId });
 
         if (songId) {
+            const hasBackNav = this.getGroupSongIds(key).length > 1;
             this.queueVersionOpen(songId, {
                 groupKey: key,
-                hasBackNav: this.getGroupSongIds(key).length > 1
+                hasBackNav,
+                skipArtFlip: !hasBackNav
             });
         }
 
@@ -1254,7 +1256,7 @@ class PL3GroupPanel {
     }
 
     createDetailDom(row, song, options = {}) {
-        const { hasBackNav = true } = options;
+        const { hasBackNav = true, skipArtFlip = false } = options;
         const detail = document.createElement('div');
         detail.className = 'PL3-groupPanelSongDetail';
 
@@ -1272,9 +1274,11 @@ class PL3GroupPanel {
         const groupTitle = this.dom.groupPanel?.querySelector('.PL3-groupPanelGroupTitle') || null;
         const shouldFlipArt = this.shouldFlipDetailArt(versionArt);
         const useDockArtForDetail = this.shouldUseDockArtForDetail(song, versionArt);
-        const flipArtTarget = shouldFlipArt
-            ? (useDockArtForDetail ? dockArt : versionArt)
-            : dockArt;
+        const flipArtTarget = skipArtFlip
+            ? null
+            : (shouldFlipArt
+                ? (useDockArtForDetail ? dockArt : versionArt)
+                : dockArt);
         const detailControls = document.createElement('div');
         detailControls.className = 'PL3-groupPanelSongDetailControls';
 
@@ -1616,7 +1620,7 @@ class PL3GroupPanel {
     // ── Version Detail (in-panel) ──────────────────────────────────────────
 
     openVersionDetail(row, songId, options = {}) {
-        const { hasBackNav = true } = options;
+        const { hasBackNav = true, skipArtFlip = false } = options;
         if (this._panelState !== this.PANEL_STATE.GROUP || this._activeDetailRow) return;
         const song = this.singlesById[songId];
         if (!song) return;
@@ -1632,7 +1636,7 @@ class PL3GroupPanel {
         const panelInner = this.getPanelInner();
         this.setDetailMotionVars(panelInner, row);
 
-        const detailParts = this.createDetailDom(row, song, { hasBackNav });
+        const detailParts = this.createDetailDom(row, song, { hasBackNav, skipArtFlip });
         this.mountDetailDom(detailParts, panelInner);
         this.scheduleStageActivation(detailParts.stage, song, transitionId);
     }
