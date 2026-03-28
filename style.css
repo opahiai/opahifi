@@ -649,7 +649,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     overflow: hidden;
     padding: 8px 4px;
     box-sizing: border-box;
@@ -704,28 +704,14 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     pointer-events: none;
 }
 
-.PL3-videoTitle {
-    position: relative;
-    z-index: 1;
-    color: #fff;
-    font-family: 'Oswald', sans-serif;
-    font-size: clamp(0.65rem, 2.8vw, 0.88rem);
-    font-weight: 900;
-    line-height: 1.1;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
-    margin-top: 4px;
-}
-
 .PL3-videoWatchBtn {
     position: relative;
     z-index: 1;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 5px 10px;
+    padding: 2px 10px;
+    margin-bottom: 4px;
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.22);
@@ -740,6 +726,12 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-videoWatchBtn i {
     font-size: 9px;
+}
+
+.PL3-videoWatchBtnLabel {
+    display: block;
+    line-height: 1;
+    text-align: center;
 }
 
 .PL3-videoWatchBtn:hover {
