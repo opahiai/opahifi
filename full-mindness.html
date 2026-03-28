@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Full-mindness | OpaHiFi</title>
+    <meta name="description"
+        content="Full-mindness: the state of being entirely aware that life is a glitching disaster, but choosing to rebrand the resulting panic as a vibe." />
+    <style>
+        :root {
+            --ohfm-bg: #f6f8ff;
+            --ohfm-panel: rgba(255, 255, 255, 0.78);
+            --ohfm-panel-strong: rgba(255, 255, 255, 0.92);
+            --ohfm-text: #14213d;
+            --ohfm-muted: #4f5d75;
+            --ohfm-line: rgba(20, 33, 61, 0.1);
+            --ohfm-blue: #2772ff;
+            --ohfm-purple: #7a4dff;
+            --ohfm-red: #ff456b;
+            --ohfm-shadow: 0 20px 60px rgba(49, 63, 108, 0.16);
+            --ohfm-radius-xl: 28px;
+            --ohfm-radius-lg: 20px;
+            --ohfm-radius-md: 14px;
+            --ohfm-max: 1120px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--ohfm-text);
+            background:
+                radial-gradient(circle at top left, rgba(39, 114, 255, 0.18), transparent 30%),
+                radial-gradient(circle at top right, rgba(255, 69, 107, 0.14), transparent 28%),
+                radial-gradient(circle at center, rgba(122, 77, 255, 0.12), transparent 36%),
+                linear-gradient(180deg, #ffffff 0%, var(--ohfm-bg) 100%);
+            line-height: 1.55;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .ohfm-shell {
+            width: min(calc(100% - 32px), var(--ohfm-max));
+            margin: 0 auto;
+        }
+
+        .ohfm-nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(20, 33, 61, 0.06);
+        }
+
+        .ohfm-nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 0;
+        }
+
+        .ohfm-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .ohfm-brand-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--ohfm-blue), var(--ohfm-purple) 55%, var(--ohfm-red));
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), 0 8px 24px rgba(122, 77, 255, 0.3);
+        }
+
+        .ohfm-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            color: var(--ohfm-muted);
+            font-size: 0.95rem;
+        }
+
+        .ohfm-nav-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0 18px;
+            border-radius: 999px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--ohfm-blue), var(--ohfm-purple) 55%, var(--ohfm-red));
+            box-shadow: 0 12px 26px rgba(95, 70, 190, 0.28);
+            font-weight: 700;
+        }
+
+        .ohfm-hero {
+            padding: 72px 0 34px;
+        }
+
+        .ohfm-hero-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 26px;
+            align-items: stretch;
+        }
+
+        .ohfm-card {
+            background: var(--ohfm-panel);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            box-shadow: var(--ohfm-shadow);
+            border-radius: var(--ohfm-radius-xl);
+        }
+
+        .ohfm-hero-copy {
+            padding: 34px;
+        }
+
+        .ohfm-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(20, 33, 61, 0.08);
+            color: var(--ohfm-muted);
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .ohfm-title {
+            margin: 18px 0 16px;
+            font-size: clamp(2.6rem, 7vw, 5.6rem);
+            line-height: 0.95;
+            letter-spacing: -0.06em;
+        }
+
+        .ohfm-title-accent {
+            display: block;
+            background: linear-gradient(135deg, var(--ohfm-blue), var(--ohfm-purple) 52%, var(--ohfm-red));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .ohfm-pronounce {
+            margin: 0 0 18px;
+            color: var(--ohfm-muted);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .ohfm-lead {
+            margin: 0;
+            font-size: clamp(1.08rem, 2vw, 1.28rem);
+            max-width: 26ch;
+        }
+
+        .ohfm-hero-actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        .ohfm-track {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(39, 114, 255, 0.08), rgba(122, 77, 255, 0.12), rgba(255, 69, 107, 0.08));
+            border: 1px solid rgba(20, 33, 61, 0.08);
+            font-weight: 700;
+        }
+
+        .ohfm-track a {
+            font-weight: 800;
+            text-decoration: underline;
+        }
+
+        .ohfm-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+            padding: 0 20px;
+            border-radius: 999px;
+            font-weight: 800;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .ohfm-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .ohfm-btn-primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--ohfm-blue), var(--ohfm-purple) 55%, var(--ohfm-red));
+            box-shadow: 0 14px 28px rgba(95, 70, 190, 0.24);
+        }
+
+        .ohfm-btn-secondary {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(20, 33, 61, 0.08);
+            color: var(--ohfm-text);
+        }
+
+        .ohfm-hero-side {
+            padding: 22px;
+            display: grid;
+            gap: 18px;
+            align-content: start;
+        }
+
+        .ohfm-mini-card {
+            border-radius: var(--ohfm-radius-lg);
+            background: var(--ohfm-panel-strong);
+            border: 1px solid rgba(20, 33, 61, 0.06);
+            padding: 22px;
+        }
+
+        .ohfm-mini-label {
+            margin: 0 0 10px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--ohfm-muted);
+            font-weight: 800;
+        }
+
+        .ohfm-mini-copy {
+            margin: 0;
+            font-size: 1.05rem;
+            line-height: 1.45;
+        }
+
+        .ohfm-pillars {
+            padding: 18px 0 24px;
+        }
+
+        .ohfm-section-head {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .ohfm-section-title {
+            margin: 0;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            letter-spacing: -0.05em;
+        }
+
+        .ohfm-section-note {
+            margin: 0;
+            color: var(--ohfm-muted);
+            max-width: 520px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .ohfm-pillar-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .ohfm-pillar-card {
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ohfm-pillar-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto auto 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--ohfm-blue), var(--ohfm-purple), var(--ohfm-red));
+        }
+
+        .ohfm-pillar-number {
+            font-size: 0.82rem;
+            color: var(--ohfm-muted);
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .ohfm-pillar-title {
+            margin: 0 0 10px;
+            font-size: 1.3rem;
+            letter-spacing: -0.03em;
+        }
+
+        .ohfm-pillar-text {
+            margin: 0;
+            color: var(--ohfm-muted);
+        }
+
+        .ohfm-compare {
+            padding: 22px 0 24px;
+        }
+
+        .ohfm-table-wrap {
+            overflow-x: auto;
+            border-radius: var(--ohfm-radius-xl);
+            box-shadow: var(--ohfm-shadow);
+            background: var(--ohfm-panel-strong);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+        }
+
+        .ohfm-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+        }
+
+        .ohfm-table th,
+        .ohfm-table td {
+            padding: 18px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--ohfm-line);
+            vertical-align: top;
+        }
+
+        .ohfm-table thead th {
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--ohfm-muted);
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .ohfm-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .ohfm-table td:nth-child(3),
+        .ohfm-table th:nth-child(3) {
+            background: linear-gradient(90deg, rgba(39, 114, 255, 0.05), rgba(122, 77, 255, 0.08), rgba(255, 69, 107, 0.06));
+        }
+
+        .ohfm-example {
+            padding: 22px 0 82px;
+        }
+
+        .ohfm-example-card {
+            padding: 28px;
+        }
+
+        .ohfm-example-label {
+            margin: 0 0 12px;
+            color: var(--ohfm-muted);
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 800;
+        }
+
+        .ohfm-quote {
+            margin: 0;
+            font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+            line-height: 1.4;
+            letter-spacing: -0.03em;
+        }
+
+        .ohfm-footer {
+            padding: 0 0 44px;
+        }
+
+        .ohfm-footer-card {
+            padding: 22px 24px;
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .ohfm-footer-copy {
+            margin: 0;
+            color: var(--ohfm-muted);
+        }
+
+        @media (max-width: 920px) {
+
+            .ohfm-hero-grid,
+            .ohfm-pillar-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ohfm-section-head {
+                align-items: start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .ohfm-nav-inner {
+                align-items: start;
+                flex-direction: column;
+            }
+
+            .ohfm-hero {
+                padding-top: 42px;
+            }
+
+            .ohfm-hero-copy,
+            .ohfm-hero-side,
+            .ohfm-example-card,
+            .ohfm-pillar-card,
+            .ohfm-footer-card {
+                padding: 22px;
+            }
+
+            .ohfm-shell {
+                width: min(calc(100% - 20px), var(--ohfm-max));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="ohfm-nav">
+        <div class="ohfm-shell ohfm-nav-inner">
+            <a class="ohfm-brand" href="#top" aria-label="Full-mindness home">
+                <span class="ohfm-brand-mark" aria-hidden="true"></span>
+                <span>Full-mindness</span>
+            </a>
+            <div class="ohfm-nav-links">
+                <a href="#pillars">Pillars</a>
+                <a href="#comparison">Comparison</a>
+                <a href="#usage">Usage</a>
+                <a class="ohfm-nav-cta" href="https://opahifi.com" target="_blank" rel="noreferrer">Visit OpaHiFi</a>
+            </div>
+        </div>
+    </nav>
+
+    <main id="top">
+        <section class="ohfm-hero">
+            <div class="ohfm-shell ohfm-hero-grid">
+                <article class="ohfm-card ohfm-hero-copy">
+                    <div class="ohfm-kicker">A wellness framework for elegant malfunction</div>
+                    <h1 class="ohfm-title">
+                        <span>Full-</span>
+                        <span class="ohfm-title-accent">mindness</span>
+                    </h1>
+                    <p class="ohfm-pronounce">/fo͝ol-mīnd-nəs/ · noun</p>
+                    <p class="ohfm-lead">
+                        The state of being entirely aware that life is a glitching disaster, but choosing to rebrand the
+                        resulting panic as a vibe.
+                    </p>
+                    <div class="ohfm-hero-actions">
+                        <a class="ohfm-btn ohfm-btn-primary" href="#comparison">See the comparison</a>
+                        <a class="ohfm-btn ohfm-btn-secondary" href="#usage">Read the usage</a>
+                    </div>
+
+                    <div class="ohfm-track">
+                        <span>Listen: Full-Mindness — OpaHiFi</span>
+                        <a href="https://opahifi.com/s/full-mindness/opa-mayhem-mix" target="_blank">Play now</a>
+                    </div>
+
+                </article>
+
+                <aside class="ohfm-card ohfm-hero-side">
+                    <section class="ohfm-mini-card">
+                        <p class="ohfm-mini-label">Definition addendum</p>
+                        <p class="ohfm-mini-copy">Unlike Mindfulness, which seeks the void, Full-mindness embraces the
+                            overflow.</p>
+                    </section>
+                    <section class="ohfm-mini-card">
+                        <p class="ohfm-mini-label">Official sign-off</p>
+                        <p class="ohfm-mini-copy">Namastay in Denial.</p>
+                    </section>
+                    <section class="ohfm-mini-card">
+                        <p class="ohfm-mini-label">Core promise</p>
+                        <p class="ohfm-mini-copy">Inner peace is optional. Inner banger remains available.</p>
+                    </section>
+                </aside>
+            </div>
+        </section>
+
+        <section class="ohfm-pillars" id="pillars">
+            <div class="ohfm-shell">
+                <div class="ohfm-section-head">
+                    <h2 class="ohfm-section-title">The Three Pillars of Full-mindness</h2>
+                    <p class="ohfm-section-note">The official doctrine for people who fully understand the problem and
+                        still choose lighting, posture, and momentum.</p>
+                </div>
+
+                <div class="ohfm-pillar-grid">
+                    <article class="ohfm-card ohfm-pillar-card">
+                        <div class="ohfm-pillar-number">Pillar 01</div>
+                        <h3 class="ohfm-pillar-title">The Anti-Void</h3>
+                        <p class="ohfm-pillar-text">We do not clear our thoughts. We let them move in with their karaoke
+                            machine and dance to their bad songs.</p>
+                    </article>
+
+                    <article class="ohfm-card ohfm-pillar-card">
+                        <div class="ohfm-pillar-number">Pillar 02</div>
+                        <h3 class="ohfm-pillar-title">Toxic Rebranding</h3>
+                        <p class="ohfm-pillar-text">Pressure is the rhythm. Anxiety is the beat. If the house is on
+                            fire, use the light to take a better selfie.</p>
+                    </article>
+
+                    <article class="ohfm-card ohfm-pillar-card">
+                        <div class="ohfm-pillar-number">Pillar 03</div>
+                        <h3 class="ohfm-pillar-title">Meltdown Couture</h3>
+                        <p class="ohfm-pillar-text">As long as you look like you care, it barely matters that you are
+                            way out of control.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="ohfm-compare" id="comparison">
+            <div class="ohfm-shell">
+                <div class="ohfm-section-head">
+                    <h2 class="ohfm-section-title">Comparison</h2>
+                    <p class="ohfm-section-note">A side-by-side breakdown for anyone deciding whether to transcend or
+                        simply accessorize the collapse.</p>
+                </div>
+
+                <div class="ohfm-table-wrap">
+                    <table class="ohfm-table" aria-label="Mindfulness versus Full-mindness comparison table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Mindfulness</th>
+                                <th>Full-mindness</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Goal</td>
+                                <td>Inner Peace</td>
+                                <td>Inner Banger</td>
+                            </tr>
+                            <tr>
+                                <td>Breath</td>
+                                <td>Inhale Peace / Exhale Stress</td>
+                                <td>Inhale Chaos / Exhale with Flair</td>
+                            </tr>
+                            <tr>
+                                <td>State</td>
+                                <td>Being Present</td>
+                                <td>Being Paranoid, but fabulously</td>
+                            </tr>
+                            <tr>
+                                <td>Mantra</td>
+                                <td>I am whole.</td>
+                                <td>I am the anthem of incomplete.</td>
+                            </tr>
+                            <tr>
+                                <td>Sign-off</td>
+                                <td>Namaste</td>
+                                <td>Namastay in Denial</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="ohfm-example" id="usage">
+            <div class="ohfm-shell">
+                <article class="ohfm-card ohfm-example-card">
+                    <p class="ohfm-example-label">Usage in a sentence</p>
+                    <blockquote class="ohfm-quote">
+                        I tried to meditate, but my chakras got into a knot, so I achieved a state of Full-mindness and
+                        decided to just ride the heat instead.
+                    </blockquote>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="ohfm-footer">
+        <div class="ohfm-shell">
+            <div class="ohfm-card ohfm-footer-card">
+                <p class="ohfm-footer-copy">Full-mindness is a branded emotional support doctrine for the stylishly
+                    overwhelmed.</p>
+                <a class="ohfm-btn ohfm-btn-primary" href="https://opahifi.com" target="_blank" rel="noreferrer">Go to
+                    OpaHiFi</a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
