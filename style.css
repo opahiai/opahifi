@@ -513,6 +513,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
         margin-right: -1px;
         margin-bottom: 0;
     }
+
 }
 
 /* ===== OpaHiFi Cycle (About tab) ===== */
@@ -654,15 +655,22 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     box-sizing: border-box;
     cursor: pointer;
     text-decoration: none;
-    transition: filter 140ms ease;
+    transition: filter 140ms ease, transform 220ms ease;
 }
 
 .PL3-videoCard:hover {
     filter: brightness(1.12);
+    transform: translateY(-2px);
 }
 
 .PL3-videoCard+.PL3-videoCard {
     border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.PL3-videoScene {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
 }
 
 .PL3-videoThumb {
@@ -670,9 +678,22 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center top;
     display: block;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+.PL3-videoThumb--bg {
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.06);
+    filter: saturate(0.96) contrast(1.02);
+}
+
+.PL3-videoThumb--fg {
+    object-fit: contain;
+    object-position: center bottom;
+    transform: translateY(0) scale(1.02);
 }
 
 .PL3-videoCard::after {
@@ -725,6 +746,16 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     background: rgba(0, 0, 0, 0.55);
     border-color: rgba(255, 255, 255, 0.4);
     transform: translateY(-1px);
+}
+
+.PL3-videoCard:hover .PL3-videoThumb--bg,
+.PL3-videoCard:focus-visible .PL3-videoThumb--bg {
+    transform: scale(1.1);
+}
+
+.PL3-videoCard:hover .PL3-videoThumb--fg,
+.PL3-videoCard:focus-visible .PL3-videoThumb--fg {
+    transform: translateY(-4px) scale(1.04);
 }
 
 .PL3-part--gallery {

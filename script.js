@@ -479,6 +479,7 @@ class PL3HighlightSection {
         this.unlockScroll = callbacks.unlockScroll || (() => { });
         this.previewVideoId = '';
         this.previewMuted = false;
+        this.videoParallaxCleanup = [];
     }
 
     init() {
@@ -498,6 +499,7 @@ class PL3HighlightSection {
         const activate = (btn) => {
             btns.forEach(b => b.setAttribute('aria-selected', b === btn ? 'true' : 'false'));
             panels.forEach(p => { p.hidden = p.id !== btn.getAttribute('aria-controls'); });
+            this.onTabActivated(btn.getAttribute('data-pl3-tab') || '');
         };
 
         btns.forEach((btn, i) => {
@@ -507,6 +509,168 @@ class PL3HighlightSection {
                 if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') next = (i - 1 + btns.length) % btns.length;
                 if (ev.key === 'ArrowDown' || ev.key === 'ArrowRight') next = (i + 1) % btns.length;
                 if (next >= 0) { btns[next].focus(); activate(btns[next]); }
+            });
+        });
+
+        const activeBtn = btns.find((btn) => btn.getAttribute('aria-selected') === 'true') || btns[0];
+        this.onTabActivated(activeBtn?.getAttribute('data-pl3-tab') || '');
+    }
+
+    onTabActivated(tabKey) {
+        if (tabKey !== 'videos') {
+            this.resetVideoParallaxCards();
+            this.clearVideoParallaxCleanup();
+            return;
+        }
+        this.playVideoTabParallax();
+    }
+
+    getVideoCards() {
+        const videoPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-videos');
+        if (!videoPanel) return [];
+        return Array.from(videoPanel.querySelectorAll('.PL3-videoCard'));
+    }
+
+    resetVideoParallaxCards() {
+        const cards = this.getVideoCards();
+        const gsap = window.gsap;
+        cards.forEach((card) => {
+            const bg = card.querySelector('.PL3-videoThumb--bg');
+            const fg = card.querySelector('.PL3-videoThumb--fg');
+            if (gsap) {
+                gsap.killTweensOf([card, bg, fg].filter(Boolean));
+                gsap.set([card, bg, fg].filter(Boolean), { clearProps: 'all' });
+                return;
+            }
+            if (bg) {
+                bg.style.transform = '';
+                bg.style.opacity = '';
+            }
+            if (fg) {
+                fg.style.transform = '';
+                fg.style.opacity = '';
+            }
+            card.style.transform = '';
+            card.style.opacity = '';
+        });
+    }
+
+    clearVideoParallaxCleanup() {
+        this.videoParallaxCleanup.forEach((cleanup) => {
+            try {
+                cleanup();
+            } catch (_) {
+                // Ignore stale cleanup handlers.
+            }
+        });
+        this.videoParallaxCleanup = [];
+    }
+
+    playVideoTabParallax() {
+        const cards = this.getVideoCards();
+        if (!cards.length) return;
+
+        const gsap = window.gsap;
+        const hasReducedMotion = typeof window.matchMedia === 'function'
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        this.clearVideoParallaxCleanup();
+
+        if (!gsap || hasReducedMotion) {
+            this.resetVideoParallaxCards();
+            return;
+        }
+
+        cards.forEach((card, index) => {
+            const bg = card.querySelector('.PL3-videoThumb--bg');
+            const fg = card.querySelector('.PL3-videoThumb--fg');
+            if (!bg || !fg) return;
+
+            const baseBgX = index === 1 ? 1.6 : -1.6;
+            const baseFgX = index === 1 ? -1.4 : 1.1;
+            const baseFgY = index === 2 ? -4 : -2.5;
+
+            gsap.killTweensOf([card, bg, fg]);
+            gsap.set(card, { opacity: 0, y: 28, rotateX: -7, transformPerspective: 900 });
+            gsap.set(bg, { xPercent: 0, yPercent: 0, scale: 1.12, rotate: 0 });
+            gsap.set(fg, { xPercent: 0, yPercent: 8, scale: 0.94, rotate: 0, opacity: 0 });
+
+            const timeline = gsap.timeline({
+                defaults: {
+                    duration: 0.9,
+                    ease: 'power3.out'
+                }
+            });
+
+            timeline
+                .to(card, {
+                    opacity: 1,
+                    y: 0,
+                    rotateX: 0,
+                    delay: index * 0.08
+                })
+                .to(bg, {
+                    scale: 1.04,
+                    xPercent: baseBgX,
+                    yPercent: -1.4,
+                    duration: 1.05
+                }, 0.02)
+                .to(fg, {
+                    opacity: 1,
+                    scale: 1.02,
+                    yPercent: baseFgY,
+                    xPercent: baseFgX,
+                    duration: 1
+                }, 0.12);
+
+            const moveCard = (ev) => {
+                const rect = card.getBoundingClientRect();
+                if (!rect.width || !rect.height) return;
+                const px = ((ev.clientX - rect.left) / rect.width) - 0.5;
+                const py = ((ev.clientY - rect.top) / rect.height) - 0.5;
+
+                gsap.to(bg, {
+                    xPercent: baseBgX + (px * 8),
+                    yPercent: -1.4 + (py * 6),
+                    duration: 0.45,
+                    overwrite: 'auto'
+                });
+                gsap.to(fg, {
+                    xPercent: baseFgX + (px * -12),
+                    yPercent: baseFgY + (py * -10),
+                    rotate: px * -4,
+                    duration: 0.45,
+                    overwrite: 'auto'
+                });
+            };
+
+            const leaveCard = () => {
+                gsap.to(bg, {
+                    xPercent: baseBgX,
+                    yPercent: -1.4,
+                    scale: 1.04,
+                    rotate: 0,
+                    duration: 0.55,
+                    overwrite: 'auto'
+                });
+                gsap.to(fg, {
+                    xPercent: baseFgX,
+                    yPercent: baseFgY,
+                    scale: 1.02,
+                    rotate: 0,
+                    duration: 0.55,
+                    overwrite: 'auto'
+                });
+            };
+
+            card.addEventListener('pointermove', moveCard);
+            card.addEventListener('pointerleave', leaveCard);
+            card.addEventListener('blur', leaveCard, true);
+
+            this.videoParallaxCleanup.push(() => {
+                card.removeEventListener('pointermove', moveCard);
+                card.removeEventListener('pointerleave', leaveCard);
+                card.removeEventListener('blur', leaveCard, true);
             });
         });
     }
