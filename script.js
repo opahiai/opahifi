@@ -480,6 +480,7 @@ class PL3HighlightSection {
         this.previewVideoId = '';
         this.previewMuted = false;
         this.videoParallaxCleanup = [];
+        this.aboutHighlightTimeline = null;
     }
 
     init() {
@@ -520,9 +521,16 @@ class PL3HighlightSection {
         if (tabKey !== 'videos') {
             this.resetVideoParallaxCards();
             this.clearVideoParallaxCleanup();
-            return;
         }
-        this.playVideoTabParallax();
+        if (tabKey !== 'about') {
+            this.resetAboutCycleHighlights();
+        }
+        if (tabKey === 'videos') {
+            this.playVideoTabParallax();
+        }
+        if (tabKey === 'about') {
+            this.playAboutCycleHighlights();
+        }
     }
 
     getVideoCards() {
@@ -564,6 +572,180 @@ class PL3HighlightSection {
             }
         });
         this.videoParallaxCleanup = [];
+    }
+
+    getAboutPillars() {
+        const aboutPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-about');
+        if (!aboutPanel) return [];
+        return [
+            aboutPanel.querySelector('.cycle-pillar--pain'),
+            aboutPanel.querySelector('.cycle-pillar--power'),
+            aboutPanel.querySelector('.cycle-pillar--people'),
+            aboutPanel.querySelector('.cycle-pillar--party')
+        ].filter(Boolean);
+    }
+
+    getAboutCycleNodes() {
+        const aboutPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-about');
+        if (!aboutPanel) return [];
+
+        const items = [
+            {
+                key: 'pain',
+                title: aboutPanel.querySelector('.cycle-pillar--pain h3'),
+                path: aboutPanel.querySelector('.cycle-path-pain'),
+                arrow: aboutPanel.querySelector('.cycle-arrow-pain'),
+                stroke: '#f21818',
+                glow: 'rgba(249, 89, 89, 0.78)'
+            },
+            {
+                key: 'power',
+                title: aboutPanel.querySelector('.cycle-pillar--power h3'),
+                path: aboutPanel.querySelector('.cycle-path-power'),
+                arrow: aboutPanel.querySelector('.cycle-arrow-power'),
+                stroke: '#cf0fff',
+                glow: 'rgba(202, 90, 242, 0.78)'
+            },
+            {
+                key: 'party',
+                title: aboutPanel.querySelector('.cycle-pillar--party h3'),
+                path: aboutPanel.querySelector('.cycle-path-party'),
+                arrow: aboutPanel.querySelector('.cycle-arrow-party'),
+                stroke: '#003cff',
+                glow: 'rgba(71, 108, 231, 0.78)'
+            },
+            {
+                key: 'people',
+                title: aboutPanel.querySelector('.cycle-pillar--people h3'),
+                path: aboutPanel.querySelector('.cycle-path-people'),
+                arrow: aboutPanel.querySelector('.cycle-arrow-people'),
+                stroke: '#ea7a17',
+                glow: 'rgba(247, 193, 112, 0.78)'
+            }
+        ];
+
+        return items.filter((item) => item.title && item.path && item.arrow);
+    }
+
+    resetAboutCycleHighlights() {
+        const items = this.getAboutCycleNodes();
+        const gsap = window.gsap;
+
+        if (this.aboutHighlightTimeline) {
+            this.aboutHighlightTimeline.kill();
+            this.aboutHighlightTimeline = null;
+        }
+
+        if (gsap && items.length) {
+            const nodes = items.flatMap((item) => [item.title, item.path, item.arrow]);
+            gsap.killTweensOf(nodes);
+            items.forEach((item) => {
+                gsap.set(item.title, {
+                    scale: 1,
+                    y: 0,
+                    filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))'
+                });
+                gsap.set(item.path, {
+                    stroke: item.stroke,
+                    strokeWidth: 2,
+                    opacity: 1
+                });
+                gsap.set(item.arrow, {
+                    fill: item.stroke,
+                    scale: 1,
+                    opacity: 1,
+                    transformOrigin: '50% 50%'
+                });
+            });
+            return;
+        }
+
+        items.forEach((item) => {
+            item.title?.removeAttribute('style');
+            item.path?.removeAttribute('style');
+            item.arrow?.removeAttribute('style');
+        });
+    }
+
+    playAboutCycleHighlights() {
+        const items = this.getAboutCycleNodes();
+        if (!items.length) return;
+
+        const gsap = window.gsap;
+        const hasReducedMotion = typeof window.matchMedia === 'function'
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        this.resetAboutCycleHighlights();
+
+        if (!gsap || hasReducedMotion) {
+            return;
+        }
+
+        const timeline = gsap.timeline({
+            onComplete: () => {
+                this.aboutHighlightTimeline = null;
+            }
+        });
+
+        const totalCycles = 3;
+
+        for (let cycleIndex = 0; cycleIndex < totalCycles; cycleIndex += 1) {
+            items.forEach((item, itemIndex) => {
+                timeline
+                    .to(item.title, {
+                        scale: 1.08,
+                        y: -1,
+                        filter: `drop-shadow(0 0 12px ${item.glow}) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.72))`,
+                        duration: 0.38,
+                        ease: 'power2.out'
+                    })
+                    .to([item.path, item.arrow], {
+                        opacity: 1,
+                        duration: 0.01
+                    }, '<')
+                    .to(item.path, {
+                        stroke: '#ffffff',
+                        strokeWidth: 3.6,
+                        duration: 0.34,
+                        ease: 'power2.out'
+                    }, '>')
+                    .to(item.arrow, {
+                        fill: '#ffffff',
+                        scale: 1.28,
+                        duration: 0.34,
+                        ease: 'power2.out'
+                    }, '<0.02')
+                    .to({}, { duration: 0.26 })
+                    .to(item.title, {
+                        scale: 1,
+                        y: 0,
+                        filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))',
+                        duration: 0.28,
+                        ease: 'power2.inOut'
+                    })
+                    .to(item.path, {
+                        stroke: item.stroke,
+                        strokeWidth: 2,
+                        duration: 0.28,
+                        ease: 'power2.inOut'
+                    }, '<')
+                    .to(item.arrow, {
+                        fill: item.stroke,
+                        scale: 1,
+                        duration: 0.28,
+                        ease: 'power2.inOut'
+                    }, '<')
+                    .to({}, {
+                        duration: cycleIndex === totalCycles - 1 && itemIndex === items.length - 1 ? 0 : 0.16
+                    });
+            });
+
+            if (cycleIndex < totalCycles - 1) {
+                timeline.to({}, { duration: 0.32 });
+            }
+        }
+
+        this.aboutHighlightTimeline = timeline;
     }
 
     playVideoTabParallax() {
