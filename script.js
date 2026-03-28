@@ -2016,6 +2016,109 @@ class PL3Controller {
         });
     }
 
+    clearIntroPreload() {
+        this.section?.classList.remove('PL3-section--preload');
+    }
+
+    playIntro() {
+        if (!this.section) return;
+
+        const gsap = window.gsap;
+        const hasReducedMotion = typeof window.matchMedia === 'function'
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const { groupKey } = this.getInitialShareRoute();
+
+        if (!gsap || hasReducedMotion || groupKey) {
+            this.clearIntroPreload();
+            return;
+        }
+
+        const nav = this.section.querySelector('.PL3-nav');
+        const heroCover = this.section.querySelector('.PL3-heroRow');
+        const brand = this.section.querySelector('.PL3-heroTitle');
+        const slogan = this.section.querySelector('.PL3-heroSlogan');
+        const tabs = this.section.querySelector('.PL3-tabs');
+        const releaseArt = this.section.querySelector('.PL3-upcomingArtWrap');
+        const releaseArtImage = this.section.querySelector('.PL3-upcomingArt');
+        const releaseCopy = this.section.querySelector('.PL3-upcomingRight');
+        const galleryHeader = this.section.querySelector('.PL3-galleryHeader');
+        const galleryItems = Array.from(this.section.querySelectorAll('.PL3-galleryItemBtn'));
+        const galleryImages = Array.from(this.section.querySelectorAll('.PL3-galleryImg'));
+        const animatedNodes = [
+            nav,
+            heroCover,
+            brand,
+            ...this.el.heroBtns,
+            slogan,
+            tabs,
+            releaseArt,
+            releaseArtImage,
+            releaseCopy,
+            galleryHeader,
+            ...galleryItems,
+            ...galleryImages
+        ].filter(Boolean);
+
+        const timeline = gsap.timeline({
+            defaults: {
+                duration: 0.74,
+                ease: 'power3.out'
+            },
+            onComplete: () => {
+                this.clearIntroPreload();
+                gsap.set(animatedNodes, { clearProps: 'all' });
+            }
+        });
+
+        const addStep = (target, vars, position) => {
+            if (!target || (Array.isArray(target) && !target.length)) return;
+            timeline.to(target, vars, position);
+        };
+
+        addStep(nav, { y: 0, opacity: 1, duration: 0.56 });
+        addStep(heroCover, {
+            scale: 1,
+            opacity: 1,
+            filter: 'saturate(1) blur(0px)',
+            duration: 0.82
+        }, '-=0.2');
+        addStep(brand, { x: 0, opacity: 1, duration: 0.58 }, '-=0.28');
+        addStep(this.el.heroBtns, {
+            y: 0,
+            opacity: 1,
+            stagger: 0.07,
+            duration: 0.46
+        }, '<0.08');
+        addStep(slogan, { y: 0, opacity: 1, duration: 0.68 }, '-=0.42');
+        addStep(tabs, { y: 0, opacity: 1, duration: 0.72 }, '-=0.34');
+        addStep(releaseArt, {
+            x: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.68
+        }, '-=0.5');
+        addStep(releaseArtImage, {
+            scale: 1,
+            opacity: 1,
+            duration: 0.72
+        }, '<0.04');
+        addStep(releaseCopy, { x: 0, opacity: 1, duration: 0.62 }, '<0.08');
+        addStep(galleryHeader, { y: 0, opacity: 1, duration: 0.58 }, '-=0.34');
+        addStep(galleryItems, {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            stagger: 0.06,
+            duration: 0.56
+        }, '-=0.26');
+        addStep(galleryImages, {
+            scale: 1,
+            opacity: 1,
+            stagger: 0.06,
+            duration: 0.62
+        }, '<');
+    }
+
     init() {
         if (!this.section) return;
         this.headerSection.init();
@@ -2023,6 +2126,7 @@ class PL3Controller {
         this.highlightSection.init();
         this.groupPanelSection.init();
         this.gallerySection.init();
+        this.playIntro();
         this.openInitialShareRoute();
     }
 

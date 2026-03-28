@@ -267,6 +267,75 @@ body {
     overflow-y: hidden;
 }
 
+html.pl3-js .PL3-section--preload .PL3-nav,
+html.pl3-js .PL3-section--preload .PL3-heroRow,
+html.pl3-js .PL3-section--preload .PL3-heroTitle,
+html.pl3-js .PL3-section--preload .PL3-heroBtn,
+html.pl3-js .PL3-section--preload .PL3-heroSlogan,
+html.pl3-js .PL3-section--preload .PL3-tabs,
+html.pl3-js .PL3-section--preload .PL3-upcomingArtWrap,
+html.pl3-js .PL3-section--preload .PL3-upcomingArt,
+html.pl3-js .PL3-section--preload .PL3-upcomingRight,
+html.pl3-js .PL3-section--preload .PL3-galleryHeader,
+html.pl3-js .PL3-section--preload .PL3-galleryItemBtn,
+html.pl3-js .PL3-section--preload .PL3-galleryImg {
+    will-change: transform, opacity;
+}
+
+html.pl3-js .PL3-section--preload .PL3-nav {
+    opacity: 0;
+    transform: translateY(-24px);
+}
+
+html.pl3-js .PL3-section--preload .PL3-heroRow {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: saturate(0.82) blur(10px);
+}
+
+html.pl3-js .PL3-section--preload .PL3-heroTitle {
+    opacity: 0;
+    transform: translateX(-22px);
+}
+
+html.pl3-js .PL3-section--preload .PL3-heroBtn {
+    opacity: 0;
+    transform: translateY(-18px);
+}
+
+html.pl3-js .PL3-section--preload .PL3-heroSlogan,
+html.pl3-js .PL3-section--preload .PL3-tabs,
+html.pl3-js .PL3-section--preload .PL3-galleryHeader {
+    opacity: 0;
+    transform: translateY(28px);
+}
+
+html.pl3-js .PL3-section--preload .PL3-upcomingArtWrap {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.94);
+}
+
+html.pl3-js .PL3-section--preload .PL3-upcomingArt {
+    opacity: 0;
+    transform: scale(0.88);
+    animation: none;
+}
+
+html.pl3-js .PL3-section--preload .PL3-upcomingRight {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+html.pl3-js .PL3-section--preload .PL3-galleryItemBtn {
+    opacity: 0;
+    transform: translateY(38px) scale(0.96);
+}
+
+html.pl3-js .PL3-section--preload .PL3-galleryImg {
+    opacity: 0;
+    transform: scale(1.08);
+}
+
 .PL3-part--header {
     display: flex;
     align-items: center;
