@@ -1348,13 +1348,25 @@ class PL3GroupPanel {
 
     resolveSourceArtButton(triggerBtn, groupKey) {
         if (!triggerBtn) return null;
-        if (triggerBtn.classList.contains('PL3-galleryItemBtn') || triggerBtn.classList.contains('PL3-upcomingArtWrap')) {
+        if (triggerBtn.classList.contains('PL3-galleryItemBtn')) {
+            return triggerBtn;
+        }
+
+        if (triggerBtn.classList.contains('PL3-upcomingArtWrap')) {
+            if (triggerBtn.getAttribute('data-pl3-source-art') === 'gallery') {
+                return this.dom.section.querySelector(`.PL3-galleryItemBtn[data-pl3-group="${groupKey}"]`) || triggerBtn;
+            }
             return triggerBtn;
         }
 
         const upcoming = triggerBtn.closest('.PL3-upcoming');
         const upcomingArt = upcoming?.querySelector(`.PL3-upcomingArtWrap[data-pl3-group="${groupKey}"]`);
-        if (upcomingArt) return upcomingArt;
+        if (upcomingArt) {
+            if (upcomingArt.getAttribute('data-pl3-source-art') === 'gallery') {
+                return this.dom.section.querySelector(`.PL3-galleryItemBtn[data-pl3-group="${groupKey}"]`) || upcomingArt;
+            }
+            return upcomingArt;
+        }
 
         return this.dom.section.querySelector(`.PL3-galleryItemBtn[data-pl3-group="${groupKey}"]`);
     }
