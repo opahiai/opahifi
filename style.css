@@ -156,9 +156,9 @@ body {
 
     /* ── Share button on top of art (panel + version screens) ── */
     --pl3-art-share-size: clamp(24px, calc(5vw + 8px), 28px);
-    --pl3-art-share-offset: clamp(4px, calc(1vw + 1px), 5px);
+    --pl3-art-share-offset: 8px;
     --pl3-art-share-radius: 999px;
-    --pl3-art-share-bg: rgba(0, 0, 0, 0.52);
+    --pl3-art-share-bg: rgba(21, 7, 183, 0.52);
     --pl3-art-share-border: rgba(255, 255, 255, 0.18);
     --pl3-art-share-font: 0.75rem;
     --pl3-art-share-hover-bg: rgba(0, 0, 0, 0.74);
@@ -644,6 +644,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .PL3-videoCard {
+    --pl3-video-fg-floor: 22px;
     flex: 1 1 0;
     position: relative;
     display: flex;
@@ -691,9 +692,10 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .PL3-videoThumb--fg {
+    bottom: var(--pl3-video-fg-floor);
     object-fit: contain;
     object-position: center bottom;
-    transform: translateY(0) scale(1.02);
+    transform: scale(1.04);
 }
 
 .PL3-videoCard::after {
@@ -747,7 +749,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-videoCard:hover .PL3-videoThumb--fg,
 .PL3-videoCard:focus-visible .PL3-videoThumb--fg {
-    transform: translateY(-4px) scale(1.04);
+    transform: translateY(-2px) scale(1.06);
 }
 
 .PL3-part--gallery {
@@ -1920,6 +1922,88 @@ button {
     display: block;
 }
 
+#PL3-art-zoom-modal[hidden] {
+    display: none;
+}
+
+#PL3-art-zoom-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10002;
+}
+
+#PL3-art-zoom-modal .PL3-artZoomOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 7, 18, 0.84);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.22s ease;
+}
+
+#PL3-art-zoom-modal.PL3-artZoom--open .PL3-artZoomOverlay {
+    opacity: 1;
+}
+
+#PL3-art-zoom-modal .PL3-artZoomPanel {
+    position: relative;
+    width: min(94vw, 760px);
+    margin: 20px auto 0;
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+#PL3-art-zoom-modal.PL3-artZoom--open .PL3-artZoomPanel {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+#PL3-art-zoom-modal .PL3-artZoomInner {
+    position: relative;
+    padding: 52px 14px 14px;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background:
+        radial-gradient(circle at top, rgba(93, 108, 255, 0.16), transparent 56%),
+        linear-gradient(180deg, rgba(13, 21, 48, 0.98), rgba(5, 9, 22, 0.96));
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.52);
+}
+
+#PL3-art-zoom-modal .PL3-artZoomImage {
+    display: block;
+    width: 100%;
+    max-width: min(86vw, 700px);
+    max-height: calc(100vh - 120px);
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.26);
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.34);
+}
+
+#PL3-art-zoom-modal .PL3-artZoomClose {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.98);
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 22px;
+    line-height: 1;
+}
+
+#PL3-art-zoom-modal .PL3-artZoomClose:hover,
+#PL3-art-zoom-modal .PL3-artZoomClose:focus-visible {
+    background: rgba(255, 255, 255, 0.14);
+}
+
 /* ===== Always-visible navigation bar ===== */
 .PL3-nav {
     position: relative;
@@ -2097,7 +2181,7 @@ button {
     aspect-ratio: 1 / 1;
 }
 
-/* Share button: soft-pill positioned at bottom-right corner of the art */
+/* Share button: soft-pill positioned at bottom-left corner of the art */
 .PL3-groupPanelShareBtn {
     display: inline-flex;
     align-items: center;
@@ -2129,7 +2213,7 @@ button {
 .PL3-groupPanelArtDockWrap .PL3-groupPanelShareBtn {
     position: absolute;
     bottom: var(--pl3-art-share-offset);
-    right: var(--pl3-art-share-offset);
+    left: var(--pl3-art-share-offset);
     z-index: 130;
 }
 
@@ -2480,6 +2564,16 @@ button {
     transform: none;
     box-shadow: none;
     filter: none;
+}
+
+.PL3-groupArtInPanel--expandable {
+    cursor: zoom-in;
+    outline: none;
+}
+
+.PL3-groupPanelArtDock:hover .PL3-groupArtInPanel--expandable,
+.PL3-groupArtInPanel--expandable:focus-visible {
+    filter: brightness(1.05);
 }
 
 .PL3-part--gallery {

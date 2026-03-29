@@ -341,6 +341,8 @@ class PL3DomRegistry {
         this.streamingBtns = Array.from(document.querySelectorAll('[data-pl3-streaming-popup]'));
         this.previewModal = document.getElementById('PL3-preview-modal');
         this.previewIframe = document.getElementById('PL3-preview-iframe');
+        this.artZoomModal = document.getElementById('PL3-art-zoom-modal');
+        this.artZoomImage = document.getElementById('PL3-art-zoom-image');
         this.streamingModal = document.getElementById('PL3-streaming-modal');
         this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
     }
@@ -770,12 +772,12 @@ class PL3HighlightSection {
 
             const baseBgX = index === 1 ? 1.6 : -1.6;
             const baseFgX = index === 1 ? -1.4 : 1.1;
-            const baseFgY = index === 2 ? -4 : -2.5;
+            const baseFgY = 0;
 
             gsap.killTweensOf([card, bg, fg]);
             gsap.set(card, { opacity: 0, y: 28, rotateX: -7, transformPerspective: 900 });
             gsap.set(bg, { xPercent: 0, yPercent: 0, scale: 1.12, rotate: 0 });
-            gsap.set(fg, { xPercent: 0, yPercent: 8, scale: 0.94, rotate: 0, opacity: 0 });
+            gsap.set(fg, { xPercent: 0, yPercent: 6, scale: 0.98, rotate: 0, opacity: 0 });
 
             const timeline = gsap.timeline({
                 defaults: {
@@ -819,7 +821,7 @@ class PL3HighlightSection {
                 });
                 gsap.to(fg, {
                     xPercent: baseFgX + (px * -12),
-                    yPercent: baseFgY + (py * -10),
+                    yPercent: baseFgY + (py * -5),
                     rotate: px * -4,
                     duration: 0.45,
                     overwrite: 'auto'
@@ -978,7 +980,7 @@ class PL3HighlightSection {
 }
 
 class PL3GroupPanel {
-    constructor(dom) {
+    constructor(dom, callbacks = {}) {
         this.PANEL_STATE = Object.freeze({
             CLOSED: 'closed',
             GROUP: 'group',
@@ -991,6 +993,8 @@ class PL3GroupPanel {
             [this.VERSION_KIND.MAIN]: 'Main version'
         });
         this.dom = dom;
+        this.lockScroll = callbacks.lockScroll || (() => { });
+        this.unlockScroll = callbacks.unlockScroll || (() => { });
         this.data = window.musicDataGrouped || {};
         this.platformOrder = Array.isArray(this.data.platformOrder) ? this.data.platformOrder : [];
         this.singlesById = this.data.singlesById || {};
@@ -1008,6 +1012,7 @@ class PL3GroupPanel {
         this._closeBtnPopTimer = null;
         this._queuedVersionOpenTimer = null;
         this._artSwapTimeline = null;
+        this._artZoomHideTimer = null;
         this.ART_DOCK_FLIP_MS = 580;
 
         this.flipReady = !!(
@@ -1086,6 +1091,13 @@ class PL3GroupPanel {
         // Version row click → overlay drilldown
         if (this.dom.groupPanelVersions) {
             this.dom.groupPanelVersions.addEventListener('click', this.onVersionRowClick, { passive: false });
+        }
+        if (this.dom.groupPanelArtDock) {
+            this.dom.groupPanelArtDock.addEventListener('click', this.onArtDockClick, { passive: false });
+            this.dom.groupPanelArtDock.addEventListener('keydown', this.onArtDockKeyDown, { passive: false });
+        }
+        if (this.dom.artZoomModal) {
+            this.dom.artZoomModal.addEventListener('click', this.onArtZoomModalClick, { passive: false });
         }
         window.addEventListener('keydown', this.onKeyDown, { passive: true });
     }
@@ -1176,8 +1188,35 @@ class PL3GroupPanel {
         this.openVersionDetail(row, row.dataset.pl3SongId);
     };
 
+    onArtDockClick = (ev) => {
+        const img = ev.target.closest('.PL3-groupArtInPanel--expandable');
+        if (!img || !this.dom.groupPanelArtDock?.contains(img)) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        this.openExpandedArt(img);
+    };
+
+    onArtDockKeyDown = (ev) => {
+        if (ev.key !== 'Enter' && ev.key !== ' ') return;
+        const img = ev.target.closest('.PL3-groupArtInPanel--expandable');
+        if (!img || !this.dom.groupPanelArtDock?.contains(img)) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        this.openExpandedArt(img);
+    };
+
+    onArtZoomModalClick = (ev) => {
+        if (!ev.target.closest('[data-pl3-art-zoom-close]')) return;
+        ev.preventDefault();
+        this.closeExpandedArt();
+    };
+
     onKeyDown = (ev) => {
         if (ev.key !== 'Escape') return;
+        if (this.isExpandedArtOpen()) {
+            this.closeExpandedArt();
+            return;
+        }
         if (this._panelState === this.PANEL_STATE.SONG) {
             if (this._detailHasBackNav === false) {
                 this.close();
@@ -1221,6 +1260,83 @@ class PL3GroupPanel {
         if (!this._artSwapTimeline) return;
         this._artSwapTimeline.kill();
         this._artSwapTimeline = null;
+    }
+
+    clearArtZoomHideTimer() {
+        if (this._artZoomHideTimer == null) return;
+        window.clearTimeout(this._artZoomHideTimer);
+        this._artZoomHideTimer = null;
+    }
+
+    isExpandedArtOpen() {
+        return !!(this.dom.artZoomModal && !this.dom.artZoomModal.hidden);
+    }
+
+    armPanelArtImage(img) {
+        if (!img) return;
+        img.classList.add('PL3-groupArtInPanel--expandable');
+        img.setAttribute('tabindex', '0');
+        img.setAttribute('role', 'button');
+        img.setAttribute('aria-label', img.alt ? `Expand ${img.alt}` : 'Expand cover art');
+    }
+
+    disarmPanelArtImage(img) {
+        if (!img) return;
+        img.classList.remove('PL3-groupArtInPanel--expandable');
+        img.removeAttribute('tabindex');
+        img.removeAttribute('role');
+        if ((img.getAttribute('aria-label') || '').startsWith('Expand ')) {
+            img.removeAttribute('aria-label');
+        }
+    }
+
+    openExpandedArt(sourceImg) {
+        const modal = this.dom.artZoomModal;
+        const modalImg = this.dom.artZoomImage;
+        const src = sourceImg?.currentSrc || sourceImg?.getAttribute('src') || '';
+        if (!modal || !modalImg || !src) return;
+
+        this.clearArtZoomHideTimer();
+        modalImg.src = src;
+        modalImg.alt = sourceImg?.alt || 'Expanded cover art';
+
+        modal.hidden = false;
+        modal.setAttribute('aria-hidden', 'false');
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                modal.classList.add('PL3-artZoom--open');
+            });
+        });
+        this.lockScroll();
+    }
+
+    closeExpandedArt(options = {}) {
+        const { immediate = false } = options;
+        const modal = this.dom.artZoomModal;
+        const modalImg = this.dom.artZoomImage;
+        if (!modal || modal.hidden) return;
+
+        const finish = () => {
+            modal.hidden = true;
+            modal.setAttribute('aria-hidden', 'true');
+            modal.classList.remove('PL3-artZoom--open');
+            if (modalImg) {
+                modalImg.removeAttribute('src');
+                modalImg.removeAttribute('alt');
+            }
+            this._artZoomHideTimer = null;
+        };
+
+        this.clearArtZoomHideTimer();
+        modal.classList.remove('PL3-artZoom--open');
+
+        if (immediate) {
+            finish();
+        } else {
+            this._artZoomHideTimer = window.setTimeout(finish, 220);
+        }
+
+        this.unlockScroll();
     }
 
     hasDistinctSingleVersionArt(groupKey) {
@@ -1338,6 +1454,7 @@ class PL3GroupPanel {
         if (!this.isOpen() && !this.activeSourceBtn) return;
         this.clearQueuedVersionOpen();
         this.clearActiveArtSwap();
+        this.closeExpandedArt({ immediate: true });
         this.closeVersionDetail({ immediate: true });
         this.restoreSourceArt({ animate: true });
         this.closePanelShell();
@@ -1386,6 +1503,7 @@ class PL3GroupPanel {
 
         sourceBtn.classList.add('PL3-artHost--detached');
         sourceImg.classList.add('PL3-groupArtInPanel');
+        this.armPanelArtImage(sourceImg);
         this.dom.groupPanelArtDock.replaceChildren(sourceImg);
 
         this.activeSourceBtn = sourceBtn;
@@ -1410,6 +1528,7 @@ class PL3GroupPanel {
 
         const flipState = animate && this.flipReady ? window.Flip.getState(sourceImg) : null;
         sourceBtn.classList.remove('PL3-artHost--detached');
+        this.disarmPanelArtImage(sourceImg);
         sourceImg.classList.remove('PL3-groupArtInPanel');
 
         sourceBtn.replaceChildren(sourceImg);
@@ -1883,6 +2002,7 @@ class PL3GroupPanel {
             if (!useDockArtForDetail) {
                 versionArt.classList.remove('PL3-groupVersionArt');
                 versionArt.classList.add('PL3-groupArtInPanel');
+                this.armPanelArtImage(versionArt);
                 if (!shouldFlipArt) {
                     this.prepareDockArtOverlay(versionArt, { zIndex: 120, opacity: 0, scale: 0.97 });
                 }
@@ -1993,6 +2113,7 @@ class PL3GroupPanel {
         if (art && this.dom.groupPanelArtDock && !useDockArtForDetail) {
             const artWrap = row.querySelector('.PL3-groupVersionArtWrap');
             if (artWrap) {
+                this.disarmPanelArtImage(art);
                 art.classList.remove('PL3-groupArtInPanel');
                 art.classList.add('PL3-groupVersionArt');
                 artWrap.replaceChildren(art);
@@ -2053,6 +2174,7 @@ class PL3GroupPanel {
         const song = this.singlesById[songId];
         if (!song) return;
 
+        this.closeExpandedArt({ immediate: true });
         this.clearActiveArtSwap();
         const transitionId = this._bumpTransition();
 
@@ -2345,7 +2467,10 @@ class PL3Controller {
             lockScroll: () => this.lockScroll(),
             unlockScroll: () => this.unlockScroll()
         });
-        this.groupPanelSection = new PL3GroupPanel(this.el);
+        this.groupPanelSection = new PL3GroupPanel(this.el, {
+            lockScroll: () => this.lockScroll(),
+            unlockScroll: () => this.unlockScroll()
+        });
         this.gallerySection = new PL3GallerySection(this.el, {
             onGroupSelect: (btn, groupKey) => this.groupPanelSection.openFromTrigger(btn, groupKey)
         });
