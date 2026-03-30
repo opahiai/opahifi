@@ -598,7 +598,8 @@ class PL3HighlightSection {
                 path: aboutPanel.querySelector('.cycle-path-pain'),
                 arrow: aboutPanel.querySelector('.cycle-arrow-pain'),
                 stroke: '#f21818',
-                glow: 'rgba(249, 89, 89, 0.78)'
+                highlight: '#ff9a9a',
+                glow: 'rgba(249, 89, 89, 0.3)'
             },
             {
                 key: 'power',
@@ -606,7 +607,8 @@ class PL3HighlightSection {
                 path: aboutPanel.querySelector('.cycle-path-power'),
                 arrow: aboutPanel.querySelector('.cycle-arrow-power'),
                 stroke: '#cf0fff',
-                glow: 'rgba(202, 90, 242, 0.78)'
+                highlight: '#f0a0ff',
+                glow: 'rgba(202, 90, 242, 0.3)'
             },
             {
                 key: 'party',
@@ -614,7 +616,8 @@ class PL3HighlightSection {
                 path: aboutPanel.querySelector('.cycle-path-party'),
                 arrow: aboutPanel.querySelector('.cycle-arrow-party'),
                 stroke: '#003cff',
-                glow: 'rgba(71, 108, 231, 0.78)'
+                highlight: '#7ca5ff',
+                glow: 'rgba(71, 108, 231, 0.28)'
             },
             {
                 key: 'people',
@@ -622,7 +625,8 @@ class PL3HighlightSection {
                 path: aboutPanel.querySelector('.cycle-path-people'),
                 arrow: aboutPanel.querySelector('.cycle-arrow-people'),
                 stroke: '#ea7a17',
-                glow: 'rgba(247, 193, 112, 0.78)'
+                highlight: '#ffc980',
+                glow: 'rgba(247, 193, 112, 0.3)'
             }
         ];
 
@@ -644,18 +648,17 @@ class PL3HighlightSection {
             items.forEach((item) => {
                 gsap.set(item.title, {
                     scale: 1,
-                    y: 0,
                     filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))'
                 });
                 gsap.set(item.path, {
                     stroke: item.stroke,
                     strokeWidth: 2,
-                    opacity: 1
+                    opacity: 0.88
                 });
                 gsap.set(item.arrow, {
                     fill: item.stroke,
                     scale: 1,
-                    opacity: 1,
+                    opacity: 0.9,
                     transformOrigin: '50% 50%'
                 });
             });
@@ -695,55 +698,54 @@ class PL3HighlightSection {
             items.forEach((item, itemIndex) => {
                 timeline
                     .to(item.title, {
-                        scale: 1.08,
-                        y: -1,
-                        filter: `drop-shadow(0 0 12px ${item.glow}) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.72))`,
-                        duration: 0.38,
-                        ease: 'power2.out'
+                        scale: 1.03,
+                        filter: `drop-shadow(0 0 8px ${item.glow}) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.62))`,
+                        duration: 0.98,
+                        ease: 'sine.inOut'
                     })
-                    .to([item.path, item.arrow], {
-                        opacity: 1,
-                        duration: 0.01
-                    }, '<')
-                    .to(item.path, {
-                        stroke: '#ffffff',
-                        strokeWidth: 3.6,
-                        duration: 0.34,
-                        ease: 'power2.out'
-                    }, '>')
-                    .to(item.arrow, {
-                        fill: '#ffffff',
-                        scale: 1.28,
-                        duration: 0.34,
-                        ease: 'power2.out'
-                    }, '<0.02')
-                    .to({}, { duration: 0.26 })
+                    .to({}, { duration: 2 })
                     .to(item.title, {
                         scale: 1,
-                        y: 0,
                         filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))',
-                        duration: 0.28,
-                        ease: 'power2.inOut'
+                        duration: 0.68,
+                        ease: 'sine.inOut'
                     })
+                    .to(item.path, {
+                        stroke: item.highlight,
+                        strokeWidth: 2.55,
+                        opacity: 1,
+                        duration: 0.84,
+                        ease: 'sine.inOut'
+                    }, '>')
+                    .to(item.arrow, {
+                        fill: item.highlight,
+                        scale: 1.08,
+                        opacity: 1,
+                        duration: 0.84,
+                        ease: 'sine.inOut'
+                    }, '<')
+                    .to({}, { duration: 0.72 })
                     .to(item.path, {
                         stroke: item.stroke,
                         strokeWidth: 2,
-                        duration: 0.28,
-                        ease: 'power2.inOut'
-                    }, '<')
+                        opacity: 0.88,
+                        duration: 0.64,
+                        ease: 'sine.inOut'
+                    })
                     .to(item.arrow, {
                         fill: item.stroke,
                         scale: 1,
-                        duration: 0.28,
-                        ease: 'power2.inOut'
+                        opacity: 0.9,
+                        duration: 0.64,
+                        ease: 'sine.inOut'
                     }, '<')
                     .to({}, {
-                        duration: cycleIndex === totalCycles - 1 && itemIndex === items.length - 1 ? 0 : 0.16
+                        duration: cycleIndex === totalCycles - 1 && itemIndex === items.length - 1 ? 0 : 0.28
                     });
             });
 
             if (cycleIndex < totalCycles - 1) {
-                timeline.to({}, { duration: 0.32 });
+                timeline.to({}, { duration: 0.46 });
             }
         }
 
@@ -771,13 +773,13 @@ class PL3HighlightSection {
             if (!bg || !fg) return;
 
             const baseBgX = index === 1 ? 1.6 : -1.6;
-            const baseFgX = index === 1 ? -1.4 : 1.1;
+            const baseFgX = 0;
             const baseFgY = 0;
 
             gsap.killTweensOf([card, bg, fg]);
             gsap.set(card, { opacity: 0, y: 28, rotateX: -7, transformPerspective: 900 });
             gsap.set(bg, { xPercent: 0, yPercent: 0, scale: 1.12, rotate: 0 });
-            gsap.set(fg, { xPercent: 0, yPercent: 6, scale: 0.98, rotate: 0, opacity: 0 });
+            gsap.set(fg, { xPercent: 0, yPercent: 0, scale: 0.99, rotate: 0, opacity: 0 });
 
             const timeline = gsap.timeline({
                 defaults: {
@@ -820,9 +822,9 @@ class PL3HighlightSection {
                     overwrite: 'auto'
                 });
                 gsap.to(fg, {
-                    xPercent: baseFgX + (px * -12),
-                    yPercent: baseFgY + (py * -5),
-                    rotate: px * -4,
+                    xPercent: baseFgX + (px * -5.5),
+                    yPercent: baseFgY,
+                    rotate: px * -2.2,
                     duration: 0.45,
                     overwrite: 'auto'
                 });
