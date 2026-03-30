@@ -662,6 +662,10 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     transition: filter 140ms ease, transform 220ms ease;
 }
 
+.PL3-videoCard--meet {
+    --pl3-video-fg-offset-x: 8px;
+}
+
 .PL3-videoCard:hover {
     filter: brightness(1.12);
     transform: translateY(-2px);

@@ -646,6 +646,7 @@ class PL3HighlightSection {
             const nodes = items.flatMap((item) => [item.title, item.path, item.arrow]);
             gsap.killTweensOf(nodes);
             items.forEach((item) => {
+                gsap.set(item.title, { clearProps: 'color,webkitTextFillColor' });
                 gsap.set(item.title, {
                     scale: 1,
                     filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))'
@@ -699,17 +700,22 @@ class PL3HighlightSection {
                 timeline
                     .to(item.title, {
                         scale: 1.03,
-                        filter: `drop-shadow(0 0 8px ${item.glow}) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.62))`,
-                        duration: 0.98,
+                        color: '#ffffff',
+                        webkitTextFillColor: '#ffffff',
+                        filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.42)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.62))',
+                        duration: 1.08,
                         ease: 'sine.inOut'
                     })
                     .to({}, { duration: 2 })
                     .to(item.title, {
                         scale: 1,
+                        color: 'rgba(255, 255, 255, 0)',
+                        webkitTextFillColor: 'transparent',
                         filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))',
                         duration: 0.68,
                         ease: 'sine.inOut'
                     })
+                    .to({}, { duration: 1 })
                     .to(item.path, {
                         stroke: item.highlight,
                         strokeWidth: 2.55,
