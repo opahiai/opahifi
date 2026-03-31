@@ -481,6 +481,9 @@ class PL3HighlightSection {
         this.unlockScroll = callbacks.unlockScroll || (() => { });
         this.previewVideoId = '';
         this.previewMuted = false;
+        this.previewAudio = null;
+        this.previewAudioBtn = null;
+        this.previewAudioPlayer = null;
         this.videoParallaxCleanup = [];
         this.aboutHighlightTimeline = null;
     }
@@ -523,6 +526,9 @@ class PL3HighlightSection {
         if (tabKey !== 'videos') {
             this.resetVideoParallaxCards();
             this.clearVideoParallaxCleanup();
+        }
+        if (tabKey !== 'release') {
+            this.pausePreviewAudio(true);
         }
         if (tabKey !== 'about') {
             this.resetAboutCycleHighlights();
@@ -891,6 +897,16 @@ class PL3HighlightSection {
         const releasePanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-release');
         if (releasePanel) {
             releasePanel.addEventListener('click', (ev) => {
+                const audioBtn = ev.target.closest('[data-pl3-audio-toggle]');
+                if (audioBtn) {
+                    const audioPlayer = audioBtn.closest('[data-pl3-audio-player]');
+                    if (!audioPlayer) return;
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    this.togglePreviewAudio(audioPlayer.getAttribute('data-pl3-audio-src'), audioBtn, audioPlayer);
+                    return;
+                }
+
                 const btn = ev.target.closest('[data-pl3-video-embed]');
                 if (!btn) return;
                 ev.preventDefault();
@@ -927,6 +943,7 @@ class PL3HighlightSection {
         const id = String(videoId || '').trim();
         if (!id) return;
 
+        this.pausePreviewAudio();
         this.previewVideoId = id;
         this.previewMuted = false;
         this.applyPreviewIframeSrc();
@@ -970,6 +987,122 @@ class PL3HighlightSection {
         if (icon) {
             icon.classList.toggle('fa-volume-xmark', isMuted);
             icon.classList.toggle('fa-volume-high', !isMuted);
+        }
+    }
+
+    getPreviewAudio() {
+        if (this.previewAudio) return this.previewAudio;
+        const audio = new Audio();
+        audio.preload = 'metadata';
+        audio.addEventListener('play', () => {
+            this.syncPreviewAudioButton(this.previewAudioBtn, true);
+            this.syncPreviewAudioProgress(this.previewAudioPlayer);
+        });
+        audio.addEventListener('pause', () => {
+            this.syncPreviewAudioButton(this.previewAudioBtn, false);
+            this.syncPreviewAudioProgress(this.previewAudioPlayer);
+        });
+        audio.addEventListener('ended', () => {
+            audio.currentTime = 0;
+            this.syncPreviewAudioButton(this.previewAudioBtn, false);
+            this.syncPreviewAudioProgress(this.previewAudioPlayer);
+        });
+        audio.addEventListener('timeupdate', () => {
+            this.syncPreviewAudioProgress(this.previewAudioPlayer);
+        });
+        audio.addEventListener('loadedmetadata', () => {
+            this.syncPreviewAudioProgress(this.previewAudioPlayer);
+        });
+        this.previewAudio = audio;
+        return audio;
+    }
+
+    syncPreviewAudioButton(btn, isPlaying) {
+        if (!btn) return;
+        const player = btn.closest('[data-pl3-audio-player]');
+        if (player) {
+            player.classList.toggle('is-playing', isPlaying);
+        }
+        btn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+        btn.setAttribute('aria-label', isPlaying ? 'Pause Full-Mindness audio' : 'Play Full-Mindness audio');
+        const icon = btn.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fa-play', !isPlaying);
+            icon.classList.toggle('fa-pause', isPlaying);
+        }
+        const label = btn.querySelector('[data-pl3-audio-toggle-label]');
+        if (label) {
+            label.textContent = isPlaying ? 'Pause' : 'Play';
+        }
+    }
+
+    formatPreviewAudioTime(seconds) {
+        const safeSeconds = Number.isFinite(seconds) && seconds > 0 ? Math.floor(seconds) : 0;
+        const minutes = Math.floor(safeSeconds / 60);
+        const remainder = safeSeconds % 60;
+        return `${minutes}:${String(remainder).padStart(2, '0')}`;
+    }
+
+    syncPreviewAudioProgress(player) {
+        if (!player || !this.previewAudio) return;
+        const duration = Number.isFinite(this.previewAudio.duration) ? this.previewAudio.duration : 0;
+        const current = Number.isFinite(this.previewAudio.currentTime) ? this.previewAudio.currentTime : 0;
+        const progress = player.querySelector('[data-pl3-audio-progress]');
+        const currentTime = player.querySelector('[data-pl3-audio-current]');
+        const durationTime = player.querySelector('[data-pl3-audio-duration]');
+
+        if (progress) {
+            const ratio = duration > 0 ? Math.min(1, Math.max(0, current / duration)) : 0;
+            progress.style.width = `${ratio * 100}%`;
+        }
+        if (currentTime) {
+            currentTime.textContent = this.formatPreviewAudioTime(current);
+        }
+        if (durationTime) {
+            durationTime.textContent = this.formatPreviewAudioTime(duration);
+        }
+    }
+
+    pausePreviewAudio(resetTime = false) {
+        if (!this.previewAudio) return;
+        this.previewAudio.pause();
+        if (resetTime) {
+            this.previewAudio.currentTime = 0;
+        }
+        this.syncPreviewAudioProgress(this.previewAudioPlayer);
+    }
+
+    togglePreviewAudio(audioSrc, btn, player) {
+        const src = String(audioSrc || '').trim();
+        if (!src || !btn) return;
+
+        const audio = this.getPreviewAudio();
+        const resolvedSrc = new URL(src, window.location.href).href;
+
+        if (this.previewAudioBtn && this.previewAudioBtn !== btn) {
+            this.syncPreviewAudioButton(this.previewAudioBtn, false);
+        }
+
+        this.previewAudioBtn = btn;
+        this.previewAudioPlayer = player || btn.closest('[data-pl3-audio-player]') || null;
+
+        if (audio.src !== resolvedSrc) {
+            audio.pause();
+            audio.src = resolvedSrc;
+            audio.currentTime = 0;
+            this.syncPreviewAudioProgress(this.previewAudioPlayer);
+        }
+
+        if (!audio.paused) {
+            audio.pause();
+            return;
+        }
+
+        const playAttempt = audio.play();
+        if (playAttempt && typeof playAttempt.catch === 'function') {
+            playAttempt.catch(() => {
+                this.syncPreviewAudioButton(btn, false);
+            });
         }
     }
 

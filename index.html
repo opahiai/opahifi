@@ -149,29 +149,52 @@
                                 <div class="PL3-tabPanel" id="PL3-tabPanel-release" role="tabpanel"
                                     aria-label="Playing Now">
                                     <div class="PL3-upcoming PL3-upcoming--playingNow" aria-label="Playing now">
-                                        <!-- Left: Image -->
-                                        <button class="PL3-upcomingArtWrap" type="button"
-                                            aria-label="Open Full-Mindness" data-pl3-group="full-mindness"
-                                            data-pl3-source-art="gallery">
-                                            <img class="PL3-upcomingArt"
-                                                src="img/music/versions/version-fullmindness-mayhemmix.png"
-                                                alt="Full-Mindness Opa Mayhem Mix cover" loading="lazy"
-                                                onerror="this.src='img/music/opahifi_album.png'">
-                                        </button>
-                                        <!-- Right: Drop Message and Buttons -->
                                         <div class="PL3-upcomingRight">
-                                            <div class="PL3-upcomingDesc">FEATURED <br>RELEASE</div>
-                                            <div class="PL3-upcomingButtons" aria-label="Release actions">
-                                                <button class="PL3-upcomingBtn PL3-upcomingPreviewBtn" type="button"
-                                                    data-pl3-video-embed="lE193jDewd4" aria-label="Open Full-Mindness">
-                                                    <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                                    <span>Preview</span>
-                                                </button>
-                                                <a class="PL3-upcomingBtn PL3-upcomingInfoBtn" href="full-mindness.html"
+                                            <div class="PL3-upcomingHeader">
+                                                <div class="PL3-upcomingDesc">FEATURED RELEASE</div>
+                                                <a class="PL3-upcomingBtn PL3-upcomingInfoBtn PL3-upcomingInfoBtn--inline"
+                                                    href="full-mindness.html"
                                                     aria-label="Learn more about Full-Mindness">
                                                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                                                     <span>Learn More</span>
                                                 </a>
+                                            </div>
+                                            <div class="PL3-upcomingPlayer" data-pl3-audio-player
+                                                data-pl3-audio-src="audio/audio-full-mindness-elm-st.m4a">
+                                                <div class="PL3-upcomingPlayerArtWrap" aria-hidden="true">
+                                                    <img class="PL3-upcomingArt"
+                                                        src="img/music/versions/version-fullmindness-mayhemmix.png"
+                                                        alt="Full-Mindness Opa Mayhem Mix cover" loading="lazy"
+                                                        onerror="this.src='img/music/opahifi_album.png'">
+                                                </div>
+                                                <div class="PL3-upcomingPlayerBody">
+                                                    <div class="PL3-upcomingPlayerTitle">Full-Mindness</div>
+                                                    <div class="PL3-upcomingPlayerSub">Mayhem Mix</div>
+                                                    <div class="PL3-upcomingPlayerMeter" aria-hidden="true">
+                                                        <span class="PL3-upcomingPlayerMeterBar"></span>
+                                                        <span class="PL3-upcomingPlayerMeterBar"></span>
+                                                        <span class="PL3-upcomingPlayerMeterBar"></span>
+                                                        <span class="PL3-upcomingPlayerMeterBar"></span>
+                                                        <span class="PL3-upcomingPlayerMeterBar"></span>
+                                                    </div>
+                                                    <div class="PL3-upcomingPlayerTimeline" aria-hidden="true">
+                                                        <span class="PL3-upcomingPlayerProgress"
+                                                            data-pl3-audio-progress></span>
+                                                    </div>
+                                                    <div class="PL3-upcomingPlayerFooter">
+                                                        <button class="PL3-upcomingPlayerBtn" type="button"
+                                                            data-pl3-audio-toggle
+                                                            aria-label="Play Full-Mindness audio"
+                                                            aria-pressed="false">
+                                                            <i class="fa-solid fa-play" aria-hidden="true"></i>
+                                                            <span data-pl3-audio-toggle-label>Play</span>
+                                                        </button>
+                                                        <div class="PL3-upcomingPlayerTimes">
+                                                            <span data-pl3-audio-current>0:00</span>
+                                                            <span data-pl3-audio-duration>0:00</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
