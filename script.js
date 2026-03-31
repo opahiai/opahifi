@@ -235,7 +235,7 @@
             title: 'GLITTAA Phoenix',
             version: 'Opa Sunrize Max Mix',
             image: 'img/music/versions/version-glittaaphoenix-sunrisemaxmix.png',
-            lyricsPath: 'lyrics/glittaa-pheonix.txt',
+            lyricsPath: 'lyrics/glittaa-pheonix-sunrise-mix.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP',
                 'Other': 'https://www.youtube.com/watch?v=LOywm64SGCY',
