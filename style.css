@@ -1602,11 +1602,11 @@ button {
 .PL3-upcomingPlayer {
     position: relative;
     display: grid;
-    grid-template-columns: 82px minmax(0, 1fr);
+    grid-template-columns: 96px minmax(0, 1fr);
     align-items: stretch;
-    gap: 8px;
+    gap: 7px;
     width: 100%;
-    padding: 8px;
+    padding: 7px;
     border-radius: 16px;
     background: linear-gradient(180deg, rgba(30, 12, 63, 0.82), rgba(16, 8, 37, 0.7));
     border: 1px solid rgba(223, 179, 255, 0.18);
@@ -1621,7 +1621,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
+    padding: 2px;
     border-radius: 14px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
     box-shadow:
@@ -1654,7 +1654,7 @@ button {
     height: auto;
     max-width: 100%;
     max-height: none;
-    border-radius: 10px;
+    border-radius: 11px;
     object-fit: cover;
     box-shadow: 0 6px 14px rgba(14, 8, 40, 0.16);
     animation: none;
@@ -1662,19 +1662,34 @@ button {
 
 .PL3-upcomingPlayerBody {
     min-width: 0;
-    display: grid;
-    align-content: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    height: 100%;
+    padding: 2px 0 2px;
+}
+
+.PL3-upcomingPlayerTop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     gap: 6px;
-    padding: 1px 0;
+    min-width: 0;
+}
+
+.PL3-upcomingPlayerCopy {
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 4px;
 }
 
 .PL3-upcomingPlayerTitle {
     margin: 0;
     color: #ffffff;
-    font-size: 0.76rem;
+    font-size: 0.96rem;
     font-weight: 900;
-    letter-spacing: 0.04em;
-    line-height: 0.95;
+    letter-spacing: 0.02em;
+    line-height: 0.88;
     text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;
@@ -1683,16 +1698,19 @@ button {
 
 .PL3-upcomingPlayerSub {
     color: rgba(255, 255, 255, 0.62);
-    font-size: 0.48rem;
+    font-size: 0.54rem;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.11em;
     line-height: 1;
     text-transform: uppercase;
+    margin-top: 4px;
 }
 
 .PL3-upcomingPlayerMeter {
     display: flex;
+    flex: 0 0 auto;
     align-items: flex-end;
+    justify-content: center;
     gap: 3px;
     height: 11px;
 }
@@ -1745,6 +1763,7 @@ button {
 .PL3-upcomingPlayerTimeline {
     position: relative;
     height: 5px;
+    margin-top: auto;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.1);
     overflow: hidden;
@@ -1764,25 +1783,27 @@ button {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
+    margin-top: 10px;
 }
 
 .PL3-upcomingPlayerBtn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
     min-height: 28px;
-    padding: 0 10px;
+    min-width: 0;
+    padding: 0 8px;
     border: 1px solid rgba(223, 179, 255, 0.24);
     border-radius: 12px;
     background: linear-gradient(180deg, rgba(70, 34, 147, 0.94), rgba(39, 16, 89, 0.86));
     color: #fff;
     cursor: pointer;
-    font-size: 0.62rem;
+    font-size: 0.56rem;
     font-weight: 800;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     line-height: 1;
     text-transform: uppercase;
     box-shadow:
@@ -1790,6 +1811,7 @@ button {
         0 8px 16px rgba(15, 7, 40, 0.16);
     transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
     flex: 0 0 auto;
+    align-self: flex-start;
 }
 
 .PL3-upcomingPlayerBtn:hover {
@@ -1811,19 +1833,25 @@ button {
     font-size: 12px;
 }
 
-.PL3-upcomingPlayerTimes {
-    display: flex;
+.PL3-upcomingPlayerTime {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
     color: rgba(255, 255, 255, 0.68);
     font-size: 0.46rem;
     font-weight: 800;
     line-height: 1;
     letter-spacing: 0.04em;
     font-variant-numeric: tabular-nums;
-    min-width: 0;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
+    min-width: 2.2rem;
+}
+
+.PL3-upcomingPlayerFooter .PL3-upcomingPlayerTime:first-child {
+    justify-content: flex-start;
+}
+
+.PL3-upcomingPlayerFooter .PL3-upcomingPlayerTime:last-child {
+    justify-content: flex-end;
 }
 
 .PL3-upcomingPlayer.is-playing {
@@ -3370,21 +3398,23 @@ button {
     }
 
     .PL3-upcomingPlayer {
-        grid-template-columns: 92px minmax(0, 1fr);
+        grid-template-columns: 108px minmax(0, 1fr);
         gap: 10px;
         padding: 10px;
     }
 
     .PL3-upcomingPlayerArtWrap {
-        padding: 5px;
+        padding: 3px;
     }
 
     .PL3-upcomingPlayerTitle {
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 
     .PL3-upcomingPlayerBtn {
         min-height: 30px;
+        padding: 0 9px;
+        font-size: 0.6rem;
     }
 
     .PL3-upcomingBtn {
@@ -3467,14 +3497,14 @@ button {
     }
 
     .PL3-upcomingPlayer {
-        grid-template-columns: 104px minmax(0, 1fr);
+        grid-template-columns: 120px minmax(0, 1fr);
         gap: 12px;
         padding: 12px;
         border-radius: 20px;
     }
 
     .PL3-upcomingPlayerArtWrap {
-        padding: 6px;
+        padding: 4px;
         border-radius: 16px;
     }
 
@@ -3483,16 +3513,17 @@ button {
     }
 
     .PL3-upcomingPlayerTitle {
-        font-size: 0.9rem;
+        font-size: 1.12rem;
     }
 
     .PL3-upcomingPlayerSub {
-        font-size: 0.54rem;
+        font-size: 0.58rem;
     }
 
     .PL3-upcomingPlayerBtn {
         min-height: 32px;
-        font-size: 0.66rem;
+        font-size: 0.64rem;
+        padding: 0 10px;
     }
 
     .PL3-upcomingBtn {
