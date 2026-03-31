@@ -105,8 +105,8 @@ body {
     --pl3-pill-playlist-max-w: 140px;
 
     /* ── About / Cycle section colors ── */
-    --cycle-pain: #f21818;
-    --cycle-pain-light: #f95959;
+    --cycle-pulse: #f21818;
+    --cycle-pulse-light: #f95959;
     --cycle-power: #cf0fff;
     --cycle-power-light: #ca5af2;
     --cycle-party: #003cff;
@@ -566,7 +566,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     justify-content: flex-end;
 }
 
-.cycle-pillar--pain {
+.cycle-pillar--pulse {
     grid-area: 1 / 1 / 2 / 2;
     text-align: left;
 }
@@ -598,8 +598,8 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
 }
 
-.cycle-pillar--pain h3 {
-    background-image: linear-gradient(135deg, var(--cycle-pain-light), var(--cycle-pain));
+.cycle-pillar--pulse h3 {
+    background-image: linear-gradient(135deg, var(--cycle-pulse-light), var(--cycle-pulse));
 }
 
 .cycle-pillar--power h3 {
@@ -1155,7 +1155,6 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     max-height: 100%;
     min-height: 0;
     overflow: hidden;
-    border-radius: var(--pl3-tile-radius);
     background-image:
         linear-gradient(180deg, rgba(5, 7, 17, 0.28), rgba(5, 7, 17, 0.62)),
         url("img/opa/cover.png");
@@ -1209,7 +1208,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-heroSlogan {
     color: #fff;
-    font-size: 1rem;
+    font-size: 1.7rem;
     font-weight: 300;
     line-height: 1.02;
     margin-top: 4px;

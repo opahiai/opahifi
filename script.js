@@ -580,7 +580,7 @@ class PL3HighlightSection {
         const aboutPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-about');
         if (!aboutPanel) return [];
         return [
-            aboutPanel.querySelector('.cycle-pillar--pain'),
+            aboutPanel.querySelector('.cycle-pillar--pulse'),
             aboutPanel.querySelector('.cycle-pillar--power'),
             aboutPanel.querySelector('.cycle-pillar--people'),
             aboutPanel.querySelector('.cycle-pillar--party')
@@ -593,10 +593,10 @@ class PL3HighlightSection {
 
         const items = [
             {
-                key: 'pain',
-                title: aboutPanel.querySelector('.cycle-pillar--pain h3'),
-                path: aboutPanel.querySelector('.cycle-path-pain'),
-                arrow: aboutPanel.querySelector('.cycle-arrow-pain'),
+                key: 'pulse',
+                title: aboutPanel.querySelector('.cycle-pillar--pulse h3'),
+                path: aboutPanel.querySelector('.cycle-path-pulse'),
+                arrow: aboutPanel.querySelector('.cycle-arrow-pulse'),
                 stroke: '#f21818',
                 highlight: '#ff9a9a',
                 glow: 'rgba(249, 89, 89, 0.3)'
