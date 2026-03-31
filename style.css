@@ -1519,7 +1519,7 @@ button {
     flex: 1 1 auto;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 14px;
     min-width: 0;
     min-height: 0;
 }
@@ -3509,6 +3509,10 @@ button {
 
     .PL3-upcoming--playingNow {
         padding: 12px;
+    }
+
+    .PL3-upcoming--playingNow .PL3-upcomingRight {
+        gap: 16px;
     }
 
     .PL3-upcoming--playingNow .PL3-upcomingDesc {
