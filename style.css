@@ -103,6 +103,7 @@ body {
     --pl3-pill-listen-max-w: 200px;
     --pl3-pill-follow-max-w: 180px;
     --pl3-pill-playlist-max-w: 140px;
+    --pl3-pill-h: 30px;
 
     /* ── About / Cycle section colors ── */
     --cycle-pulse: #f21818;
@@ -140,8 +141,8 @@ body {
     /* ── Panel art dock ── */
     --pl3-panel-art-dock-size: clamp(98px, calc(22vw + 28px), 118px);
 
-    /* ── Shared button height (design for 320px default) ── */
-    --pl3-btn-h: 28px;
+    /* ── Shared pill/button height (design for 320px default) ── */
+    --pl3-btn-h: var(--pl3-pill-h);
 
     /* ── Panel bottom close button ── */
     --pl3-panel-close-h: var(--pl3-btn-h);
@@ -275,7 +276,7 @@ html.pl3-js .PL3-section--preload .PL3-heroSlogan,
 html.pl3-js .PL3-section--preload .PL3-tabs,
 html.pl3-js .PL3-section--preload .PL3-upcomingArtWrap,
 html.pl3-js .PL3-section--preload .PL3-upcomingArt,
-html.pl3-js .PL3-section--preload .PL3-upcomingRight,
+html.pl3-js .PL3-section--preload .PL3-upcomingContent,
 html.pl3-js .PL3-section--preload .PL3-galleryHeader,
 html.pl3-js .PL3-section--preload .PL3-galleryItemBtn,
 html.pl3-js .PL3-section--preload .PL3-galleryImg {
@@ -321,7 +322,7 @@ html.pl3-js .PL3-section--preload .PL3-upcomingArt {
     animation: none;
 }
 
-html.pl3-js .PL3-section--preload .PL3-upcomingRight {
+html.pl3-js .PL3-section--preload .PL3-upcomingContent {
     opacity: 0;
     transform: translateX(30px);
 }
@@ -645,7 +646,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-videoCard {
     --pl3-video-btn-bottom: 8px;
-    --pl3-video-btn-height: 34px;
+    --pl3-video-btn-height: var(--pl3-pill-h);
     --pl3-video-fg-width: clamp(112px, 38vw, 156px);
     --pl3-video-fg-offset-x: 0px;
     flex: 1 1 0;
@@ -973,7 +974,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     flex: 0 0 auto;
     width: var(--pl3-pill-playlist-max-w);
     overflow: visible;
-    height: 30px;
+    height: var(--pl3-pill-h);
 }
 
 .PL3-playlistPill {
@@ -982,7 +983,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     justify-content: center;
     gap: 0px;
     width: 100%;
-    padding: 4px 14px;
+    padding: 0 14px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.25);
@@ -995,7 +996,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
     overflow: hidden;
     white-space: nowrap;
-    height: 30px;
+    height: var(--pl3-pill-h);
 }
 
 .PL3-playlistPill:hover {
@@ -1017,7 +1018,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     transform: translateY(-50%);
     justify-content: flex-start;
     z-index: 8;
-    height: 28px;
+    height: var(--pl3-pill-h);
     overflow: visible;
 }
 
@@ -1236,8 +1237,16 @@ button {
     font-family: "Tom Oswald", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+.PL3-heroBtn,
+.PL3-upcomingPlayerBtn,
+.PL3-upcomingBtn,
+.PL3-playlistPill,
+.PL3-videoWatchBtn {
+    min-height: var(--pl3-pill-h);
+    height: var(--pl3-pill-h);
+}
+
 .PL3-heroBtn {
-    height: 30px;
     border-radius: 999px;
     border: none;
     color: #fff;
@@ -1378,7 +1387,7 @@ button {
 
 .PL3-upcoming--playingNow {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     justify-content: center;
     padding: 8px;
     position: relative;
@@ -1505,7 +1514,7 @@ button {
     animation: PL3-upcomingPulse 2.5s ease-in-out infinite;
 }
 
-.PL3-upcomingRight {
+.PL3-upcomingContent {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -1514,11 +1523,11 @@ button {
     flex: 0 1 auto;
 }
 
-.PL3-upcoming--playingNow .PL3-upcomingRight {
+.PL3-upcoming--playingNow .PL3-upcomingContent {
     width: 100%;
     flex: 1 1 auto;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 14px;
     min-width: 0;
     min-height: 0;
@@ -1758,7 +1767,6 @@ button {
     align-items: center;
     justify-content: center;
     gap: 5px;
-    min-height: 30px;
     min-width: 0;
     padding: 0 10px;
     border: 1px solid rgba(223, 179, 255, 0.24);
@@ -1851,7 +1859,7 @@ button {
     gap: var(--upcoming-btn-gap, 6px);
     min-width: 96px;
     width: min(100%, var(--upcoming-btn-width, 132px));
-    padding: var(--upcoming-btn-padding, 8px 14px);
+    padding: var(--upcoming-btn-padding, 0 14px);
     border-radius: var(--upcoming-btn-radius, 20px);
     color: #fff;
     font-size: var(--upcoming-btn-font-size, 12px);
@@ -1916,7 +1924,6 @@ button {
     min-width: 0;
     align-self: flex-start;
     margin-top: 0;
-    min-height: 28px;
     max-height: none;
     padding: 0 10px;
     border-radius: 12px;
@@ -3271,7 +3278,6 @@ button {
         --pl3-gap-md: 9px;
         --pl3-panel-pad-x: 4px;
         --pl3-panel-inner-pad-x: 6px;
-        --pl3-btn-h: 30px;
         --pl3-panel-art-dock-size: 132px;
     }
 
@@ -3326,7 +3332,7 @@ button {
         padding: 10px;
     }
 
-    .PL3-upcomingRight {
+    .PL3-upcomingContent {
         align-items: flex-start;
         flex: 1 1 0;
     }
@@ -3360,7 +3366,6 @@ button {
     }
 
     .PL3-upcomingPlayerBtn {
-        min-height: 30px;
         padding: 0 12px;
         font-size: 0.64rem;
     }
@@ -3386,7 +3391,6 @@ button {
         --pl3-section-highlight: 37;
         --pl3-section-gallery: 37;
         --pl3-split-gap: 2.6vh;
-        --pl3-btn-h: 32px;
         --pl3-panel-art-dock-size: 148px;
         --pl3-version-art-size: 58px;
         --pl3-version-platform-size: 23px;
@@ -3431,7 +3435,7 @@ button {
         text-align: left;
     }
 
-    .PL3-upcomingRight,
+    .PL3-upcomingContent,
     .PL3-upcomingButtons {
         align-items: flex-start;
     }
@@ -3440,7 +3444,7 @@ button {
         padding: 12px;
     }
 
-    .PL3-upcoming--playingNow .PL3-upcomingRight {
+    .PL3-upcoming--playingNow .PL3-upcomingContent {
         gap: 16px;
     }
 
@@ -3473,7 +3477,6 @@ button {
     }
 
     .PL3-upcomingPlayerBtn {
-        min-height: 32px;
         font-size: 0.68rem;
         padding: 0 14px;
     }

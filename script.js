@@ -2664,7 +2664,7 @@ class PL3Controller {
         const tabs = this.section.querySelector('.PL3-tabs');
         const releaseArt = this.section.querySelector('.PL3-upcomingArtWrap');
         const releaseArtImage = this.section.querySelector('.PL3-upcomingArt');
-        const releaseCopy = this.section.querySelector('.PL3-upcomingRight');
+        const releaseCopy = this.section.querySelector('.PL3-upcomingContent');
         const galleryHeader = this.section.querySelector('.PL3-galleryHeader');
         const galleryItems = Array.from(this.section.querySelectorAll('.PL3-galleryItemBtn'));
         const galleryImages = Array.from(this.section.querySelectorAll('.PL3-galleryImg'));
