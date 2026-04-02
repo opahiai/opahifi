@@ -276,7 +276,8 @@ html.pl3-js .PL3-section--preload .PL3-heroSlogan,
 html.pl3-js .PL3-section--preload .PL3-tabs,
 html.pl3-js .PL3-section--preload .PL3-upcomingArtWrap,
 html.pl3-js .PL3-section--preload .PL3-upcomingArt,
-html.pl3-js .PL3-section--preload .PL3-upcomingContent,
+html.pl3-js .PL3-section--preload .PL3-upcomingHeader,
+html.pl3-js .PL3-section--preload .PL3-upcomingPlayerCard,
 html.pl3-js .PL3-section--preload .PL3-galleryHeader,
 html.pl3-js .PL3-section--preload .PL3-galleryItemBtn,
 html.pl3-js .PL3-section--preload .PL3-galleryImg {
@@ -322,7 +323,8 @@ html.pl3-js .PL3-section--preload .PL3-upcomingArt {
     animation: none;
 }
 
-html.pl3-js .PL3-section--preload .PL3-upcomingContent {
+html.pl3-js .PL3-section--preload .PL3-upcomingHeader,
+html.pl3-js .PL3-section--preload .PL3-upcomingPlayerCard {
     opacity: 0;
     transform: translateX(30px);
 }
@@ -1387,11 +1389,15 @@ button {
 
 .PL3-upcoming--playingNow {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 14px;
     padding: 8px;
     position: relative;
     isolation: isolate;
+    min-width: 0;
+    min-height: 0;
 }
 
 .PL3-upcoming--playingNow::before {
@@ -1512,25 +1518,6 @@ button {
     align-items: center;
     text-align: center;
     animation: PL3-upcomingPulse 2.5s ease-in-out infinite;
-}
-
-.PL3-upcomingContent {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    min-width: 0;
-    flex: 0 1 auto;
-}
-
-.PL3-upcoming--playingNow .PL3-upcomingContent {
-    width: 100%;
-    flex: 1 1 auto;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 14px;
-    min-width: 0;
-    min-height: 0;
 }
 
 .PL3-upcomingHeader {
@@ -3332,11 +3319,6 @@ button {
         padding: 10px;
     }
 
-    .PL3-upcomingContent {
-        align-items: flex-start;
-        flex: 1 1 0;
-    }
-
     .PL3-upcomingDesc {
         font-size: 2rem;
         text-align: left;
@@ -3435,16 +3417,12 @@ button {
         text-align: left;
     }
 
-    .PL3-upcomingContent,
     .PL3-upcomingButtons {
         align-items: flex-start;
     }
 
     .PL3-upcoming--playingNow {
         padding: 12px;
-    }
-
-    .PL3-upcoming--playingNow .PL3-upcomingContent {
         gap: 16px;
     }
 
