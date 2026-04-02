@@ -251,108 +251,47 @@
                                 <div class="PL3-tabPanel" id="PL3-tabPanel-about" role="tabpanel" aria-label="About"
                                     hidden>
                                     <div class="opahifi-cycle">
-                                        <svg class="cycle-svg" viewBox="0 0 250 225" preserveAspectRatio="none">
-                                            <defs>
-                                                <style>
-                                                    .cycle-path-pulse {
-                                                        stroke: var(--cycle-pulse);
-                                                        fill: none;
-                                                    }
-
-                                                    .cycle-arrow-pulse {
-                                                        fill: var(--cycle-pulse);
-                                                    }
-
-                                                    .cycle-path-power {
-                                                        stroke: var(--cycle-power);
-                                                        fill: none;
-                                                    }
-
-                                                    .cycle-arrow-power {
-                                                        fill: var(--cycle-power);
-                                                    }
-
-                                                    .cycle-path-party {
-                                                        stroke: var(--cycle-party);
-                                                        fill: none;
-                                                    }
-
-                                                    .cycle-arrow-party {
-                                                        fill: var(--cycle-party);
-                                                    }
-
-                                                    .cycle-path-people {
-                                                        stroke: var(--cycle-people);
-                                                        fill: none;
-                                                    }
-
-                                                    .cycle-arrow-people {
-                                                        fill: var(--cycle-people);
-                                                    }
-                                                </style>
-                                                <filter id="cycle-glow" x="-20%" y="-20%" width="140%" height="140%">
-                                                    <feGaussianBlur stdDeviation="1.5" result="blur" />
-                                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                                                </filter>
-                                            </defs>
-                                            <line x1="125" y1="15" x2="125" y2="210" stroke="rgba(255,255,255,0.08)"
-                                                stroke-width="1" stroke-dasharray="2 2" />
-                                            <line x1="15" y1="112.5" x2="235" y2="112.5" stroke="rgba(255,255,255,0.08)"
-                                                stroke-width="1" stroke-dasharray="2 2" />
-                                            <path class="cycle-path-pulse"
-                                                d="M 4 107.5 L 4 24 A 20 20 0 0 1 24 4 L 115 4" stroke-width="2"
-                                                stroke-linecap="round" />
-                                            <polygon class="cycle-arrow-pulse" points="112,1.5 120,4 112,6.5"
-                                                filter="url(#cycle-glow)" />
-                                            <path class="cycle-path-power"
-                                                d="M 130 4 L 226 4 A 20 20 0 0 1 246 24 L 246 102.5" stroke-width="2"
-                                                stroke-linecap="round" />
-                                            <polygon class="cycle-arrow-power" points="243.5,99.5 246,107.5 248.5,99.5"
-                                                filter="url(#cycle-glow)" />
-                                            <path class="cycle-path-party"
-                                                d="M 246 117.5 L 246 201 A 20 20 0 0 1 226 221 L 135 221"
-                                                stroke-width="2" stroke-linecap="round" />
-                                            <polygon class="cycle-arrow-party" points="138,218.5 130,221 138,223.5"
-                                                filter="url(#cycle-glow)" />
-                                            <path class="cycle-path-people"
-                                                d="M 120 221 L 24 221 A 20 20 0 0 1 4 201 L 4 122.5" stroke-width="2"
-                                                stroke-linecap="round" />
-                                            <polygon class="cycle-arrow-people" points="1.5,125.5 4,117.5 6.5,125.5"
-                                                filter="url(#cycle-glow)" />
-                                        </svg>
                                         <div class="cycle-grid">
-                                            <div class="cycle-pillar cycle-pillar--pulse cycle-pillar--top">
-                                                <h3>PULSE</h3>
-                                                <p>
-                                                    <span>Heartbeats turn to rhythm</span>
-                                                    <span>Lyrics run through veins</span>
-                                                    <span>Melodies make you feel alive</span>
-                                                </p>
-                                            </div>
-                                            <div class="cycle-pillar cycle-pillar--power cycle-pillar--top">
-                                                <h3>POWER</h3>
-                                                <p>
-                                                    <span>Beats that ignite movement</span>
-                                                    <span>Dance turns into energy</span>
-                                                    <span>Body leads, the mind follows</span>
-                                                </p>
-                                            </div>
-                                            <div class="cycle-pillar cycle-pillar--people cycle-pillar--bottom">
-                                                <h3>PEOPLE</h3>
-                                                <p>
-                                                    <span>Songs that bridge &amp; connect</span>
-                                                    <span>Love opens into vulnerability</span>
-                                                    <span>Even if you fall, you're not alone</span>
-                                                </p>
-                                            </div>
-                                            <div class="cycle-pillar cycle-pillar--party cycle-pillar--bottom">
-                                                <h3>PARTY</h3>
-                                                <p>
-                                                    <span>Music to celebrate the win</span>
-                                                    <span>The sound of letting go</span>
-                                                    <span>Release turns to elevation</span>
-                                                </p>
-                                            </div>
+                                            <article class="cycle-pillar cycle-pillar--pulse cycle-pillar--top">
+                                                <div class="cycle-pillarInner">
+                                                    <h3>PULSE</h3>
+                                                    <p>
+                                                        <span>Heartbeats turn to rhythm</span>
+                                                        <span>Lyrics run through veins</span>
+                                                        <span>Melodies make you feel alive</span>
+                                                    </p>
+                                                </div>
+                                            </article>
+                                            <article class="cycle-pillar cycle-pillar--power cycle-pillar--top">
+                                                <div class="cycle-pillarInner">
+                                                    <h3>POWER</h3>
+                                                    <p>
+                                                        <span>Beats that ignite movement</span>
+                                                        <span>Dance turns into energy</span>
+                                                        <span>Body leads, the mind follows</span>
+                                                    </p>
+                                                </div>
+                                            </article>
+                                            <article class="cycle-pillar cycle-pillar--people cycle-pillar--bottom">
+                                                <div class="cycle-pillarInner">
+                                                    <h3>PEOPLE</h3>
+                                                    <p>
+                                                        <span>Songs that bridge &amp; connect</span>
+                                                        <span>Love opens into vulnerability</span>
+                                                        <span>Even if you fall, you're not alone</span>
+                                                    </p>
+                                                </div>
+                                            </article>
+                                            <article class="cycle-pillar cycle-pillar--party cycle-pillar--bottom">
+                                                <div class="cycle-pillarInner">
+                                                    <h3>PARTY</h3>
+                                                    <p>
+                                                        <span>Music to celebrate the win</span>
+                                                        <span>The sound of letting go</span>
+                                                        <span>Release turns to elevation</span>
+                                                    </p>
+                                                </div>
+                                            </article>
                                         </div>
                                     </div>
                                 </div>

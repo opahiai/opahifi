@@ -485,7 +485,6 @@ class PL3HighlightSection {
         this.previewAudioBtn = null;
         this.previewAudioPlayer = null;
         this.videoParallaxCleanup = [];
-        this.aboutHighlightTimeline = null;
     }
 
     init() {
@@ -530,14 +529,8 @@ class PL3HighlightSection {
         if (tabKey !== 'release') {
             this.pausePreviewAudio(true);
         }
-        if (tabKey !== 'about') {
-            this.resetAboutCycleHighlights();
-        }
         if (tabKey === 'videos') {
             this.playVideoTabParallax();
-        }
-        if (tabKey === 'about') {
-            this.playAboutCycleHighlights();
         }
     }
 
@@ -580,188 +573,6 @@ class PL3HighlightSection {
             }
         });
         this.videoParallaxCleanup = [];
-    }
-
-    getAboutPillars() {
-        const aboutPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-about');
-        if (!aboutPanel) return [];
-        return [
-            aboutPanel.querySelector('.cycle-pillar--pulse'),
-            aboutPanel.querySelector('.cycle-pillar--power'),
-            aboutPanel.querySelector('.cycle-pillar--people'),
-            aboutPanel.querySelector('.cycle-pillar--party')
-        ].filter(Boolean);
-    }
-
-    getAboutCycleNodes() {
-        const aboutPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-about');
-        if (!aboutPanel) return [];
-
-        const items = [
-            {
-                key: 'pulse',
-                title: aboutPanel.querySelector('.cycle-pillar--pulse h3'),
-                path: aboutPanel.querySelector('.cycle-path-pulse'),
-                arrow: aboutPanel.querySelector('.cycle-arrow-pulse'),
-                stroke: '#f21818',
-                highlight: '#ff9a9a',
-                glow: 'rgba(249, 89, 89, 0.3)'
-            },
-            {
-                key: 'power',
-                title: aboutPanel.querySelector('.cycle-pillar--power h3'),
-                path: aboutPanel.querySelector('.cycle-path-power'),
-                arrow: aboutPanel.querySelector('.cycle-arrow-power'),
-                stroke: '#cf0fff',
-                highlight: '#f0a0ff',
-                glow: 'rgba(202, 90, 242, 0.3)'
-            },
-            {
-                key: 'party',
-                title: aboutPanel.querySelector('.cycle-pillar--party h3'),
-                path: aboutPanel.querySelector('.cycle-path-party'),
-                arrow: aboutPanel.querySelector('.cycle-arrow-party'),
-                stroke: '#003cff',
-                highlight: '#7ca5ff',
-                glow: 'rgba(71, 108, 231, 0.28)'
-            },
-            {
-                key: 'people',
-                title: aboutPanel.querySelector('.cycle-pillar--people h3'),
-                path: aboutPanel.querySelector('.cycle-path-people'),
-                arrow: aboutPanel.querySelector('.cycle-arrow-people'),
-                stroke: '#ea7a17',
-                highlight: '#ffc980',
-                glow: 'rgba(247, 193, 112, 0.3)'
-            }
-        ];
-
-        return items.filter((item) => item.title && item.path && item.arrow);
-    }
-
-    resetAboutCycleHighlights() {
-        const items = this.getAboutCycleNodes();
-        const gsap = window.gsap;
-
-        if (this.aboutHighlightTimeline) {
-            this.aboutHighlightTimeline.kill();
-            this.aboutHighlightTimeline = null;
-        }
-
-        if (gsap && items.length) {
-            const nodes = items.flatMap((item) => [item.title, item.path, item.arrow]);
-            gsap.killTweensOf(nodes);
-            items.forEach((item) => {
-                gsap.set(item.title, { clearProps: 'color,webkitTextFillColor' });
-                gsap.set(item.title, {
-                    scale: 1,
-                    filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))'
-                });
-                gsap.set(item.path, {
-                    stroke: item.stroke,
-                    strokeWidth: 2,
-                    opacity: 0.88
-                });
-                gsap.set(item.arrow, {
-                    fill: item.stroke,
-                    scale: 1,
-                    opacity: 0.9,
-                    transformOrigin: '50% 50%'
-                });
-            });
-            return;
-        }
-
-        items.forEach((item) => {
-            item.title?.removeAttribute('style');
-            item.path?.removeAttribute('style');
-            item.arrow?.removeAttribute('style');
-        });
-    }
-
-    playAboutCycleHighlights() {
-        const items = this.getAboutCycleNodes();
-        if (!items.length) return;
-
-        const gsap = window.gsap;
-        const hasReducedMotion = typeof window.matchMedia === 'function'
-            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        this.resetAboutCycleHighlights();
-
-        if (!gsap || hasReducedMotion) {
-            return;
-        }
-
-        const timeline = gsap.timeline({
-            onComplete: () => {
-                this.aboutHighlightTimeline = null;
-            }
-        });
-
-        const totalCycles = 3;
-
-        for (let cycleIndex = 0; cycleIndex < totalCycles; cycleIndex += 1) {
-            items.forEach((item, itemIndex) => {
-                timeline
-                    .to(item.title, {
-                        scale: 1.03,
-                        color: '#ffffff',
-                        webkitTextFillColor: '#ffffff',
-                        filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.42)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.62))',
-                        duration: 1.08,
-                        ease: 'sine.inOut'
-                    })
-                    .to({}, { duration: 2 })
-                    .to(item.title, {
-                        scale: 1,
-                        color: 'rgba(255, 255, 255, 0)',
-                        webkitTextFillColor: 'transparent',
-                        filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))',
-                        duration: 0.68,
-                        ease: 'sine.inOut'
-                    })
-                    .to({}, { duration: 1 })
-                    .to(item.path, {
-                        stroke: item.highlight,
-                        strokeWidth: 2.55,
-                        opacity: 1,
-                        duration: 0.84,
-                        ease: 'sine.inOut'
-                    }, '>')
-                    .to(item.arrow, {
-                        fill: item.highlight,
-                        scale: 1.08,
-                        opacity: 1,
-                        duration: 0.84,
-                        ease: 'sine.inOut'
-                    }, '<')
-                    .to({}, { duration: 0.72 })
-                    .to(item.path, {
-                        stroke: item.stroke,
-                        strokeWidth: 2,
-                        opacity: 0.88,
-                        duration: 0.64,
-                        ease: 'sine.inOut'
-                    })
-                    .to(item.arrow, {
-                        fill: item.stroke,
-                        scale: 1,
-                        opacity: 0.9,
-                        duration: 0.64,
-                        ease: 'sine.inOut'
-                    }, '<')
-                    .to({}, {
-                        duration: cycleIndex === totalCycles - 1 && itemIndex === items.length - 1 ? 0 : 0.28
-                    });
-            });
-
-            if (cycleIndex < totalCycles - 1) {
-                timeline.to({}, { duration: 0.46 });
-            }
-        }
-
-        this.aboutHighlightTimeline = timeline;
     }
 
     playVideoTabParallax() {
