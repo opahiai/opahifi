@@ -1758,7 +1758,7 @@ button {
     padding: 0 10px;
     border: 1px solid rgba(223, 179, 255, 0.24);
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(70, 34, 147, 0.94), rgba(39, 16, 89, 0.86));
+    background: linear-gradient(180deg, rgb(162 31 249 / 94%), rgb(99 9 138 / 86%));
     color: #fff;
     cursor: pointer;
     font-size: 0.62rem;
