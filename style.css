@@ -486,7 +486,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .cycle-arrow {
-    --cycle-arrow-size: clamp(20px, 4.4vw, 28px);
+    --cycle-arrow-size: clamp(22px, 5vw, 32px);
     position: absolute;
     z-index: 2;
     width: var(--cycle-arrow-size);
@@ -495,16 +495,19 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     background:
-        radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 42%),
-        linear-gradient(180deg, rgba(19, 24, 52, 0.82), rgba(7, 10, 24, 0.72));
+        radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 42%),
+        linear-gradient(180deg, rgba(14, 17, 37, 0.94), rgba(5, 7, 18, 0.9));
     box-shadow:
-        0 8px 18px rgba(0, 0, 0, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        0 8px 18px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     pointer-events: none;
+    will-change: transform, filter, box-shadow, border-color, opacity;
+    opacity: 0.42;
+    filter: brightness(0.62) saturate(0.62);
 }
 
 .cycle-arrowIcon {
@@ -513,7 +516,8 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     fill: none;
     transform: rotate(var(--cycle-arrow-rotation, 0deg));
     transform-origin: 50% 50%;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.28));
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.34));
+    opacity: 0.7;
 }
 
 .cycle-arrowTrail,
@@ -561,6 +565,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .cycle-pillar {
+    position: relative;
     min-width: 0;
     min-height: 0;
     display: flex;
@@ -568,7 +573,11 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     justify-content: stretch;
     overflow: hidden;
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    filter: brightness(0.46) saturate(0.72) contrast(0.95);
+    box-shadow:
+        inset 0 0 0 999px rgba(3, 5, 18, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    will-change: filter, box-shadow;
 }
 
 .cycle-pillar--pulse {
@@ -588,6 +597,8 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .cycle-pillarInner {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex: 1 1 auto;
     min-width: 0;
@@ -3260,7 +3271,9 @@ button {
 
 
 @media (prefers-reduced-motion: reduce) {
-    .PL3-upcomingPlayerArtWrap::before {
+    .PL3-upcomingPlayerArtWrap::before,
+    .cycle-pillar,
+    .cycle-arrow {
         animation: none !important;
     }
 }

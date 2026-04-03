@@ -428,6 +428,17 @@ class PL3ButtonsSection {
     }
 }
 
+const PL3_ABOUT_CYCLE_CONFIG = Object.freeze({
+    timing: Object.freeze({
+        pillarReveal: 0.65,
+        pillarHold: 2.35,
+        arrowPeak: 0.35,
+        arrowIconFadeIn: 0.22,
+        arrowSettle: 0.28,
+        arrowHold: 0.87
+    })
+});
+
 class PL3HighlightSection {
     constructor(dom, callbacks = {}) {
         this.dom = dom;
@@ -439,10 +450,16 @@ class PL3HighlightSection {
         this.previewAudioBtn = null;
         this.previewAudioPlayer = null;
         this.videoParallaxCleanup = [];
+        this.aboutCyclePanel = null;
+        this.aboutCycleSteps = [];
+        this.aboutCycleTimeline = null;
+        this.aboutCycleStarted = false;
+        this.aboutCycleCompleted = false;
     }
 
     init() {
         if (!this.dom.highlightPart) return;
+        this.setupAboutCycle();
         this.attachTabEvents();
         this.attachPreviewEvents();
     }
@@ -480,12 +497,210 @@ class PL3HighlightSection {
             this.resetVideoParallaxCards();
             this.clearVideoParallaxCleanup();
         }
+        if (tabKey !== 'about') {
+            this.pauseAboutCycle();
+        }
         if (tabKey !== 'release') {
             this.pausePreviewAudio(true);
         }
         if (tabKey === 'videos') {
             this.playVideoTabParallax();
         }
+        if (tabKey === 'about') {
+            this.playAboutCycle();
+        }
+    }
+
+    setupAboutCycle() {
+        const aboutPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-about');
+        if (!aboutPanel) return;
+
+        const buildArrowStep = (selector, rgb) => {
+            const el = aboutPanel.querySelector(selector);
+            return el ? {
+                type: 'arrow',
+                el,
+                icon: el.querySelector('.cycle-arrowIcon'),
+                rgb
+            } : null;
+        };
+
+        const steps = [
+            { type: 'pillar', el: aboutPanel.querySelector('.cycle-pillar--pulse'), rgb: '111 163 255' },
+            buildArrowStep('.cycle-arrow--top', '154 117 255'),
+            { type: 'pillar', el: aboutPanel.querySelector('.cycle-pillar--power'), rgb: '154 117 255' },
+            buildArrowStep('.cycle-arrow--right', '255 111 227'),
+            { type: 'pillar', el: aboutPanel.querySelector('.cycle-pillar--party'), rgb: '255 111 227' },
+            buildArrowStep('.cycle-arrow--bottom', '255 103 125'),
+            { type: 'pillar', el: aboutPanel.querySelector('.cycle-pillar--people'), rgb: '255 103 125' },
+            buildArrowStep('.cycle-arrow--left', '111 163 255')
+        ];
+
+        if (steps.some((step) => !step?.el)) return;
+
+        this.aboutCyclePanel = aboutPanel;
+        this.aboutCycleSteps = steps;
+
+        if (!window.gsap) return;
+
+        window.gsap.set(
+            this.aboutCycleSteps
+                .filter((step) => step.type === 'arrow')
+                .map((step) => step.el),
+            { transformOrigin: '50% 50%' }
+        );
+    }
+
+    getCyclePillarLitVars(rgb) {
+        return {
+            filter: 'brightness(1.34) saturate(1.34) contrast(1.04)',
+            boxShadow: [
+                'inset 0 0 0 999px rgba(255, 255, 255, 0.02)',
+                'inset 0 1px 0 rgba(255, 255, 255, 0.22)',
+                `inset 0 0 0 2px rgb(${rgb} / 0.56)`,
+                `inset 0 0 70px rgb(${rgb} / 0.22)`,
+                `0 0 34px rgb(${rgb} / 0.38)`,
+                `0 0 72px rgb(${rgb} / 0.24)`
+            ].join(', ')
+        };
+    }
+
+    getCycleArrowPeakVars(rgb) {
+        return {
+            scale: 1.32,
+            opacity: 1,
+            filter: 'brightness(1.95) saturate(1.5)',
+            borderColor: `rgb(${rgb} / 0.95)`,
+            boxShadow: [
+                `0 0 0 2px rgb(${rgb} / 0.34)`,
+                `0 0 22px rgb(${rgb} / 0.54)`,
+                `0 0 46px rgb(${rgb} / 0.34)`,
+                '0 12px 26px rgba(0, 0, 0, 0.34)',
+                'inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+            ].join(', ')
+        };
+    }
+
+    getCycleArrowLitVars(rgb) {
+        return {
+            scale: 1.08,
+            opacity: 0.96,
+            filter: 'brightness(1.45) saturate(1.18)',
+            borderColor: `rgb(${rgb} / 0.72)`,
+            boxShadow: [
+                `0 0 0 1px rgb(${rgb} / 0.24)`,
+                `0 0 16px rgb(${rgb} / 0.34)`,
+                '0 10px 22px rgba(0, 0, 0, 0.3)',
+                'inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+            ].join(', ')
+        };
+    }
+
+    setAboutCycleCompletedState() {
+        const gsap = window.gsap;
+        if (!gsap || !this.aboutCycleSteps.length) return;
+
+        this.aboutCycleSteps.forEach((step) => {
+            if (step.type === 'pillar') {
+                gsap.set(step.el, this.getCyclePillarLitVars(step.rgb));
+                return;
+            }
+
+            gsap.set(step.el, this.getCycleArrowLitVars(step.rgb));
+            if (step.icon) {
+                gsap.set(step.icon, { opacity: 1 });
+            }
+        });
+
+        this.aboutCycleCompleted = true;
+    }
+
+    ensureAboutCycleTimeline() {
+        if (this.aboutCycleTimeline || !this.aboutCycleSteps.length || !window.gsap) {
+            return this.aboutCycleTimeline;
+        }
+
+        const gsap = window.gsap;
+        const { timing } = PL3_ABOUT_CYCLE_CONFIG;
+        const timeline = gsap.timeline({
+            paused: true,
+            onComplete: () => {
+                this.aboutCycleCompleted = true;
+            }
+        });
+
+        const holdFor = (seconds) => {
+            timeline.to({}, { duration: seconds, ease: 'none' });
+        };
+
+        this.aboutCycleSteps.forEach((step) => {
+            if (step.type === 'pillar') {
+                timeline.to(step.el, {
+                    ...this.getCyclePillarLitVars(step.rgb),
+                    duration: timing.pillarReveal,
+                    ease: 'power2.out'
+                });
+                holdFor(timing.pillarHold);
+                return;
+            }
+
+            timeline.to(step.el, {
+                ...this.getCycleArrowPeakVars(step.rgb),
+                duration: timing.arrowPeak,
+                ease: 'power2.out'
+            });
+
+            if (step.icon) {
+                timeline.to(step.icon, {
+                    opacity: 1,
+                    duration: timing.arrowIconFadeIn,
+                    ease: 'power2.out'
+                }, '<');
+            }
+
+            timeline.to(step.el, {
+                ...this.getCycleArrowLitVars(step.rgb),
+                duration: timing.arrowSettle,
+                ease: 'power2.out'
+            });
+            holdFor(timing.arrowHold);
+        });
+
+        this.aboutCycleTimeline = timeline;
+        return timeline;
+    }
+
+    playAboutCycle() {
+        if (!this.aboutCyclePanel || !this.aboutCycleSteps.length) return;
+
+        const gsap = window.gsap;
+        if (!gsap) return;
+
+        const hasReducedMotion = typeof window.matchMedia === 'function'
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (hasReducedMotion) {
+            this.setAboutCycleCompletedState();
+            return;
+        }
+
+        const timeline = this.ensureAboutCycleTimeline();
+        if (!timeline || this.aboutCycleCompleted) return;
+
+        if (!this.aboutCycleStarted) {
+            this.aboutCycleStarted = true;
+            requestAnimationFrame(() => timeline.play(0));
+            return;
+        }
+
+        if (timeline.paused()) {
+            timeline.play();
+        }
+    }
+
+    pauseAboutCycle() {
+        if (!this.aboutCycleTimeline || this.aboutCycleCompleted) return;
+        this.aboutCycleTimeline.pause();
     }
 
     getVideoCards() {
