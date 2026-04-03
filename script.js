@@ -338,12 +338,10 @@ class PL3DomRegistry {
         this.groupPanelCount = section.querySelector('[data-pl3-group-count]');
         this.groupPanelVersions = section.querySelector('[data-pl3-group-versions]');
         this.groupPanelCloseBtn = section.querySelector('[data-pl3-group-close]');
-        this.streamingBtns = Array.from(document.querySelectorAll('[data-pl3-streaming-popup]'));
         this.previewModal = document.getElementById('PL3-preview-modal');
         this.previewIframe = document.getElementById('PL3-preview-iframe');
         this.artZoomModal = document.getElementById('PL3-art-zoom-modal');
         this.artZoomImage = document.getElementById('PL3-art-zoom-image');
-        this.streamingModal = document.getElementById('PL3-streaming-modal');
         this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
     }
 }
@@ -384,17 +382,14 @@ class PL3HeaderSection {
 }
 
 class PL3ButtonsSection {
-    constructor(dom, callbacks = {}) {
+    constructor(dom) {
         this.dom = dom;
         this.expandedBtn = null;
-        this.lockScroll = callbacks.lockScroll || (() => { });
-        this.unlockScroll = callbacks.unlockScroll || (() => { });
     }
 
     init() {
         if (!this.dom.btnRow) return;
         this.dom.btnRow.addEventListener('click', this.onButtonRowClick, { passive: true });
-        this.attachStreamingPopupEvents();
     }
 
     onButtonRowClick = (ev) => {
@@ -430,47 +425,6 @@ class PL3ButtonsSection {
             b.classList.remove('PL3-heroBtn--expanded', 'PL3-heroBtn--collapsed');
         });
         this.expandedBtn = null;
-    }
-
-    attachStreamingPopupEvents() {
-        if (this.dom.streamingBtns && this.dom.streamingBtns.length > 0) {
-            this.dom.streamingBtns.forEach(btn => {
-                btn.addEventListener('click', (ev) => {
-                    ev.preventDefault();
-                    this.openStreamingPopup();
-                }, { passive: false });
-            });
-        }
-
-        const m = this.dom.streamingModal;
-        if (m) {
-            m.addEventListener('click', (ev) => {
-                if (!ev.target.closest('[data-pl3-streaming-close]') || !m.contains(ev.target)) return;
-                ev.preventDefault();
-                this.closeStreamingPopup();
-            }, { passive: false });
-        }
-
-        window.addEventListener('keydown', (ev) => {
-            if (!this.dom.streamingModal || this.dom.streamingModal.hidden || ev.key !== 'Escape') return;
-            this.closeStreamingPopup();
-        }, { passive: true });
-    }
-
-    openStreamingPopup() {
-        const m = this.dom.streamingModal;
-        if (!m) return;
-        m.hidden = false;
-        m.removeAttribute('aria-hidden');
-        this.lockScroll();
-    }
-
-    closeStreamingPopup() {
-        const m = this.dom.streamingModal;
-        if (!m) return;
-        m.hidden = true;
-        m.setAttribute('aria-hidden', 'true');
-        this.unlockScroll();
     }
 }
 
@@ -2411,10 +2365,7 @@ class PL3Controller {
         this.scrollLock = new PL3ScrollLock();
         this.el = new PL3DomRegistry(this.section);
         this.headerSection = new PL3HeaderSection(this.el);
-        this.buttonsSection = new PL3ButtonsSection(this.el, {
-            lockScroll: () => this.lockScroll(),
-            unlockScroll: () => this.unlockScroll()
-        });
+        this.buttonsSection = new PL3ButtonsSection(this.el);
         this.highlightSection = new PL3HighlightSection(this.el, {
             lockScroll: () => this.lockScroll(),
             unlockScroll: () => this.unlockScroll()

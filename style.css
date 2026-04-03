@@ -1073,7 +1073,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 /* Buttons: use Tom Oswald if available, fall back to system sans-serif */
 .PL3-heroBtn,
 .PL3-tabBtn,
-.PL3-upcomingBtn,
+.PL3-upcomingInfoBtn,
 .PL3-playlistPill,
 .PL3-groupPanelShareBtn,
 .PL3-groupPanelCloseBtn,
@@ -1083,7 +1083,7 @@ button {
 
 .PL3-heroBtn,
 .PL3-upcomingPlayerBtn,
-.PL3-upcomingBtn,
+.PL3-upcomingInfoBtn,
 .PL3-playlistPill,
 .PL3-videoWatchBtn {
     min-height: var(--pl3-pill-h);
@@ -1353,15 +1353,6 @@ button {
     will-change: transform, box-shadow;
 }
 
-.PL3-upcomingMeta {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    animation: PL3-upcomingPulse 2.5s ease-in-out infinite;
-}
-
 .PL3-upcomingHeader {
     display: flex;
     align-items: flex-start;
@@ -1371,26 +1362,7 @@ button {
     min-width: 0;
 }
 
-.PL3-upcomingKicker {
-    color: rgba(255, 255, 255, 0.98);
-    font-size: clamp(1.35rem, 7vw, 2rem);
-    font-weight: 900;
-    line-height: 0.92;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    text-wrap: balance;
-}
-
-.PL3-upcomingVersion {
-    color: rgba(255, 255, 255, 0.58);
-    font-size: 0.72rem;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-}
-
-.PL3-upcomingDesc {
+.PL3-upcoming--playingNow .PL3-upcomingDesc {
     color: #fff;
     font-size: 1.5rem;
     font-weight: 900;
@@ -1399,9 +1371,6 @@ button {
     text-shadow: 0 0 20px rgba(31, 111, 235, 0.4);
     text-align: left;
     flex-shrink: 0;
-}
-
-.PL3-upcoming--playingNow .PL3-upcomingDesc {
     display: block;
     flex: 0 1 auto;
     width: auto;
@@ -1420,21 +1389,6 @@ button {
     white-space: nowrap;
     margin: 0;
     max-width: none;
-}
-
-.PL3-upcomingButtons {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 4px;
-    flex-shrink: 0;
-}
-
-.PL3-upcoming--playingNow .PL3-upcomingButtons {
-    width: 100%;
-    gap: 8px;
-    margin-top: 0;
 }
 
 .PL3-upcomingPlayerCard {
@@ -1525,7 +1479,7 @@ button {
 .PL3-upcomingPlayerTitle {
     margin: 0;
     color: #ffffff;
-    font-size: 1.08rem;
+    font-size: 1rem;
     font-weight: 900;
     letter-spacing: 0.015em;
     line-height: 0.88;
@@ -1584,7 +1538,7 @@ button {
 }
 
 .PL3-upcomingPlayerActions .PL3-upcomingPlayerBtn,
-.PL3-upcomingPlayerActions .PL3-upcomingBtn {
+.PL3-upcomingPlayerActions .PL3-upcomingInfoBtn {
     flex: 1 1 0;
     width: auto;
     min-width: 0;
@@ -1673,58 +1627,26 @@ button {
     border-color: rgba(115, 231, 255, 0.24);
 }
 
-.PL3-upcomingSub {
-    margin-top: 6px;
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 14px;
-    font-weight: 600;
-}
-
-/* Base button styles */
-.PL3-upcomingBtn {
+.PL3-upcoming--playingNow .PL3-upcomingInfoBtn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--upcoming-btn-gap, 6px);
-    min-width: 96px;
-    width: min(100%, var(--upcoming-btn-width, 132px));
-    padding: var(--upcoming-btn-padding, 0 14px);
-    border-radius: var(--upcoming-btn-radius, 20px);
+    gap: 6px;
+    min-width: 0;
+    width: auto;
+    align-self: flex-start;
+    margin-top: 0;
+    max-height: none;
+    padding: 0 10px;
+    border-radius: 12px;
     color: #fff;
-    font-size: var(--upcoming-btn-font-size, 12px);
-    font-weight: var(--upcoming-btn-font-weight, 700);
+    font-size: 0.62rem;
+    font-weight: 800;
     line-height: 1;
-    margin-top: 10px;
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
     text-decoration: none;
-}
-
-.PL3-upcomingPreviewBtn {
-    --upcoming-btn-bg: rgba(0, 0, 0, 0.25);
-    --upcoming-btn-border: 1px solid rgba(255, 255, 255, 0.18);
-    --upcoming-btn-bg-hover: rgba(0, 0, 0, 0.35);
-    --upcoming-btn-border-hover: rgba(255, 255, 255, 0.28);
-
-    background: var(--upcoming-btn-bg);
-    border: var(--upcoming-btn-border);
-    transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
-}
-
-.PL3-upcomingPreviewBtn:hover {
-    background: var(--upcoming-btn-bg-hover);
-    border-color: var(--upcoming-btn-border-hover);
-    transform: translateY(-1px);
-}
-
-.PL3-upcomingPreviewBtn:active {
-    transform: translateY(0px);
-}
-
-.PL3-upcomingPreviewBtn:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.6);
-    outline-offset: 2px;
 }
 
 .PL3-upcomingInfoBtn {
@@ -1748,31 +1670,13 @@ button {
     outline-offset: 2px;
 }
 
-.PL3-upcoming--playingNow .PL3-upcomingBtn {
-    width: min(100%, 172px);
-    min-width: 0;
-    align-self: flex-start;
-    margin-top: 0;
-    max-height: none;
-    padding: 0 10px;
-    border-radius: 12px;
-    justify-content: center;
-    font-size: 0.62rem;
-    font-weight: 800;
-}
-
 .PL3-upcoming--playingNow .PL3-upcomingInfoBtn {
     width: auto;
     justify-content: center;
 }
 
-.PL3-upcomingInfoBtn--inline {
-    flex: 0 0 auto;
-    gap: 6px;
-    white-space: nowrap;
-}
-
 @keyframes PL3-upcomingPlayerGlow {
+
     0%,
     100% {
         transform: scale(1);
@@ -1782,157 +1686,6 @@ button {
     50% {
         transform: scale(1.08);
         opacity: 0.34;
-    }
-}
-
-.PL3-spotifySticker {
-    --upcoming-btn-bg: rgba(0, 0, 0, 0.3);
-    --upcoming-btn-border: 1px solid rgba(100, 150, 120, 0.3);
-    --upcoming-btn-bg-hover: rgba(0, 0, 0, 0.4);
-    --upcoming-btn-border-hover: rgba(100, 150, 120, 0.5);
-
-    background: var(--upcoming-btn-bg);
-    border: var(--upcoming-btn-border);
-    transition: all 200ms ease;
-}
-
-.PL3-upcomingPreviewBtn i {
-    font-size: 14px;
-}
-
-.PL3-spotifySticker img {
-    width: 16px;
-    height: 16px;
-    object-fit: contain;
-    opacity: 0.7;
-}
-
-.PL3-spotifySticker:hover {
-    background: var(--upcoming-btn-bg-hover);
-    border-color: var(--upcoming-btn-border-hover);
-    color: rgba(100, 150, 120, 0.9);
-    transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(100, 150, 120, 0.1);
-}
-
-.PL3-spotifySticker:active {
-    transform: scale(0.98);
-}
-
-/* ===== Streaming Services Popup Modal ===== */
-#PL3-streaming-modal[hidden] {
-    display: none;
-}
-
-#PL3-streaming-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 10002;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.PL3-streamingOverlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-    cursor: pointer;
-}
-
-.PL3-streamingPanel {
-    position: relative;
-    z-index: 1;
-    background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 100%);
-    border: 2px solid rgba(140, 70, 255, 0.3);
-    border-radius: 24px;
-    padding: 40px 32px;
-    width: calc(100% - 20px);
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(31, 111, 235, 0.2), 0 0 40px rgba(140, 70, 255, 0.1);
-    animation: slideUp 300ms ease-out;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.PL3-streamingClose {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    color: #fff;
-    font-size: 24px;
-    line-height: 1;
-    cursor: pointer;
-    transition: all 200ms ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.PL3-streamingClose:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.4);
-}
-
-.PL3-streamingContent {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-}
-
-.PL3-streamingTitle {
-    font-size: 32px;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 20px rgba(140, 70, 255, 0.3);
-}
-
-.PL3-streamingMessage {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.6;
-}
-
-.PL3-streamingMessage strong {
-    color: #1f6feb;
-    font-weight: 800;
-    text-shadow: 0 0 10px rgba(31, 111, 235, 0.4);
-}
-
-.PL3-streamingServices {
-    font-size: 48px;
-    margin-top: 10px;
-    animation: PL3-streamingPulse 2.4s ease-in-out infinite;
-}
-
-@keyframes PL3-streamingPulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    50% {
-        transform: scale(1.12);
-        opacity: 0.85;
     }
 }
 
@@ -3139,15 +2892,6 @@ button {
         padding: 10px;
     }
 
-    .PL3-upcomingDesc {
-        font-size: 2rem;
-        text-align: left;
-    }
-
-    .PL3-upcomingButtons {
-        align-items: flex-start;
-    }
-
     .PL3-upcoming--playingNow .PL3-upcomingDesc {
         font-size: 1.22rem;
         max-width: none;
@@ -3164,7 +2908,7 @@ button {
     }
 
     .PL3-upcomingPlayerTitle {
-        font-size: 1.16rem;
+        font-size: 1rem;
     }
 
     .PL3-upcomingPlayerBtn {
@@ -3172,13 +2916,10 @@ button {
         font-size: 0.64rem;
     }
 
-    .PL3-upcomingBtn {
+    .PL3-upcomingInfoBtn {
         font-size: 0.66rem;
     }
 
-    .PL3-upcomingInfoBtn--inline {
-        font-size: 0.58rem;
-    }
 }
 
 
@@ -3263,15 +3004,6 @@ button {
         padding: 0 12px;
     }
 
-    .PL3-upcomingDesc {
-        font-size: 2.6rem;
-        text-align: left;
-    }
-
-    .PL3-upcomingButtons {
-        align-items: flex-start;
-    }
-
     .PL3-upcoming--playingNow {
         padding: 12px;
         gap: 16px;
@@ -3298,7 +3030,7 @@ button {
     }
 
     .PL3-upcomingPlayerTitle {
-        font-size: 1.28rem;
+        font-size: 1rem;
     }
 
     .PL3-upcomingPlayerSub {
@@ -3310,7 +3042,7 @@ button {
         padding: 0 14px;
     }
 
-    .PL3-upcomingBtn {
+    .PL3-upcomingInfoBtn {
         font-size: 0.7rem;
     }
 
