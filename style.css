@@ -384,8 +384,8 @@ html.pl3-js .PL3-section--preload .PL3-upcomingArt {
     animation: none;
 }
 
-html.pl3-js .PL3-section--preload .PL3-upcomingHeader,
-html.pl3-js .PL3-section--preload .PL3-upcomingPlayerCard {
+html.pl3-js .PL3-section--preload .PL3-upcoming--playingNow>.PL3-upcomingHeader,
+html.pl3-js .PL3-section--preload .PL3-upcoming--playingNow>.PL3-upcomingPlayerCard {
     opacity: 0;
     transform: translateX(30px);
 }
@@ -1489,7 +1489,7 @@ button {
     justify-content: center;
     flex-direction: row;
     gap: 10px;
-    padding: 10px 12px;
+    padding: 0;
     box-sizing: border-box;
     overflow: hidden;
 }
@@ -1499,8 +1499,8 @@ button {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 14px;
-    padding: 8px;
+    gap: 0;
+    padding: 2px;
     position: relative;
     isolation: isolate;
     min-width: 0;
@@ -1657,18 +1657,31 @@ button {
 }
 
 .PL3-upcomingPlayerCard {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
     width: 100%;
+    height: 100%;
     min-width: 0;
+    min-height: 0;
 }
 
 .PL3-upcomingPlayer {
+    flex: 1 1 auto;
     position: relative;
     display: grid;
+    grid-template-areas:
+        "header header"
+        "art body";
+    grid-template-rows: auto minmax(0, 1fr);
     grid-template-columns: var(--pl3-upcoming-player-art-stage-size) minmax(0, 1fr);
     align-items: center;
-    gap: 8px;
+    gap: 8px 8px;
     width: 100%;
-    padding: 0px;
+    min-height: 0;
+    padding: 6px;
     border-radius: 16px;
     background: linear-gradient(180deg, rgba(30, 12, 63, 0.82), rgba(16, 8, 37, 0.7));
     border: 1px solid rgba(223, 179, 255, 0.18);
@@ -1676,9 +1689,17 @@ button {
         inset 0 1px 0 var(--pl3-color-white-08),
         0 10px 22px rgba(11, 5, 31, 0.14);
     min-width: 0;
+    box-sizing: border-box;
+}
+
+.PL3-upcomingPlayer>.PL3-upcomingHeader {
+    grid-area: header;
+    align-self: start;
+    padding: 0;
 }
 
 .PL3-upcomingPlayerArtWrap {
+    grid-area: art;
     position: relative;
     display: flex;
     align-items: center;
@@ -1740,6 +1761,7 @@ button {
 }
 
 .PL3-upcomingPlayerBody {
+    grid-area: body;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -3367,6 +3389,16 @@ button {
         overflow-y: hidden;
         position: relative;
         z-index: 1;
+    }
+
+    :root {
+        --pl3-desktop-panel-max-h: clamp(320px, 44vh, 430px);
+    }
+
+    .PL3-part--highlight,
+    .PL3-part--gallery {
+        align-self: start;
+        height: min(100%, var(--pl3-desktop-panel-max-h));
     }
 }
 
