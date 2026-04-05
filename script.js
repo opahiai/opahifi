@@ -335,6 +335,9 @@ class PL3AudioBorderVisualizer {
         this.accentCyanRgb = '84, 198, 255';
         this.accentVioletRgb = '141, 107, 255';
         this.accentPinkRgb = '255, 79, 136';
+        this.visualCenterX = 0;
+        this.visualCenterY = 0;
+        this.visualBaseRadius = 0;
 
         this.resizeCanvas = this.resizeCanvas.bind(this);
         this.render = this.render.bind(this);
@@ -363,6 +366,29 @@ class PL3AudioBorderVisualizer {
         this.accentCyanRgb = accentCyanRgb || '84, 198, 255';
         this.accentVioletRgb = accentVioletRgb || '141, 107, 255';
         this.accentPinkRgb = accentPinkRgb || '255, 79, 136';
+    }
+
+    syncVisualizerGeometry(canvasRect) {
+        if (!this.canvas) return;
+
+        const rect = canvasRect || this.canvas.getBoundingClientRect();
+        const fallbackCenterX = rect.width / 2;
+        const fallbackCenterY = rect.height / 2;
+        const fallbackBaseRadius = Math.min(rect.width, rect.height) * 0.24;
+        const wrap = this.canvas.parentElement;
+        const artTarget = wrap?.querySelector('.PL3-upcomingArt') || wrap?.querySelector('.PL3-upcomingPlayerArtPad');
+
+        if (!artTarget) {
+            this.visualCenterX = fallbackCenterX;
+            this.visualCenterY = fallbackCenterY;
+            this.visualBaseRadius = fallbackBaseRadius;
+            return;
+        }
+
+        const artRect = artTarget.getBoundingClientRect();
+        this.visualCenterX = (artRect.left - rect.left) + (artRect.width / 2);
+        this.visualCenterY = (artRect.top - rect.top) + (artRect.height / 2);
+        this.visualBaseRadius = Math.min(artRect.width, artRect.height) * 0.545;
     }
 
     attachAudio(audio) {
@@ -423,6 +449,7 @@ class PL3AudioBorderVisualizer {
 
         this.syncLayoutMetrics();
         const rect = this.canvas.getBoundingClientRect();
+        this.syncVisualizerGeometry(rect);
         const dpr = Math.max(window.devicePixelRatio || 1, 1);
         this.canvas.width = Math.max(1, Math.round(rect.width * dpr));
         this.canvas.height = Math.max(1, Math.round(rect.height * dpr));
@@ -512,7 +539,7 @@ class PL3AudioBorderVisualizer {
         for (let i = 0; i <= steps; i += 1) {
             const angle = (i / steps) * Math.PI * 2;
             const edgeWeight = 0.6 + 0.4 * (1 - Math.abs(Math.sin(angle * 2)));
-            const breath = Math.sin(time * 1.7 + angle * 4) * 2.8 * edgeWeight;
+            const breath = Math.sin(time * 1.7 + angle * 4) * 3.2 * edgeWeight;
             const point = this.getSquarePoint(cx, cy, baseRadius + breath, angle, 5.5);
 
             if (i === 0) {
@@ -542,9 +569,9 @@ class PL3AudioBorderVisualizer {
         const time = performance.now() * 0.001;
         const width = rect.width;
         const height = rect.height;
-        const cx = width / 2;
-        const cy = height / 2;
-        const baseRadius = Math.min(width, height) * 0.24;
+        const cx = this.visualCenterX || (width / 2);
+        const cy = this.visualCenterY || (height / 2);
+        const baseRadius = this.visualBaseRadius || (Math.min(width, height) * 0.24);
 
         ctx.clearRect(0, 0, width, height);
         this.drawGlow(cx, cy, baseRadius);
