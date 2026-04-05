@@ -1498,7 +1498,7 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
     gap: 14px;
     padding: 8px;
     position: relative;
@@ -1665,10 +1665,10 @@ button {
     position: relative;
     display: grid;
     grid-template-columns: var(--pl3-upcoming-player-art-stage-size) minmax(0, 1fr);
-    align-items: stretch;
+    align-items: center;
     gap: 8px;
     width: 100%;
-    padding: 8px;
+    padding: 0px;
     border-radius: 16px;
     background: linear-gradient(180deg, rgba(30, 12, 63, 0.82), rgba(16, 8, 37, 0.7));
     border: 1px solid rgba(223, 179, 255, 0.18);
@@ -1714,8 +1714,7 @@ button {
     z-index: 0;
     opacity: 1;
     filter:
-        drop-shadow(0 0 16px rgba(var(--pl3-rgb-accent-violet), 0.26))
-        drop-shadow(0 0 6px rgba(var(--pl3-rgb-accent-cyan), 0.18));
+        drop-shadow(0 0 16px rgba(var(--pl3-rgb-accent-violet), 0.26)) drop-shadow(0 0 6px rgba(var(--pl3-rgb-accent-cyan), 0.18));
 }
 
 .PL3-upcomingPlayerArtPad {
@@ -1744,8 +1743,10 @@ button {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    height: 100%;
+    align-self: center;
+    justify-content: center;
+    gap: 8px;
+    height: auto;
     padding: 2px 0 2px;
 }
 
@@ -1785,7 +1786,7 @@ button {
 .PL3-upcomingPlayerTimeline {
     position: relative;
     height: 5px;
-    margin-top: auto;
+    margin-top: 0;
     border-radius: 999px;
     background: var(--pl3-color-white-10);
     overflow: hidden;
@@ -1807,7 +1808,7 @@ button {
     justify-content: space-between;
     gap: 8px;
     min-width: 0;
-    margin-top: 8px;
+    margin-top: 0;
 }
 
 .PL3-upcomingPlayerActions {
@@ -1817,7 +1818,7 @@ button {
     gap: 8px;
     width: 100%;
     min-width: 0;
-    margin-top: 10px;
+    margin-top: 0;
 }
 
 .PL3-upcomingPlayerActions .PL3-upcomingPlayerBtn,
@@ -1903,8 +1904,7 @@ button {
 
 .PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayerVisualizer {
     filter:
-        drop-shadow(0 0 20px rgba(var(--pl3-rgb-accent-violet), 0.36))
-        drop-shadow(0 0 10px rgba(var(--pl3-rgb-accent-cyan), 0.26));
+        drop-shadow(0 0 20px rgba(var(--pl3-rgb-accent-violet), 0.36)) drop-shadow(0 0 10px rgba(var(--pl3-rgb-accent-cyan), 0.26));
 }
 
 .PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayerBtn {
