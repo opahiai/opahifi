@@ -135,11 +135,11 @@ body {
     --pl3-upcoming-glow-scale: 1.12;
     --pl3-upcoming-player-art-size: 96px;
     --pl3-upcoming-player-art-pad: 8px;
+    --pl3-upcoming-player-visualizer-space: 28px;
+    --pl3-upcoming-player-art-wrap-inset: var(--pl3-upcoming-player-visualizer-space);
     --pl3-upcoming-player-art-stage-size:
-        calc(var(--pl3-upcoming-player-art-size) + (var(--pl3-upcoming-player-art-pad) * 2));
+        calc(var(--pl3-upcoming-player-art-size) + (var(--pl3-upcoming-player-art-pad) * 2) + (var(--pl3-upcoming-player-visualizer-space) * 2));
     --pl3-upcoming-player-art-shell-radius: 14px;
-    --pl3-upcoming-player-visualizer-idle-line: 2.8px;
-    --pl3-upcoming-player-visualizer-active-line: 3.2px;
 
     /* Grid section gap */
     --pl3-split-gap: 2.2vh;
@@ -1720,11 +1720,13 @@ button {
 
 .PL3-upcomingPlayerArtPad {
     position: absolute;
-    inset: var(--pl3-upcoming-player-art-pad);
+    inset: var(--pl3-upcoming-player-art-wrap-inset);
     z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: var(--pl3-upcoming-player-art-pad);
+    box-sizing: border-box;
 }
 
 .PL3-upcomingPlayer .PL3-upcomingArt {
@@ -3164,6 +3166,7 @@ button {
 @media (min-width: 425px) {
     :root {
         --pl3-upcoming-player-art-size: 108px;
+        --pl3-upcoming-player-visualizer-space: 30px;
     }
 
     .PL3-card {
@@ -3231,6 +3234,7 @@ button {
         --pl3-gallery-pad-block-start: 0.18rem;
         --pl3-gallery-pad-block-end: 0.08rem;
         --pl3-upcoming-player-art-size: 120px;
+        --pl3-upcoming-player-visualizer-space: 32px;
     }
 
     .PL3-card {

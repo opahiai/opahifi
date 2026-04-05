@@ -329,9 +329,6 @@ class PL3AudioBorderVisualizer {
         this.dataArray = null;
         this.rafId = 0;
         this.active = false;
-        this.artPad = 8;
-        this.idleLineWidth = 2.8;
-        this.activeLineWidth = 3.2;
         this.accentCyan = 'rgb(84, 198, 255)';
         this.accentViolet = 'rgb(141, 107, 255)';
         this.accentPink = 'rgb(255, 79, 136)';
@@ -353,9 +350,6 @@ class PL3AudioBorderVisualizer {
         if (!this.canvas?.parentElement) return;
 
         const styles = window.getComputedStyle(this.canvas.parentElement);
-        const artPad = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-art-pad'));
-        const idleLineWidth = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-visualizer-idle-line'));
-        const activeLineWidth = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-visualizer-active-line'));
         const accentCyan = styles.getPropertyValue('--pl3-color-accent-cyan').trim();
         const accentViolet = styles.getPropertyValue('--pl3-color-accent-violet').trim();
         const accentPink = styles.getPropertyValue('--pl3-color-accent-pink').trim();
@@ -363,9 +357,6 @@ class PL3AudioBorderVisualizer {
         const accentVioletRgb = styles.getPropertyValue('--pl3-rgb-accent-violet').trim();
         const accentPinkRgb = styles.getPropertyValue('--pl3-rgb-accent-pink').trim();
 
-        this.artPad = Number.isFinite(artPad) ? artPad : 8;
-        this.idleLineWidth = Number.isFinite(idleLineWidth) ? idleLineWidth : 2.8;
-        this.activeLineWidth = Number.isFinite(activeLineWidth) ? activeLineWidth : 3.2;
         this.accentCyan = accentCyan || 'rgb(84, 198, 255)';
         this.accentViolet = accentViolet || 'rgb(141, 107, 255)';
         this.accentPink = accentPink || 'rgb(255, 79, 136)';
@@ -470,43 +461,11 @@ class PL3AudioBorderVisualizer {
         }
 
         ctx.closePath();
-        ctx.strokeStyle = 'rgba(141, 107, 255, 0.16)';
-        ctx.lineWidth = 6;
-        ctx.shadowBlur = 24;
-        ctx.shadowColor = 'rgba(141, 107, 255, 0.22)';
-        ctx.stroke();
+        ctx.fillStyle = `rgba(${this.accentVioletRgb}, 0.08)`;
+        ctx.shadowBlur = 36;
+        ctx.shadowColor = `rgba(${this.accentVioletRgb}, 0.22)`;
+        ctx.fill();
         ctx.restore();
-    }
-
-    drawBaseFrame(cx, cy, radius, width, height) {
-        const ctx = this.ctx;
-        const gradient = ctx.createLinearGradient(0, 0, width, height);
-        gradient.addColorStop(0, `rgba(${this.accentCyanRgb}, 0.52)`);
-        gradient.addColorStop(0.5, `rgba(${this.accentVioletRgb}, 0.8)`);
-        gradient.addColorStop(1, `rgba(${this.accentPinkRgb}, 0.58)`);
-
-        ctx.beginPath();
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-
-        const steps = 200;
-        for (let i = 0; i <= steps; i += 1) {
-            const angle = (i / steps) * Math.PI * 2;
-            const point = this.getSquarePoint(cx, cy, radius, angle, 5.5);
-
-            if (i === 0) {
-                ctx.moveTo(point.x, point.y);
-            } else {
-                ctx.lineTo(point.x, point.y);
-            }
-        }
-
-        ctx.closePath();
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 1.45;
-        ctx.globalAlpha = 0.95;
-        ctx.stroke();
-        ctx.globalAlpha = 1;
     }
 
     drawRing(cx, cy, baseRadius, bins, rotation, alpha, lineWidth, colorStops, power, motionScale, width, height) {
@@ -525,7 +484,7 @@ class PL3AudioBorderVisualizer {
             const angle = (index / bins) * Math.PI * 2 + rotation;
             const value = this.dataArray ? this.dataArray[index] / 255 : 0;
             const edgeWeight = 0.55 + 0.45 * (1 - Math.abs(Math.sin(angle * 2)));
-            const wave = Math.pow(value, 1.55) * motionScale * edgeWeight;
+            const wave = Math.pow(value, 1.65) * motionScale * 1.8 * edgeWeight;
             const point = this.getSquarePoint(cx, cy, baseRadius + wave, angle, power);
 
             if (i === 0) {
@@ -564,18 +523,9 @@ class PL3AudioBorderVisualizer {
         }
 
         ctx.closePath();
-        const gradient = ctx.createLinearGradient(0, 0, width, height);
-        gradient.addColorStop(0, `rgba(${this.accentCyanRgb}, 0.96)`);
-        gradient.addColorStop(0.5, `rgba(${this.accentVioletRgb}, 0.98)`);
-        gradient.addColorStop(1, `rgba(${this.accentPinkRgb}, 0.94)`);
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = this.idleLineWidth;
-        ctx.globalAlpha = 0.98;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = `rgba(${this.accentVioletRgb}, 0.18)`;
+        ctx.strokeStyle = `rgba(${this.accentVioletRgb}, 0.42)`;
+        ctx.lineWidth = 2.2;
         ctx.stroke();
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
     }
 
     render() {
@@ -594,34 +544,29 @@ class PL3AudioBorderVisualizer {
         const height = rect.height;
         const cx = width / 2;
         const cy = height / 2;
-        const borderInset = Math.max(2, this.artPad - 6);
-        const baseRadius = Math.max(
-            10,
-            (Math.min(width, height) / 2) - borderInset
-        );
+        const baseRadius = Math.min(width, height) * 0.24;
 
         ctx.clearRect(0, 0, width, height);
-        this.drawGlow(cx, cy, Math.max(10, baseRadius));
-        this.drawBaseFrame(cx, cy, Math.max(10, baseRadius - 1), width, height);
+        this.drawGlow(cx, cy, baseRadius);
 
         if (this.active && this.analyser && this.dataArray) {
             this.analyser.smoothingTimeConstant = 0.82;
             this.analyser.getByteFrequencyData(this.dataArray);
-            const bins = Math.min(this.dataArray.length, 220);
+            const bins = Math.min(this.dataArray.length, 240);
 
-            this.drawRing(cx, cy, Math.max(10, baseRadius + 1), bins, time * 0.11, 0.98, this.activeLineWidth, [
+            this.drawRing(cx, cy, baseRadius + 8, bins, time * 0.10, 0.94, 3.2, [
                 [0, this.accentCyan],
                 [0.5, this.accentViolet],
                 [1, this.accentPink]
-            ], 5.8, 14, width, height);
+            ], 5.8, 26, width, height);
 
-            this.drawRing(cx, cy, Math.max(10, baseRadius + 8), bins, -time * 0.08, 0.54, 2.1, [
+            this.drawRing(cx, cy, baseRadius + 22, bins, -time * 0.07, 0.34, 2.05, [
                 [0, `rgba(${this.accentCyanRgb}, 0.82)`],
-                [0.5, `rgba(${this.accentVioletRgb}, 0.8)`],
+                [0.5, `rgba(${this.accentVioletRgb}, 0.78)`],
                 [1, `rgba(${this.accentPinkRgb}, 0.72)`]
-            ], 5.2, 9, width, height);
+            ], 5.2, 16, width, height);
         } else {
-            this.drawIdleRing(cx, cy, Math.max(10, baseRadius - 1), time, width, height);
+            this.drawIdleRing(cx, cy, baseRadius + 14, time, width, height);
         }
 
         this.rafId = requestAnimationFrame(this.render);
