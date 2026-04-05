@@ -13,16 +13,64 @@ body {
     font-family: 'Oswald', sans-serif;
     height: 100%;
     overflow: hidden;
-    background: #050711;
-    color: #fff;
+    background: var(--pl3-color-bg-base);
+    color: var(--pl3-color-text);
     background:
-        radial-gradient(1200px 600px at 20% 10%, rgba(31, 111, 235, 0.18), transparent 60%),
-        radial-gradient(900px 500px at 80% 30%, rgba(140, 70, 255, 0.16), transparent 55%),
-        radial-gradient(900px 520px at 25% 85%, rgba(239, 68, 68, 0.18), transparent 60%),
-        linear-gradient(180deg, #060914 0%, #050711 100%);
+        radial-gradient(1200px 600px at 20% 10%, rgba(var(--pl3-rgb-accent-blue), 0.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 30%, rgba(var(--pl3-rgb-accent-purple), 0.16), transparent 55%),
+        radial-gradient(900px 520px at 25% 85%, rgba(var(--pl3-rgb-accent-red), 0.18), transparent 60%),
+        linear-gradient(180deg, var(--pl3-color-bg-top) 0%, var(--pl3-color-bg-base) 100%);
 }
 
 :root {
+    /* ===== Website color palette ===== */
+    --pl3-rgb-bg-base: 5, 7, 17;
+    --pl3-rgb-bg-top: 6, 9, 20;
+    --pl3-rgb-surface-nav: 7, 14, 35;
+    --pl3-rgb-white: 255, 255, 255;
+    --pl3-rgb-black: 0, 0, 0;
+    --pl3-rgb-accent-blue: 31, 111, 235;
+    --pl3-rgb-accent-purple: 140, 70, 255;
+    --pl3-rgb-accent-red: 239, 68, 68;
+    --pl3-rgb-accent-cyan: 84, 198, 255;
+    --pl3-rgb-accent-violet: 141, 107, 255;
+    --pl3-rgb-accent-pink: 255, 79, 136;
+    --pl3-color-text: rgb(var(--pl3-rgb-white));
+    --pl3-color-text-strong: rgb(var(--pl3-rgb-white));
+    --pl3-color-bg-base: rgb(var(--pl3-rgb-bg-base));
+    --pl3-color-bg-top: rgb(var(--pl3-rgb-bg-top));
+    --pl3-color-accent-cyan: rgb(var(--pl3-rgb-accent-cyan));
+    --pl3-color-accent-violet: rgb(var(--pl3-rgb-accent-violet));
+    --pl3-color-accent-pink: rgb(var(--pl3-rgb-accent-pink));
+    --pl3-color-white-00: rgba(var(--pl3-rgb-white), 0);
+    --pl3-color-white-02: rgba(var(--pl3-rgb-white), 0.02);
+    --pl3-color-white-04: rgba(var(--pl3-rgb-white), 0.04);
+    --pl3-color-white-06: rgba(var(--pl3-rgb-white), 0.06);
+    --pl3-color-white-08: rgba(var(--pl3-rgb-white), 0.08);
+    --pl3-color-white-10: rgba(var(--pl3-rgb-white), 0.10);
+    --pl3-color-white-12: rgba(var(--pl3-rgb-white), 0.12);
+    --pl3-color-white-14: rgba(var(--pl3-rgb-white), 0.14);
+    --pl3-color-white-16: rgba(var(--pl3-rgb-white), 0.16);
+    --pl3-color-white-18: rgba(var(--pl3-rgb-white), 0.18);
+    --pl3-color-white-22: rgba(var(--pl3-rgb-white), 0.22);
+    --pl3-color-white-24: rgba(var(--pl3-rgb-white), 0.24);
+    --pl3-color-white-28: rgba(var(--pl3-rgb-white), 0.28);
+    --pl3-color-white-30: rgba(var(--pl3-rgb-white), 0.30);
+    --pl3-color-white-38: rgba(var(--pl3-rgb-white), 0.38);
+    --pl3-color-white-55: rgba(var(--pl3-rgb-white), 0.55);
+    --pl3-color-white-60: rgba(var(--pl3-rgb-white), 0.60);
+    --pl3-color-white-62: rgba(var(--pl3-rgb-white), 0.62);
+    --pl3-color-white-68: rgba(var(--pl3-rgb-white), 0.68);
+    --pl3-color-white-70: rgba(var(--pl3-rgb-white), 0.70);
+    --pl3-color-white-88: rgba(var(--pl3-rgb-white), 0.88);
+    --pl3-color-white-92: rgba(var(--pl3-rgb-white), 0.92);
+    --pl3-color-white-94: rgba(var(--pl3-rgb-white), 0.94);
+    --pl3-color-white-96: rgba(var(--pl3-rgb-white), 0.96);
+    --pl3-color-white-98: rgba(var(--pl3-rgb-white), 0.98);
+    --pl3-color-white-99: rgba(var(--pl3-rgb-white), 0.99);
+    --pl3-color-black-25: rgba(var(--pl3-rgb-black), 0.25);
+    --pl3-color-black-35: rgba(var(--pl3-rgb-black), 0.35);
+
     /* ===== PL3 (p_listen3) tuning knobs ===== */
     --pl3-part-pad-x: 6px;
     --pl3-part-pad-y: 6px;
@@ -74,9 +122,9 @@ body {
     --pl3-gallery-active-scale: 1.14;
     --pl3-gallery-img-sat: 0.92;
     --pl3-gallery-img-zoom: 1.08;
-    --pl3-gallery-shell-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(244, 242, 246, 0.98));
+    --pl3-gallery-shell-bg: linear-gradient(180deg, var(--pl3-color-white-99), rgba(244, 242, 246, 0.98));
     --pl3-gallery-shell-border: rgba(18, 16, 30, 0.08);
-    --pl3-gallery-shell-highlight: rgba(255, 255, 255, 0.7);
+    --pl3-gallery-shell-highlight: var(--pl3-color-white-70);
     --pl3-gallery-shell-active: rgba(255, 221, 170, 0.78);
     --pl3-gallery-shadow: none;
     --pl3-gallery-shadow-hover: none;
@@ -85,6 +133,13 @@ body {
     /* Upcoming section */
     --pl3-upcoming-art-scale: 1;
     --pl3-upcoming-glow-scale: 1.12;
+    --pl3-upcoming-player-art-size: 96px;
+    --pl3-upcoming-player-art-pad: 8px;
+    --pl3-upcoming-player-art-stage-size:
+        calc(var(--pl3-upcoming-player-art-size) + (var(--pl3-upcoming-player-art-pad) * 2));
+    --pl3-upcoming-player-art-shell-radius: 14px;
+    --pl3-upcoming-player-visualizer-idle-line: 2.8px;
+    --pl3-upcoming-player-visualizer-active-line: 3.2px;
 
     /* Grid section gap */
     --pl3-split-gap: 2.2vh;
@@ -105,8 +160,8 @@ body {
     /* ── Navigation bar ── */
     --pl3-nav-h: 44px;
     --pl3-nav-pad-x: 14px;
-    --pl3-nav-bg: rgba(7, 14, 35, 0.88);
-    --pl3-nav-border: rgba(255, 255, 255, 0.10);
+    --pl3-nav-bg: rgba(var(--pl3-rgb-surface-nav), 0.88);
+    --pl3-nav-border: var(--pl3-color-white-10);
     --pl3-nav-blur: 8px;
     --pl3-nav-brand-size: 1.05rem;
 
@@ -123,7 +178,7 @@ body {
     --pl3-panel-inner-pad-y: clamp(8px, calc(5px + 1.4vw), 10px);
     --pl3-panel-inner-pad-bottom: calc(var(--pl3-panel-close-h) / 2 + 4px);
     --pl3-panel-inner-gap: 8px;
-    --pl3-panel-shell-border: rgba(255, 255, 255, 0.16);
+    --pl3-panel-shell-border: var(--pl3-color-white-16);
     --pl3-panel-shell-bg:
         radial-gradient(130% 120% at 18% 0%, rgba(89, 123, 255, 0.45), rgba(6, 16, 41, 0.55) 52%),
         linear-gradient(180deg, rgba(10, 19, 48, 0.92), rgba(7, 14, 35, 0.9));
@@ -150,8 +205,8 @@ body {
     --pl3-panel-close-w: var(--pl3-btn-h);
     --pl3-panel-close-radius: 999px;
     --pl3-panel-close-font: 1.12rem;
-    --pl3-panel-close-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 234, 238, 0.98));
-    --pl3-panel-close-border: rgba(255, 255, 255, 0.76);
+    --pl3-panel-close-bg: linear-gradient(180deg, var(--pl3-color-white-98), rgba(247, 234, 238, 0.98));
+    --pl3-panel-close-border: rgba(var(--pl3-rgb-white), 0.76);
     --pl3-panel-close-hover-bg: linear-gradient(180deg, rgba(255, 250, 251, 1), rgba(244, 221, 228, 0.98));
     --pl3-panel-footer-pad-x: 8px;
     --pl3-panel-footer-pad-bottom: 10px;
@@ -161,7 +216,7 @@ body {
     --pl3-art-share-offset: 8px;
     --pl3-art-share-radius: 999px;
     --pl3-art-share-bg: rgba(21, 7, 183, 0.52);
-    --pl3-art-share-border: rgba(255, 255, 255, 0.18);
+    --pl3-art-share-border: var(--pl3-color-white-18);
     --pl3-art-share-font: 0.75rem;
     --pl3-art-share-hover-bg: rgba(0, 0, 0, 0.74);
 
@@ -191,7 +246,7 @@ body {
     --pl3-version-row-pad: calc(6px + 1px * var(--pl3-mobile-fluid-step));
 
     /* ── Version card visuals ── */
-    --pl3-version-card-border: rgba(255, 255, 255, 0.16);
+    --pl3-version-card-border: var(--pl3-color-white-16);
     --pl3-version-card-bg:
         radial-gradient(140% 150% at 0% 0%, rgba(105, 86, 255, 0.34), rgba(74, 33, 164, 0.24) 36%, rgba(19, 18, 57, 0) 76%),
         linear-gradient(135deg, rgba(43, 31, 99, 0.92), rgba(23, 19, 62, 0.9));
@@ -405,11 +460,11 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    background: var(--pl3-color-white-04);
+    border: 1px solid var(--pl3-color-white-10);
+    border-bottom: 1px solid var(--pl3-color-white-10);
     border-radius: 8px 8px 0 0;
-    color: rgba(255, 255, 255, 0.30);
+    color: var(--pl3-color-white-30);
     cursor: pointer;
     font-family: inherit;
     font-size: 0.72rem;
@@ -429,8 +484,8 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .PL3-tabBtn:hover:not([aria-selected="true"]) {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.60);
+    background: var(--pl3-color-white-08);
+    color: var(--pl3-color-white-60);
 }
 
 .PL3-tabBtn[aria-selected="true"] {
@@ -440,7 +495,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     border-color: rgba(190, 130, 255, 0.38);
     border-bottom-color: transparent;
     /* merges into panel */
-    color: #ffffff;
+    color: var(--pl3-color-text-strong);
     text-shadow: 0 0 10px rgba(210, 160, 255, 0.6);
     box-shadow: inset 0 1px 0 rgba(220, 170, 255, 0.22);
     margin-bottom: -1px;
@@ -501,7 +556,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     height: 100%;
     min-width: 0;
     min-height: 0;
-    background: rgba(255, 255, 255, 0.10);
+    background: var(--pl3-color-white-10);
 }
 
 .cycle-arrow {
@@ -514,13 +569,13 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid var(--pl3-color-white-14);
     background:
-        radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 42%),
+        radial-gradient(circle at 30% 28%, var(--pl3-color-white-18), var(--pl3-color-white-00) 42%),
         linear-gradient(180deg, rgba(14, 17, 37, 0.94), rgba(5, 7, 18, 0.9));
     box-shadow:
         0 8px 18px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        inset 0 1px 0 var(--pl3-color-white-08);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     pointer-events: none;
@@ -541,7 +596,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .cycle-arrowTrail,
 .cycle-arrowHead {
-    stroke: rgba(255, 255, 255, 0.96);
+    stroke: var(--pl3-color-white-96);
     stroke-width: 2.2;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -552,7 +607,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .cycle-arrowDot {
-    fill: rgba(255, 255, 255, 0.56);
+    fill: rgba(var(--pl3-rgb-white), 0.56);
 }
 
 .cycle-arrow--top {
@@ -591,11 +646,11 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     align-items: stretch;
     justify-content: stretch;
     overflow: hidden;
-    color: #fff;
+    color: var(--pl3-color-text);
     filter: brightness(0.46) saturate(0.72) contrast(0.95);
     box-shadow:
         inset 0 0 0 999px rgba(3, 5, 18, 0.34),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        inset 0 1px 0 var(--pl3-color-white-04);
     will-change: filter, box-shadow;
 }
 
@@ -1038,10 +1093,10 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     gap: 0px;
     width: 100%;
     padding: 0 14px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid var(--pl3-color-white-18);
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.25);
-    color: #fff;
+    background: var(--pl3-color-black-25);
+    color: var(--pl3-color-text);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.01em;
@@ -1054,13 +1109,13 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .PL3-playlistPill:hover {
-    background: rgba(0, 0, 0, 0.35);
-    border-color: rgba(255, 255, 255, 0.28);
+    background: var(--pl3-color-black-35);
+    border-color: var(--pl3-color-white-28);
     transform: translateY(-1px);
 }
 
 .PL3-playlistPill:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.7);
+    outline: 2px solid var(--pl3-color-white-70);
     outline-offset: 2px;
 }
 
@@ -1139,7 +1194,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     /* border: 1px solid rgba(214, 177, 255, 0.28); */
     /* background: linear-gradient(180deg, rgba(58, 20, 93, 0.98), rgba(26, 10, 48, 0.98)); */
     box-shadow: 0 8px 16px rgba(10, 4, 24, 0.32);
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--pl3-color-white-92);
     font-size: 0.52rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -1154,8 +1209,8 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     width: 25px;
     height: 25px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.88);
+    background: var(--pl3-color-white-94);
+    border: 1px solid var(--pl3-color-white-88);
     box-shadow: 0 8px 16px rgba(15, 11, 38, 0.18);
     transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
 }
@@ -1164,14 +1219,14 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 .PL3-playlistPillLink:focus-visible {
     transform: translateY(-1px) scale(1.06);
     box-shadow: 0 10px 20px rgba(15, 11, 38, 0.24);
-    background: #fff;
+    background: var(--pl3-color-text);
 }
 
 .PL3-playlistPill .PL3-heroBtn-close {
     margin-left: 5px;
     padding-left: 5px;
     border-left-color: rgba(74, 29, 47, 0.18);
-    color: rgba(255, 255, 255, 0.94);
+    color: var(--pl3-color-white-94);
 }
 
 .PL3-playlistPillIcon {
@@ -1443,7 +1498,7 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     gap: 14px;
     padding: 8px;
     position: relative;
@@ -1458,11 +1513,11 @@ button {
     inset: 0;
     border-radius: 18px;
     background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+        linear-gradient(180deg, var(--pl3-color-white-08), var(--pl3-color-white-02)),
         linear-gradient(135deg, rgba(117, 38, 201, 0.48), rgba(36, 18, 94, 0.22));
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--pl3-color-white-12);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 1px 0 var(--pl3-color-white-08),
         0 16px 34px rgba(10, 5, 31, 0.14);
     z-index: 0;
 }
@@ -1573,7 +1628,7 @@ button {
 }
 
 .PL3-upcoming--playingNow .PL3-upcomingDesc {
-    color: #fff;
+    color: var(--pl3-color-text);
     font-size: 1.5rem;
     font-weight: 900;
     line-height: 0.9;
@@ -1589,7 +1644,7 @@ button {
     border-radius: 0;
     background: none;
     border: 0;
-    color: rgb(255 255 255);
+    color: var(--pl3-color-text);
     font-size: clamp(1.1rem, 4.8vw, 1.55rem);
     font-weight: 900;
     line-height: 0.92;
@@ -1609,7 +1664,7 @@ button {
 .PL3-upcomingPlayer {
     position: relative;
     display: grid;
-    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-columns: var(--pl3-upcoming-player-art-stage-size) minmax(0, 1fr);
     align-items: stretch;
     gap: 8px;
     width: 100%;
@@ -1618,7 +1673,7 @@ button {
     background: linear-gradient(180deg, rgba(30, 12, 63, 0.82), rgba(16, 8, 37, 0.7));
     border: 1px solid rgba(223, 179, 255, 0.18);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 1px 0 var(--pl3-color-white-08),
         0 10px 22px rgba(11, 5, 31, 0.14);
     min-width: 0;
 }
@@ -1628,42 +1683,58 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2px;
-    border-radius: 14px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        0 8px 18px rgba(10, 5, 31, 0.16);
+    align-self: center;
+    justify-self: stretch;
+    width: var(--pl3-upcoming-player-art-stage-size);
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border-radius: var(--pl3-upcoming-player-art-shell-radius);
+    background: transparent;
+    box-shadow: none;
     overflow: hidden;
+    isolation: isolate;
 }
 
 .PL3-upcomingPlayerArtWrap::before {
-    content: '';
-    position: absolute;
-    inset: -10%;
-    border-radius: 16px;
-    background: radial-gradient(circle, rgba(117, 38, 201, 0.32) 0%, rgba(117, 38, 201, 0) 72%);
-    filter: blur(12px);
-    opacity: 0.22;
-    animation: PL3-upcomingPlayerGlow 4.8s ease-in-out infinite;
+    content: none;
 }
 
 .PL3-upcomingPlayerArtWrap::after {
-    content: '';
+    content: none;
+}
+
+.PL3-upcomingPlayerVisualizer {
     position: absolute;
     inset: 0;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 1;
+    filter:
+        drop-shadow(0 0 16px rgba(var(--pl3-rgb-accent-violet), 0.26))
+        drop-shadow(0 0 6px rgba(var(--pl3-rgb-accent-cyan), 0.18));
+}
+
+.PL3-upcomingPlayerArtPad {
+    position: absolute;
+    inset: var(--pl3-upcoming-player-art-pad);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .PL3-upcomingPlayer .PL3-upcomingArt {
     width: 100%;
-    height: auto;
+    height: 100%;
     max-width: 100%;
-    max-height: none;
+    max-height: 100%;
     border-radius: 11px;
     object-fit: cover;
-    box-shadow: 0 6px 14px rgba(14, 8, 40, 0.16);
+    box-shadow: none;
     animation: none;
 }
 
@@ -1688,7 +1759,7 @@ button {
 
 .PL3-upcomingPlayerTitle {
     margin: 0;
-    color: #ffffff;
+    color: var(--pl3-color-text-strong);
     font-size: 1rem;
     font-weight: 900;
     letter-spacing: 0.015em;
@@ -1700,7 +1771,7 @@ button {
 }
 
 .PL3-upcomingPlayerSub {
-    color: rgba(255, 255, 255, 0.62);
+    color: var(--pl3-color-white-62);
     font-size: 0.62rem;
     font-weight: 500;
     letter-spacing: 0.1em;
@@ -1714,7 +1785,7 @@ button {
     height: 5px;
     margin-top: auto;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--pl3-color-white-10);
     overflow: hidden;
 }
 
@@ -1723,7 +1794,7 @@ button {
     width: 0;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, #73e7ff 0%, #ba82ff 100%);
+    background: linear-gradient(90deg, var(--pl3-color-accent-cyan) 0%, var(--pl3-color-accent-violet) 100%);
     box-shadow: 0 0 16px rgba(115, 231, 255, 0.34);
     transition: width 140ms linear;
 }
@@ -1765,7 +1836,7 @@ button {
     border: 1px solid rgba(223, 179, 255, 0.24);
     border-radius: 999px;
     background: linear-gradient(180deg, rgb(162 31 249 / 94%), rgb(99 9 138 / 86%));
-    color: #fff;
+    color: var(--pl3-color-text);
     cursor: pointer;
     font-size: 0.62rem;
     font-weight: 800;
@@ -1773,7 +1844,7 @@ button {
     line-height: 1;
     text-transform: uppercase;
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.10),
+        inset 0 1px 0 var(--pl3-color-white-10),
         0 8px 16px rgba(15, 7, 40, 0.16);
     transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
     flex: 0 0 auto;
@@ -1791,7 +1862,7 @@ button {
 }
 
 .PL3-upcomingPlayerBtn:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline: 2px solid rgba(var(--pl3-rgb-white), 0.6);
     outline-offset: 2px;
 }
 
@@ -1802,7 +1873,7 @@ button {
 .PL3-upcomingPlayerTime {
     display: inline-flex;
     align-items: center;
-    color: rgba(255, 255, 255, 0.68);
+    color: var(--pl3-color-white-68);
     font-size: 0.48rem;
     font-weight: 800;
     line-height: 1;
@@ -1823,13 +1894,15 @@ button {
 .PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayer {
     border-color: rgba(115, 231, 255, 0.26);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 1px 0 var(--pl3-color-white-10),
         0 16px 30px rgba(20, 10, 55, 0.22),
         0 0 0 1px rgba(115, 231, 255, 0.06);
 }
 
-.PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayerArtWrap::before {
-    opacity: 0.38;
+.PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayerVisualizer {
+    filter:
+        drop-shadow(0 0 20px rgba(var(--pl3-rgb-accent-violet), 0.36))
+        drop-shadow(0 0 10px rgba(var(--pl3-rgb-accent-cyan), 0.26));
 }
 
 .PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayerBtn {
@@ -1849,7 +1922,7 @@ button {
     max-height: none;
     padding: 0 10px;
     border-radius: 12px;
-    color: #fff;
+    color: var(--pl3-color-text);
     font-size: 0.62rem;
     font-weight: 800;
     line-height: 1;
@@ -1860,14 +1933,14 @@ button {
 }
 
 .PL3-upcomingInfoBtn {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: linear-gradient(180deg, var(--pl3-color-white-12), var(--pl3-color-white-06));
+    border: 1px solid var(--pl3-color-white-14);
     transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
 }
 
 .PL3-upcomingInfoBtn:hover {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.24);
+    background: var(--pl3-color-white-14);
+    border-color: var(--pl3-color-white-24);
     transform: translateY(-1px);
 }
 
@@ -1876,7 +1949,7 @@ button {
 }
 
 .PL3-upcomingInfoBtn:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.55);
+    outline: 2px solid var(--pl3-color-white-55);
     outline-offset: 2px;
 }
 
@@ -3089,6 +3162,10 @@ button {
 
 
 @media (min-width: 425px) {
+    :root {
+        --pl3-upcoming-player-art-size: 108px;
+    }
+
     .PL3-card {
         width: 400px;
     }
@@ -3108,13 +3185,12 @@ button {
     }
 
     .PL3-upcomingPlayer {
-        grid-template-columns: 108px minmax(0, 1fr);
         gap: 10px;
         padding: 10px;
     }
 
     .PL3-upcomingPlayerArtWrap {
-        padding: 3px;
+        border-radius: calc(var(--pl3-upcoming-player-art-shell-radius) + 1px);
     }
 
     .PL3-upcomingPlayerTitle {
@@ -3154,6 +3230,7 @@ button {
         --pl3-gallery-unit-max: 6.6rem;
         --pl3-gallery-pad-block-start: 0.18rem;
         --pl3-gallery-pad-block-end: 0.08rem;
+        --pl3-upcoming-player-art-size: 120px;
     }
 
     .PL3-card {
@@ -3206,15 +3283,13 @@ button {
     }
 
     .PL3-upcomingPlayer {
-        grid-template-columns: 120px minmax(0, 1fr);
         gap: 12px;
         padding: 12px;
         border-radius: 20px;
     }
 
     .PL3-upcomingPlayerArtWrap {
-        padding: 4px;
-        border-radius: 16px;
+        border-radius: calc(var(--pl3-upcoming-player-art-shell-radius) + 2px);
     }
 
     .PL3-upcomingPlayer .PL3-upcomingArt {
@@ -3248,9 +3323,26 @@ button {
     .PL3-groupPanelInner {
         gap: 12px;
         padding: 20px;
-        border-radius: var(--pl3-card-radius);
+        border-radius: 0 0 var(--pl3-card-radius) var(--pl3-card-radius);
         border-left: 1px solid var(--pl3-panel-shell-border);
         border-right: 1px solid var(--pl3-panel-shell-border);
+        background:
+            radial-gradient(130% 120% at 18% 0%, rgba(89, 123, 255, 0.34), rgba(6, 16, 41, 0.96) 52%),
+            linear-gradient(180deg, rgba(10, 19, 48, 0.99), rgba(7, 14, 35, 0.985));
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    .PL3-groupPanelTop {
+        padding-right: calc(var(--pl3-panel-close-w) + 16px);
+    }
+
+    .PL3-groupPanelFooter {
+        top: 20px;
+        right: 20px;
+        bottom: auto;
+        left: auto;
+        transform: none;
     }
 
     .PL3-groupPanelInner--detail .PL3-groupPanelGroupTitle {

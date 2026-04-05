@@ -318,6 +318,316 @@
     };
 })();
 
+class PL3AudioBorderVisualizer {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas?.getContext('2d') || null;
+        this.audio = null;
+        this.audioContext = null;
+        this.analyser = null;
+        this.sourceNode = null;
+        this.dataArray = null;
+        this.rafId = 0;
+        this.active = false;
+        this.artPad = 8;
+        this.idleLineWidth = 2.8;
+        this.activeLineWidth = 3.2;
+        this.accentCyan = 'rgb(84, 198, 255)';
+        this.accentViolet = 'rgb(141, 107, 255)';
+        this.accentPink = 'rgb(255, 79, 136)';
+        this.accentCyanRgb = '84, 198, 255';
+        this.accentVioletRgb = '141, 107, 255';
+        this.accentPinkRgb = '255, 79, 136';
+
+        this.resizeCanvas = this.resizeCanvas.bind(this);
+        this.render = this.render.bind(this);
+
+        if (this.canvas && this.ctx) {
+            window.addEventListener('resize', this.resizeCanvas, { passive: true });
+            this.resizeCanvas();
+            this.rafId = requestAnimationFrame(this.render);
+        }
+    }
+
+    syncLayoutMetrics() {
+        if (!this.canvas?.parentElement) return;
+
+        const styles = window.getComputedStyle(this.canvas.parentElement);
+        const artPad = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-art-pad'));
+        const idleLineWidth = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-visualizer-idle-line'));
+        const activeLineWidth = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-visualizer-active-line'));
+        const accentCyan = styles.getPropertyValue('--pl3-color-accent-cyan').trim();
+        const accentViolet = styles.getPropertyValue('--pl3-color-accent-violet').trim();
+        const accentPink = styles.getPropertyValue('--pl3-color-accent-pink').trim();
+        const accentCyanRgb = styles.getPropertyValue('--pl3-rgb-accent-cyan').trim();
+        const accentVioletRgb = styles.getPropertyValue('--pl3-rgb-accent-violet').trim();
+        const accentPinkRgb = styles.getPropertyValue('--pl3-rgb-accent-pink').trim();
+
+        this.artPad = Number.isFinite(artPad) ? artPad : 8;
+        this.idleLineWidth = Number.isFinite(idleLineWidth) ? idleLineWidth : 2.8;
+        this.activeLineWidth = Number.isFinite(activeLineWidth) ? activeLineWidth : 3.2;
+        this.accentCyan = accentCyan || 'rgb(84, 198, 255)';
+        this.accentViolet = accentViolet || 'rgb(141, 107, 255)';
+        this.accentPink = accentPink || 'rgb(255, 79, 136)';
+        this.accentCyanRgb = accentCyanRgb || '84, 198, 255';
+        this.accentVioletRgb = accentVioletRgb || '141, 107, 255';
+        this.accentPinkRgb = accentPinkRgb || '255, 79, 136';
+    }
+
+    attachAudio(audio) {
+        if (!audio) return;
+        this.audio = audio;
+        this.ensureAudioGraph();
+    }
+
+    ensureAudioGraph() {
+        if (!this.audio || this.audioContext || !this.ctx) return;
+
+        const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextCtor) return;
+
+        try {
+            this.audioContext = new AudioContextCtor();
+            this.analyser = this.audioContext.createAnalyser();
+            this.analyser.fftSize = 1024;
+            this.analyser.smoothingTimeConstant = 0.82;
+            this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+
+            this.sourceNode = this.audioContext.createMediaElementSource(this.audio);
+            this.sourceNode.connect(this.analyser);
+            this.analyser.connect(this.audioContext.destination);
+        } catch (_) {
+            this.audioContext = null;
+            this.analyser = null;
+            this.dataArray = null;
+        }
+    }
+
+    async activate() {
+        this.active = true;
+        this.ensureAudioGraph();
+
+        if (this.audioContext?.state === 'suspended') {
+            try {
+                await this.audioContext.resume();
+            } catch (_) {
+                // Ignore resume failures and retry on the next gesture.
+            }
+        }
+
+        if (!this.rafId) {
+            this.rafId = requestAnimationFrame(this.render);
+        }
+    }
+
+    deactivate() {
+        this.active = false;
+        if (!this.rafId) {
+            this.rafId = requestAnimationFrame(this.render);
+        }
+    }
+
+    resizeCanvas() {
+        if (!this.canvas || !this.ctx) return;
+
+        this.syncLayoutMetrics();
+        const rect = this.canvas.getBoundingClientRect();
+        const dpr = Math.max(window.devicePixelRatio || 1, 1);
+        this.canvas.width = Math.max(1, Math.round(rect.width * dpr));
+        this.canvas.height = Math.max(1, Math.round(rect.height * dpr));
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.ctx.scale(dpr, dpr);
+    }
+
+    getSquarePoint(cx, cy, radius, angle, power = 5.8) {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        const denominator = Math.pow(
+            Math.pow(Math.abs(cos), power) + Math.pow(Math.abs(sin), power),
+            1 / power
+        ) || 1;
+
+        return {
+            x: cx + (radius * cos) / denominator,
+            y: cy + (radius * sin) / denominator
+        };
+    }
+
+    drawGlow(cx, cy, radius) {
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.beginPath();
+
+        const steps = 220;
+        for (let i = 0; i <= steps; i += 1) {
+            const angle = (i / steps) * Math.PI * 2;
+            const point = this.getSquarePoint(cx, cy, radius * 1.14, angle, 5.2);
+            if (i === 0) {
+                ctx.moveTo(point.x, point.y);
+            } else {
+                ctx.lineTo(point.x, point.y);
+            }
+        }
+
+        ctx.closePath();
+        ctx.strokeStyle = 'rgba(141, 107, 255, 0.16)';
+        ctx.lineWidth = 6;
+        ctx.shadowBlur = 24;
+        ctx.shadowColor = 'rgba(141, 107, 255, 0.22)';
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    drawBaseFrame(cx, cy, radius, width, height) {
+        const ctx = this.ctx;
+        const gradient = ctx.createLinearGradient(0, 0, width, height);
+        gradient.addColorStop(0, `rgba(${this.accentCyanRgb}, 0.52)`);
+        gradient.addColorStop(0.5, `rgba(${this.accentVioletRgb}, 0.8)`);
+        gradient.addColorStop(1, `rgba(${this.accentPinkRgb}, 0.58)`);
+
+        ctx.beginPath();
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        const steps = 200;
+        for (let i = 0; i <= steps; i += 1) {
+            const angle = (i / steps) * Math.PI * 2;
+            const point = this.getSquarePoint(cx, cy, radius, angle, 5.5);
+
+            if (i === 0) {
+                ctx.moveTo(point.x, point.y);
+            } else {
+                ctx.lineTo(point.x, point.y);
+            }
+        }
+
+        ctx.closePath();
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.45;
+        ctx.globalAlpha = 0.95;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+    }
+
+    drawRing(cx, cy, baseRadius, bins, rotation, alpha, lineWidth, colorStops, power, motionScale, width, height) {
+        const ctx = this.ctx;
+        const gradient = ctx.createLinearGradient(0, 0, width, height);
+        colorStops.forEach((stop) => {
+            gradient.addColorStop(stop[0], stop[1]);
+        });
+
+        ctx.beginPath();
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        for (let i = 0; i <= bins; i += 1) {
+            const index = Math.min(i, bins - 1);
+            const angle = (index / bins) * Math.PI * 2 + rotation;
+            const value = this.dataArray ? this.dataArray[index] / 255 : 0;
+            const edgeWeight = 0.55 + 0.45 * (1 - Math.abs(Math.sin(angle * 2)));
+            const wave = Math.pow(value, 1.55) * motionScale * edgeWeight;
+            const point = this.getSquarePoint(cx, cy, baseRadius + wave, angle, power);
+
+            if (i === 0) {
+                ctx.moveTo(point.x, point.y);
+            } else {
+                ctx.lineTo(point.x, point.y);
+            }
+        }
+
+        ctx.closePath();
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = lineWidth;
+        ctx.globalAlpha = alpha;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+    }
+
+    drawIdleRing(cx, cy, baseRadius, time, width, height) {
+        const ctx = this.ctx;
+        ctx.beginPath();
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        const steps = 200;
+        for (let i = 0; i <= steps; i += 1) {
+            const angle = (i / steps) * Math.PI * 2;
+            const edgeWeight = 0.6 + 0.4 * (1 - Math.abs(Math.sin(angle * 2)));
+            const breath = Math.sin(time * 1.7 + angle * 4) * 2.8 * edgeWeight;
+            const point = this.getSquarePoint(cx, cy, baseRadius + breath, angle, 5.5);
+
+            if (i === 0) {
+                ctx.moveTo(point.x, point.y);
+            } else {
+                ctx.lineTo(point.x, point.y);
+            }
+        }
+
+        ctx.closePath();
+        const gradient = ctx.createLinearGradient(0, 0, width, height);
+        gradient.addColorStop(0, `rgba(${this.accentCyanRgb}, 0.96)`);
+        gradient.addColorStop(0.5, `rgba(${this.accentVioletRgb}, 0.98)`);
+        gradient.addColorStop(1, `rgba(${this.accentPinkRgb}, 0.94)`);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = this.idleLineWidth;
+        ctx.globalAlpha = 0.98;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = `rgba(${this.accentVioletRgb}, 0.18)`;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+    }
+
+    render() {
+        this.rafId = 0;
+        if (!this.canvas || !this.ctx) return;
+
+        const rect = this.canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) {
+            this.rafId = requestAnimationFrame(this.render);
+            return;
+        }
+
+        const ctx = this.ctx;
+        const time = performance.now() * 0.001;
+        const width = rect.width;
+        const height = rect.height;
+        const cx = width / 2;
+        const cy = height / 2;
+        const borderInset = Math.max(2, this.artPad - 6);
+        const baseRadius = Math.max(
+            10,
+            (Math.min(width, height) / 2) - borderInset
+        );
+
+        ctx.clearRect(0, 0, width, height);
+        this.drawGlow(cx, cy, Math.max(10, baseRadius));
+        this.drawBaseFrame(cx, cy, Math.max(10, baseRadius - 1), width, height);
+
+        if (this.active && this.analyser && this.dataArray) {
+            this.analyser.smoothingTimeConstant = 0.82;
+            this.analyser.getByteFrequencyData(this.dataArray);
+            const bins = Math.min(this.dataArray.length, 220);
+
+            this.drawRing(cx, cy, Math.max(10, baseRadius + 1), bins, time * 0.11, 0.98, this.activeLineWidth, [
+                [0, this.accentCyan],
+                [0.5, this.accentViolet],
+                [1, this.accentPink]
+            ], 5.8, 14, width, height);
+
+            this.drawRing(cx, cy, Math.max(10, baseRadius + 8), bins, -time * 0.08, 0.54, 2.1, [
+                [0, `rgba(${this.accentCyanRgb}, 0.82)`],
+                [0.5, `rgba(${this.accentVioletRgb}, 0.8)`],
+                [1, `rgba(${this.accentPinkRgb}, 0.72)`]
+            ], 5.2, 9, width, height);
+        } else {
+            this.drawIdleRing(cx, cy, Math.max(10, baseRadius - 1), time, width, height);
+        }
+
+        this.rafId = requestAnimationFrame(this.render);
+    }
+}
+
 class PL3DomRegistry {
     constructor(section) {
         this.section = section;
@@ -343,6 +653,7 @@ class PL3DomRegistry {
         this.artZoomModal = document.getElementById('PL3-art-zoom-modal');
         this.artZoomImage = document.getElementById('PL3-art-zoom-image');
         this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
+        this.releaseAudioVisualizerCanvas = section.querySelector('[data-pl3-audio-visualizer]');
     }
 }
 
@@ -449,6 +760,7 @@ class PL3HighlightSection {
         this.previewAudio = null;
         this.previewAudioBtn = null;
         this.previewAudioPlayer = null;
+        this.releaseAudioVisualizer = null;
         this.videoParallaxCleanup = [];
         this.aboutCyclePanel = null;
         this.aboutCycleSteps = [];
@@ -459,9 +771,15 @@ class PL3HighlightSection {
 
     init() {
         if (!this.dom.highlightPart) return;
+        this.setupReleaseAudioVisualizer();
         this.setupAboutCycle();
         this.attachTabEvents();
         this.attachPreviewEvents();
+    }
+
+    setupReleaseAudioVisualizer() {
+        if (!this.dom.releaseAudioVisualizerCanvas) return;
+        this.releaseAudioVisualizer = new PL3AudioBorderVisualizer(this.dom.releaseAudioVisualizerCanvas);
     }
 
     // === Tabs ===
@@ -975,15 +1293,19 @@ class PL3HighlightSection {
         const audio = new Audio();
         audio.preload = 'metadata';
         audio.addEventListener('play', () => {
+            this.releaseAudioVisualizer?.attachAudio(audio);
+            this.releaseAudioVisualizer?.activate();
             this.syncPreviewAudioButton(this.previewAudioBtn, true);
             this.syncPreviewAudioProgress(this.previewAudioPlayer);
         });
         audio.addEventListener('pause', () => {
+            this.releaseAudioVisualizer?.deactivate();
             this.syncPreviewAudioButton(this.previewAudioBtn, false);
             this.syncPreviewAudioProgress(this.previewAudioPlayer);
         });
         audio.addEventListener('ended', () => {
             audio.currentTime = 0;
+            this.releaseAudioVisualizer?.deactivate();
             this.syncPreviewAudioButton(this.previewAudioBtn, false);
             this.syncPreviewAudioProgress(this.previewAudioPlayer);
         });
@@ -991,8 +1313,10 @@ class PL3HighlightSection {
             this.syncPreviewAudioProgress(this.previewAudioPlayer);
         });
         audio.addEventListener('loadedmetadata', () => {
+            this.releaseAudioVisualizer?.attachAudio(audio);
             this.syncPreviewAudioProgress(this.previewAudioPlayer);
         });
+        this.releaseAudioVisualizer?.attachAudio(audio);
         this.previewAudio = audio;
         return audio;
     }
@@ -1058,6 +1382,7 @@ class PL3HighlightSection {
 
         const audio = this.getPreviewAudio();
         const resolvedSrc = new URL(src, window.location.href).href;
+        this.releaseAudioVisualizer?.attachAudio(audio);
 
         if (this.previewAudioBtn && this.previewAudioBtn !== btn) {
             this.syncPreviewAudioButton(this.previewAudioBtn, false);

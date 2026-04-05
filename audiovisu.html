@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opa Circular Wave Visualizer</title>
+    <style>
+        :root {
+            --ovw-bg-0: #07111f;
+            --ovw-bg-1: #0e1b31;
+            --ovw-surface: rgba(255, 255, 255, 0.08);
+            --ovw-surface-border: rgba(255, 255, 255, 0.14);
+            --ovw-text: #eff4ff;
+            --ovw-text-soft: rgba(239, 244, 255, 0.72);
+            --ovw-accent-0: #54c6ff;
+            --ovw-accent-1: #8d6bff;
+            --ovw-accent-2: #ff4f88;
+            --ovw-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+            --ovw-radius-xl: 28px;
+            --ovw-panel-w: min(92vw, 760px);
+            --ovw-visual-size: min(72vw, 440px);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 80vh;
+            max-height: 80vh;
+            font-family: Inter, Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(84, 198, 255, 0.15), transparent 32%),
+                radial-gradient(circle at bottom right, rgba(255, 79, 136, 0.12), transparent 28%),
+                linear-gradient(180deg, var(--ovw-bg-1), var(--ovw-bg-0));
+            color: var(--ovw-text);
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .ovw-shell {
+            width: var(--ovw-panel-w);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.06));
+            border: 1px solid var(--ovw-surface-border);
+            border-radius: var(--ovw-radius-xl);
+            box-shadow: var(--ovw-shadow);
+            backdrop-filter: blur(18px);
+            overflow: hidden;
+        }
+
+        .ovw-top {
+            display: grid;
+            place-items: center;
+            padding: 28px 24px 14px;
+        }
+
+        .ovw-visual-wrap {
+            position: relative;
+            width: var(--ovw-visual-size);
+            aspect-ratio: 1 / 1;
+            display: grid;
+            place-items: center;
+        }
+
+        .ovw-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: drop-shadow(0 0 24px rgba(141, 107, 255, 0.22));
+        }
+
+        .ovw-art {
+            position: relative;
+            z-index: 2;
+            width: 44%;
+            aspect-ratio: 1 / 1;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background:
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.28), transparent 18%),
+                linear-gradient(135deg, rgba(84, 198, 255, 0.95), rgba(141, 107, 255, 0.92), rgba(255, 79, 136, 0.92));
+            box-shadow:
+                inset 0 1px 8px rgba(255, 255, 255, 0.18),
+                0 18px 44px rgba(0, 0, 0, 0.38);
+            display: grid;
+            place-items: center;
+        }
+
+        .ovw-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .ovw-art.ovw-has-image img {
+            display: block;
+        }
+
+        .ovw-art-label {
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.35;
+            color: rgba(255, 255, 255, 0.86);
+            letter-spacing: 0.02em;
+        }
+
+        .ovw-art.ovw-has-image .ovw-art-label {
+            display: none;
+        }
+
+        .ovw-meta {
+            padding: 0 28px 6px;
+            text-align: center;
+        }
+
+        .ovw-title {
+            margin: 0;
+            font-size: clamp(26px, 4vw, 34px);
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .ovw-subtitle {
+            margin: 10px 0 0;
+            font-size: 14px;
+            color: var(--ovw-text-soft);
+        }
+
+        .ovw-controls {
+            padding: 18px 22px 24px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .ovw-row {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .ovw-btn,
+        .ovw-file {
+            width: 100%;
+            min-height: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--ovw-text);
+            padding: 12px 14px;
+            font: inherit;
+            transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+        }
+
+        .ovw-btn:hover,
+        .ovw-file:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.11);
+            border-color: rgba(255, 255, 255, 0.22);
+            cursor: pointer;
+        }
+
+        .ovw-btn {
+            font-weight: 700;
+        }
+
+        .ovw-audio {
+            width: 100%;
+            height: 48px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .ovw-inputs {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .ovw-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .ovw-label {
+            font-size: 12px;
+            color: var(--ovw-text-soft);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .ovw-range {
+            width: 100%;
+            accent-color: #8d6bff;
+        }
+
+        .ovw-note {
+            font-size: 12px;
+            color: var(--ovw-text-soft);
+            text-align: center;
+            padding-top: 2px;
+        }
+
+        @media (max-width: 640px) {
+
+            .ovw-row,
+            .ovw-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .ovw-top {
+                padding-top: 22px;
+            }
+
+            .ovw-controls {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="ovw-shell">
+        <section class="ovw-top">
+            <div class="ovw-visual-wrap">
+                <canvas id="ovw-visualizer" class="ovw-canvas"></canvas>
+
+                <div id="ovw-art" class="ovw-art">
+                    <img id="ovw-art-image" alt="Album art" />
+                    <div class="ovw-art-label">Drop cover art here<br />or choose an image below</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ovw-meta">
+            <h1 class="ovw-title">Rounded Square Edge Visualizer</h1>
+            <p class="ovw-subtitle">Vanilla HTML, canvas, Web Audio API</p>
+        </section>
+
+        <section class="ovw-controls">
+            <div class="ovw-row">
+                <input id="ovw-audio-file" class="ovw-file" type="file" accept="audio/*" />
+                <input id="ovw-art-file" class="ovw-file" type="file" accept="image/*" />
+            </div>
+
+            <audio id="ovw-audio" class="ovw-audio" controls crossorigin="anonymous"></audio>
+
+            <div class="ovw-row">
+                <button id="ovw-demo-btn" class="ovw-btn" type="button">Load Demo Tone</button>
+                <button id="ovw-play-btn" class="ovw-btn" type="button">Play / Resume</button>
+            </div>
+
+            <div class="ovw-inputs">
+                <label class="ovw-field">
+                    <span class="ovw-label">Wave Intensity</span>
+                    <input id="ovw-intensity" class="ovw-range" type="range" min="0.5" max="4" value="1.8" step="0.1" />
+                </label>
+
+                <label class="ovw-field">
+                    <span class="ovw-label">Smoothing</span>
+                    <input id="ovw-smoothing" class="ovw-range" type="range" min="0.55" max="0.96" value="0.82"
+                        step="0.01" />
+                </label>
+            </div>
+
+            <div class="ovw-note">Tip: click Play once after loading a file so the browser unlocks audio analysis.</div>
+        </section>
+    </main>
+
+    <script>
+        (() => {
+            const ovwCanvas = document.getElementById('ovw-visualizer');
+            const ovwCtx = ovwCanvas.getContext('2d');
+            const ovwAudio = document.getElementById('ovw-audio');
+            const ovwAudioFile = document.getElementById('ovw-audio-file');
+            const ovwArtFile = document.getElementById('ovw-art-file');
+            const ovwArt = document.getElementById('ovw-art');
+            const ovwArtImage = document.getElementById('ovw-art-image');
+            const ovwPlayBtn = document.getElementById('ovw-play-btn');
+            const ovwDemoBtn = document.getElementById('ovw-demo-btn');
+            const ovwIntensity = document.getElementById('ovw-intensity');
+            const ovwSmoothing = document.getElementById('ovw-smoothing');
+
+            let ovwAudioContext = null;
+            let ovwAnalyser = null;
+            let ovwSourceNode = null;
+            let ovwDataArray = null;
+            let ovwAnimationId = null;
+            let ovwDemoUrl = null;
+
+            function ovwResizeCanvas() {
+                const ovwRect = ovwCanvas.getBoundingClientRect();
+                const ovwDpr = Math.max(window.devicePixelRatio || 1, 1);
+                ovwCanvas.width = Math.max(1, Math.round(ovwRect.width * ovwDpr));
+                ovwCanvas.height = Math.max(1, Math.round(ovwRect.height * ovwDpr));
+                ovwCtx.setTransform(1, 0, 0, 1, 0, 0);
+                ovwCtx.scale(ovwDpr, ovwDpr);
+            }
+
+            function ovwInitAudio() {
+                if (ovwAudioContext) return;
+
+                const OvwAudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!OvwAudioContext) {
+                    alert('Your browser does not support the Web Audio API.');
+                    return;
+                }
+
+                ovwAudioContext = new OvwAudioContext();
+                ovwAnalyser = ovwAudioContext.createAnalyser();
+                ovwAnalyser.fftSize = 1024;
+                ovwAnalyser.smoothingTimeConstant = Number(ovwSmoothing.value);
+                ovwDataArray = new Uint8Array(ovwAnalyser.frequencyBinCount);
+
+                ovwSourceNode = ovwAudioContext.createMediaElementSource(ovwAudio);
+                ovwSourceNode.connect(ovwAnalyser);
+                ovwAnalyser.connect(ovwAudioContext.destination);
+            }
+
+            async function ovwUnlockAudio() {
+                ovwInitAudio();
+                if (!ovwAudioContext) return false;
+                if (ovwAudioContext.state === 'suspended') {
+                    await ovwAudioContext.resume();
+                }
+                return true;
+            }
+
+            function ovwLoadAudioFile(ovwFile) {
+                if (!ovwFile) return;
+                if (ovwDemoUrl) {
+                    URL.revokeObjectURL(ovwDemoUrl);
+                    ovwDemoUrl = null;
+                }
+                const ovwUrl = URL.createObjectURL(ovwFile);
+                ovwAudio.src = ovwUrl;
+                ovwAudio.load();
+            }
+
+            function ovwLoadArtFile(ovwFile) {
+                if (!ovwFile) return;
+                const ovwReader = new FileReader();
+                ovwReader.onload = () => {
+                    ovwArtImage.src = ovwReader.result;
+                    ovwArt.classList.add('ovw-has-image');
+                };
+                ovwReader.readAsDataURL(ovwFile);
+            }
+
+            function ovwBufferToWaveBlob(ovwBuffer) {
+                const ovwChannelData = ovwBuffer.getChannelData(0);
+                const ovwLength = ovwChannelData.length;
+                const ovwArrayBuffer = new ArrayBuffer(44 + ovwLength * 2);
+                const ovwView = new DataView(ovwArrayBuffer);
+
+                function ovwWriteString(ovwOffset, ovwString) {
+                    for (let ovwI = 0; ovwI < ovwString.length; ovwI += 1) {
+                        ovwView.setUint8(ovwOffset + ovwI, ovwString.charCodeAt(ovwI));
+                    }
+                }
+
+                ovwWriteString(0, 'RIFF');
+                ovwView.setUint32(4, 36 + ovwLength * 2, true);
+                ovwWriteString(8, 'WAVE');
+                ovwWriteString(12, 'fmt ');
+                ovwView.setUint32(16, 16, true);
+                ovwView.setUint16(20, 1, true);
+                ovwView.setUint16(22, 1, true);
+                ovwView.setUint32(24, ovwBuffer.sampleRate, true);
+                ovwView.setUint32(28, ovwBuffer.sampleRate * 2, true);
+                ovwView.setUint16(32, 2, true);
+                ovwView.setUint16(34, 16, true);
+                ovwWriteString(36, 'data');
+                ovwView.setUint32(40, ovwLength * 2, true);
+
+                let ovwOffset = 44;
+                for (let ovwI = 0; ovwI < ovwLength; ovwI += 1) {
+                    const ovwSample = Math.max(-1, Math.min(1, ovwChannelData[ovwI]));
+                    ovwView.setInt16(ovwOffset, ovwSample < 0 ? ovwSample * 0x8000 : ovwSample * 0x7fff, true);
+                    ovwOffset += 2;
+                }
+
+                return new Blob([ovwArrayBuffer], { type: 'audio/wav' });
+            }
+
+            async function ovwLoadDemoTone() {
+                const ovwReady = await ovwUnlockAudio();
+                if (!ovwReady) return;
+
+                const ovwSampleRate = 44100;
+                const ovwDuration = 10;
+                const ovwFrameCount = ovwSampleRate * ovwDuration;
+                const ovwBuffer = ovwAudioContext.createBuffer(1, ovwFrameCount, ovwSampleRate);
+                const ovwChannel = ovwBuffer.getChannelData(0);
+
+                for (let ovwI = 0; ovwI < ovwFrameCount; ovwI += 1) {
+                    const ovwT = ovwI / ovwSampleRate;
+                    const ovwFreq = 140 + 80 * Math.sin(ovwT * 1.8) + 40 * Math.sin(ovwT * 6.2);
+                    const ovwPulse = 0.55 + 0.45 * Math.sin(ovwT * Math.PI * 2 * 2.2);
+                    ovwChannel[ovwI] = Math.sin(2 * Math.PI * ovwFreq * ovwT) * ovwPulse * 0.38;
+                }
+
+                if (ovwDemoUrl) {
+                    URL.revokeObjectURL(ovwDemoUrl);
+                }
+                ovwDemoUrl = URL.createObjectURL(ovwBufferToWaveBlob(ovwBuffer));
+                ovwAudio.src = ovwDemoUrl;
+                ovwAudio.load();
+                await ovwAudio.play().catch(() => { });
+            }
+
+            function ovwGetSquarePoint(ovwCx, ovwCy, ovwRadius, ovwAngle, ovwPower = 5.8) {
+                const ovwCos = Math.cos(ovwAngle);
+                const ovwSin = Math.sin(ovwAngle);
+                const ovwDenominator = Math.pow(
+                    Math.pow(Math.abs(ovwCos), ovwPower) + Math.pow(Math.abs(ovwSin), ovwPower),
+                    1 / ovwPower
+                ) || 1;
+
+                return {
+                    x: ovwCx + (ovwRadius * ovwCos) / ovwDenominator,
+                    y: ovwCy + (ovwRadius * ovwSin) / ovwDenominator
+                };
+            }
+
+            function ovwDrawSquareGlow(ovwCx, ovwCy, ovwRadius) {
+                ovwCtx.save();
+                ovwCtx.beginPath();
+
+                const ovwSteps = 220;
+                for (let ovwI = 0; ovwI <= ovwSteps; ovwI += 1) {
+                    const ovwAngle = (ovwI / ovwSteps) * Math.PI * 2;
+                    const ovwPoint = ovwGetSquarePoint(ovwCx, ovwCy, ovwRadius * 1.14, ovwAngle, 5.2);
+                    if (ovwI === 0) {
+                        ovwCtx.moveTo(ovwPoint.x, ovwPoint.y);
+                    } else {
+                        ovwCtx.lineTo(ovwPoint.x, ovwPoint.y);
+                    }
+                }
+
+                ovwCtx.closePath();
+                ovwCtx.fillStyle = 'rgba(141,107,255,0.08)';
+                ovwCtx.shadowBlur = 36;
+                ovwCtx.shadowColor = 'rgba(141,107,255,0.22)';
+                ovwCtx.fill();
+                ovwCtx.restore();
+            }
+
+            function ovwDrawSquareRing(ovwCx, ovwCy, ovwBaseRadius, ovwBins, ovwRotation, ovwAlpha, ovwLineWidth, ovwColorStops, ovwPower, ovwMotionScale) {
+                const ovwRect = ovwCanvas.getBoundingClientRect();
+                const ovwGradient = ovwCtx.createLinearGradient(0, 0, ovwRect.width, ovwRect.height);
+                ovwColorStops.forEach((ovwStop) => {
+                    ovwGradient.addColorStop(ovwStop[0], ovwStop[1]);
+                });
+
+                ovwCtx.beginPath();
+                ovwCtx.lineJoin = 'round';
+                ovwCtx.lineCap = 'round';
+
+                for (let ovwI = 0; ovwI <= ovwBins; ovwI += 1) {
+                    const ovwIndex = Math.min(ovwI, ovwBins - 1);
+                    const ovwAngle = (ovwIndex / ovwBins) * Math.PI * 2 + ovwRotation;
+                    const ovwValue = ovwDataArray ? ovwDataArray[ovwIndex] / 255 : 0;
+                    const ovwBoost = Number(ovwIntensity.value);
+                    const ovwEdgeWeight = 0.55 + 0.45 * (1 - Math.abs(Math.sin(ovwAngle * 2)));
+                    const ovwWave = Math.pow(ovwValue, 1.65) * ovwMotionScale * ovwBoost * ovwEdgeWeight;
+                    const ovwPoint = ovwGetSquarePoint(ovwCx, ovwCy, ovwBaseRadius + ovwWave, ovwAngle, ovwPower);
+
+                    if (ovwI === 0) {
+                        ovwCtx.moveTo(ovwPoint.x, ovwPoint.y);
+                    } else {
+                        ovwCtx.lineTo(ovwPoint.x, ovwPoint.y);
+                    }
+                }
+
+                ovwCtx.closePath();
+                ovwCtx.strokeStyle = ovwGradient;
+                ovwCtx.lineWidth = ovwLineWidth;
+                ovwCtx.globalAlpha = ovwAlpha;
+                ovwCtx.stroke();
+                ovwCtx.globalAlpha = 1;
+            }
+
+            function ovwDrawIdleSquareRing(ovwCx, ovwCy, ovwBaseRadius, ovwTime) {
+                ovwCtx.beginPath();
+                ovwCtx.lineJoin = 'round';
+                ovwCtx.lineCap = 'round';
+
+                const ovwSteps = 200;
+                for (let ovwI = 0; ovwI <= ovwSteps; ovwI += 1) {
+                    const ovwAngle = (ovwI / ovwSteps) * Math.PI * 2;
+                    const ovwEdgeWeight = 0.6 + 0.4 * (1 - Math.abs(Math.sin(ovwAngle * 2)));
+                    const ovwBreath = Math.sin(ovwTime * 1.7 + ovwAngle * 4) * 3.2 * ovwEdgeWeight;
+                    const ovwPoint = ovwGetSquarePoint(ovwCx, ovwCy, ovwBaseRadius + ovwBreath, ovwAngle, 5.5);
+
+                    if (ovwI === 0) {
+                        ovwCtx.moveTo(ovwPoint.x, ovwPoint.y);
+                    } else {
+                        ovwCtx.lineTo(ovwPoint.x, ovwPoint.y);
+                    }
+                }
+
+                ovwCtx.closePath();
+                ovwCtx.strokeStyle = 'rgba(141,107,255,0.42)';
+                ovwCtx.lineWidth = 2.2;
+                ovwCtx.stroke();
+            }
+
+            function ovwRender() {
+                const ovwRect = ovwCanvas.getBoundingClientRect();
+                const ovwW = ovwRect.width;
+                const ovwH = ovwRect.height;
+                const ovwCx = ovwW / 2;
+                const ovwCy = ovwH / 2;
+                const ovwTime = performance.now() * 0.001;
+                const ovwBaseRadius = Math.min(ovwW, ovwH) * 0.24;
+
+                ovwCtx.clearRect(0, 0, ovwW, ovwH);
+                ovwDrawSquareGlow(ovwCx, ovwCy, ovwBaseRadius);
+
+                if (ovwAnalyser && ovwDataArray) {
+                    ovwAnalyser.smoothingTimeConstant = Number(ovwSmoothing.value);
+                    ovwAnalyser.getByteFrequencyData(ovwDataArray);
+                    const ovwBins = Math.min(ovwDataArray.length, 240);
+
+                    ovwDrawSquareRing(ovwCx, ovwCy, ovwBaseRadius + 8, ovwBins, ovwTime * 0.10, 0.94, 3.2, [
+                        [0, '#54c6ff'],
+                        [0.5, '#8d6bff'],
+                        [1, '#ff4f88']
+                    ], 5.8, 26);
+
+                    ovwDrawSquareRing(ovwCx, ovwCy, ovwBaseRadius + 22, ovwBins, -ovwTime * 0.07, 0.34, 2.05, [
+                        [0, 'rgba(84,198,255,0.82)'],
+                        [0.5, 'rgba(141,107,255,0.78)'],
+                        [1, 'rgba(255,79,136,0.72)']
+                    ], 5.2, 16);
+                } else {
+                    ovwDrawIdleSquareRing(ovwCx, ovwCy, ovwBaseRadius + 14, ovwTime);
+                }
+
+                ovwAnimationId = requestAnimationFrame(ovwRender);
+            }
+
+            ovwAudioFile.addEventListener('change', (ovwEvent) => {
+                ovwLoadAudioFile(ovwEvent.target.files[0]);
+            });
+
+            ovwArtFile.addEventListener('change', (ovwEvent) => {
+                ovwLoadArtFile(ovwEvent.target.files[0]);
+            });
+
+            ovwPlayBtn.addEventListener('click', async () => {
+                const ovwReady = await ovwUnlockAudio();
+                if (!ovwReady) return;
+                if (ovwAudio.src) {
+                    await ovwAudio.play().catch(() => { });
+                }
+            });
+
+            ovwDemoBtn.addEventListener('click', async () => {
+                await ovwLoadDemoTone();
+            });
+
+            ovwArt.addEventListener('dragover', (ovwEvent) => {
+                ovwEvent.preventDefault();
+            });
+
+            ovwArt.addEventListener('drop', (ovwEvent) => {
+                ovwEvent.preventDefault();
+                const ovwFile = [...ovwEvent.dataTransfer.files].find((ovwItem) => ovwItem.type.startsWith('image/'));
+                ovwLoadArtFile(ovwFile);
+            });
+
+            ovwAudio.addEventListener('play', () => {
+                ovwUnlockAudio();
+            });
+
+            ovwAudio.addEventListener('ended', () => {
+                if (ovwDemoUrl) {
+                    URL.revokeObjectURL(ovwDemoUrl);
+                    ovwDemoUrl = null;
+                }
+            });
+
+            window.addEventListener('resize', ovwResizeCanvas);
+            ovwResizeCanvas();
+            if (!ovwAnimationId) {
+                ovwRender();
+            }
+        })();
+    </script>
+</body>
+
+</html>
