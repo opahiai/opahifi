@@ -1105,6 +1105,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
     overflow: hidden;
     white-space: nowrap;
+    max-width: 120px;
     height: var(--pl3-pill-h);
 }
 
@@ -3389,17 +3390,25 @@ button {
         overflow-y: hidden;
         position: relative;
         z-index: 1;
+        margin-top: 1rem;
     }
 
     :root {
-        --pl3-desktop-panel-max-h: clamp(320px, 44vh, 430px);
+        --pl3-highlight-panel-max-h: clamp(320px, 44vh, 430px);
+        --pl3-gallery-panel-max-h: clamp(440px, 64vh, 680px);
     }
 
-    .PL3-part--highlight,
+    .PL3-part--highlight {
+        align-self: start;
+        height: min(100%, var(--pl3-highlight-panel-max-h));
+        min-width: 340px;
+    }
+
     .PL3-part--gallery {
         align-self: start;
-        height: min(100%, var(--pl3-desktop-panel-max-h));
+        height: min(100%, var(--pl3-gallery-panel-max-h));
     }
+
 }
 
 
