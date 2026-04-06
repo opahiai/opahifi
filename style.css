@@ -1694,14 +1694,15 @@ button {
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-columns: var(--pl3-upcoming-player-art-stage-size) minmax(0, 1fr);
     align-items: center;
-    /* gap: 8px 8px; */
+    gap: 0px;
     width: 100%;
     min-height: 0;
     padding: 6px;
-    margin-left: -7px;
+    margin-left: -10px;
     border-radius: 16px;
     min-width: 0;
     box-sizing: border-box;
+    padding-top: 15px;
 }
 
 .PL3-upcomingPlayer>.PL3-upcomingHeader {
@@ -1926,14 +1927,6 @@ button {
 
 .PL3-upcomingPlayerFooter .PL3-upcomingPlayerTime:last-child {
     justify-content: flex-end;
-}
-
-.PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayer {
-    border-color: rgba(115, 231, 255, 0.26);
-    box-shadow:
-        inset 0 1px 0 var(--pl3-color-white-10),
-        0 16px 30px rgba(20, 10, 55, 0.22),
-        0 0 0 1px rgba(115, 231, 255, 0.06);
 }
 
 .PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayerVisualizer {
@@ -3269,7 +3262,7 @@ button {
         --pl3-gallery-pad-block-end: 0.08rem;
         --pl3-upcoming-player-art-size: 120px;
         --pl3-upcoming-player-canvas-space: 28px;
-        --pl3-highlight-panel-max-h: 30vh;
+        --pl3-highlight-panel-max-h: 37vh;
         --pl3-gallery-panel-max-h: clamp(440px, 64vh, 680px);
     }
 
@@ -3408,8 +3401,7 @@ button {
 
     .PL3-part--highlight {
         align-self: start;
-        height: 30vh;
-        height: 30vh;
+        height: 40vh;
         min-width: 340px;
     }
 
