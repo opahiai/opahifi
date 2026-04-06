@@ -335,6 +335,11 @@ class PL3AudioBorderVisualizer {
         this.accentCyanRgb = '84, 198, 255';
         this.accentVioletRgb = '141, 107, 255';
         this.accentPinkRgb = '255, 79, 136';
+        this.ringGap = 0;
+        this.ringGlowScale = 1.58;
+        this.idleRingOffset = 9;
+        this.activeRingOffset = 5;
+        this.secondaryRingOffset = 14;
         this.visualCenterX = 0;
         this.visualCenterY = 0;
         this.visualBaseRadius = 0;
@@ -359,6 +364,11 @@ class PL3AudioBorderVisualizer {
         const accentCyanRgb = styles.getPropertyValue('--pl3-rgb-accent-cyan').trim();
         const accentVioletRgb = styles.getPropertyValue('--pl3-rgb-accent-violet').trim();
         const accentPinkRgb = styles.getPropertyValue('--pl3-rgb-accent-pink').trim();
+        const ringGap = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-gap'));
+        const ringGlowScale = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-glow-scale'));
+        const idleRingOffset = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-idle-offset'));
+        const activeRingOffset = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-active-offset'));
+        const secondaryRingOffset = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-secondary-offset'));
 
         this.accentCyan = accentCyan || 'rgb(84, 198, 255)';
         this.accentViolet = accentViolet || 'rgb(141, 107, 255)';
@@ -366,6 +376,11 @@ class PL3AudioBorderVisualizer {
         this.accentCyanRgb = accentCyanRgb || '84, 198, 255';
         this.accentVioletRgb = accentVioletRgb || '141, 107, 255';
         this.accentPinkRgb = accentPinkRgb || '255, 79, 136';
+        this.ringGap = Number.isFinite(ringGap) ? ringGap : 0;
+        this.ringGlowScale = Number.isFinite(ringGlowScale) ? ringGlowScale : 1.08;
+        this.idleRingOffset = Number.isFinite(idleRingOffset) ? idleRingOffset : 8;
+        this.activeRingOffset = Number.isFinite(activeRingOffset) ? activeRingOffset : 5;
+        this.secondaryRingOffset = Number.isFinite(secondaryRingOffset) ? secondaryRingOffset : 14;
     }
 
     syncVisualizerGeometry(canvasRect) {
@@ -388,7 +403,8 @@ class PL3AudioBorderVisualizer {
         const artRect = artTarget.getBoundingClientRect();
         this.visualCenterX = (artRect.left - rect.left) + (artRect.width / 2);
         this.visualCenterY = (artRect.top - rect.top) + (artRect.height / 2);
-        this.visualBaseRadius = Math.min(artRect.width, artRect.height) * 0.545;
+        // Position the ring from the art edge using a pixel gap.
+        this.visualBaseRadius = (Math.min(artRect.width, artRect.height) * 0.5) + this.ringGap;
     }
 
     attachAudio(audio) {
@@ -479,7 +495,7 @@ class PL3AudioBorderVisualizer {
         const steps = 220;
         for (let i = 0; i <= steps; i += 1) {
             const angle = (i / steps) * Math.PI * 2;
-            const point = this.getSquarePoint(cx, cy, radius * 1.14, angle, 5.2);
+            const point = this.getSquarePoint(cx, cy, radius * this.ringGlowScale, angle, 5.2);
             if (i === 0) {
                 ctx.moveTo(point.x, point.y);
             } else {
@@ -581,19 +597,19 @@ class PL3AudioBorderVisualizer {
             this.analyser.getByteFrequencyData(this.dataArray);
             const bins = Math.min(this.dataArray.length, 240);
 
-            this.drawRing(cx, cy, baseRadius + 8, bins, time * 0.10, 0.94, 3.2, [
+            this.drawRing(cx, cy, baseRadius + this.activeRingOffset, bins, time * 0.10, 0.94, 3.2, [
                 [0, this.accentCyan],
                 [0.5, this.accentViolet],
                 [1, this.accentPink]
             ], 5.8, 26, width, height);
 
-            this.drawRing(cx, cy, baseRadius + 22, bins, -time * 0.07, 0.34, 2.05, [
+            this.drawRing(cx, cy, baseRadius + this.secondaryRingOffset, bins, -time * 0.07, 0.34, 2.05, [
                 [0, `rgba(${this.accentCyanRgb}, 0.82)`],
                 [0.5, `rgba(${this.accentVioletRgb}, 0.78)`],
                 [1, `rgba(${this.accentPinkRgb}, 0.72)`]
             ], 5.2, 16, width, height);
         } else {
-            this.drawIdleRing(cx, cy, baseRadius + 14, time, width, height);
+            this.drawIdleRing(cx, cy, baseRadius + this.idleRingOffset, time, width, height);
         }
 
         this.rafId = requestAnimationFrame(this.render);

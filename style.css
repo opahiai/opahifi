@@ -144,6 +144,16 @@ body {
     --pl3-upcoming-player-art-stage-size:
         var(--pl3-upcoming-player-canvas-size);
     --pl3-upcoming-player-art-shell-radius: 14px;
+    /* Ring controls:
+       ring-gap = base distance from the art edge
+       ring-idle-offset = extra distance for the idle ring
+       ring-active-offset = extra distance for the main bright playing ring
+       ring-secondary-offset = extra distance for the faint outer playing ring */
+    --pl3-upcoming-player-ring-gap: 3px;
+    --pl3-upcoming-player-ring-glow-scale: 1.03;
+    --pl3-upcoming-player-ring-idle-offset: 8px;
+    --pl3-upcoming-player-ring-active-offset: 2px;
+    --pl3-upcoming-player-ring-secondary-offset: 10px;
 
     /* Grid section gap */
     --pl3-split-gap: 2.2vh;
@@ -3257,7 +3267,7 @@ button {
         --pl3-gallery-pad-block-end: 0.08rem;
         --pl3-upcoming-player-art-size: 120px;
         --pl3-upcoming-player-canvas-space: 28px;
-        --pl3-highlight-panel-max-h: clamp(320px, 44vh, 430px);
+        --pl3-highlight-panel-max-h: 30vh;
         --pl3-gallery-panel-max-h: clamp(440px, 64vh, 680px);
     }
 
@@ -3396,7 +3406,8 @@ button {
 
     .PL3-part--highlight {
         align-self: start;
-        height: min(100%, var(--pl3-highlight-panel-max-h));
+        height: 30vh;
+        height: 30vh;
         min-width: 340px;
     }
 
