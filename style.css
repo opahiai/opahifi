@@ -133,12 +133,16 @@ body {
     /* Upcoming section */
     --pl3-upcoming-art-scale: 1;
     --pl3-upcoming-glow-scale: 1.12;
+    /* Customize the player art/canvas sizing with these three vars. */
     --pl3-upcoming-player-art-size: 96px;
     --pl3-upcoming-player-art-pad: 8px;
-    --pl3-upcoming-player-visualizer-space: 28px;
-    --pl3-upcoming-player-art-wrap-inset: var(--pl3-upcoming-player-visualizer-space);
+    --pl3-upcoming-player-canvas-space: 24px;
+    --pl3-upcoming-player-canvas-size:
+        calc(var(--pl3-upcoming-player-art-size) + (var(--pl3-upcoming-player-art-pad) * 2) + (var(--pl3-upcoming-player-canvas-space) * 2));
+    --pl3-upcoming-player-visualizer-space: var(--pl3-upcoming-player-canvas-space);
+    --pl3-upcoming-player-art-wrap-inset: var(--pl3-upcoming-player-canvas-space);
     --pl3-upcoming-player-art-stage-size:
-        calc(var(--pl3-upcoming-player-art-size) + (var(--pl3-upcoming-player-art-pad) * 2) + (var(--pl3-upcoming-player-visualizer-space) * 2));
+        var(--pl3-upcoming-player-canvas-size);
     --pl3-upcoming-player-art-shell-radius: 14px;
 
     /* Grid section gap */
@@ -1684,11 +1688,6 @@ button {
     min-height: 0;
     padding: 6px;
     border-radius: 16px;
-    background: linear-gradient(180deg, rgba(30, 12, 63, 0.82), rgba(16, 8, 37, 0.7));
-    border: 1px solid rgba(223, 179, 255, 0.18);
-    box-shadow:
-        inset 0 1px 0 var(--pl3-color-white-08),
-        0 10px 22px rgba(11, 5, 31, 0.14);
     min-width: 0;
     box-sizing: border-box;
 }
@@ -3189,7 +3188,7 @@ button {
 @media (min-width: 425px) {
     :root {
         --pl3-upcoming-player-art-size: 108px;
-        --pl3-upcoming-player-visualizer-space: 30px;
+        --pl3-upcoming-player-canvas-space: 26px;
     }
 
     .PL3-card {
@@ -3257,7 +3256,9 @@ button {
         --pl3-gallery-pad-block-start: 0.18rem;
         --pl3-gallery-pad-block-end: 0.08rem;
         --pl3-upcoming-player-art-size: 120px;
-        --pl3-upcoming-player-visualizer-space: 32px;
+        --pl3-upcoming-player-canvas-space: 28px;
+        --pl3-highlight-panel-max-h: clamp(320px, 44vh, 430px);
+        --pl3-gallery-panel-max-h: clamp(440px, 64vh, 680px);
     }
 
     .PL3-card {
@@ -3391,11 +3392,6 @@ button {
         position: relative;
         z-index: 1;
         margin-top: 1rem;
-    }
-
-    :root {
-        --pl3-highlight-panel-max-h: clamp(320px, 44vh, 430px);
-        --pl3-gallery-panel-max-h: clamp(440px, 64vh, 680px);
     }
 
     .PL3-part--highlight {
