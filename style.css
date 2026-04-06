@@ -1668,6 +1668,7 @@ button {
     text-shadow: none;
     white-space: nowrap;
     margin: 0;
+    margin-left: 8px;
     max-width: none;
 }
 
@@ -1693,10 +1694,11 @@ button {
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-columns: var(--pl3-upcoming-player-art-stage-size) minmax(0, 1fr);
     align-items: center;
-    gap: 8px 8px;
+    /* gap: 8px 8px; */
     width: 100%;
     min-height: 0;
     padding: 6px;
+    margin-left: -7px;
     border-radius: 16px;
     min-width: 0;
     box-sizing: border-box;
