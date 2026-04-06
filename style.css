@@ -3371,8 +3371,8 @@ button {
     }
 
     .PL3-groupPanelFooter {
-        top: 20px;
-        right: 20px;
+        top: 0;
+        right: calc(-0.8 * var(--pl3-panel-close-w));
         bottom: auto;
         left: auto;
         transform: none;
