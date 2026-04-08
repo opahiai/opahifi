@@ -616,6 +616,98 @@ class PL3AudioBorderVisualizer {
     }
 }
 
+class PL3GalleryLayout {
+    constructor(section) {
+        this.section = section;
+        this.gallery = section.querySelector('.PL3-gallery');
+        this.buttons = this.gallery ? Array.from(this.gallery.querySelectorAll('.PL3-galleryItemBtn')) : [];
+        this.tabletMedia = typeof window.matchMedia === 'function'
+            ? window.matchMedia('(min-width: 768px)')
+            : null;
+    }
+
+    init() {
+        if (!this.gallery || !this.buttons.length) return;
+        this.applyLayout();
+
+        if (!this.tabletMedia) return;
+        if (typeof this.tabletMedia.addEventListener === 'function') {
+            this.tabletMedia.addEventListener('change', this.applyLayout);
+            return;
+        }
+        if (typeof this.tabletMedia.addListener === 'function') {
+            this.tabletMedia.addListener(this.applyLayout);
+        }
+    }
+
+    parseLayout(value) {
+        return String(value || '')
+            .split(',')
+            .map((part) => Number.parseInt(part.trim(), 10))
+            .filter((count) => Number.isFinite(count) && count > 0);
+    }
+
+    getActiveLayout() {
+        const mobileValue = this.gallery.dataset.pl3LayoutMobile || this.gallery.dataset.pl3Layout || '';
+        const tabletValue = this.gallery.dataset.pl3LayoutTablet || mobileValue;
+        const preferredValue = this.tabletMedia?.matches
+            ? (tabletValue || mobileValue)
+            : (mobileValue || tabletValue);
+        const layout = this.parseLayout(preferredValue);
+        return layout.length ? layout : [Math.max(this.buttons.length, 1)];
+    }
+
+    buildRows(layout) {
+        const rows = [];
+        let cursor = 0;
+        const overflowCount = layout[layout.length - 1] || layout[0] || 1;
+
+        while (cursor < this.buttons.length) {
+            const slotCount = layout[rows.length] || overflowCount;
+            const rowButtons = this.buttons.slice(cursor, cursor + slotCount);
+            if (!rowButtons.length) break;
+            rows.push({ slotCount, buttons: rowButtons });
+            cursor += slotCount;
+        }
+
+        if (!rows.length) {
+            rows.push({ slotCount: layout[0] || 1, buttons: [] });
+        }
+
+        return rows;
+    }
+
+    rowHasVisibleButtons(buttons) {
+        return buttons.some((btn) => !btn.hidden);
+    }
+
+    createRow(slotCount, buttons, index) {
+        const row = document.createElement('div');
+        row.className = 'PL3-galleryRow';
+        row.dataset.pl3GalleryRow = String(index + 1);
+        row.style.setProperty('--pl3-gallery-row-slot-count', String(Math.max(slotCount, 1)));
+        buttons.forEach((btn) => row.append(btn));
+        return row;
+    }
+
+    applyLayout = () => {
+        const layout = this.getActiveLayout();
+        const rowDefs = this.buildRows(layout);
+        const renderedRows = rowDefs
+            .filter((rowDef) => this.rowHasVisibleButtons(rowDef.buttons))
+            .map((rowDef, index) => this.createRow(rowDef.slotCount, rowDef.buttons, index));
+        const maxCount = Math.max(...layout, 1);
+
+        if (!renderedRows.length) {
+            renderedRows.push(this.createRow(layout[0] || 1, [], 0));
+        }
+
+        this.gallery.style.setProperty('--pl3-gallery-max-count', String(maxCount));
+        this.gallery.style.setProperty('--pl3-gallery-rows', String(renderedRows.length));
+        this.gallery.replaceChildren(...renderedRows);
+    };
+}
+
 class PL3DomRegistry {
     constructor(section) {
         this.section = section;
@@ -2891,6 +2983,8 @@ class PL3Controller {
         if (!this.section) return;
 
         this.scrollLock = new PL3ScrollLock();
+        this.galleryLayout = new PL3GalleryLayout(this.section);
+        this.galleryLayout.init();
         this.el = new PL3DomRegistry(this.section);
         this.headerSection = new PL3HeaderSection(this.el);
         this.buttonsSection = new PL3ButtonsSection(this.el);

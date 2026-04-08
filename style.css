@@ -105,8 +105,7 @@ body {
 
     /* Gallery layout */
     --pl3-gallery-pill-gap: 4px;
-    --pl3-gallery-top-count: 4;
-    --pl3-gallery-bottom-count: 3;
+    --pl3-gallery-max-count: 4;
     --pl3-gallery-rows: 2;
     --pl3-gallery-row-overlap-factor: 0.22;
     --pl3-gallery-hex-ratio: 0.8660254;
@@ -922,12 +921,18 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     flex: 1 1 0%;
     min-height: 0;
     --pl3-gallery-inline-room:
-        calc(100cqw - (2 * var(--pl3-gallery-pad-inline)) - ((var(--pl3-gallery-top-count) - 1) * var(--pl3-gallery-col-gap)));
+        calc(100cqw - (2 * var(--pl3-gallery-pad-inline)) - ((var(--pl3-gallery-max-count) - 1) * var(--pl3-gallery-col-gap)));
     --pl3-gallery-block-room:
         calc(100cqh - var(--pl3-gallery-pad-block-start) - var(--pl3-gallery-pad-block-end));
-    --pl3-gallery-unit-from-inline: calc(var(--pl3-gallery-inline-room) / var(--pl3-gallery-top-count));
+    --pl3-gallery-unit-from-inline: calc(var(--pl3-gallery-inline-room) / var(--pl3-gallery-max-count));
     --pl3-gallery-item-h-from-block:
-        calc(var(--pl3-gallery-block-room) / (var(--pl3-gallery-rows) - var(--pl3-gallery-row-overlap-factor)));
+        calc(
+            var(--pl3-gallery-block-room)
+            / (
+                var(--pl3-gallery-rows)
+                - ((var(--pl3-gallery-rows) - 1) * var(--pl3-gallery-row-overlap-factor))
+            )
+        );
     --pl3-gallery-unit-from-block:
         calc(var(--pl3-gallery-item-h-from-block) * var(--pl3-gallery-hex-ratio));
     --pl3-gallery-unit:
@@ -949,17 +954,25 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    min-height: var(--pl3-gallery-item-h);
     gap: var(--pl3-gallery-col-gap);
+    inline-size: min(
+        100%,
+        calc(
+            (var(--pl3-gallery-unit) * var(--pl3-gallery-row-slot-count, var(--pl3-gallery-max-count)))
+            + ((var(--pl3-gallery-row-slot-count, var(--pl3-gallery-max-count)) - 1) * var(--pl3-gallery-col-gap))
+        )
+    );
+    margin-inline: auto;
     overflow: visible;
 }
 
-.PL3-galleryRow--top {
-    min-height: var(--pl3-gallery-item-h);
+.PL3-galleryRow + .PL3-galleryRow {
+    margin-top: calc(var(--pl3-gallery-row-overlap) * -1);
 }
 
-.PL3-galleryRow--bottom {
-    min-height: var(--pl3-gallery-item-h);
-    margin-top: calc(var(--pl3-gallery-row-overlap) * -1);
+.PL3-galleryItemBtn[hidden] {
+    display: none;
 }
 
 .PL3-galleryItemBtn {
@@ -3257,7 +3270,7 @@ button {
         --pl3-version-detail-platform-icon-size: 20px;
         --pl3-version-platform-gap: 16px;
         --pl3-gallery-pill-gap: 10px;
-        --pl3-gallery-unit-max: 6.6rem;
+        --pl3-gallery-unit-max: 8rem;
         --pl3-gallery-pad-block-start: 0.18rem;
         --pl3-gallery-pad-block-end: 0.08rem;
         --pl3-upcoming-player-art-size: 120px;
