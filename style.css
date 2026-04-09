@@ -3258,6 +3258,8 @@ button {
         --pl3-part-pad-y: 10px;
         --pl3-gap-md: 10px;
         --pl3-gap-sm: 8px;
+        --pl3-tablet-highlight-column: 50;
+        --pl3-tablet-gallery-column: 50;
         --pl3-section-header: 19;
         --pl3-section-highlight: 37;
         --pl3-section-gallery: 37;
@@ -3415,7 +3417,7 @@ button {
     .PL3-part--highlight {
         align-self: start;
         height: 40vh;
-        min-width: 340px;
+        min-width: 0;
     }
 
     .PL3-part--gallery {
