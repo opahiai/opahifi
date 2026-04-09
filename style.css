@@ -926,13 +926,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
         calc(100cqh - var(--pl3-gallery-pad-block-start) - var(--pl3-gallery-pad-block-end));
     --pl3-gallery-unit-from-inline: calc(var(--pl3-gallery-inline-room) / var(--pl3-gallery-max-count));
     --pl3-gallery-item-h-from-block:
-        calc(
-            var(--pl3-gallery-block-room)
-            / (
-                var(--pl3-gallery-rows)
-                - ((var(--pl3-gallery-rows) - 1) * var(--pl3-gallery-row-overlap-factor))
-            )
-        );
+        calc(var(--pl3-gallery-block-room) / (var(--pl3-gallery-rows) - ((var(--pl3-gallery-rows) - 1) * var(--pl3-gallery-row-overlap-factor))));
     --pl3-gallery-unit-from-block:
         calc(var(--pl3-gallery-item-h-from-block) * var(--pl3-gallery-hex-ratio));
     --pl3-gallery-unit:
@@ -956,18 +950,13 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     align-items: flex-start;
     min-height: var(--pl3-gallery-item-h);
     gap: var(--pl3-gallery-col-gap);
-    inline-size: min(
-        100%,
-        calc(
-            (var(--pl3-gallery-unit) * var(--pl3-gallery-row-slot-count, var(--pl3-gallery-max-count)))
-            + ((var(--pl3-gallery-row-slot-count, var(--pl3-gallery-max-count)) - 1) * var(--pl3-gallery-col-gap))
-        )
-    );
+    inline-size: min(100%,
+            calc((var(--pl3-gallery-unit) * var(--pl3-gallery-row-slot-count, var(--pl3-gallery-max-count))) + ((var(--pl3-gallery-row-slot-count, var(--pl3-gallery-max-count)) - 1) * var(--pl3-gallery-col-gap))));
     margin-inline: auto;
     overflow: visible;
 }
 
-.PL3-galleryRow + .PL3-galleryRow {
+.PL3-galleryRow+.PL3-galleryRow {
     margin-top: calc(var(--pl3-gallery-row-overlap) * -1);
 }
 
@@ -3331,13 +3320,34 @@ button {
     }
 
     .PL3-upcomingPlayer {
+        grid-template-areas:
+            "header"
+            "art"
+            "body";
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        justify-items: center;
+        align-items: start;
         gap: 12px;
         padding: 12px;
+        margin-left: 0;
         border-radius: 20px;
     }
 
+    .PL3-upcomingPlayer>.PL3-upcomingHeader {
+        width: 100%;
+    }
+
     .PL3-upcomingPlayerArtWrap {
+        justify-self: center;
+        align-self: start;
         border-radius: calc(var(--pl3-upcoming-player-art-shell-radius) + 2px);
+    }
+
+    .PL3-upcomingPlayerBody {
+        align-self: start;
+        width: 100%;
+        max-width: 250px;
     }
 
     .PL3-upcomingPlayer .PL3-upcomingArt {
@@ -3416,7 +3426,7 @@ button {
 
     .PL3-part--highlight {
         align-self: start;
-        height: 40vh;
+        height: min(100%, var(--pl3-gallery-panel-max-h));
         min-width: 0;
     }
 
