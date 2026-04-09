@@ -3438,6 +3438,96 @@ button {
 }
 
 
+@media (min-width: 1024px) {
+    .PL3-upcoming--playingNow {
+        padding: 1.5rem 1.35rem 1.2rem;
+    }
+
+    .PL3-upcomingPlayer {
+        grid-template-areas:
+            "header art"
+            "body body";
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto;
+        column-gap: 1.4rem;
+        row-gap: 1rem;
+        justify-content: center;
+        justify-items: start;
+        align-content: center;
+        align-items: center;
+        padding: 0;
+    }
+
+    .PL3-upcomingPlayer>.PL3-upcomingHeader {
+        width: auto;
+        align-self: center;
+        justify-content: flex-start;
+    }
+
+    .PL3-upcomingPlayerArtWrap {
+        justify-self: start;
+        align-self: center;
+        width: clamp(150px, 15vw, 190px);
+    }
+
+    .PL3-upcomingPlayerBody {
+        justify-self: stretch;
+        width: auto;
+        max-width: none;
+        align-self: start;
+        gap: 10px;
+    }
+
+    .PL3-upcomingPlayerTop,
+    .PL3-upcomingPlayerCopy {
+        text-align: left;
+    }
+
+    .PL3-upcomingPlayerTop {
+        width: 100%;
+    }
+
+    .PL3-upcomingPlayerCopy {
+        width: 100%;
+        max-width: 20rem;
+    }
+
+    .PL3-upcomingPlayerTitle {
+        font-size: 1.7rem;
+    }
+
+    .PL3-upcomingPlayerSub {
+        font-size: 1.4rem;
+        margin-top: 6px;
+    }
+
+    .PL3-upcomingPlayerActions {
+        display: grid;
+        grid-template-columns: repeat(2, 9rem);
+        justify-content: center;
+        gap: 14px;
+    }
+
+    .PL3-upcomingPlayerBody .PL3-upcomingPlayerActions .PL3-upcomingPlayerBtn,
+    .PL3-upcomingPlayerBody .PL3-upcomingPlayerActions .PL3-upcomingInfoBtn {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .PL3-upcoming--playingNow .PL3-upcomingDesc {
+        font-size: 3rem;
+        white-space: normal;
+        margin-left: 0;
+        max-width: 8.5ch;
+    }
+
+    .PL3-upcomingPlayerTime {
+        font-size: .7rem;
+    }
+}
+
+
 @media (prefers-reduced-motion: reduce) {
 
     .PL3-upcomingPlayerArtWrap::before,
