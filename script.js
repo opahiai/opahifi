@@ -90,6 +90,7 @@
             key: GROUP.OLD_LOVE_STORY,
             title: 'Old Love Story',
             titleLines: ['OLD LOVE', 'STORY'],
+            shareImage: 'img/music/main_oldlovestory.png',
             cover: 'img/music/base/base-oldlovestory.png',
             songIds: [],
             singlesById: {}
@@ -99,6 +100,7 @@
             key: GROUP.OPA_PA_PA_PARTY,
             title: 'Opa pa pa party',
             titleLines: ['OPA PA', 'PA PARTY!'],
+            shareImage: 'img/music/main_oparty.png',
             cover: 'img/music/base/base-opapapaparty.png',
             songIds: [],
             singlesById: {}
@@ -108,6 +110,7 @@
             key: GROUP.GLITTAA_PHOENIX,
             title: 'Glittaa Phoenix',
             titleLines: ['GLITTAA', 'PHOENIX!'],
+            shareImage: 'img/music/main_glitta.png',
             cover: 'img/music/base/base-glittaaphoenix.png',
             songIds: [],
             singlesById: {}
@@ -117,6 +120,7 @@
             key: GROUP.SPLENDA_LOVE_RABBIT_HELL,
             title: 'Splenda Love Rabbit Hell',
             titleLines: ['SPLENDA LOVE', 'RABBIT HELL'],
+            shareImage: 'img/music/main_splenda_rabbit.png',
             cover: 'img/music/base/base-splendaloverabbithell.png',
             songIds: [],
             singlesById: {}
@@ -126,6 +130,7 @@
             key: GROUP.BELIEVE_THE_TRUTH_FAIRY,
             title: 'Believe the Truth fairy',
             titleLines: ['BELIEVE the', 'TRUTH FAIRY'],
+            shareImage: 'img/music/main_truthfairy.png',
             cover: 'img/music/base/base-believethetruthfairy.png',
             songIds: [],
             singlesById: {}
@@ -135,6 +140,7 @@
             key: GROUP.FULL_MINDNESS,
             title: 'Full-Mindness',
             titleLines: ['FULL-', 'MINDNESS'],
+            shareImage: 'img/music/main_full_mindness.png',
             cover: 'img/music/base/base-fullmindness.png',
             songIds: [],
             singlesById: {}
