@@ -3505,11 +3505,11 @@ button {
     }
 
     .PL3-upcomingPlayerTitle {
-        font-size: 1.7rem;
+        font-size: 1.5rem;
     }
 
     .PL3-upcomingPlayerSub {
-        font-size: 1.4rem;
+        font-size: 1rem;
         margin-top: 6px;
     }
 
@@ -3528,7 +3528,7 @@ button {
     }
 
     .PL3-upcoming--playingNow .PL3-upcomingDesc {
-        font-size: 3rem;
+        font-size: 2rem;
         white-space: normal;
         margin-left: 0;
         max-width: 8.5ch;
