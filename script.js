@@ -688,6 +688,51 @@ class PL3GalleryLayout {
         return buttons.some((btn) => !btn.hidden);
     }
 
+    getPlaylistLinkEntries() {
+        return Array.from(
+            this.section.querySelectorAll('.PL3-playlistPillWrap [data-pl3-playlist-links] a')
+        ).map((link) => {
+            const icon = link.querySelector('img');
+            return {
+                href: link.getAttribute('href') || '',
+                ariaLabel: link.getAttribute('aria-label') || '',
+                iconSrc: icon?.getAttribute('src') || '',
+                iconAlt: icon?.getAttribute('alt') || ''
+            };
+        }).filter((entry) => entry.href && entry.iconSrc);
+    }
+
+    createGhostPlaylistBack() {
+        const back = document.createElement('div');
+        back.className = 'PL3-galleryGhostPlaylistBack';
+        back.setAttribute('data-pl3-ghost-playlist-links', '');
+        back.setAttribute('data-pl3-playlist-toggle', '');
+        back.setAttribute('aria-label', 'Playlist links');
+
+        const row = document.createElement('div');
+        row.className = 'PL3-galleryGhostPlaylistBackRow';
+
+        this.getPlaylistLinkEntries().forEach((entry) => {
+            const link = document.createElement('a');
+            link.className = 'PL3-playlistPillLink PL3-galleryGhostPlaylistLink';
+            link.href = entry.href;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.setAttribute('aria-label', entry.ariaLabel);
+
+            const icon = document.createElement('img');
+            icon.className = 'PL3-playlistPillIcon';
+            icon.src = entry.iconSrc;
+            icon.alt = entry.iconAlt;
+
+            link.append(icon);
+            row.append(link);
+        });
+
+        back.append(row);
+        return back;
+    }
+
     createGhostRack(count) {
         const rack = document.createElement('div');
         rack.className = 'PL3-galleryGhostRack PL3-galleryGhostRack--top';
@@ -697,6 +742,9 @@ class PL3GalleryLayout {
             ghost.className = 'PL3-galleryGhostHex';
             if (index === 0) {
                 ghost.classList.add('PL3-galleryGhostHex--playlist');
+
+                const playlistCard = document.createElement('div');
+                playlistCard.className = 'PL3-galleryGhostPlaylistCard';
 
                 const playlistButton = document.createElement('button');
                 playlistButton.className = 'PL3-galleryGhostPlaylistBtn';
@@ -719,7 +767,8 @@ class PL3GalleryLayout {
                 };
 
                 playlistButton.append(playlistLabel, playlistImage);
-                ghost.append(playlistButton);
+                playlistCard.append(playlistButton, this.createGhostPlaylistBack());
+                ghost.append(playlistCard);
             } else {
                 ghost.setAttribute('aria-hidden', 'true');
             }
@@ -769,11 +818,7 @@ class PL3DomRegistry {
         this.previewBtn = section.querySelector('[data-pl3-preview]');
         this.gallery = section.querySelector('.PL3-gallery');
         this.galleryBtns = Array.from(section.querySelectorAll('.PL3-galleryItemBtn'));
-        this.playlistToggles = Array.from(section.querySelectorAll('[data-pl3-playlist-toggle]'));
-        this.playlistPillToggle = this.playlistToggles.find((toggle) => toggle.classList.contains('PL3-playlistPill'))
-            || this.playlistToggles[0]
-            || null;
-        this.playlistPillLinks = section.querySelector('[data-pl3-playlist-links]');
+        this.refreshPlaylistRefs();
         this.groupPanel = section.querySelector('#PL3-group-panel');
         this.groupPanelArtDock = section.querySelector('[data-pl3-group-art-dock]');
         this.groupPanelTitle = section.querySelector('[data-pl3-group-title]');
@@ -786,6 +831,18 @@ class PL3DomRegistry {
         this.artZoomImage = document.getElementById('PL3-art-zoom-image');
         this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
         this.releaseAudioVisualizerCanvas = section.querySelector('[data-pl3-audio-visualizer]');
+    }
+
+    refreshPlaylistRefs() {
+        this.playlistToggles = Array.from(this.section.querySelectorAll('[data-pl3-playlist-toggle]'));
+        this.playlistPillToggle = this.playlistToggles.find((toggle) => toggle.classList.contains('PL3-playlistPill'))
+            || this.playlistToggles[0]
+            || null;
+        this.playlistPillLinks = this.section.querySelector('[data-pl3-playlist-links]');
+        this.playlistGhostHex = this.section.querySelector('.PL3-galleryGhostHex--playlist');
+        this.playlistGhostToggles = Array.from(
+            this.section.querySelectorAll('.PL3-galleryGhostPlaylistBtn, .PL3-galleryGhostPlaylistBack')
+        );
     }
 }
 
@@ -2969,6 +3026,7 @@ class PL3GallerySection {
         this.dom = dom;
         this.onGroupSelect = callbacks.onGroupSelect || (() => { });
         this.playlistExpanded = false;
+        this.playlistExpandedSurface = '';
     }
 
     init() {
@@ -2977,12 +3035,18 @@ class PL3GallerySection {
     }
 
     onSectionClick = (ev) => {
+        this.dom.refreshPlaylistRefs();
         const playlistToggle = ev.target.closest('[data-pl3-playlist-toggle]');
         if (playlistToggle) {
-            const isPlaylistLink = ev.target.closest('[data-pl3-playlist-links] a');
+            const isPlaylistLink = ev.target.closest('[data-pl3-playlist-links] a, [data-pl3-ghost-playlist-links] a');
             if (isPlaylistLink) return;
             ev.preventDefault();
-            this.playlistExpanded ? this.collapsePlaylistPill() : this.expandPlaylistPill();
+            const surface = this.getPlaylistSurface(playlistToggle);
+            if (this.playlistExpanded && surface === this.playlistExpandedSurface) {
+                this.collapsePlaylistPill();
+                return;
+            }
+            surface === 'ghost' ? this.expandPlaylistGhost() : this.expandPlaylistPill();
             return;
         }
 
@@ -2993,7 +3057,7 @@ class PL3GallerySection {
             return;
         }
 
-        if (ev.target.closest('[data-pl3-playlist-links]')) return;
+        if (ev.target.closest('[data-pl3-playlist-links], [data-pl3-ghost-playlist-links]')) return;
 
         const btn = ev.target.closest('[data-pl3-group]');
         if (!btn || !this.dom.section.contains(btn)) {
@@ -3005,34 +3069,58 @@ class PL3GallerySection {
         this.onGroupSelect(btn, btn.getAttribute('data-pl3-group') || '');
     };
 
+    getPlaylistSurface(toggle) {
+        if (toggle.classList.contains('PL3-galleryGhostPlaylistBtn')
+            || toggle.classList.contains('PL3-galleryGhostPlaylistBack')) {
+            return 'ghost';
+        }
+        return 'pill';
+    }
+
     expandPlaylistPill() {
+        this.dom.refreshPlaylistRefs();
         const toggle = this.dom.playlistPillToggle;
         const links = this.dom.playlistPillLinks;
         if (!toggle || !links) return;
 
-        this.dom.playlistToggles.forEach((playlistToggle) => {
-            playlistToggle.setAttribute('aria-expanded', 'true');
-            if (playlistToggle !== toggle) {
-                playlistToggle.classList.add('PL3-galleryGhostPlaylistBtn--expanded');
-            }
-        });
+        this.collapsePlaylistPill();
+        toggle.setAttribute('aria-expanded', 'true');
         toggle.classList.add('PL3-playlistPill--expanded');
         links.hidden = false;
         this.playlistExpanded = true;
+        this.playlistExpandedSurface = 'pill';
+    }
+
+    expandPlaylistGhost() {
+        this.dom.refreshPlaylistRefs();
+        const ghostHex = this.dom.playlistGhostHex;
+        if (!ghostHex) return;
+
+        this.collapsePlaylistPill();
+        ghostHex.classList.add('PL3-galleryGhostHex--expanded');
+        this.dom.playlistGhostToggles.forEach((toggle) => {
+            toggle.setAttribute('aria-expanded', 'true');
+        });
+        this.playlistExpanded = true;
+        this.playlistExpandedSurface = 'ghost';
     }
 
     collapsePlaylistPill() {
+        this.dom.refreshPlaylistRefs();
         const toggle = this.dom.playlistPillToggle;
         const links = this.dom.playlistPillLinks;
-        if (!toggle || !links) return;
+        toggle?.setAttribute('aria-expanded', 'false');
+        toggle?.classList.remove('PL3-playlistPill--expanded');
+        if (links) {
+            links.hidden = true;
+        }
 
-        this.dom.playlistToggles.forEach((playlistToggle) => {
+        this.dom.playlistGhostHex?.classList.remove('PL3-galleryGhostHex--expanded');
+        this.dom.playlistGhostToggles.forEach((playlistToggle) => {
             playlistToggle.setAttribute('aria-expanded', 'false');
-            playlistToggle.classList.remove('PL3-galleryGhostPlaylistBtn--expanded');
         });
-        toggle.classList.remove('PL3-playlistPill--expanded');
-        links.hidden = true;
         this.playlistExpanded = false;
+        this.playlistExpandedSurface = '';
     }
 }
 
