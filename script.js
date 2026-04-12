@@ -709,6 +709,10 @@ class PL3GalleryLayout {
         back.setAttribute('data-pl3-playlist-toggle', '');
         back.setAttribute('aria-label', 'Playlist links');
 
+        const title = document.createElement('span');
+        title.className = 'PL3-galleryGhostPlaylistBackTitle';
+        title.textContent = 'Playlists:';
+
         const row = document.createElement('div');
         row.className = 'PL3-galleryGhostPlaylistBackRow';
 
@@ -729,7 +733,7 @@ class PL3GalleryLayout {
             row.append(link);
         });
 
-        back.append(row);
+        back.append(title, row);
         return back;
     }
 
@@ -3201,6 +3205,7 @@ class PL3Controller {
             ? Array.from(releasePanel.children).filter((node) => node.matches('.PL3-upcomingHeader, .PL3-upcomingPlayerCard'))
             : [];
         const galleryHeader = this.section.querySelector('.PL3-galleryHeader');
+        const galleryGhostHexes = Array.from(this.section.querySelectorAll('.PL3-galleryGhostHex'));
         const galleryItems = Array.from(this.section.querySelectorAll('.PL3-galleryItemBtn'));
         const galleryImages = Array.from(this.section.querySelectorAll('.PL3-galleryImg'));
         const animatedNodes = [
@@ -3214,6 +3219,7 @@ class PL3Controller {
             releaseArtImage,
             releaseCopy,
             galleryHeader,
+            ...galleryGhostHexes,
             ...galleryItems,
             ...galleryImages
         ].filter(Boolean);
@@ -3263,6 +3269,13 @@ class PL3Controller {
         }, '<0.04');
         addStep(releaseCopy, { x: 0, opacity: 1, duration: 0.62 }, '<0.08');
         addStep(galleryHeader, { y: 0, opacity: 1, duration: 0.58 }, '-=0.34');
+        addStep(galleryGhostHexes, {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            stagger: 0.06,
+            duration: 0.56
+        }, '-=0.26');
         addStep(galleryItems, {
             y: 0,
             scale: 1,
