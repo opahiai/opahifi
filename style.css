@@ -107,6 +107,7 @@ body {
     --pl3-gallery-pill-gap: 4px;
     --pl3-gallery-max-count: 4;
     --pl3-gallery-rows: 2;
+    --pl3-gallery-scale: 0.93;
     --pl3-gallery-row-overlap-factor: 0.22;
     --pl3-gallery-hex-ratio: 0.8660254;
     --pl3-gallery-unit-min: 4.45rem;
@@ -942,6 +943,8 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
         var(--pl3-gallery-pad-block-start) var(--pl3-gallery-pad-inline) var(--pl3-gallery-pad-block-end);
     overflow: visible;
     isolation: isolate;
+    transform: scale(var(--pl3-gallery-scale));
+    transform-origin: center top;
 }
 
 .PL3-galleryRow {
@@ -970,7 +973,6 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
             calc((var(--pl3-gallery-unit) * 3) + (2 * var(--pl3-gallery-col-gap))));
     margin-inline: auto;
     overflow: visible;
-    pointer-events: none;
 }
 
 .PL3-galleryGhostRack+.PL3-galleryRow {
@@ -991,6 +993,10 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
         inset 0 -0.8rem 1.15rem rgba(0, 0, 0, 0.06),
         inset 0 0.35rem 0.8rem rgba(255, 255, 255, 0.44);
     opacity: 1;
+    overflow: hidden;
+    transform: translateY(0) scale(1);
+    transform-origin: 50% 50%;
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
 }
 
 .PL3-galleryGhostHex::before,
@@ -1013,6 +1019,72 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     background:
         radial-gradient(circle, rgba(131, 99, 255, 0.22) 0%, rgba(131, 99, 255, 0.08) 44%, rgba(131, 99, 255, 0) 70%);
     filter: blur(2px);
+}
+
+.PL3-galleryGhostHex--playlist {
+    box-shadow: var(--pl3-gallery-shadow);
+}
+
+.PL3-galleryGhostHex--playlist:hover,
+.PL3-galleryGhostHex--playlist:focus-within {
+    transform: translateY(calc(var(--pl3-gallery-hover-lift) * -1)) scale(var(--pl3-gallery-hover-scale));
+    box-shadow: var(--pl3-gallery-shadow-hover);
+    z-index: 2;
+}
+
+.PL3-galleryGhostPlaylistBtn {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.PL3-galleryGhostPlaylistBtn:focus-visible {
+    outline: none;
+}
+
+.PL3-galleryGhostPlaylistLabel {
+    position: absolute;
+    top: 1.1rem;
+    left: 50%;
+    z-index: 2;
+    transform: translateX(-50%);
+    font-family: 'Oswald', sans-serif;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: rgba(31, 23, 41, 0.92);
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.PL3-galleryGhostPlaylistImg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 2rem 0.75rem 0.8rem;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 18px rgba(17, 9, 33, 0.12));
+    transform: scale(1);
+    transition: transform 320ms ease, filter 220ms ease, opacity 220ms ease;
+}
+
+.PL3-galleryGhostHex--playlist:hover .PL3-galleryGhostPlaylistImg,
+.PL3-galleryGhostHex--playlist:focus-within .PL3-galleryGhostPlaylistImg {
+    transform: scale(var(--pl3-gallery-img-zoom));
+    filter: drop-shadow(0 10px 20px rgba(17, 9, 33, 0.18));
+}
+
+.PL3-galleryGhostPlaylistBtn.PL3-galleryGhostPlaylistBtn--expanded .PL3-galleryGhostPlaylistImg {
+    opacity: 0.84;
 }
 
 .PL3-galleryItemBtn[hidden] {
@@ -1263,8 +1335,6 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     align-items: center;
     padding: 3px 10px;
     border-radius: 999px;
-    /* border: 1px solid rgba(214, 177, 255, 0.28); */
-    /* background: linear-gradient(180deg, rgba(58, 20, 93, 0.98), rgba(26, 10, 48, 0.98)); */
     box-shadow: 0 8px 16px rgba(10, 4, 24, 0.32);
     color: var(--pl3-color-white-92);
     font-size: 0.52rem;
