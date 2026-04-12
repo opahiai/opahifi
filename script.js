@@ -687,6 +687,20 @@ class PL3GalleryLayout {
         return buttons.some((btn) => !btn.hidden);
     }
 
+    createGhostRack(count) {
+        const rack = document.createElement('div');
+        rack.className = 'PL3-galleryGhostRack PL3-galleryGhostRack--top';
+        rack.setAttribute('aria-hidden', 'true');
+
+        for (let index = 0; index < count; index += 1) {
+            const ghost = document.createElement('span');
+            ghost.className = 'PL3-galleryGhostHex';
+            rack.append(ghost);
+        }
+
+        return rack;
+    }
+
     createRow(slotCount, buttons, index) {
         const row = document.createElement('div');
         row.className = 'PL3-galleryRow';
@@ -702,15 +716,16 @@ class PL3GalleryLayout {
         const renderedRows = rowDefs
             .filter((rowDef) => this.rowHasVisibleButtons(rowDef.buttons))
             .map((rowDef, index) => this.createRow(rowDef.slotCount, rowDef.buttons, index));
-        const maxCount = Math.max(...layout, 1);
+        const maxCount = Math.max(...layout, 3, 1);
 
         if (!renderedRows.length) {
             renderedRows.push(this.createRow(layout[0] || 1, [], 0));
         }
 
+        const ghostRack = this.createGhostRack(3);
         this.gallery.style.setProperty('--pl3-gallery-max-count', String(maxCount));
-        this.gallery.style.setProperty('--pl3-gallery-rows', String(renderedRows.length));
-        this.gallery.replaceChildren(...renderedRows);
+        this.gallery.style.setProperty('--pl3-gallery-rows', String(renderedRows.length + 1));
+        this.gallery.replaceChildren(ghostRack, ...renderedRows);
     };
 }
 
