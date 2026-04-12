@@ -165,8 +165,8 @@ a {
 .fm-hero,
 .fm-section,
 .fm-footer {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    /* padding-left: 1rem; */
+    /* padding-right: 1rem; */
 }
 
 .fm-hero {
@@ -190,18 +190,7 @@ a {
     max-width: 56rem;
 }
 
-.fm-kicker {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    border: 1px solid rgba(168, 85, 247, 0.2);
-    background: rgba(168, 85, 247, 0.1);
-    color: #c084fc;
-    font-size: 0.5625rem;
-    font-weight: 900;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-}
+
 
 .fm-hero__title {
     margin: 1rem 0 0;
@@ -344,6 +333,7 @@ a {
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 2.5rem;
+    padding: 0 1rem;
 }
 
 .fm-section__head--center {
@@ -374,9 +364,9 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 250px;
+    min-height: 180px;
     padding: 1rem;
-    max-width: 260px;
+    max-width: 280px;
     border-radius: 0.75rem;
 }
 
@@ -384,7 +374,7 @@ a {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .fm-pillar__meta {
@@ -484,7 +474,7 @@ a {
     transition: background-color 0.3s ease;
 }
 
-.fm-table tbody tr + tr {
+.fm-table tbody tr+tr {
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -503,7 +493,7 @@ a {
     background: transparent;
 }
 
-.fm-table td + td {
+.fm-table td+td {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -718,7 +708,18 @@ a {
     text-transform: uppercase;
 }
 
+
+@media (min-width: 425px) {
+
+    .fm-footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
 @media (min-width: 640px) {
+
+
     .fm-nav__pills {
         gap: 0.375rem;
     }
@@ -765,13 +766,10 @@ a {
         padding-bottom: 1rem;
     }
 
-    .fm-kicker {
-        padding: 0.25rem 1rem;
-        font-size: 0.625rem;
-    }
+
 
     .fm-hero__title {
-        font-size: 8rem;
+        font-size: 6rem;
     }
 
     .fm-hero__subtitle {
@@ -945,15 +943,15 @@ a {
         overflow-wrap: normal;
     }
 
-    .fm-table tbody tr + tr {
+    .fm-table tbody tr+tr {
         border-top: 0;
     }
 
-    .fm-table tbody tr + tr td {
+    .fm-table tbody tr+tr td {
         border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .fm-table td + td {
+    .fm-table td+td {
         display: table-cell;
         height: auto;
         margin-top: 0;
@@ -1073,5 +1071,5 @@ a {
 
     .fm-pillar {
         max-width: 280px;
-    }   
+    }
 }
