@@ -906,7 +906,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     align-items: center;
     justify-content: space-between;
     flex: 0 0 auto;
-    margin-bottom: 0;
+    margin-bottom: -2rem;
     position: relative;
     overflow: visible;
 }

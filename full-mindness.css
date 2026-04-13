@@ -783,8 +783,9 @@ a {
     }
 
     .fm-dictionary {
-        padding: 2.5rem;
+        padding: 1.5rem;
         border-radius: 1.5rem;
+        margin: 0 2rem;
     }
 
     .fm-dictionary__icon {
@@ -804,11 +805,11 @@ a {
     }
 
     .fm-dictionary__title {
-        font-size: 3rem;
+        font-size: 2rem;
     }
 
     .fm-dictionary__sound {
-        font-size: 1.125rem;
+        font-size: 0.7rem;
     }
 
     .fm-dictionary__type {
@@ -818,6 +819,7 @@ a {
     .fm-dictionary__definition {
         margin-bottom: 2rem;
         font-size: 1.5rem;
+        max-width: 60%;
     }
 
     .fm-dictionary__notes {
