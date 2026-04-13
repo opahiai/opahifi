@@ -260,7 +260,7 @@ a {
 
 .fm-dictionary__title {
     margin: 0;
-    font-size: 1.875rem;
+    font-size: 1.475rem;
     font-weight: 900;
     letter-spacing: -0.03em;
     text-transform: uppercase;
@@ -289,7 +289,7 @@ a {
 .fm-dictionary__definition {
     margin: 0 0 1.5rem;
     color: #d4d4d8;
-    font-size: 1.125rem;
+    font-size: 0.9rem;
     line-height: 1.6;
 }
 
