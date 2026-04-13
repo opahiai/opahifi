@@ -1001,6 +1001,11 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
 }
 
+.PL3-galleryGhostHex--spacer {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .PL3-galleryGhostHex::before,
 .PL3-galleryGhostHex::after {
     content: "";
@@ -1117,9 +1122,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     justify-content: center;
     gap: 0.6rem;
     padding: 0.95rem 0.7rem 0.85rem;
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 239, 244, 0.95)),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.04));
+    background: linear-gradient(180deg, rgb(202 21 21 / 98%), rgb(99 44 181 / 95%)), linear-gradient(180deg, rgb(35 2 2 / 36%), rgb(72 31 200));
     transform: rotateY(180deg);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -1146,7 +1149,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.38rem;
+    gap: 0.08rem;
     flex-wrap: nowrap;
     max-width: none;
 }
@@ -1425,10 +1428,10 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     border-radius: 999px;
-    background: var(--pl3-color-white-94);
+    background: rgb(40 25 162 / 94%);
     border: 1px solid var(--pl3-color-white-88);
     box-shadow: 0 8px 16px rgba(15, 11, 38, 0.18);
     transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
@@ -3466,7 +3469,7 @@ button {
         --pl3-version-platform-gap: 16px;
         --pl3-gallery-pill-gap: 10px;
         --pl3-gallery-unit-max: 8rem;
-        --pl3-gallery-pad-block-start: 0.18rem;
+        --pl3-gallery-pad-block-start: 0.48rem;
         --pl3-gallery-pad-block-end: 0.08rem;
         --pl3-upcoming-player-art-size: 120px;
         --pl3-upcoming-player-canvas-space: 28px;
