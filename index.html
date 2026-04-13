@@ -341,6 +341,48 @@
                         <!-- Use comma-separated row slot counts per breakpoint; add `hidden` to a button to disable that slot. -->
                         <div class="PL3-gallery" aria-label="OpaHiFi groups" data-pl3-layout-mobile="4,3"
                             data-pl3-layout-tablet="4,3">
+                            <div class="PL3-galleryGhostRack PL3-galleryGhostRack--top">
+                                <span class="PL3-galleryGhostHex" aria-hidden="true"></span>
+                                <span class="PL3-galleryGhostHex" aria-hidden="true"></span>
+                                <span class="PL3-galleryGhostHex PL3-galleryGhostHex--playlist">
+                                    <div class="PL3-galleryGhostPlaylistCard">
+                                        <button class="PL3-galleryGhostPlaylistBtn" type="button"
+                                            data-pl3-playlist-toggle aria-expanded="false"
+                                            aria-label="Open playlists">
+                                            <span class="PL3-galleryGhostPlaylistLabel">Play All</span>
+                                            <img class="PL3-galleryGhostPlaylistImg" src="img/btns/playlist.png"
+                                                alt="Play the List" loading="lazy"
+                                                onerror="this.hidden=true">
+                                        </button>
+                                        <div class="PL3-galleryGhostPlaylistBack" data-pl3-ghost-playlist-links
+                                            data-pl3-playlist-toggle aria-expanded="false"
+                                            aria-label="Playlist links">
+                                            <span class="PL3-galleryGhostPlaylistBackTitle">Playlists:</span>
+                                            <div class="PL3-galleryGhostPlaylistBackRow">
+                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
+                                                    href="https://open.spotify.com/playlist/5rAMYPsUmFoq3yoBnIGYQR?si=qw3P1s6eT7OLxatM2zUb3w"
+                                                    target="_blank" rel="noopener" aria-label="Spotify playlist">
+                                                    <img class="PL3-playlistPillIcon" src="img/ico/spotify-plum.svg"
+                                                        alt="Spotify">
+                                                </a>
+                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
+                                                    href="https://music.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF&si=S9qhguENixnuD3Ps"
+                                                    target="_blank" rel="noopener"
+                                                    aria-label="YouTube Music playlist">
+                                                    <img class="PL3-playlistPillIcon"
+                                                        src="img/ico/youtubemusic-plum.svg" alt="YouTube Music">
+                                                </a>
+                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
+                                                    href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF"
+                                                    target="_blank" rel="noopener" aria-label="YouTube playlist">
+                                                    <img class="PL3-playlistPillIcon" src="img/ico/youtube-plum.svg"
+                                                        alt="YouTube">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
                             <div class="PL3-galleryRow PL3-galleryRow--top">
                                 <button class="PL3-galleryItemBtn" type="button" aria-label="Open Old Love Story"
                                     data-pl3-group="old-love-story">

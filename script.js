@@ -627,7 +627,6 @@ class PL3GalleryLayout {
         this.section = section;
         this.gallery = section.querySelector('.PL3-gallery');
         this.buttons = this.gallery ? Array.from(this.gallery.querySelectorAll('.PL3-galleryItemBtn')) : [];
-        this.playlistButtonImage = 'img/btns/playlist.png';
         this.tabletMedia = typeof window.matchMedia === 'function'
             ? window.matchMedia('(min-width: 768px)')
             : null;
@@ -688,100 +687,6 @@ class PL3GalleryLayout {
         return buttons.some((btn) => !btn.hidden);
     }
 
-    getPlaylistLinkEntries() {
-        return Array.from(
-            this.section.querySelectorAll('.PL3-playlistPillWrap [data-pl3-playlist-links] a')
-        ).map((link) => {
-            const icon = link.querySelector('img');
-            return {
-                href: link.getAttribute('href') || '',
-                ariaLabel: link.getAttribute('aria-label') || '',
-                iconSrc: icon?.getAttribute('src') || '',
-                iconAlt: icon?.getAttribute('alt') || ''
-            };
-        }).filter((entry) => entry.href && entry.iconSrc);
-    }
-
-    createGhostPlaylistBack() {
-        const back = document.createElement('div');
-        back.className = 'PL3-galleryGhostPlaylistBack';
-        back.setAttribute('data-pl3-ghost-playlist-links', '');
-        back.setAttribute('data-pl3-playlist-toggle', '');
-        back.setAttribute('aria-label', 'Playlist links');
-
-        const title = document.createElement('span');
-        title.className = 'PL3-galleryGhostPlaylistBackTitle';
-        title.textContent = 'Playlists:';
-
-        const row = document.createElement('div');
-        row.className = 'PL3-galleryGhostPlaylistBackRow';
-
-        this.getPlaylistLinkEntries().forEach((entry) => {
-            const link = document.createElement('a');
-            link.className = 'PL3-playlistPillLink PL3-galleryGhostPlaylistLink';
-            link.href = entry.href;
-            link.target = '_blank';
-            link.rel = 'noopener';
-            link.setAttribute('aria-label', entry.ariaLabel);
-
-            const icon = document.createElement('img');
-            icon.className = 'PL3-playlistPillIcon';
-            icon.src = entry.iconSrc;
-            icon.alt = entry.iconAlt;
-
-            link.append(icon);
-            row.append(link);
-        });
-
-        back.append(title, row);
-        return back;
-    }
-
-    createGhostRack(count) {
-        const rack = document.createElement('div');
-        rack.className = 'PL3-galleryGhostRack PL3-galleryGhostRack--top';
-
-        for (let index = 0; index < count; index += 1) {
-            const ghost = document.createElement('span');
-            ghost.className = 'PL3-galleryGhostHex';
-            if (index === 0) {
-                ghost.classList.add('PL3-galleryGhostHex--playlist');
-
-                const playlistCard = document.createElement('div');
-                playlistCard.className = 'PL3-galleryGhostPlaylistCard';
-
-                const playlistButton = document.createElement('button');
-                playlistButton.className = 'PL3-galleryGhostPlaylistBtn';
-                playlistButton.type = 'button';
-                playlistButton.setAttribute('data-pl3-playlist-toggle', '');
-                playlistButton.setAttribute('aria-expanded', 'false');
-                playlistButton.setAttribute('aria-label', 'Open playlists');
-
-                const playlistLabel = document.createElement('span');
-                playlistLabel.className = 'PL3-galleryGhostPlaylistLabel';
-                playlistLabel.textContent = 'Play All';
-
-                const playlistImage = document.createElement('img');
-                playlistImage.className = 'PL3-galleryGhostPlaylistImg';
-                playlistImage.src = this.playlistButtonImage;
-                playlistImage.alt = 'Play the List';
-                playlistImage.loading = 'lazy';
-                playlistImage.onerror = () => {
-                    playlistImage.hidden = true;
-                };
-
-                playlistButton.append(playlistLabel, playlistImage);
-                playlistCard.append(playlistButton, this.createGhostPlaylistBack());
-                ghost.append(playlistCard);
-            } else {
-                ghost.setAttribute('aria-hidden', 'true');
-            }
-            rack.append(ghost);
-        }
-
-        return rack;
-    }
-
     createRow(slotCount, buttons, index) {
         const row = document.createElement('div');
         row.className = 'PL3-galleryRow';
@@ -797,16 +702,16 @@ class PL3GalleryLayout {
         const renderedRows = rowDefs
             .filter((rowDef) => this.rowHasVisibleButtons(rowDef.buttons))
             .map((rowDef, index) => this.createRow(rowDef.slotCount, rowDef.buttons, index));
-        const maxCount = Math.max(...layout, 3, 1);
+        const ghostRack = this.gallery.querySelector('.PL3-galleryGhostRack');
+        const maxCount = Math.max(...layout, ghostRack ? 3 : 1, 1);
 
         if (!renderedRows.length) {
             renderedRows.push(this.createRow(layout[0] || 1, [], 0));
         }
 
-        const ghostRack = this.createGhostRack(3);
         this.gallery.style.setProperty('--pl3-gallery-max-count', String(maxCount));
-        this.gallery.style.setProperty('--pl3-gallery-rows', String(renderedRows.length + 1));
-        this.gallery.replaceChildren(ghostRack, ...renderedRows);
+        this.gallery.style.setProperty('--pl3-gallery-rows', String(renderedRows.length + (ghostRack ? 1 : 0)));
+        this.gallery.replaceChildren(...(ghostRack ? [ghostRack] : []), ...renderedRows);
     };
 }
 
