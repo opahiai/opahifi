@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Featured Release | Full-Mindness by OpaHiFi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="focus.css">
+</head>
+
+<body class="focusPage">
+    <main class="focusShell">
+        <nav class="focusTopbar" aria-label="Page links">
+            <a class="focusTopbarLink" href="index.html#p_listen3">Back to OpaHiFi</a>
+            <a class="focusTopbarLink focusTopbarLink--ghost" href="full-mindness.html">Full-Mindness Info</a>
+        </nav>
+
+        <section class="focusReleaseCard" data-focus-player data-audio-src="audio/audio-full-mindness-elm-st.m4a"
+            aria-label="Featured release">
+            <div class="focusReleaseHero">
+                <div class="focusReleaseCopy">
+                    <p class="focusReleaseEyebrow">Featured Release</p>
+                    <h1 class="focusReleaseTitle">Full-Mindness</h1>
+                    <p class="focusReleaseMix">Mayhem Mix</p>
+                    <p class="focusReleaseBody">
+                        The featured release has been moved off the homepage so the full player can live in a proper
+                        mobile-first layout.
+                    </p>
+                </div>
+
+                <div class="focusReleaseArtShell">
+                    <img class="focusReleaseArt" src="img/music/versions/version-fullmindness-mayhemmix.png"
+                        alt="Full-Mindness Opa Mayhem Mix cover" loading="lazy"
+                        onerror="this.src='img/music/opahifi_album.png'">
+                </div>
+            </div>
+
+            <div class="focusReleaseWaveCard">
+                <div class="focusReleaseWaveShell">
+                    <div class="focusReleaseWaveform" data-focus-waveform aria-label="Full-Mindness waveform"></div>
+                    <audio data-focus-audio preload="metadata">
+                        <source src="audio/audio-full-mindness-elm-st.m4a" type="audio/mp4">
+                    </audio>
+                </div>
+                <div class="focusReleaseTiming">
+                    <span class="focusReleaseTime" data-focus-current>0:00</span>
+                    <span class="focusReleaseTime" data-focus-duration>0:28</span>
+                </div>
+            </div>
+
+            <div class="focusReleaseActions">
+                <button class="focusReleaseActionBtn focusReleaseActionBtn--play" type="button" data-focus-toggle
+                    aria-label="Play Full-Mindness audio" aria-pressed="false">
+                    <span class="focusReleaseActionIcon" aria-hidden="true">▶</span>
+                    <span data-focus-toggle-label>Play</span>
+                </button>
+                <a class="focusReleaseActionBtn focusReleaseActionBtn--info" href="full-mindness.html"
+                    aria-label="Info about Full-Mindness">
+                    <span class="focusReleaseActionIcon" aria-hidden="true">i</span>
+                    <span>Info</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/wavesurfer.js@7.12.6/dist/wavesurfer.min.js"></script>
+    <script src="focus.js"></script>
+</body>
+
+</html>

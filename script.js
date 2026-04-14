@@ -870,8 +870,6 @@ class PL3HighlightSection {
 
     init() {
         if (!this.dom.highlightPart) return;
-        this.setupReleaseAudioVisualizer();
-        this.setupReleaseWaveform();
         this.setupAboutCycle();
         this.attachTabEvents();
         this.attachPreviewEvents();
@@ -890,6 +888,13 @@ class PL3HighlightSection {
         const player = releasePanel?.querySelector('[data-pl3-audio-player]');
         if (!audioEl) return;
 
+        const getWaveHeight = () => {
+            const width = window.innerWidth || document.documentElement.clientWidth || 0;
+            if (width >= 768) return 84;
+            if (width >= 560) return 76;
+            return 68;
+        };
+
         this.bindPreviewAudioElement(audioEl);
         this.previewAudioBtn = playBtn || this.previewAudioBtn;
         this.previewAudioPlayer = player || this.previewAudioPlayer;
@@ -904,7 +909,7 @@ class PL3HighlightSection {
         this.releaseWaveSurfer = window.WaveSurfer.create({
             container: waveformEl,
             media: audioEl,
-            height: 92,
+            height: getWaveHeight(),
             normalize: true,
             cursorWidth: 0,
             interact: true,
@@ -959,6 +964,11 @@ class PL3HighlightSection {
             this.syncPreviewAudioProgress(this.previewAudioPlayer);
         });
 
+        window.addEventListener('resize', () => {
+            if (!this.releaseWaveSurfer || typeof this.releaseWaveSurfer.setOptions !== 'function') return;
+            this.releaseWaveSurfer.setOptions({ height: getWaveHeight() });
+        }, { passive: true });
+
         this.releaseWaveSurfer.on('interaction', () => {
             this.previewAudioBtn = playBtn || this.previewAudioBtn;
             this.previewAudioPlayer = player || this.previewAudioPlayer;
@@ -1011,6 +1021,7 @@ class PL3HighlightSection {
         }
         if (tabKey !== 'release') {
             this.pausePreviewAudio(true);
+            this.dom.highlightPart?.querySelector('[data-pl3-focus-frame]')?.contentWindow?.postMessage({ type: 'focus-pause' }, '*');
         }
         if (tabKey === 'videos') {
             this.playVideoTabParallax();
@@ -1378,28 +1389,6 @@ class PL3HighlightSection {
                 const btn = ev.target.closest('[data-pl3-video-embed]');
                 if (!btn) return;
                 ev.preventDefault();
-                this.openPreviewModal(btn.getAttribute('data-pl3-video-embed'));
-            }, { passive: false });
-        }
-
-        // Release panel Preview button
-        const releasePanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-release');
-        if (releasePanel) {
-            releasePanel.addEventListener('click', (ev) => {
-                const audioBtn = ev.target.closest('[data-pl3-audio-toggle]');
-                if (audioBtn) {
-                    const audioPlayer = audioBtn.closest('[data-pl3-audio-player]');
-                    if (!audioPlayer) return;
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    this.togglePreviewAudio(audioPlayer.getAttribute('data-pl3-audio-src'), audioBtn, audioPlayer);
-                    return;
-                }
-
-                const btn = ev.target.closest('[data-pl3-video-embed]');
-                if (!btn) return;
-                ev.preventDefault();
-                ev.stopPropagation();
                 this.openPreviewModal(btn.getAttribute('data-pl3-video-embed'));
             }, { passive: false });
         }
@@ -3213,12 +3202,7 @@ class PL3Controller {
         const brand = this.section.querySelector('.PL3-heroTitle');
         const slogan = this.section.querySelector('.PL3-heroSlogan');
         const tabs = this.section.querySelector('.PL3-tabs');
-        const releaseArt = this.section.querySelector('.PL3-upcomingArtWrap');
-        const releaseArtImage = this.section.querySelector('.PL3-upcomingArt');
-        const releasePanel = this.section.querySelector('.PL3-upcoming--playingNow');
-        const releaseCopy = releasePanel
-            ? Array.from(releasePanel.children).filter((node) => node.matches('.PL3-upcomingHeader, .PL3-upcomingPlayerCard'))
-            : [];
+        const focusFrameWrap = this.section.querySelector('.PL3-focusFrameWrap');
         const galleryHeader = this.section.querySelector('.PL3-galleryHeader');
         const galleryGhostHexes = Array.from(this.section.querySelectorAll('.PL3-galleryGhostHex'));
         const galleryItems = Array.from(this.section.querySelectorAll('.PL3-galleryItemBtn'));
@@ -3230,9 +3214,7 @@ class PL3Controller {
             ...this.el.heroBtns,
             slogan,
             tabs,
-            releaseArt,
-            releaseArtImage,
-            releaseCopy,
+            focusFrameWrap,
             galleryHeader,
             ...galleryGhostHexes,
             ...galleryItems,
@@ -3271,18 +3253,11 @@ class PL3Controller {
         }, '<0.08');
         addStep(slogan, { y: 0, opacity: 1, duration: 0.68 }, '-=0.42');
         addStep(tabs, { y: 0, opacity: 1, duration: 0.72 }, '-=0.34');
-        addStep(releaseArt, {
-            x: 0,
-            scale: 1,
+        addStep(focusFrameWrap, {
+            y: 0,
             opacity: 1,
             duration: 0.68
-        }, '-=0.5');
-        addStep(releaseArtImage, {
-            scale: 1,
-            opacity: 1,
-            duration: 0.72
-        }, '<0.04');
-        addStep(releaseCopy, { x: 0, opacity: 1, duration: 0.62 }, '<0.08');
+        }, '-=0.44');
         addStep(galleryHeader, { y: 0, opacity: 1, duration: 0.58 }, '-=0.34');
         addStep(galleryGhostHexes, {
             y: 0,

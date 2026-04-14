@@ -1,0 +1,386 @@
+:root {
+    color-scheme: dark;
+    --focus-bg: #090c1f;
+    --focus-panel-border: rgba(222, 171, 255, 0.34);
+    --focus-text: rgba(255, 255, 255, 0.98);
+    --focus-text-soft: rgba(255, 255, 255, 0.78);
+    --focus-wave-cyan: #54c6ff;
+    --focus-wave-violet: #8d6bff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    background:
+        radial-gradient(120% 100% at 0% 0%, rgba(134, 76, 255, 0.42), rgba(134, 76, 255, 0) 40%),
+        radial-gradient(90% 90% at 100% 100%, rgba(35, 82, 226, 0.36), rgba(35, 82, 226, 0) 42%),
+        linear-gradient(180deg, #090d23 0%, #120818 100%);
+    color: var(--focus-text);
+    font-family: "Poppins", system-ui, sans-serif;
+}
+
+body.focusPage--embed {
+    background: transparent;
+}
+
+.focusShell {
+    width: min(100%, 960px);
+    margin: 0 auto;
+    padding: 16px;
+}
+
+body.focusPage--embed .focusShell {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 0;
+}
+
+.focusTopbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+body.focusPage--embed .focusTopbar {
+    display: none;
+}
+
+.focusTopbarLink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: linear-gradient(180deg, rgba(108, 48, 236, 0.96), rgba(65, 26, 171, 0.92));
+    color: var(--focus-text);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.focusTopbarLink--ghost {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.focusTopbarLink:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.24);
+}
+
+.focusReleaseCard {
+    position: relative;
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 28px;
+    background:
+        radial-gradient(130% 118% at 0% 0%, rgba(184, 107, 255, 0.96), rgba(126, 40, 204, 0.92) 34%, rgba(79, 20, 126, 0.96) 58%, rgba(37, 11, 66, 0.98) 82%),
+        radial-gradient(96% 88% at 100% 100%, rgba(39, 80, 235, 0.38), rgba(39, 80, 235, 0) 44%),
+        linear-gradient(150deg, rgba(108, 23, 67, 0.98), rgba(18, 9, 44, 0.98));
+    border: 1px solid var(--focus-panel-border);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 24px 42px rgba(8, 4, 25, 0.3);
+    overflow: hidden;
+    isolation: isolate;
+}
+
+body.focusPage--embed .focusReleaseCard {
+    min-height: 100dvh;
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+}
+
+.focusReleaseCard::before,
+.focusReleaseCard::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.focusReleaseCard::before {
+    top: -16%;
+    left: -12%;
+    width: 54%;
+    aspect-ratio: 1 / 1;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+    filter: blur(12px);
+}
+
+.focusReleaseCard::after {
+    right: -14%;
+    bottom: -18%;
+    width: 44%;
+    aspect-ratio: 1 / 1;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(56, 115, 255, 0.34), rgba(56, 115, 255, 0));
+    filter: blur(18px);
+}
+
+.focusReleaseHero,
+.focusReleaseWaveCard,
+.focusReleaseActions {
+    position: relative;
+    z-index: 1;
+}
+
+.focusReleaseHero {
+    display: grid;
+    gap: 16px;
+}
+
+.focusReleaseCopy {
+    display: grid;
+    gap: 8px;
+}
+
+.focusReleaseEyebrow,
+.focusReleaseTitle,
+.focusReleaseMix,
+.focusReleaseBody {
+    margin: 0;
+}
+
+.focusReleaseEyebrow,
+.focusReleaseTitle,
+.focusReleaseMix {
+    font-family: "Bebas Neue", Impact, sans-serif;
+    letter-spacing: 0.03em;
+}
+
+.focusReleaseEyebrow {
+    font-size: clamp(1.1rem, 5vw, 1.45rem);
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.focusReleaseTitle {
+    font-size: clamp(2.5rem, 15vw, 5.4rem);
+    line-height: 0.88;
+    color: var(--focus-text);
+}
+
+.focusReleaseMix {
+    font-size: clamp(1.2rem, 6.4vw, 2rem);
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.focusReleaseBody {
+    max-width: 36rem;
+    color: rgba(255, 255, 255, 0.74);
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.focusReleaseArtShell {
+    position: relative;
+    width: min(100%, 280px);
+    aspect-ratio: 1 / 1;
+    margin-inline: auto;
+    padding: 10px;
+    border-radius: 28px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04)),
+        linear-gradient(180deg, rgba(58, 38, 109, 0.95), rgba(28, 18, 66, 0.98));
+    border: 1px solid rgba(244, 224, 255, 0.16);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 18px 28px rgba(8, 4, 25, 0.24);
+}
+
+.focusReleaseArtShell::before {
+    content: "";
+    position: absolute;
+    inset: 10% 12%;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(165, 97, 255, 0.28), rgba(165, 97, 255, 0));
+    filter: blur(18px);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.focusReleaseArt {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+.focusReleaseWaveCard {
+    display: grid;
+    gap: 8px;
+}
+
+.focusReleaseWaveShell {
+    position: relative;
+    width: 100%;
+    padding: 14px;
+    border-radius: 24px;
+    background:
+        linear-gradient(180deg, rgba(43, 27, 85, 0.96), rgba(28, 17, 61, 0.98)),
+        radial-gradient(circle at 18% 50%, rgba(84, 198, 255, 0.12), rgba(84, 198, 255, 0) 40%),
+        radial-gradient(circle at 82% 52%, rgba(123, 96, 255, 0.14), rgba(123, 96, 255, 0) 42%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 14px 24px rgba(7, 4, 22, 0.18);
+    overflow: hidden;
+}
+
+.focusReleaseWaveShell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    pointer-events: none;
+}
+
+.focusReleaseWaveform {
+    position: relative;
+    width: 100%;
+    min-height: 84px;
+}
+
+.focusReleaseWaveform canvas {
+    display: block;
+}
+
+.focusReleaseWaveShell audio {
+    display: none;
+}
+
+.focusReleaseTiming {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-inline: 2px;
+}
+
+.focusReleaseTime {
+    color: var(--focus-text-soft);
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: clamp(1rem, 4vw, 1.3rem);
+    letter-spacing: 0.04em;
+}
+
+.focusReleaseActions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.focusReleaseActionBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(244, 210, 255, 0.2);
+    color: var(--focus-text);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.09),
+        0 10px 18px rgba(9, 4, 27, 0.2);
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.focusReleaseActionBtn--play {
+    background: linear-gradient(180deg, rgba(108, 48, 236, 0.98), rgba(66, 26, 170, 0.94));
+    appearance: none;
+    font-family: inherit;
+}
+
+.focusReleaseActionBtn--info {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+}
+
+.focusReleaseActionBtn:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.28);
+}
+
+.focusReleaseActionBtn:active {
+    transform: translateY(0);
+}
+
+.focusReleaseActionBtn:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.74);
+    outline-offset: 3px;
+}
+
+.focusReleaseActionIcon {
+    font-size: 0.9em;
+}
+
+.focusReleaseCard.is-playing .focusReleaseActionBtn--play {
+    background: linear-gradient(180deg, rgba(67, 168, 214, 0.96), rgba(70, 48, 182, 0.94));
+    border-color: rgba(115, 231, 255, 0.32);
+}
+
+@media (min-width: 640px) {
+    .focusShell {
+        padding: 20px;
+    }
+
+    .focusReleaseCard {
+        gap: 18px;
+        padding: 20px;
+    }
+
+    .focusReleaseHero {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: end;
+    }
+
+    .focusReleaseArtShell {
+        width: clamp(220px, 32vw, 300px);
+        margin: 0;
+    }
+
+    .focusReleaseActions {
+        grid-template-columns: repeat(2, minmax(0, 220px));
+        justify-content: center;
+    }
+}
+
+@media (min-width: 900px) {
+    .focusShell {
+        padding: 28px 24px 40px;
+    }
+
+    .focusReleaseCard {
+        gap: 22px;
+        padding: 28px;
+    }
+
+    .focusReleaseWaveform {
+        min-height: 108px;
+    }
+}
