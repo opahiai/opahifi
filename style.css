@@ -1914,6 +1914,17 @@ button {
     padding-top: 15px;
 }
 
+.PL3-upcomingPlayer.PL3-upcomingPlayer--noArt {
+    grid-template-areas:
+        "header"
+        "body";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: start;
+    justify-items: stretch;
+    margin-left: 0;
+}
+
 .PL3-upcomingPlayer>.PL3-upcomingHeader {
     grid-area: header;
     align-self: start;
@@ -1994,6 +2005,11 @@ button {
     padding: 2px 0 2px;
 }
 
+.PL3-upcomingPlayer.PL3-upcomingPlayer--noArt .PL3-upcomingPlayerBody {
+    width: 100%;
+    max-width: none;
+}
+
 .PL3-upcomingPlayerTop {
     display: block;
     min-width: 0;
@@ -2044,6 +2060,34 @@ button {
     background: linear-gradient(90deg, var(--pl3-color-accent-cyan) 0%, var(--pl3-color-accent-violet) 100%);
     box-shadow: 0 0 16px rgba(115, 231, 255, 0.34);
     transition: width 140ms linear;
+}
+
+.PL3-upcomingWaveShell {
+    position: relative;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 18px;
+    background:
+        linear-gradient(180deg, rgba(20, 17, 42, 0.74), rgba(8, 8, 20, 0.58)),
+        radial-gradient(circle at 18% 50%, rgba(var(--pl3-rgb-accent-cyan), 0.12), transparent 36%),
+        radial-gradient(circle at 82% 50%, rgba(var(--pl3-rgb-accent-violet), 0.14), transparent 40%);
+    border: 1px solid rgba(var(--pl3-rgb-white), 0.08);
+    box-shadow: inset 0 1px 0 rgba(var(--pl3-rgb-white), 0.06);
+    overflow: hidden;
+}
+
+.PL3-upcomingWaveform {
+    position: relative;
+    width: 100%;
+    min-height: 92px;
+}
+
+.PL3-upcomingWaveform canvas {
+    display: block;
+}
+
+.PL3-upcomingWaveShell audio {
+    display: none;
 }
 
 .PL3-upcomingPlayerFooter {

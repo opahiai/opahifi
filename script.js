@@ -859,6 +859,7 @@ class PL3HighlightSection {
         this.previewAudioBtn = null;
         this.previewAudioPlayer = null;
         this.releaseAudioVisualizer = null;
+        this.releaseWaveSurfer = null;
         this.videoParallaxCleanup = [];
         this.aboutCyclePanel = null;
         this.aboutCycleSteps = [];
@@ -870,6 +871,7 @@ class PL3HighlightSection {
     init() {
         if (!this.dom.highlightPart) return;
         this.setupReleaseAudioVisualizer();
+        this.setupReleaseWaveform();
         this.setupAboutCycle();
         this.attachTabEvents();
         this.attachPreviewEvents();
@@ -878,6 +880,97 @@ class PL3HighlightSection {
     setupReleaseAudioVisualizer() {
         if (!this.dom.releaseAudioVisualizerCanvas) return;
         this.releaseAudioVisualizer = new PL3AudioBorderVisualizer(this.dom.releaseAudioVisualizerCanvas);
+    }
+
+    setupReleaseWaveform() {
+        const releasePanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-release');
+        const waveformEl = releasePanel?.querySelector('[data-pl3-waveform]');
+        const audioEl = releasePanel?.querySelector('[data-pl3-wave-audio]');
+        const playBtn = releasePanel?.querySelector('[data-pl3-audio-toggle]');
+        const player = releasePanel?.querySelector('[data-pl3-audio-player]');
+        if (!audioEl) return;
+
+        this.bindPreviewAudioElement(audioEl);
+        this.previewAudioBtn = playBtn || this.previewAudioBtn;
+        this.previewAudioPlayer = player || this.previewAudioPlayer;
+        this.syncPreviewAudioProgress(this.previewAudioPlayer);
+
+        if (!waveformEl || !window.WaveSurfer || typeof window.WaveSurfer.create !== 'function') return;
+
+        const rootStyles = window.getComputedStyle(document.documentElement);
+        const waveColor = rootStyles.getPropertyValue('--pl3-color-accent-cyan').trim() || '#54c6ff';
+        const progressColor = rootStyles.getPropertyValue('--pl3-color-accent-violet').trim() || '#8d6bff';
+
+        this.releaseWaveSurfer = window.WaveSurfer.create({
+            container: waveformEl,
+            media: audioEl,
+            height: 92,
+            normalize: true,
+            cursorWidth: 0,
+            interact: true,
+            dragToSeek: true,
+            waveColor,
+            progressColor,
+            renderFunction: (channels, ctx) => {
+                const { width, height } = ctx.canvas;
+                const samples = channels?.[0];
+                if (!samples || !samples.length || !width || !height) return;
+
+                const scale = samples.length / width;
+                const step = Math.max(8, Math.round(width / 64));
+                const amplitude = height * 0.34;
+
+                if (typeof ctx.resetTransform === 'function') {
+                    ctx.resetTransform();
+                }
+                ctx.clearRect(0, 0, width, height);
+                ctx.translate(0, height / 2);
+                ctx.lineWidth = 2.4;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = ctx.fillStyle;
+                ctx.beginPath();
+
+                for (let i = 0; i < width; i += step * 2) {
+                    const index = Math.min(samples.length - 1, Math.floor(i * scale));
+                    const value = Math.max(0.08, Math.abs(samples[index] || 0));
+                    let x = i;
+                    let y = value * amplitude;
+
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, y);
+                    ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, true);
+                    ctx.lineTo(x + step, 0);
+
+                    x += step;
+                    y *= -1;
+
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, y);
+                    ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, false);
+                    ctx.lineTo(x + step, 0);
+                }
+
+                ctx.stroke();
+                ctx.closePath();
+            }
+        });
+
+        this.releaseWaveSurfer.on('ready', () => {
+            this.syncPreviewAudioProgress(this.previewAudioPlayer);
+        });
+
+        this.releaseWaveSurfer.on('interaction', () => {
+            this.previewAudioBtn = playBtn || this.previewAudioBtn;
+            this.previewAudioPlayer = player || this.previewAudioPlayer;
+            if (!audioEl.paused) return;
+
+            const playAttempt = this.releaseWaveSurfer.play();
+            if (playAttempt && typeof playAttempt.catch === 'function') {
+                playAttempt.catch(() => {
+                    this.syncPreviewAudioButton(this.previewAudioBtn, false);
+                });
+            }
+        });
     }
 
     // === Tabs ===
@@ -1386,9 +1479,13 @@ class PL3HighlightSection {
         }
     }
 
-    getPreviewAudio() {
-        if (this.previewAudio) return this.previewAudio;
-        const audio = new Audio();
+    bindPreviewAudioElement(audio) {
+        if (!audio) return null;
+        if (audio.dataset.pl3AudioBound === 'true') {
+            this.previewAudio = audio;
+            return audio;
+        }
+
         audio.preload = 'metadata';
         audio.addEventListener('play', () => {
             this.releaseAudioVisualizer?.attachAudio(audio);
@@ -1414,9 +1511,19 @@ class PL3HighlightSection {
             this.releaseAudioVisualizer?.attachAudio(audio);
             this.syncPreviewAudioProgress(this.previewAudioPlayer);
         });
+
         this.releaseAudioVisualizer?.attachAudio(audio);
+        audio.dataset.pl3AudioBound = 'true';
         this.previewAudio = audio;
         return audio;
+    }
+
+    getPreviewAudio() {
+        if (this.previewAudio) return this.previewAudio;
+        const existingAudio = this.dom.highlightPart?.querySelector('[data-pl3-wave-audio]');
+        if (existingAudio) return this.bindPreviewAudioElement(existingAudio);
+        const audio = new Audio();
+        return this.bindPreviewAudioElement(audio);
     }
 
     syncPreviewAudioButton(btn, isPlaying) {
@@ -1470,6 +1577,9 @@ class PL3HighlightSection {
         this.previewAudio.pause();
         if (resetTime) {
             this.previewAudio.currentTime = 0;
+            if (this.releaseWaveSurfer && typeof this.releaseWaveSurfer.setTime === 'function') {
+                this.releaseWaveSurfer.setTime(0);
+            }
         }
         this.syncPreviewAudioProgress(this.previewAudioPlayer);
     }
