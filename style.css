@@ -84,7 +84,7 @@ body {
 
     /* 3-screen section split (unitless numbers out of 100). These should sum to 100. */
     --pl3-section-header: 17;
-    --pl3-section-highlight: 38;
+    --pl3-section-highlight: 40;
     --pl3-section-gallery: 36;
 
     /* Derived percentages for grid usage */
@@ -476,7 +476,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     flex: 1;
     min-width: 0;
     min-height: 0;
-    max-height: 40vh;
+    max-height: 350px;
     background:
         radial-gradient(160% 130% at 0% 0%, rgba(146, 72, 255, 0.72), rgba(88, 22, 196, 0.68) 42%, rgba(6, 9, 28, 0) 75%),
         radial-gradient(120% 110% at 100% 100%, rgba(15, 43, 227, 0.74), rgba(28, 8, 8, 0.5) 60%),
@@ -503,59 +503,55 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 /* ===== Focus panel ===== */
+
+/* Panel fills the tab panel, centers the layout block */
 #PL3-tabPanel-release {
-    padding: 15px 20px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
+    padding: 12px;
     box-sizing: border-box;
 }
 
+/* Vertical stack: header sits above the art+buttons row */
 .PL3-focusLayout {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
-    min-height: 0;
+    align-items: flex-start;
+    gap: 10px;
 }
 
 .PL3-focusHeader {
-    flex: 0 0 20%;
-    display: flex;
-    align-items: center;
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     color: var(--pl3-color-white-90, #fff);
 }
 
+/* Side-by-side: art on left, buttons on right */
 .PL3-focusBody {
-    flex: 0 0 80%;
     display: flex;
-    gap: 15px;
-    min-height: 0;
-    padding-bottom: 10px;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
 }
 
+/* 150×150 square, no tricks */
 .PL3-focusArtCol {
-    flex: 2;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    min-width: 0;
-    min-height: 0;
+    flex: 0 0 150px;
+    width: 150px;
+    height: 150px;
 }
 
 .PL3-focusArtWrap {
-    position: relative;
-    height: 100%;
-    max-width: 100%;
-    aspect-ratio: 1 / 1;
+    width: 150px;
+    height: 150px;
     border-radius: var(--pl3-tile-radius, 8px);
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     background: rgba(255, 255, 255, 0.05);
 }
 
@@ -566,60 +562,44 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     display: block;
 }
 
-.PL3-focusPlayBtn {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    width: clamp(32px, 4vw, 44px);
-    height: clamp(32px, 4vw, 44px);
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    backdrop-filter: blur(4px);
-    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-}
-
-.PL3-focusPlayBtn:hover {
-    background: rgba(0, 0, 0, 0.7);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: scale(1.05);
-}
-
+/* Buttons column: narrower than the art */
 .PL3-focusLinksCol {
-    flex: 1;
+    flex: 0 0 auto;
+    width: 120px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 8px;
-    min-width: 0;
+    gap: 6px;
 }
 
+/* Pills: exact same height as Stream/Follow/Shop buttons (--pl3-pill-h = 30px) */
 .PL3-focusPill {
+    width: 100%;
+    max-width: 150px;
+    height: var(--pl3-pill-h);
+    min-height: var(--pl3-pill-h);
     display: flex;
-    flex: 1;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     border-radius: 999px;
-    background: #fff;
-    color: #5816c4;
-    font-size: 0.85rem;
-    font-weight: 500;
-    text-decoration: none;
     border: none;
+    color: #fff;
+    font-family: "Tom Oswald", system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 900;
     cursor: pointer;
-    transition: transform 0.15s ease, background 0.15s ease;
+    padding: 0 11px;
     white-space: nowrap;
-    padding: 0 10px;
+    transition: filter 0.2s ease;
+    background: linear-gradient(135deg, rgb(83 5 211 / 81%) 0%, rgb(133 6 255 / 66%) 100%);
 }
 
 .PL3-focusPill:hover {
-    background: #f0f0f0;
-    transform: translateY(-1px);
+    filter: brightness(1.15);
+}
+
+.PL3-focusPill--play {
+    background: linear-gradient(135deg, rgb(45 51 218 / 93%) 0%, #065fd4 100%);
 }
 
 /* ===== About panel ===== */
@@ -3016,6 +2996,10 @@ button {
         gap: 0;
     }
 
+
+    .PL3-focusHeader {
+        font-size: 1.5rem;
+    }
 }
 
 
@@ -3025,11 +3009,7 @@ button {
         font-size: 2.75rem;
     }
 
-    .PL3-tabPanels {
-        max-height: 45vh;
-    }
 
-    ;
 }
 
 
