@@ -3009,7 +3009,24 @@ button {
         font-size: 2.75rem;
     }
 
+    .PL3-focusHeader {
+        font-size: 2rem;
+    }
 
+    .PL3-focusArtCol {
+        flex: 0 0 200px;
+        width: 200px;
+        height: 200px;
+    }
+
+    .PL3-focusArtWrap {
+        width: 200px;
+        height: 200px;
+    }
+
+    .PL3-focusLinksCol {
+        width: 160px;
+    }
 }
 
 
