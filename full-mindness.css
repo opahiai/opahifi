@@ -929,8 +929,10 @@ a {
         background: rgba(255, 255, 255, 0.05);
     }
 
-    .fm-table tr {
+    .fm-table tbody tr {
         display: table-row;
+        grid-template-columns: none;
+        gap: 0;
         padding: 0;
     }
 

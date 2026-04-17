@@ -148,18 +148,27 @@
                             <div class="PL3-tabPanels">
                                 <div class="PL3-tabPanel" id="PL3-tabPanel-release" role="tabpanel"
                                     aria-label="Featured Release">
-                                    <div class="PL3-focusLayout">
+                                    <div class="PL3-focusLayout" data-pl3-audio-player>
                                         <div class="PL3-focusHeader">Featured Release</div>
                                         <div class="PL3-focusBody">
                                             <div class="PL3-focusArtCol">
                                                 <div class="PL3-focusArtWrap">
                                                     <img src="img/music/versions/version-fullmindness-mayhemmix.png"
                                                         alt="Featured Release" class="PL3-focusArtImg">
+                                                    <canvas class="PL3-focusArtProgress" data-pl3-audio-visualizer
+                                                        aria-hidden="true"></canvas>
                                                 </div>
+                                                <audio data-pl3-wave-audio preload="metadata" hidden>
+                                                    <source src="audio/audio-full-mindness-elm-st.m4a" type="audio/mp4">
+                                                </audio>
                                             </div>
                                             <div class="PL3-focusLinksCol">
-                                                <button class="PL3-focusPill PL3-focusPill--play" type="button"><i
-                                                        class="fa-solid fa-play"></i> Play</button>
+                                                <button class="PL3-focusPill PL3-focusPill--play" type="button"
+                                                    data-pl3-audio-toggle
+                                                    data-pl3-audio-src="audio/audio-full-mindness-elm-st.m4a"
+                                                    aria-label="Play Full-Mindness audio" aria-pressed="false"><i
+                                                        class="fa-solid fa-play"></i> <span
+                                                        data-pl3-audio-toggle-label>Play</span></button>
                                                 <button class="PL3-focusPill" type="button"
                                                     data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV3W8uiqhjN7dgZsGnzajUTN">Videos</button>
                                                 <button class="PL3-focusPill" type="button"

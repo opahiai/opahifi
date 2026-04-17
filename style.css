@@ -551,6 +551,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .PL3-focusArtWrap {
+    position: relative;
     width: var(--pl3-focus-art-size);
     height: var(--pl3-focus-art-size);
     border-radius: var(--pl3-tile-radius, 8px);
@@ -564,6 +565,20 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.18s ease;
+}
+
+.PL3-focusArtProgress {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+[data-pl3-audio-player].is-playing .PL3-focusArtImg {
+    transform: scale(1.02);
 }
 
 /* Buttons column: narrower than the art */
