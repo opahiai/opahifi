@@ -67,7 +67,8 @@
         GLITTAA_PHOENIX: 'glittaa-phoenix',
         SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
-        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch'
+        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch',
+        WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya'
     });
 
     const SINGLE = Object.freeze({
@@ -79,7 +80,8 @@
         GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
         FULL_MINDNESS: 'full-mindness',
-        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch'
+        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch',
+        WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya'
     });
 
     const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
@@ -151,6 +153,16 @@
             title: 'Let\'s not do Brunch',
             titleLines: ['LET\'S NOT', 'DO BRUNCH'],
             cover: 'img/music/base/base-letsnotdobrunch.png',
+            songIds: [],
+            singlesById: {}
+        },
+        {
+            id: 8,
+            key: GROUP.WELLWOLF_HOWL_LEHLUYA,
+            title: 'Wellwolf Howl-Lehluya',
+            titleLines: ['WELLWOLF', 'HOWL-LEHLUYA'],
+            shareImage: 'img/music/base/base-wellwolfhowllehluya.png',
+            cover: 'img/music/base/base-wellwolfhowllehluya.png',
             songIds: [],
             singlesById: {}
         }
@@ -292,6 +304,20 @@
                 'Amazon Music': 'https://music.amazon.com/albums/B0GS2JC8QD?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_CGFq3eGi1CLBa46vBJBJNB3oc&trackAsin=B0GS23XMP6',
                 'Other': 'https://youtu.be/nlRw2m9_Qh4?si=Xe-ZF1Ogg2ynabpj'
             }
+        },
+        [SINGLE.WELLWOLF_HOWL_LEHLUYA]: {
+            id: SINGLE.WELLWOLF_HOWL_LEHLUYA,
+            groupKey: GROUP.WELLWOLF_HOWL_LEHLUYA,
+            title: 'Wellwolf Howl-Lehluya',
+            image: 'img/music/base/base-wellwolfhowllehluya.png',
+            lyricsPath: 'lyrics/wellwolf-hoawlehluya.txt',
+            links: {
+                'YouTube Music': 'https://music.youtube.com/playlist?list=OLAK5uy_k3iThKSj0H5nDqf-dpU5EMM-ccRcglZaY&si=d2V3JFEBlqkSJi55',
+                'Other': 'https://youtu.be/bjecZnXbXBc?si=Llwj6s7pyO2fRMmY',
+                'Spotify': 'https://open.spotify.com/track/4OHlXoJFuPhfm4plY7Coop?si=86049caec0384f95',
+                'Apple Music': 'https://music.apple.com/us/album/wellwolf-howl-lehluya-single/1894120765',
+                'Amazon Music': 'https://music.amazon.com/tracks/B0GXHSFW83?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_YaZDAKqp0vQwgwM7y8yENc9Zw'
+            }
         }
     };
 
@@ -304,7 +330,8 @@
         SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
         SINGLE.BELIEVE_THE_TRUTH_FAIRY,
         SINGLE.FULL_MINDNESS,
-        SINGLE.LETS_NOT_DO_BRUNCH
+        SINGLE.LETS_NOT_DO_BRUNCH,
+        SINGLE.WELLWOLF_HOWL_LEHLUYA
     ];
 
 
@@ -329,26 +356,9 @@ class PL3AudioBorderVisualizer {
         this.canvas = canvas;
         this.ctx = canvas?.getContext('2d') || null;
         this.audio = null;
-        this.audioContext = null;
-        this.analyser = null;
-        this.sourceNode = null;
-        this.dataArray = null;
         this.rafId = 0;
         this.active = false;
-        this.accentCyan = 'rgb(84, 198, 255)';
-        this.accentViolet = 'rgb(141, 107, 255)';
-        this.accentPink = 'rgb(255, 79, 136)';
-        this.accentCyanRgb = '84, 198, 255';
-        this.accentVioletRgb = '141, 107, 255';
-        this.accentPinkRgb = '255, 79, 136';
-        this.ringGap = 0;
-        this.ringGlowScale = 1.58;
-        this.idleRingOffset = 9;
-        this.activeRingOffset = 5;
-        this.secondaryRingOffset = 14;
-        this.visualCenterX = 0;
-        this.visualCenterY = 0;
-        this.visualBaseRadius = 0;
+        this.audioEventHandlers = null;
 
         this.resizeCanvas = this.resizeCanvas.bind(this);
         this.render = this.render.bind(this);
@@ -356,269 +366,288 @@ class PL3AudioBorderVisualizer {
         if (this.canvas && this.ctx) {
             window.addEventListener('resize', this.resizeCanvas, { passive: true });
             this.resizeCanvas();
-            this.rafId = requestAnimationFrame(this.render);
         }
     }
 
-    syncLayoutMetrics() {
-        if (!this.canvas?.parentElement) return;
-
-        const styles = window.getComputedStyle(this.canvas.parentElement);
-        const accentCyan = styles.getPropertyValue('--pl3-color-accent-cyan').trim();
-        const accentViolet = styles.getPropertyValue('--pl3-color-accent-violet').trim();
-        const accentPink = styles.getPropertyValue('--pl3-color-accent-pink').trim();
-        const accentCyanRgb = styles.getPropertyValue('--pl3-rgb-accent-cyan').trim();
-        const accentVioletRgb = styles.getPropertyValue('--pl3-rgb-accent-violet').trim();
-        const accentPinkRgb = styles.getPropertyValue('--pl3-rgb-accent-pink').trim();
-        const ringGap = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-gap'));
-        const ringGlowScale = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-glow-scale'));
-        const idleRingOffset = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-idle-offset'));
-        const activeRingOffset = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-active-offset'));
-        const secondaryRingOffset = Number.parseFloat(styles.getPropertyValue('--pl3-upcoming-player-ring-secondary-offset'));
-
-        this.accentCyan = accentCyan || 'rgb(84, 198, 255)';
-        this.accentViolet = accentViolet || 'rgb(141, 107, 255)';
-        this.accentPink = accentPink || 'rgb(255, 79, 136)';
-        this.accentCyanRgb = accentCyanRgb || '84, 198, 255';
-        this.accentVioletRgb = accentVioletRgb || '141, 107, 255';
-        this.accentPinkRgb = accentPinkRgb || '255, 79, 136';
-        this.ringGap = Number.isFinite(ringGap) ? ringGap : 0;
-        this.ringGlowScale = Number.isFinite(ringGlowScale) ? ringGlowScale : 1.08;
-        this.idleRingOffset = Number.isFinite(idleRingOffset) ? idleRingOffset : 8;
-        this.activeRingOffset = Number.isFinite(activeRingOffset) ? activeRingOffset : 5;
-        this.secondaryRingOffset = Number.isFinite(secondaryRingOffset) ? secondaryRingOffset : 14;
+    requestFrame() {
+        if (this.rafId || !this.canvas || !this.ctx) return;
+        this.rafId = requestAnimationFrame(this.render);
     }
 
-    syncVisualizerGeometry(canvasRect) {
-        if (!this.canvas) return;
-
-        const rect = canvasRect || this.canvas.getBoundingClientRect();
-        const fallbackCenterX = rect.width / 2;
-        const fallbackCenterY = rect.height / 2;
-        const fallbackBaseRadius = Math.min(rect.width, rect.height) * 0.24;
-        const wrap = this.canvas.parentElement;
-        const artTarget = wrap?.querySelector('.PL3-upcomingArt') || wrap?.querySelector('.PL3-upcomingPlayerArtPad');
-
-        if (!artTarget) {
-            this.visualCenterX = fallbackCenterX;
-            this.visualCenterY = fallbackCenterY;
-            this.visualBaseRadius = fallbackBaseRadius;
-            return;
-        }
-
-        const artRect = artTarget.getBoundingClientRect();
-        this.visualCenterX = (artRect.left - rect.left) + (artRect.width / 2);
-        this.visualCenterY = (artRect.top - rect.top) + (artRect.height / 2);
-        // Position the ring from the art edge using a pixel gap.
-        this.visualBaseRadius = (Math.min(artRect.width, artRect.height) * 0.5) + this.ringGap;
+    removeAudioListeners() {
+        if (!this.audio || !this.audioEventHandlers) return;
+        Object.entries(this.audioEventHandlers).forEach(([eventName, handler]) => {
+            this.audio.removeEventListener(eventName, handler);
+        });
+        this.audioEventHandlers = null;
     }
 
     attachAudio(audio) {
         if (!audio) return;
+        if (this.audio === audio) {
+            this.requestFrame();
+            return;
+        }
+
+        this.removeAudioListeners();
         this.audio = audio;
-        this.ensureAudioGraph();
+        this.audioEventHandlers = {
+            loadedmetadata: () => this.requestFrame(),
+            timeupdate: () => this.requestFrame(),
+            play: () => this.requestFrame(),
+            pause: () => this.requestFrame(),
+            seeking: () => this.requestFrame(),
+            seeked: () => this.requestFrame(),
+            ended: () => this.requestFrame(),
+            emptied: () => this.requestFrame()
+        };
+        Object.entries(this.audioEventHandlers).forEach(([eventName, handler]) => {
+            this.audio.addEventListener(eventName, handler);
+        });
+        this.requestFrame();
     }
 
-    ensureAudioGraph() {
-        if (!this.audio || this.audioContext || !this.ctx) return;
-
-        const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextCtor) return;
-
-        try {
-            this.audioContext = new AudioContextCtor();
-            this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 1024;
-            this.analyser.smoothingTimeConstant = 0.82;
-            this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-
-            this.sourceNode = this.audioContext.createMediaElementSource(this.audio);
-            this.sourceNode.connect(this.analyser);
-            this.analyser.connect(this.audioContext.destination);
-        } catch (_) {
-            this.audioContext = null;
-            this.analyser = null;
-            this.dataArray = null;
-        }
-    }
-
-    async activate() {
+    activate() {
         this.active = true;
-        this.ensureAudioGraph();
-
-        if (this.audioContext?.state === 'suspended') {
-            try {
-                await this.audioContext.resume();
-            } catch (_) {
-                // Ignore resume failures and retry on the next gesture.
-            }
-        }
-
-        if (!this.rafId) {
-            this.rafId = requestAnimationFrame(this.render);
-        }
+        this.requestFrame();
     }
 
     deactivate() {
         this.active = false;
-        if (!this.rafId) {
-            this.rafId = requestAnimationFrame(this.render);
-        }
+        this.requestFrame();
     }
 
     resizeCanvas() {
         if (!this.canvas || !this.ctx) return;
 
-        this.syncLayoutMetrics();
         const rect = this.canvas.getBoundingClientRect();
-        this.syncVisualizerGeometry(rect);
         const dpr = Math.max(window.devicePixelRatio || 1, 1);
         this.canvas.width = Math.max(1, Math.round(rect.width * dpr));
         this.canvas.height = Math.max(1, Math.round(rect.height * dpr));
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-        this.ctx.scale(dpr, dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.requestFrame();
     }
 
-    getSquarePoint(cx, cy, radius, angle, power = 5.8) {
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
-        const denominator = Math.pow(
-            Math.pow(Math.abs(cos), power) + Math.pow(Math.abs(sin), power),
-            1 / power
-        ) || 1;
+    isPlaying() {
+        return !!this.audio && !this.audio.paused && !this.audio.ended;
+    }
+
+    getPlaybackProgress() {
+        if (!this.audio || !Number.isFinite(this.audio.duration) || this.audio.duration <= 0) {
+            return 0;
+        }
+
+        const progress = this.audio.currentTime / this.audio.duration;
+        return Math.min(1, Math.max(0, progress));
+    }
+
+    hasVisibleProgress() {
+        return !!this.audio && (this.isPlaying() || this.audio.currentTime > 0);
+    }
+
+    getDotScale(timeMs) {
+        if (!this.isPlaying()) return 1;
+        return 1 + (0.14 * ((Math.sin(timeMs * 0.0062) + 1) / 2));
+    }
+
+    getTrackMetrics(width, height) {
+        const stageSize = Math.max(0, Math.min(width, height));
+        const padding = Math.max(3, stageSize * 0.015);
+        const trackSize = Math.max(0, stageSize - (padding * 2));
+        const parentStyles = this.canvas?.parentElement
+            ? window.getComputedStyle(this.canvas.parentElement)
+            : null;
+        const parentRadius = parentStyles ? Number.parseFloat(parentStyles.borderRadius) : Number.NaN;
+        const trackRadius = Number.isFinite(parentRadius)
+            ? Math.min(parentRadius, trackSize / 2)
+            : Math.max(8, trackSize * 0.14);
 
         return {
-            x: cx + (radius * cos) / denominator,
-            y: cy + (radius * sin) / denominator
+            x: (width - trackSize) / 2,
+            y: (height - trackSize) / 2,
+            size: trackSize,
+            radius: trackRadius,
+            centerX: width / 2,
+            centerY: height / 2
         };
     }
 
-    drawGlow(cx, cy, radius) {
-        const ctx = this.ctx;
-        ctx.save();
-        ctx.beginPath();
+    buildRoundedRectPath(ctx, x, y, width, height, radius) {
+        const safeRadius = Math.min(radius, width / 2, height / 2);
 
-        const steps = 220;
-        for (let i = 0; i <= steps; i += 1) {
-            const angle = (i / steps) * Math.PI * 2;
-            const point = this.getSquarePoint(cx, cy, radius * this.ringGlowScale, angle, 5.2);
-            if (i === 0) {
-                ctx.moveTo(point.x, point.y);
-            } else {
-                ctx.lineTo(point.x, point.y);
+        ctx.beginPath();
+        ctx.moveTo(x + safeRadius, y);
+        ctx.lineTo(x + width - safeRadius, y);
+        ctx.arcTo(x + width, y, x + width, y + safeRadius, safeRadius);
+        ctx.lineTo(x + width, y + height - safeRadius);
+        ctx.arcTo(x + width, y + height, x + width - safeRadius, y + height, safeRadius);
+        ctx.lineTo(x + safeRadius, y + height);
+        ctx.arcTo(x, y + height, x, y + height - safeRadius, safeRadius);
+        ctx.lineTo(x, y + safeRadius);
+        ctx.arcTo(x, y, x + safeRadius, y, safeRadius);
+        ctx.closePath();
+    }
+
+    getPointOnRoundedSquare(centerX, centerY, size, radius, progress) {
+        const half = size / 2;
+        const safeRadius = Math.min(radius, half);
+        const straight = size - (2 * safeRadius);
+        const halfTop = (size / 2) - safeRadius;
+        const quarterArc = (Math.PI * safeRadius) / 2;
+        const totalLength = (4 * straight) + (2 * Math.PI * safeRadius);
+        let distance = (((progress % 1) + 1) % 1) * totalLength;
+
+        const left = centerX - half;
+        const top = centerY - half;
+        const right = centerX + half;
+        const bottom = centerY + half;
+
+        const segments = [
+            { type: 'line', length: halfTop, from: { x: centerX, y: top }, to: { x: right - safeRadius, y: top } },
+            { type: 'arc', length: quarterArc, cx: right - safeRadius, cy: top + safeRadius, start: -Math.PI / 2, end: 0 },
+            { type: 'line', length: straight, from: { x: right, y: top + safeRadius }, to: { x: right, y: bottom - safeRadius } },
+            { type: 'arc', length: quarterArc, cx: right - safeRadius, cy: bottom - safeRadius, start: 0, end: Math.PI / 2 },
+            { type: 'line', length: straight, from: { x: right - safeRadius, y: bottom }, to: { x: left + safeRadius, y: bottom } },
+            { type: 'arc', length: quarterArc, cx: left + safeRadius, cy: bottom - safeRadius, start: Math.PI / 2, end: Math.PI },
+            { type: 'line', length: straight, from: { x: left, y: bottom - safeRadius }, to: { x: left, y: top + safeRadius } },
+            { type: 'arc', length: quarterArc, cx: left + safeRadius, cy: top + safeRadius, start: Math.PI, end: (Math.PI * 3) / 2 },
+            { type: 'line', length: halfTop, from: { x: left + safeRadius, y: top }, to: { x: centerX, y: top } }
+        ];
+
+        for (const segment of segments) {
+            if (distance <= segment.length || segment === segments[segments.length - 1]) {
+                const ratio = segment.length === 0 ? 0 : distance / segment.length;
+
+                if (segment.type === 'line') {
+                    return {
+                        x: segment.from.x + ((segment.to.x - segment.from.x) * ratio),
+                        y: segment.from.y + ((segment.to.y - segment.from.y) * ratio)
+                    };
+                }
+
+                const angle = segment.start + ((segment.end - segment.start) * ratio);
+                return {
+                    x: segment.cx + (Math.cos(angle) * safeRadius),
+                    y: segment.cy + (Math.sin(angle) * safeRadius)
+                };
             }
+
+            distance -= segment.length;
         }
 
-        ctx.closePath();
-        ctx.fillStyle = `rgba(${this.accentVioletRgb}, 0.08)`;
-        ctx.shadowBlur = 36;
-        ctx.shadowColor = `rgba(${this.accentVioletRgb}, 0.22)`;
+        return { x: centerX, y: top };
+    }
+
+    drawProgressTrack(track, timeMs) {
+        const ctx = this.ctx;
+        const progress = this.getPlaybackProgress();
+        if (!this.hasVisibleProgress()) return;
+
+        const dotRadius = Math.max(3.2, track.size * 0.022) * this.getDotScale(timeMs);
+        const lineWidth = Math.max(2.5, track.size * 0.022);
+        const dotPoint = this.getPointOnRoundedSquare(
+            track.centerX,
+            track.centerY,
+            track.size,
+            track.radius,
+            progress
+        );
+
+        if (progress > 0) {
+            ctx.save();
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            const steps = Math.max(48, Math.ceil(progress * 220));
+            const gradient = ctx.createLinearGradient(
+                track.x,
+                track.y,
+                track.x + track.size,
+                track.y + track.size
+            );
+            gradient.addColorStop(0, 'rgba(36, 161, 255, 0.95)');
+            gradient.addColorStop(0.5, 'rgba(139, 92, 246, 0.98)');
+            gradient.addColorStop(1, 'rgba(255, 58, 155, 1)');
+
+            const startPoint = this.getPointOnRoundedSquare(
+                track.centerX,
+                track.centerY,
+                track.size,
+                track.radius,
+                0
+            );
+
+            ctx.beginPath();
+            ctx.moveTo(startPoint.x, startPoint.y);
+
+            for (let index = 1; index <= steps; index += 1) {
+                const point = this.getPointOnRoundedSquare(
+                    track.centerX,
+                    track.centerY,
+                    track.size,
+                    track.radius,
+                    (index / steps) * progress
+                );
+                ctx.lineTo(point.x, point.y);
+            }
+
+            ctx.strokeStyle = 'rgba(7, 10, 18, 0.34)';
+            ctx.lineWidth = lineWidth + 1.2;
+            ctx.stroke();
+
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'rgba(255, 58, 155, 0.28)';
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            ctx.restore();
+        }
+
+        const dotGradient = ctx.createLinearGradient(
+            dotPoint.x - dotRadius,
+            dotPoint.y - dotRadius,
+            dotPoint.x + dotRadius,
+            dotPoint.y + dotRadius
+        );
+        dotGradient.addColorStop(0, 'rgba(36, 161, 255, 1)');
+        dotGradient.addColorStop(0.5, 'rgba(139, 92, 246, 1)');
+        dotGradient.addColorStop(1, 'rgba(255, 58, 155, 1)');
+
+        ctx.beginPath();
+        ctx.arc(dotPoint.x, dotPoint.y, Math.max(4, dotRadius * 1.15), 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(7, 10, 18, 0.45)';
         ctx.fill();
-        ctx.restore();
-    }
 
-    drawRing(cx, cy, baseRadius, bins, rotation, alpha, lineWidth, colorStops, power, motionScale, width, height) {
-        const ctx = this.ctx;
-        const gradient = ctx.createLinearGradient(0, 0, width, height);
-        colorStops.forEach((stop) => {
-            gradient.addColorStop(stop[0], stop[1]);
-        });
-
+        ctx.fillStyle = dotGradient;
+        ctx.shadowBlur = 14;
+        ctx.shadowColor = 'rgba(255, 58, 155, 0.34)';
         ctx.beginPath();
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-
-        for (let i = 0; i <= bins; i += 1) {
-            const index = Math.min(i, bins - 1);
-            const angle = (index / bins) * Math.PI * 2 + rotation;
-            const value = this.dataArray ? this.dataArray[index] / 255 : 0;
-            const edgeWeight = 0.55 + 0.45 * (1 - Math.abs(Math.sin(angle * 2)));
-            const wave = Math.pow(value, 1.65) * motionScale * 1.8 * edgeWeight;
-            const point = this.getSquarePoint(cx, cy, baseRadius + wave, angle, power);
-
-            if (i === 0) {
-                ctx.moveTo(point.x, point.y);
-            } else {
-                ctx.lineTo(point.x, point.y);
-            }
-        }
-
-        ctx.closePath();
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = lineWidth;
-        ctx.globalAlpha = alpha;
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-    }
-
-    drawIdleRing(cx, cy, baseRadius, time, width, height) {
-        const ctx = this.ctx;
-        ctx.beginPath();
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-
-        const steps = 200;
-        for (let i = 0; i <= steps; i += 1) {
-            const angle = (i / steps) * Math.PI * 2;
-            const edgeWeight = 0.6 + 0.4 * (1 - Math.abs(Math.sin(angle * 2)));
-            const breath = Math.sin(time * 1.7 + angle * 4) * 3.2 * edgeWeight;
-            const point = this.getSquarePoint(cx, cy, baseRadius + breath, angle, 5.5);
-
-            if (i === 0) {
-                ctx.moveTo(point.x, point.y);
-            } else {
-                ctx.lineTo(point.x, point.y);
-            }
-        }
-
-        ctx.closePath();
-        ctx.strokeStyle = `rgba(${this.accentVioletRgb}, 0.42)`;
-        ctx.lineWidth = 2.2;
-        ctx.stroke();
+        ctx.arc(dotPoint.x, dotPoint.y, Math.max(3.2, dotRadius), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
     }
 
     render() {
         this.rafId = 0;
         if (!this.canvas || !this.ctx) return;
 
-        const rect = this.canvas.getBoundingClientRect();
-        if (!rect.width || !rect.height) {
-            this.rafId = requestAnimationFrame(this.render);
-            return;
-        }
+        const width = this.canvas.clientWidth;
+        const height = this.canvas.clientHeight;
+        if (!width || !height) return;
 
         const ctx = this.ctx;
-        const time = performance.now() * 0.001;
-        const width = rect.width;
-        const height = rect.height;
-        const cx = this.visualCenterX || (width / 2);
-        const cy = this.visualCenterY || (height / 2);
-        const baseRadius = this.visualBaseRadius || (Math.min(width, height) * 0.24);
-
+        const track = this.getTrackMetrics(width, height);
         ctx.clearRect(0, 0, width, height);
-        this.drawGlow(cx, cy, baseRadius);
 
-        if (this.active && this.analyser && this.dataArray) {
-            this.analyser.smoothingTimeConstant = 0.82;
-            this.analyser.getByteFrequencyData(this.dataArray);
-            const bins = Math.min(this.dataArray.length, 240);
+        if (!this.hasVisibleProgress()) return;
 
-            this.drawRing(cx, cy, baseRadius + this.activeRingOffset, bins, time * 0.10, 0.94, 3.2, [
-                [0, this.accentCyan],
-                [0.5, this.accentViolet],
-                [1, this.accentPink]
-            ], 5.8, 26, width, height);
+        this.drawProgressTrack(track, performance.now());
 
-            this.drawRing(cx, cy, baseRadius + this.secondaryRingOffset, bins, -time * 0.07, 0.34, 2.05, [
-                [0, `rgba(${this.accentCyanRgb}, 0.82)`],
-                [0.5, `rgba(${this.accentVioletRgb}, 0.78)`],
-                [1, `rgba(${this.accentPinkRgb}, 0.72)`]
-            ], 5.2, 16, width, height);
-        } else {
-            this.drawIdleRing(cx, cy, baseRadius + this.idleRingOffset, time, width, height);
+        if (this.active || this.isPlaying()) {
+            this.requestFrame();
         }
-
-        this.rafId = requestAnimationFrame(this.render);
     }
 }
 
@@ -626,7 +655,7 @@ class PL3GalleryLayout {
     constructor(section) {
         this.section = section;
         this.gallery = section.querySelector('.PL3-gallery');
-        this.buttons = this.gallery ? Array.from(this.gallery.querySelectorAll('.PL3-galleryItemBtn')) : [];
+        this.buttons = this.gallery ? Array.from(this.gallery.querySelectorAll('.PL3-galleryRow .PL3-galleryItemBtn')) : [];
         this.tabletMedia = typeof window.matchMedia === 'function'
             ? window.matchMedia('(min-width: 768px)')
             : null;
@@ -702,15 +731,16 @@ class PL3GalleryLayout {
         const renderedRows = rowDefs
             .filter((rowDef) => this.rowHasVisibleButtons(rowDef.buttons))
             .map((rowDef, index) => this.createRow(rowDef.slotCount, rowDef.buttons, index));
-        const maxCount = Math.max(...layout, 1);
+        const ghostRack = this.gallery.querySelector('.PL3-galleryGhostRack');
+        const maxCount = Math.max(...layout, ghostRack ? 3 : 1, 1);
 
         if (!renderedRows.length) {
             renderedRows.push(this.createRow(layout[0] || 1, [], 0));
         }
 
         this.gallery.style.setProperty('--pl3-gallery-max-count', String(maxCount));
-        this.gallery.style.setProperty('--pl3-gallery-rows', String(renderedRows.length));
-        this.gallery.replaceChildren(...renderedRows);
+        this.gallery.style.setProperty('--pl3-gallery-rows', String(renderedRows.length + (ghostRack ? 1 : 0)));
+        this.gallery.replaceChildren(...(ghostRack ? [ghostRack] : []), ...renderedRows);
     };
 }
 
@@ -726,8 +756,7 @@ class PL3DomRegistry {
         this.previewBtn = section.querySelector('[data-pl3-preview]');
         this.gallery = section.querySelector('.PL3-gallery');
         this.galleryBtns = Array.from(section.querySelectorAll('.PL3-galleryItemBtn'));
-        this.playlistPillToggle = section.querySelector('[data-pl3-playlist-toggle]');
-        this.playlistPillLinks = section.querySelector('[data-pl3-playlist-links]');
+        this.refreshPlaylistRefs();
         this.groupPanel = section.querySelector('#PL3-group-panel');
         this.groupPanelArtDock = section.querySelector('[data-pl3-group-art-dock]');
         this.groupPanelTitle = section.querySelector('[data-pl3-group-title]');
@@ -740,6 +769,18 @@ class PL3DomRegistry {
         this.artZoomImage = document.getElementById('PL3-art-zoom-image');
         this.previewSoundBtn = this.previewModal?.querySelector('[data-pl3-preview-sound]');
         this.releaseAudioVisualizerCanvas = section.querySelector('[data-pl3-audio-visualizer]');
+    }
+
+    refreshPlaylistRefs() {
+        this.playlistToggles = Array.from(this.section.querySelectorAll('[data-pl3-playlist-toggle]'));
+        this.playlistPillToggle = this.playlistToggles.find((toggle) => toggle.classList.contains('PL3-playlistPill'))
+            || this.playlistToggles[0]
+            || null;
+        this.playlistPillLinks = this.section.querySelector('[data-pl3-playlist-links]');
+        this.playlistGhostHex = this.section.querySelector('.PL3-galleryGhostHex--playlist');
+        this.playlistGhostToggles = Array.from(
+            this.section.querySelectorAll('.PL3-galleryGhostPlaylistBtn, .PL3-galleryGhostPlaylistBack')
+        );
     }
 }
 
@@ -847,6 +888,7 @@ class PL3HighlightSection {
         this.previewAudioBtn = null;
         this.previewAudioPlayer = null;
         this.releaseAudioVisualizer = null;
+        this.releaseWaveSurfer = null;
         this.videoParallaxCleanup = [];
         this.aboutCyclePanel = null;
         this.aboutCycleSteps = [];
@@ -858,6 +900,7 @@ class PL3HighlightSection {
     init() {
         if (!this.dom.highlightPart) return;
         this.setupReleaseAudioVisualizer();
+        this.setupReleaseWaveform();
         this.setupAboutCycle();
         this.attachTabEvents();
         this.attachPreviewEvents();
@@ -866,6 +909,109 @@ class PL3HighlightSection {
     setupReleaseAudioVisualizer() {
         if (!this.dom.releaseAudioVisualizerCanvas) return;
         this.releaseAudioVisualizer = new PL3AudioBorderVisualizer(this.dom.releaseAudioVisualizerCanvas);
+    }
+
+    setupReleaseWaveform() {
+        const releasePanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-release');
+        const waveformEl = releasePanel?.querySelector('[data-pl3-waveform]');
+        const audioEl = releasePanel?.querySelector('[data-pl3-wave-audio]');
+        const playBtn = releasePanel?.querySelector('[data-pl3-audio-toggle]');
+        const player = releasePanel?.querySelector('[data-pl3-audio-player]');
+        if (!audioEl) return;
+
+        const getWaveHeight = () => {
+            const width = window.innerWidth || document.documentElement.clientWidth || 0;
+            if (width >= 768) return 84;
+            if (width >= 560) return 76;
+            return 68;
+        };
+
+        this.bindPreviewAudioElement(audioEl);
+        this.previewAudioBtn = playBtn || this.previewAudioBtn;
+        this.previewAudioPlayer = player || this.previewAudioPlayer;
+        this.syncPreviewAudioProgress(this.previewAudioPlayer);
+
+        if (!waveformEl || !window.WaveSurfer || typeof window.WaveSurfer.create !== 'function') return;
+
+        const rootStyles = window.getComputedStyle(document.documentElement);
+        const waveColor = rootStyles.getPropertyValue('--pl3-color-accent-cyan').trim() || '#54c6ff';
+        const progressColor = rootStyles.getPropertyValue('--pl3-color-accent-violet').trim() || '#8d6bff';
+
+        this.releaseWaveSurfer = window.WaveSurfer.create({
+            container: waveformEl,
+            media: audioEl,
+            height: getWaveHeight(),
+            normalize: true,
+            cursorWidth: 0,
+            interact: true,
+            dragToSeek: true,
+            waveColor,
+            progressColor,
+            renderFunction: (channels, ctx) => {
+                const { width, height } = ctx.canvas;
+                const samples = channels?.[0];
+                if (!samples || !samples.length || !width || !height) return;
+
+                const scale = samples.length / width;
+                const step = Math.max(8, Math.round(width / 64));
+                const amplitude = height * 0.34;
+
+                if (typeof ctx.resetTransform === 'function') {
+                    ctx.resetTransform();
+                }
+                ctx.clearRect(0, 0, width, height);
+                ctx.translate(0, height / 2);
+                ctx.lineWidth = 2.4;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = ctx.fillStyle;
+                ctx.beginPath();
+
+                for (let i = 0; i < width; i += step * 2) {
+                    const index = Math.min(samples.length - 1, Math.floor(i * scale));
+                    const value = Math.max(0.08, Math.abs(samples[index] || 0));
+                    let x = i;
+                    let y = value * amplitude;
+
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, y);
+                    ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, true);
+                    ctx.lineTo(x + step, 0);
+
+                    x += step;
+                    y *= -1;
+
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, y);
+                    ctx.arc(x + step / 2, y, step / 2, Math.PI, 0, false);
+                    ctx.lineTo(x + step, 0);
+                }
+
+                ctx.stroke();
+                ctx.closePath();
+            }
+        });
+
+        this.releaseWaveSurfer.on('ready', () => {
+            this.syncPreviewAudioProgress(this.previewAudioPlayer);
+        });
+
+        window.addEventListener('resize', () => {
+            if (!this.releaseWaveSurfer || typeof this.releaseWaveSurfer.setOptions !== 'function') return;
+            this.releaseWaveSurfer.setOptions({ height: getWaveHeight() });
+        }, { passive: true });
+
+        this.releaseWaveSurfer.on('interaction', () => {
+            this.previewAudioBtn = playBtn || this.previewAudioBtn;
+            this.previewAudioPlayer = player || this.previewAudioPlayer;
+            if (!audioEl.paused) return;
+
+            const playAttempt = this.releaseWaveSurfer.play();
+            if (playAttempt && typeof playAttempt.catch === 'function') {
+                playAttempt.catch(() => {
+                    this.syncPreviewAudioButton(this.previewAudioBtn, false);
+                });
+            }
+        });
     }
 
     // === Tabs ===
@@ -906,6 +1052,7 @@ class PL3HighlightSection {
         }
         if (tabKey !== 'release') {
             this.pausePreviewAudio(true);
+            this.dom.highlightPart?.querySelector('[data-pl3-focus-frame]')?.contentWindow?.postMessage({ type: 'focus-pause' }, '*');
         }
         if (tabKey === 'videos') {
             this.playVideoTabParallax();
@@ -1266,35 +1413,24 @@ class PL3HighlightSection {
             }, { passive: false });
         }
 
-        // Video card Watch buttons with a specific playlist
-        const videoPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-videos');
-        if (videoPanel) {
-            videoPanel.addEventListener('click', (ev) => {
-                const btn = ev.target.closest('[data-pl3-video-embed]');
-                if (!btn) return;
-                ev.preventDefault();
-                this.openPreviewModal(btn.getAttribute('data-pl3-video-embed'));
-            }, { passive: false });
-        }
-
-        // Release panel Preview button
-        const releasePanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-release');
-        if (releasePanel) {
-            releasePanel.addEventListener('click', (ev) => {
+        // Any highlight control can launch a specific preview playlist.
+        const highlightPart = this.dom.highlightPart;
+        if (highlightPart) {
+            highlightPart.addEventListener('click', (ev) => {
                 const audioBtn = ev.target.closest('[data-pl3-audio-toggle]');
                 if (audioBtn) {
-                    const audioPlayer = audioBtn.closest('[data-pl3-audio-player]');
-                    if (!audioPlayer) return;
                     ev.preventDefault();
-                    ev.stopPropagation();
-                    this.togglePreviewAudio(audioPlayer.getAttribute('data-pl3-audio-src'), audioBtn, audioPlayer);
+                    this.togglePreviewAudio(
+                        audioBtn.getAttribute('data-pl3-audio-src'),
+                        audioBtn,
+                        audioBtn.closest('[data-pl3-audio-player]')
+                    );
                     return;
                 }
 
                 const btn = ev.target.closest('[data-pl3-video-embed]');
                 if (!btn) return;
                 ev.preventDefault();
-                ev.stopPropagation();
                 this.openPreviewModal(btn.getAttribute('data-pl3-video-embed'));
             }, { passive: false });
         }
@@ -1374,9 +1510,13 @@ class PL3HighlightSection {
         }
     }
 
-    getPreviewAudio() {
-        if (this.previewAudio) return this.previewAudio;
-        const audio = new Audio();
+    bindPreviewAudioElement(audio) {
+        if (!audio) return null;
+        if (audio.dataset.pl3AudioBound === 'true') {
+            this.previewAudio = audio;
+            return audio;
+        }
+
         audio.preload = 'metadata';
         audio.addEventListener('play', () => {
             this.releaseAudioVisualizer?.attachAudio(audio);
@@ -1402,9 +1542,19 @@ class PL3HighlightSection {
             this.releaseAudioVisualizer?.attachAudio(audio);
             this.syncPreviewAudioProgress(this.previewAudioPlayer);
         });
+
         this.releaseAudioVisualizer?.attachAudio(audio);
+        audio.dataset.pl3AudioBound = 'true';
         this.previewAudio = audio;
         return audio;
+    }
+
+    getPreviewAudio() {
+        if (this.previewAudio) return this.previewAudio;
+        const existingAudio = this.dom.highlightPart?.querySelector('[data-pl3-wave-audio]');
+        if (existingAudio) return this.bindPreviewAudioElement(existingAudio);
+        const audio = new Audio();
+        return this.bindPreviewAudioElement(audio);
     }
 
     syncPreviewAudioButton(btn, isPlaying) {
@@ -1458,6 +1608,9 @@ class PL3HighlightSection {
         this.previewAudio.pause();
         if (resetTime) {
             this.previewAudio.currentTime = 0;
+            if (this.releaseWaveSurfer && typeof this.releaseWaveSurfer.setTime === 'function') {
+                this.releaseWaveSurfer.setTime(0);
+            }
         }
         this.syncPreviewAudioProgress(this.previewAudioPlayer);
     }
@@ -2923,6 +3076,7 @@ class PL3GallerySection {
         this.dom = dom;
         this.onGroupSelect = callbacks.onGroupSelect || (() => { });
         this.playlistExpanded = false;
+        this.playlistExpandedSurface = '';
     }
 
     init() {
@@ -2931,12 +3085,18 @@ class PL3GallerySection {
     }
 
     onSectionClick = (ev) => {
+        this.dom.refreshPlaylistRefs();
         const playlistToggle = ev.target.closest('[data-pl3-playlist-toggle]');
         if (playlistToggle) {
-            const isPlaylistLink = ev.target.closest('[data-pl3-playlist-links] a');
+            const isPlaylistLink = ev.target.closest('[data-pl3-playlist-links] a, [data-pl3-ghost-playlist-links] a');
             if (isPlaylistLink) return;
             ev.preventDefault();
-            this.playlistExpanded ? this.collapsePlaylistPill() : this.expandPlaylistPill();
+            const surface = this.getPlaylistSurface(playlistToggle);
+            if (this.playlistExpanded && surface === this.playlistExpandedSurface) {
+                this.collapsePlaylistPill();
+                return;
+            }
+            surface === 'ghost' ? this.expandPlaylistGhost() : this.expandPlaylistPill();
             return;
         }
 
@@ -2947,7 +3107,7 @@ class PL3GallerySection {
             return;
         }
 
-        if (ev.target.closest('[data-pl3-playlist-links]')) return;
+        if (ev.target.closest('[data-pl3-playlist-links], [data-pl3-ghost-playlist-links]')) return;
 
         const btn = ev.target.closest('[data-pl3-group]');
         if (!btn || !this.dom.section.contains(btn)) {
@@ -2959,26 +3119,58 @@ class PL3GallerySection {
         this.onGroupSelect(btn, btn.getAttribute('data-pl3-group') || '');
     };
 
+    getPlaylistSurface(toggle) {
+        if (toggle.classList.contains('PL3-galleryGhostPlaylistBtn')
+            || toggle.classList.contains('PL3-galleryGhostPlaylistBack')) {
+            return 'ghost';
+        }
+        return 'pill';
+    }
+
     expandPlaylistPill() {
+        this.dom.refreshPlaylistRefs();
         const toggle = this.dom.playlistPillToggle;
         const links = this.dom.playlistPillLinks;
         if (!toggle || !links) return;
 
-        toggle.classList.add('PL3-playlistPill--expanded');
+        this.collapsePlaylistPill();
         toggle.setAttribute('aria-expanded', 'true');
+        toggle.classList.add('PL3-playlistPill--expanded');
         links.hidden = false;
         this.playlistExpanded = true;
+        this.playlistExpandedSurface = 'pill';
+    }
+
+    expandPlaylistGhost() {
+        this.dom.refreshPlaylistRefs();
+        const ghostHex = this.dom.playlistGhostHex;
+        if (!ghostHex) return;
+
+        this.collapsePlaylistPill();
+        ghostHex.classList.add('PL3-galleryGhostHex--expanded');
+        this.dom.playlistGhostToggles.forEach((toggle) => {
+            toggle.setAttribute('aria-expanded', 'true');
+        });
+        this.playlistExpanded = true;
+        this.playlistExpandedSurface = 'ghost';
     }
 
     collapsePlaylistPill() {
+        this.dom.refreshPlaylistRefs();
         const toggle = this.dom.playlistPillToggle;
         const links = this.dom.playlistPillLinks;
-        if (!toggle || !links) return;
+        toggle?.setAttribute('aria-expanded', 'false');
+        toggle?.classList.remove('PL3-playlistPill--expanded');
+        if (links) {
+            links.hidden = true;
+        }
 
-        toggle.classList.remove('PL3-playlistPill--expanded');
-        toggle.setAttribute('aria-expanded', 'false');
-        links.hidden = true;
+        this.dom.playlistGhostHex?.classList.remove('PL3-galleryGhostHex--expanded');
+        this.dom.playlistGhostToggles.forEach((playlistToggle) => {
+            playlistToggle.setAttribute('aria-expanded', 'false');
+        });
         this.playlistExpanded = false;
+        this.playlistExpandedSurface = '';
     }
 }
 
@@ -3052,13 +3244,9 @@ class PL3Controller {
         const brand = this.section.querySelector('.PL3-heroTitle');
         const slogan = this.section.querySelector('.PL3-heroSlogan');
         const tabs = this.section.querySelector('.PL3-tabs');
-        const releaseArt = this.section.querySelector('.PL3-upcomingArtWrap');
-        const releaseArtImage = this.section.querySelector('.PL3-upcomingArt');
-        const releasePanel = this.section.querySelector('.PL3-upcoming--playingNow');
-        const releaseCopy = releasePanel
-            ? Array.from(releasePanel.children).filter((node) => node.matches('.PL3-upcomingHeader, .PL3-upcomingPlayerCard'))
-            : [];
+        const focusFrameWrap = this.section.querySelector('.PL3-focusFrameWrap');
         const galleryHeader = this.section.querySelector('.PL3-galleryHeader');
+        const galleryGhostHexes = Array.from(this.section.querySelectorAll('.PL3-galleryGhostHex'));
         const galleryItems = Array.from(this.section.querySelectorAll('.PL3-galleryItemBtn'));
         const galleryImages = Array.from(this.section.querySelectorAll('.PL3-galleryImg'));
         const animatedNodes = [
@@ -3068,10 +3256,9 @@ class PL3Controller {
             ...this.el.heroBtns,
             slogan,
             tabs,
-            releaseArt,
-            releaseArtImage,
-            releaseCopy,
+            focusFrameWrap,
             galleryHeader,
+            ...galleryGhostHexes,
             ...galleryItems,
             ...galleryImages
         ].filter(Boolean);
@@ -3108,19 +3295,19 @@ class PL3Controller {
         }, '<0.08');
         addStep(slogan, { y: 0, opacity: 1, duration: 0.68 }, '-=0.42');
         addStep(tabs, { y: 0, opacity: 1, duration: 0.72 }, '-=0.34');
-        addStep(releaseArt, {
-            x: 0,
-            scale: 1,
+        addStep(focusFrameWrap, {
+            y: 0,
             opacity: 1,
             duration: 0.68
-        }, '-=0.5');
-        addStep(releaseArtImage, {
+        }, '-=0.44');
+        addStep(galleryHeader, { y: 0, opacity: 1, duration: 0.58 }, '-=0.34');
+        addStep(galleryGhostHexes, {
+            y: 0,
             scale: 1,
             opacity: 1,
-            duration: 0.72
-        }, '<0.04');
-        addStep(releaseCopy, { x: 0, opacity: 1, duration: 0.62 }, '<0.08');
-        addStep(galleryHeader, { y: 0, opacity: 1, duration: 0.58 }, '-=0.34');
+            stagger: 0.06,
+            duration: 0.56
+        }, '-=0.26');
         addStep(galleryItems, {
             y: 0,
             scale: 1,

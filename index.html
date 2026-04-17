@@ -147,55 +147,33 @@
                             <!-- Tab panels -->
                             <div class="PL3-tabPanels">
                                 <div class="PL3-tabPanel" id="PL3-tabPanel-release" role="tabpanel"
-                                    aria-label="Playing Now">
-                                    <div class="PL3-upcoming PL3-upcoming--playingNow" aria-label="Playing now">
-                                        <div class="PL3-upcomingPlayerCard" data-pl3-audio-player
-                                            data-pl3-audio-src="audio/audio-full-mindness-elm-st.m4a">
-                                            <div class="PL3-upcomingPlayer">
-                                                <div class="PL3-upcomingHeader">
-                                                    <div class="PL3-upcomingDesc">FEATURED RELEASE</div>
+                                    aria-label="Featured Release">
+                                    <div class="PL3-focusLayout" data-pl3-audio-player>
+                                        <div class="PL3-focusHeader">Featured Release</div>
+                                        <div class="PL3-focusBody">
+                                            <div class="PL3-focusArtCol">
+                                                <div class="PL3-focusArtWrap">
+                                                    <img src="img/music/versions/version-fullmindness-mayhemmix.png"
+                                                        alt="Featured Release" class="PL3-focusArtImg">
+                                                    <canvas class="PL3-focusArtProgress" data-pl3-audio-visualizer
+                                                        aria-hidden="true"></canvas>
                                                 </div>
-                                                <div class="PL3-upcomingPlayerArtWrap" aria-hidden="true">
-                                                    <canvas class="PL3-upcomingPlayerVisualizer"
-                                                        data-pl3-audio-visualizer aria-hidden="true"></canvas>
-                                                    <div class="PL3-upcomingPlayerArtPad">
-                                                        <img class="PL3-upcomingArt"
-                                                            src="img/music/versions/version-fullmindness-mayhemmix.png"
-                                                            alt="Full-Mindness Opa Mayhem Mix cover" loading="lazy"
-                                                            onerror="this.src='img/music/opahifi_album.png'">
-                                                    </div>
-                                                </div>
-                                                <div class="PL3-upcomingPlayerBody">
-                                                    <div class="PL3-upcomingPlayerTop">
-                                                        <div class="PL3-upcomingPlayerCopy">
-                                                            <div class="PL3-upcomingPlayerTitle">Full-Mindness</div>
-                                                            <div class="PL3-upcomingPlayerSub">Mayhem Mix</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="PL3-upcomingPlayerTimeline" aria-hidden="true">
-                                                        <span class="PL3-upcomingPlayerProgress"
-                                                            data-pl3-audio-progress></span>
-                                                    </div>
-                                                    <div class="PL3-upcomingPlayerFooter">
-                                                        <span class="PL3-upcomingPlayerTime"
-                                                            data-pl3-audio-current>0:00</span>
-                                                        <span class="PL3-upcomingPlayerTime"
-                                                            data-pl3-audio-duration>0:00</span>
-                                                    </div>
-                                                    <div class="PL3-upcomingPlayerActions">
-                                                        <button class="PL3-upcomingPlayerBtn" type="button"
-                                                            data-pl3-audio-toggle aria-label="Play Full-Mindness audio"
-                                                            aria-pressed="false">
-                                                            <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                                            <span data-pl3-audio-toggle-label>Play</span>
-                                                        </button>
-                                                        <a class="PL3-upcomingInfoBtn" href="full-mindness.html"
-                                                            aria-label="Info about Full-Mindness">
-                                                            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                                                            <span>Info</span>
-                                                        </a>
-                                                    </div>
-                                                </div>
+                                                <audio data-pl3-wave-audio preload="metadata" hidden>
+                                                    <source src="audio/audio-full-mindness-elm-st.m4a" type="audio/mp4">
+                                                </audio>
+                                            </div>
+                                            <div class="PL3-focusLinksCol">
+                                                <button class="PL3-focusPill PL3-focusPill--play" type="button"
+                                                    data-pl3-audio-toggle
+                                                    data-pl3-audio-src="audio/audio-full-mindness-elm-st.m4a"
+                                                    aria-label="Play Full-Mindness audio" aria-pressed="false"><i
+                                                        class="fa-solid fa-play"></i> <span
+                                                        data-pl3-audio-toggle-label>Play</span></button>
+                                                <button class="PL3-focusPill" type="button"
+                                                    data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV3W8uiqhjN7dgZsGnzajUTN">Videos</button>
+                                                <button class="PL3-focusPill" type="button"
+                                                    data-pl3-group="full-mindness">Lyrics</button>
+                                                <a class="PL3-focusPill" href="full-mindness.html">Context</a>
                                             </div>
                                         </div>
                                     </div>
@@ -337,43 +315,53 @@
                     <div class="PL3-part PL3-part--gallery" aria-label="Gallery">
                         <div class="PL3-galleryHeader">
                             <div class="PL3-subTitle">All Releases</div>
-                            <div class="PL3-playlistPillWrap">
-                                <button class="PL3-playlistPill" type="button" data-pl3-playlist-toggle
-                                    aria-expanded="false">
-                                    <span class="PL3-playlistPillLabel"><i
-                                            class="fa-solid fa-play PL3-playlistPillPlayIcon"
-                                            aria-hidden="true"></i><span class="PL3-playlistPlayText">Play</span><span
-                                            class="PL3-playlistTheText">the</span><span
-                                            class="PL3-playlistListText">List</span></span>
-                                    <div class="PL3-playlistPillIcons" data-pl3-playlist-links hidden>
-                                        <span class="PL3-playlistPillPrefix">Playlists:</span>
-                                        <a class="PL3-playlistPillLink"
-                                            href="https://open.spotify.com/playlist/5rAMYPsUmFoq3yoBnIGYQR?si=qw3P1s6eT7OLxatM2zUb3w"
-                                            target="_blank" rel="noopener" aria-label="Spotify playlist">
-                                            <img class="PL3-playlistPillIcon" src="img/ico/spotify-plum.svg"
-                                                alt="Spotify">
-                                        </a>
-                                        <a class="PL3-playlistPillLink"
-                                            href="https://music.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF&si=S9qhguENixnuD3Ps"
-                                            target="_blank" rel="noopener" aria-label="YouTube Music playlist">
-                                            <img class="PL3-playlistPillIcon" src="img/ico/youtubemusic-plum.svg"
-                                                alt="YouTube Music">
-                                        </a>
-                                        <a class="PL3-playlistPillLink"
-                                            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF"
-                                            target="_blank" rel="noopener" aria-label="YouTube playlist">
-                                            <img class="PL3-playlistPillIcon" src="img/ico/youtube-plum.svg"
-                                                alt="YouTube">
-                                        </a>
-                                        <span class="PL3-heroBtn-close" data-pl3-playlist-close
-                                            aria-label="Close">×</span>
-                                    </div>
-                                </button>
-                            </div>
                         </div>
                         <!-- Use comma-separated row slot counts per breakpoint; add `hidden` to a button to disable that slot. -->
                         <div class="PL3-gallery" aria-label="OpaHiFi groups" data-pl3-layout-mobile="4,3"
-                            data-pl3-layout-tablet="2,3,2">
+                            data-pl3-layout-tablet="4,3">
+                            <div class="PL3-galleryGhostRack PL3-galleryGhostRack--top">
+                                <span class="PL3-galleryGhostHex PL3-galleryGhostHex--spacer" aria-hidden="true"></span>
+                                <span class="PL3-galleryGhostHex PL3-galleryGhostHex--playlist">
+                                    <div class="PL3-galleryGhostPlaylistCard">
+                                        <button class="PL3-galleryGhostPlaylistBtn" type="button"
+                                            data-pl3-playlist-toggle aria-expanded="false" aria-label="Open playlists">
+                                            <span class="PL3-galleryGhostPlaylistLabel">Play All</span>
+                                            <img class="PL3-galleryGhostPlaylistImg" src="img/btns/playlist.png"
+                                                alt="Play the List" loading="lazy" onerror="this.hidden=true">
+                                        </button>
+                                        <div class="PL3-galleryGhostPlaylistBack" data-pl3-ghost-playlist-links
+                                            data-pl3-playlist-toggle aria-expanded="false" aria-label="Playlist links">
+                                            <span class="PL3-galleryGhostPlaylistBackTitle">Playlists:</span>
+                                            <div class="PL3-galleryGhostPlaylistBackRow">
+                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
+                                                    href="https://open.spotify.com/playlist/5rAMYPsUmFoq3yoBnIGYQR?si=qw3P1s6eT7OLxatM2zUb3w"
+                                                    target="_blank" rel="noopener" aria-label="Spotify playlist">
+                                                    <img class="PL3-playlistPillIcon" src="img/ico/spotify-white.svg"
+                                                        alt="Spotify">
+                                                </a>
+                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
+                                                    href="https://music.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF&si=S9qhguENixnuD3Ps"
+                                                    target="_blank" rel="noopener" aria-label="YouTube Music playlist">
+                                                    <img class="PL3-playlistPillIcon"
+                                                        src="img/ico/youtubemusic-white.svg" alt="YouTube Music">
+                                                </a>
+                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
+                                                    href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF"
+                                                    target="_blank" rel="noopener" aria-label="YouTube playlist">
+                                                    <img class="PL3-playlistPillIcon" src="img/ico/youtube-white.svg"
+                                                        alt="YouTube">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Wellwolf Howl-Lehluya"
+                                    data-pl3-group="wellwolf-howl-lehluya">
+                                    <img class="PL3-galleryImg" src="img/music/base/base-wellwolfhowllehluya.png"
+                                        alt="Wellwolf Howl-Lehluya cover" loading="lazy"
+                                        onerror="this.src='img/music/opahifi_album.png'">
+                                </button>
+                            </div>
                             <div class="PL3-galleryRow PL3-galleryRow--top">
                                 <button class="PL3-galleryItemBtn" type="button" aria-label="Open Old Love Story"
                                     data-pl3-group="old-love-story">
@@ -492,6 +480,7 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/wavesurfer.js@7.12.6/dist/wavesurfer.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Flip.min.js"></script>
     <script src="script.js"></script>

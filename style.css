@@ -84,7 +84,7 @@ body {
 
     /* 3-screen section split (unitless numbers out of 100). These should sum to 100. */
     --pl3-section-header: 17;
-    --pl3-section-highlight: 38;
+    --pl3-section-highlight: 40;
     --pl3-section-gallery: 36;
 
     /* Derived percentages for grid usage */
@@ -107,6 +107,7 @@ body {
     --pl3-gallery-pill-gap: 4px;
     --pl3-gallery-max-count: 4;
     --pl3-gallery-rows: 2;
+    --pl3-gallery-scale: 0.93;
     --pl3-gallery-row-overlap-factor: 0.22;
     --pl3-gallery-hex-ratio: 0.8660254;
     --pl3-gallery-unit-min: 4.45rem;
@@ -128,31 +129,6 @@ body {
     --pl3-gallery-shadow: none;
     --pl3-gallery-shadow-hover: none;
     --pl3-gallery-shadow-active: none;
-
-    /* Upcoming section */
-    --pl3-upcoming-art-scale: 1;
-    --pl3-upcoming-glow-scale: 1.12;
-    /* Customize the player art/canvas sizing with these three vars. */
-    --pl3-upcoming-player-art-size: 96px;
-    --pl3-upcoming-player-art-pad: 8px;
-    --pl3-upcoming-player-canvas-space: 24px;
-    --pl3-upcoming-player-canvas-size:
-        calc(var(--pl3-upcoming-player-art-size) + (var(--pl3-upcoming-player-art-pad) * 2) + (var(--pl3-upcoming-player-canvas-space) * 2));
-    --pl3-upcoming-player-visualizer-space: var(--pl3-upcoming-player-canvas-space);
-    --pl3-upcoming-player-art-wrap-inset: var(--pl3-upcoming-player-canvas-space);
-    --pl3-upcoming-player-art-stage-size:
-        var(--pl3-upcoming-player-canvas-size);
-    --pl3-upcoming-player-art-shell-radius: 14px;
-    /* Ring controls:
-       ring-gap = base distance from the art edge
-       ring-idle-offset = extra distance for the idle ring
-       ring-active-offset = extra distance for the main bright playing ring
-       ring-secondary-offset = extra distance for the faint outer playing ring */
-    --pl3-upcoming-player-ring-gap: 3px;
-    --pl3-upcoming-player-ring-glow-scale: 1.03;
-    --pl3-upcoming-player-ring-idle-offset: 8px;
-    --pl3-upcoming-player-ring-active-offset: 2px;
-    --pl3-upcoming-player-ring-secondary-offset: 10px;
 
     /* Grid section gap */
     --pl3-split-gap: 2.2vh;
@@ -183,6 +159,9 @@ body {
     --pl3-pill-follow-max-w: 180px;
     --pl3-pill-playlist-max-w: 140px;
     --pl3-pill-h: 30px;
+
+    /* ── Focus panel art size ── */
+    --pl3-focus-art-size: 150px;
 
     /* ── Panel outer / inner padding ── */
     --pl3-panel-pad-x: 0px;
@@ -348,11 +327,8 @@ html.pl3-js .PL3-section--preload .PL3-heroTitle,
 html.pl3-js .PL3-section--preload .PL3-heroBtn,
 html.pl3-js .PL3-section--preload .PL3-heroSlogan,
 html.pl3-js .PL3-section--preload .PL3-tabs,
-html.pl3-js .PL3-section--preload .PL3-upcomingArtWrap,
-html.pl3-js .PL3-section--preload .PL3-upcomingArt,
-html.pl3-js .PL3-section--preload .PL3-upcomingHeader,
-html.pl3-js .PL3-section--preload .PL3-upcomingPlayerCard,
 html.pl3-js .PL3-section--preload .PL3-galleryHeader,
+html.pl3-js .PL3-section--preload .PL3-galleryGhostHex,
 html.pl3-js .PL3-section--preload .PL3-galleryItemBtn,
 html.pl3-js .PL3-section--preload .PL3-galleryImg {
     will-change: transform, opacity;
@@ -386,23 +362,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryHeader {
     transform: translateY(28px);
 }
 
-html.pl3-js .PL3-section--preload .PL3-upcomingArtWrap {
-    opacity: 0;
-    transform: translateX(-30px) scale(0.94);
-}
-
-html.pl3-js .PL3-section--preload .PL3-upcomingArt {
-    opacity: 0;
-    transform: scale(0.88);
-    animation: none;
-}
-
-html.pl3-js .PL3-section--preload .PL3-upcoming--playingNow>.PL3-upcomingHeader,
-html.pl3-js .PL3-section--preload .PL3-upcoming--playingNow>.PL3-upcomingPlayerCard {
-    opacity: 0;
-    transform: translateX(30px);
-}
-
+html.pl3-js .PL3-section--preload .PL3-galleryGhostHex,
 html.pl3-js .PL3-section--preload .PL3-galleryItemBtn {
     opacity: 0;
     transform: translateY(38px) scale(0.96);
@@ -516,9 +476,11 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .PL3-tabPanels {
+    max-height: 300px;
     flex: 1;
     min-width: 0;
     min-height: 0;
+
     background:
         radial-gradient(160% 130% at 0% 0%, rgba(146, 72, 255, 0.72), rgba(88, 22, 196, 0.68) 42%, rgba(6, 9, 28, 0) 75%),
         radial-gradient(120% 110% at 100% 100%, rgba(15, 43, 227, 0.74), rgba(28, 8, 8, 0.5) 60%),
@@ -542,6 +504,122 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-tabPanel[hidden] {
     display: none;
+}
+
+/* ===== Focus panel ===== */
+
+/* Panel fills the tab panel, centers the layout block */
+#PL3-tabPanel-release:not([hidden]) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+/* Vertical stack: header sits above the art+buttons row */
+.PL3-focusLayout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.PL3-focusHeader {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pl3-color-white-90, #fff);
+}
+
+/* Side-by-side: art on left, buttons on right */
+.PL3-focusBody {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+/* art size controlled by --pl3-focus-art-size */
+.PL3-focusArtCol {
+    flex: 0 0 var(--pl3-focus-art-size);
+    width: var(--pl3-focus-art-size);
+    height: var(--pl3-focus-art-size);
+}
+
+.PL3-focusArtWrap {
+    position: relative;
+    width: var(--pl3-focus-art-size);
+    height: var(--pl3-focus-art-size);
+    border-radius: var(--pl3-tile-radius, 8px);
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.PL3-focusArtImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.18s ease;
+}
+
+.PL3-focusArtProgress {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+[data-pl3-audio-player].is-playing .PL3-focusArtImg {
+    transform: scale(1.02);
+}
+
+/* Buttons column: narrower than the art */
+.PL3-focusLinksCol {
+    flex: 0 0 auto;
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Pills: exact same height as Stream/Follow/Shop buttons (--pl3-pill-h = 30px) */
+.PL3-focusPill {
+    width: 100%;
+    max-width: var(--pl3-focus-art-size);
+    height: var(--pl3-pill-h);
+    min-height: var(--pl3-pill-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 999px;
+    border: none;
+    color: #fff;
+    font-family: "Tom Oswald", system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    padding: 0 11px;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: filter 0.2s ease;
+    background: linear-gradient(135deg, rgb(83 5 211 / 81%) 0%, rgb(133 6 255 / 66%) 100%);
+}
+
+.PL3-focusPill:hover {
+    filter: brightness(1.15);
+}
+
+.PL3-focusPill--play {
+    background: linear-gradient(135deg, rgb(45 51 218 / 93%) 0%, #065fd4 100%);
 }
 
 /* ===== About panel ===== */
@@ -903,7 +981,6 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     align-items: center;
     justify-content: space-between;
     flex: 0 0 auto;
-    margin-bottom: 0;
     position: relative;
     overflow: visible;
 }
@@ -942,6 +1019,8 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
         var(--pl3-gallery-pad-block-start) var(--pl3-gallery-pad-inline) var(--pl3-gallery-pad-block-end);
     overflow: visible;
     isolation: isolate;
+    transform: scale(var(--pl3-gallery-scale));
+    transform-origin: center top;
 }
 
 .PL3-galleryRow {
@@ -958,6 +1037,208 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-galleryRow+.PL3-galleryRow {
     margin-top: calc(var(--pl3-gallery-row-overlap) * -1);
+}
+
+.PL3-galleryGhostRack {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: var(--pl3-gallery-item-h);
+    gap: var(--pl3-gallery-col-gap);
+    inline-size: min(100%,
+            calc((var(--pl3-gallery-unit) * 3) + (2 * var(--pl3-gallery-col-gap))));
+    margin-inline: auto;
+    overflow: visible;
+}
+
+.PL3-galleryGhostRack+.PL3-galleryRow {
+    margin-top: calc(var(--pl3-gallery-row-overlap) * -1);
+}
+
+.PL3-galleryGhostHex {
+    position: relative;
+    inline-size: var(--pl3-gallery-unit);
+    aspect-ratio: calc(sqrt(3) / 2);
+    border-radius: 1rem;
+    clip-path: polygon(50% 0, 150% 50%, 50% 100%, -50% 50%);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 239, 244, 0.92)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.04));
+    box-shadow:
+        inset 0 0 0 1px rgba(20, 17, 31, 0.08),
+        inset 0 -0.8rem 1.15rem rgba(0, 0, 0, 0.06),
+        inset 0 0.35rem 0.8rem rgba(255, 255, 255, 0.44);
+    opacity: 1;
+    overflow: hidden;
+    transform: translateY(0) scale(1);
+    transform-origin: 50% 50%;
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+}
+
+.PL3-galleryGhostHex--spacer {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.PL3-galleryGhostHex::before,
+.PL3-galleryGhostHex::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.PL3-galleryGhostHex::before {
+    inset: 0.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.74);
+    border-radius: inherit;
+}
+
+.PL3-galleryGhostHex::after {
+    inset: 30% 24%;
+    border-radius: 999px;
+    background:
+        radial-gradient(circle, rgba(131, 99, 255, 0.22) 0%, rgba(131, 99, 255, 0.08) 44%, rgba(131, 99, 255, 0) 70%);
+    filter: blur(2px);
+}
+
+.PL3-galleryGhostHex--playlist {
+    box-shadow: var(--pl3-gallery-shadow);
+    perspective: 1200px;
+}
+
+.PL3-galleryGhostHex--playlist:hover,
+.PL3-galleryGhostHex--playlist:focus-within {
+    transform: translateY(calc(var(--pl3-gallery-hover-lift) * -1)) scale(var(--pl3-gallery-hover-scale));
+    box-shadow: var(--pl3-gallery-shadow-hover);
+    z-index: 2;
+}
+
+.PL3-galleryGhostHex--expanded {
+    z-index: 4;
+}
+
+.PL3-galleryGhostPlaylistCard {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.PL3-galleryGhostHex--expanded .PL3-galleryGhostPlaylistCard {
+    transform: rotateY(180deg);
+}
+
+.PL3-galleryGhostPlaylistBtn {
+    position: absolute;
+    inset: 5px;
+    display: block;
+    width: auto;
+    height: auto;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.PL3-galleryGhostPlaylistBtn:focus-visible {
+    outline: none;
+}
+
+.PL3-galleryGhostPlaylistLabel {
+    position: absolute;
+    top: 1.2rem;
+    left: 50%;
+    z-index: 2;
+    transform: translateX(-50%);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.94rem;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: rgba(31, 23, 41, 0.92);
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.PL3-galleryGhostPlaylistImg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 2.2rem 0.75rem 0rem;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 18px rgba(17, 9, 33, 0.12));
+    transform: scale(1);
+    transition: transform 320ms ease, filter 220ms ease, opacity 220ms ease;
+}
+
+.PL3-galleryGhostHex--playlist:hover .PL3-galleryGhostPlaylistImg,
+.PL3-galleryGhostHex--playlist:focus-within .PL3-galleryGhostPlaylistImg {
+    transform: scale(var(--pl3-gallery-img-zoom));
+    filter: drop-shadow(0 10px 20px rgba(17, 9, 33, 0.18));
+}
+
+.PL3-galleryGhostHex--expanded .PL3-galleryGhostPlaylistImg,
+.PL3-galleryGhostHex--expanded .PL3-galleryGhostPlaylistLabel {
+    opacity: 0;
+}
+
+.PL3-galleryGhostPlaylistBack {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.95rem 0.7rem 0.85rem;
+    background: linear-gradient(180deg, rgb(202 21 21 / 98%), rgb(99 44 181 / 95%)), linear-gradient(180deg, rgb(35 2 2 / 36%), rgb(72 31 200));
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.PL3-galleryGhostHex--expanded .PL3-galleryGhostPlaylistBack {
+    pointer-events: auto;
+}
+
+.PL3-galleryGhostPlaylistBackTitle {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: rgba(31, 23, 41, 0.86);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.PL3-galleryGhostPlaylistBackRow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.08rem;
+    flex-wrap: nowrap;
+    max-width: none;
+}
+
+.PL3-galleryGhostPlaylistLink {
+    width: 1.92rem;
+    height: 1.92rem;
+    background: rgba(74, 29, 47, 0.08);
+    border-color: rgba(74, 29, 47, 0.14);
+}
+
+.PL3-galleryGhostPlaylistLink:hover,
+.PL3-galleryGhostPlaylistLink:focus-visible {
+    background: rgba(74, 29, 47, 0.14);
+    border-color: rgba(74, 29, 47, 0.24);
 }
 
 .PL3-galleryItemBtn[hidden] {
@@ -1208,8 +1489,6 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     align-items: center;
     padding: 3px 10px;
     border-radius: 999px;
-    /* border: 1px solid rgba(214, 177, 255, 0.28); */
-    /* background: linear-gradient(180deg, rgba(58, 20, 93, 0.98), rgba(26, 10, 48, 0.98)); */
     box-shadow: 0 8px 16px rgba(10, 4, 24, 0.32);
     color: var(--pl3-color-white-92);
     font-size: 0.52rem;
@@ -1223,10 +1502,10 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     border-radius: 999px;
-    background: var(--pl3-color-white-94);
+    background: rgb(40 25 162 / 94%);
     border: 1px solid var(--pl3-color-white-88);
     box-shadow: 0 8px 16px rgba(15, 11, 38, 0.18);
     transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
@@ -1357,7 +1636,6 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 /* Buttons: use Tom Oswald if available, fall back to system sans-serif */
 .PL3-heroBtn,
 .PL3-tabBtn,
-.PL3-upcomingInfoBtn,
 .PL3-playlistPill,
 .PL3-groupPanelShareBtn,
 .PL3-groupPanelCloseBtn,
@@ -1366,8 +1644,6 @@ button {
 }
 
 .PL3-heroBtn,
-.PL3-upcomingPlayerBtn,
-.PL3-upcomingInfoBtn,
 .PL3-playlistPill,
 .PL3-videoWatchBtn {
     min-height: var(--pl3-pill-h);
@@ -1498,513 +1774,6 @@ button {
     color: #fff;
 }
 
-/* ===== Middle (30%) ===== */
-.PL3-upcoming {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    gap: 10px;
-    padding: 0;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-.PL3-upcoming--playingNow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0;
-    padding: 2px;
-    position: relative;
-    isolation: isolate;
-    min-width: 0;
-    min-height: 0;
-}
-
-.PL3-upcoming--playingNow::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 18px;
-    background:
-        linear-gradient(180deg, var(--pl3-color-white-08), var(--pl3-color-white-02)),
-        linear-gradient(135deg, rgba(117, 38, 201, 0.48), rgba(36, 18, 94, 0.22));
-    border: 1px solid var(--pl3-color-white-12);
-    box-shadow:
-        inset 0 1px 0 var(--pl3-color-white-08),
-        0 16px 34px rgba(10, 5, 31, 0.14);
-    z-index: 0;
-}
-
-.PL3-upcoming--playingNow::after {
-    content: '';
-    position: absolute;
-    right: -12%;
-    bottom: -22%;
-    width: 52%;
-    height: 60%;
-    background: radial-gradient(circle, rgba(35, 92, 255, 0.3) 0%, rgba(35, 92, 255, 0) 74%);
-    filter: blur(16px);
-    opacity: 0.7;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.PL3-upcoming--playingNow>* {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-}
-
-.PL3-upcomingArtWrap {
-    width: min(42%, 132px);
-    aspect-ratio: 1 / 1;
-    max-width: calc(100% - 24px);
-    max-height: 64%;
-    overflow: visible;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: none;
-    border-radius: 18px;
-    background: transparent;
-    transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
-    z-index: 2;
-    flex-shrink: 0;
-    cursor: pointer;
-
-}
-
-.PL3-upcomingArtWrap::before {
-    content: '';
-    position: absolute;
-    width: calc(100% * var(--pl3-upcoming-art-scale));
-    height: calc(100% * var(--pl3-upcoming-art-scale));
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) scale(var(--pl3-upcoming-glow-scale));
-    background:
-        radial-gradient(circle, rgba(255, 107, 189, 0.46) 0%, rgba(196, 77, 255, 0.24) 42%, rgba(255, 159, 67, 0.10) 64%, rgba(255, 107, 189, 0) 78%);
-    border-radius: 50%;
-    z-index: -1;
-    opacity: 0.28;
-    filter: blur(24px);
-    animation: PL3-upcomingBorderShine 18s linear infinite, PL3-upcomingHaloDrift 6.8s ease-in-out infinite;
-}
-
-.PL3-upcomingArtWrap::after {
-    content: '';
-    position: absolute;
-    width: calc(100% * var(--pl3-upcoming-art-scale));
-    height: calc(100% * var(--pl3-upcoming-art-scale));
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) scale(calc(var(--pl3-upcoming-glow-scale) + 0.04));
-    border-radius: 50%;
-    background:
-        radial-gradient(circle at 34% 30%, rgba(120, 173, 255, 0.26), transparent 34%),
-        radial-gradient(circle at 68% 72%, rgba(230, 92, 165, 0.18), transparent 38%);
-    filter: blur(16px);
-    opacity: 0.28;
-    z-index: -1;
-    animation: PL3-upcomingHaloDrift 6.8s ease-in-out infinite reverse;
-}
-
-.PL3-upcomingArtWrap:hover {
-    transform: scale(1.05);
-}
-
-.PL3-upcomingArt {
-    width: calc(100% * var(--pl3-upcoming-art-scale));
-    height: calc(100% * var(--pl3-upcoming-art-scale));
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
-    border-radius: 18px;
-    box-shadow: 0 0 14px rgba(196, 77, 255, 0.30), 0 0 26px rgba(255, 107, 189, 0.20);
-    animation: PL3-upcomingGlow 2.8s ease-in-out infinite, PL3-upcomingPulse 3.8s ease-in-out infinite;
-    position: relative;
-    z-index: 1;
-    transform-origin: center center;
-    will-change: transform, box-shadow;
-}
-
-.PL3-upcomingHeader {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 8px;
-    width: 100%;
-    min-width: 0;
-}
-
-.PL3-upcoming--playingNow .PL3-upcomingDesc {
-    color: var(--pl3-color-text);
-    font-size: 1.5rem;
-    font-weight: 900;
-    line-height: 0.9;
-    overflow-wrap: anywhere;
-    text-shadow: 0 0 20px rgba(31, 111, 235, 0.4);
-    text-align: left;
-    flex-shrink: 0;
-    display: block;
-    flex: 0 1 auto;
-    width: auto;
-    min-height: 0;
-    padding: 0;
-    border-radius: 0;
-    background: none;
-    border: 0;
-    color: var(--pl3-color-text);
-    font-size: clamp(1.1rem, 4.8vw, 1.55rem);
-    font-weight: 900;
-    line-height: 0.92;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    text-shadow: none;
-    white-space: nowrap;
-    margin: 0;
-    margin-left: 8px;
-    max-width: none;
-}
-
-.PL3-upcomingPlayerCard {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 0;
-    width: 100%;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
-}
-
-.PL3-upcomingPlayer {
-    flex: 1 1 auto;
-    position: relative;
-    display: grid;
-    grid-template-areas:
-        "header header"
-        "art body";
-    grid-template-rows: auto minmax(0, 1fr);
-    grid-template-columns: var(--pl3-upcoming-player-art-stage-size) minmax(0, 1fr);
-    align-items: center;
-    gap: 0px;
-    width: 100%;
-    min-height: 0;
-    padding: 6px;
-    margin-left: -10px;
-    border-radius: 16px;
-    min-width: 0;
-    box-sizing: border-box;
-    padding-top: 15px;
-}
-
-.PL3-upcomingPlayer>.PL3-upcomingHeader {
-    grid-area: header;
-    align-self: start;
-    padding: 0;
-}
-
-.PL3-upcomingPlayerArtWrap {
-    grid-area: art;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: center;
-    justify-self: stretch;
-    width: var(--pl3-upcoming-player-art-stage-size);
-    max-width: 100%;
-    aspect-ratio: 1 / 1;
-    padding: 0;
-    border-radius: var(--pl3-upcoming-player-art-shell-radius);
-    background: transparent;
-    box-shadow: none;
-    overflow: hidden;
-    isolation: isolate;
-}
-
-.PL3-upcomingPlayerArtWrap::before {
-    content: none;
-}
-
-.PL3-upcomingPlayerArtWrap::after {
-    content: none;
-}
-
-.PL3-upcomingPlayerVisualizer {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 1;
-    filter:
-        drop-shadow(0 0 16px rgba(var(--pl3-rgb-accent-violet), 0.26)) drop-shadow(0 0 6px rgba(var(--pl3-rgb-accent-cyan), 0.18));
-}
-
-.PL3-upcomingPlayerArtPad {
-    position: absolute;
-    inset: var(--pl3-upcoming-player-art-wrap-inset);
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--pl3-upcoming-player-art-pad);
-    box-sizing: border-box;
-}
-
-.PL3-upcomingPlayer .PL3-upcomingArt {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 11px;
-    object-fit: cover;
-    box-shadow: none;
-    animation: none;
-}
-
-.PL3-upcomingPlayerBody {
-    grid-area: body;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-self: center;
-    justify-content: center;
-    gap: 8px;
-    height: auto;
-    padding: 2px 0 2px;
-}
-
-.PL3-upcomingPlayerTop {
-    display: block;
-    min-width: 0;
-}
-
-.PL3-upcomingPlayerCopy {
-    min-width: 0;
-    padding-right: 0;
-}
-
-.PL3-upcomingPlayerTitle {
-    margin: 0;
-    color: var(--pl3-color-text-strong);
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: 0.015em;
-    line-height: 0.88;
-    text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.PL3-upcomingPlayerSub {
-    color: var(--pl3-color-white-62);
-    font-size: 0.62rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    line-height: 1;
-    text-transform: uppercase;
-    margin-top: 4px;
-}
-
-.PL3-upcomingPlayerTimeline {
-    position: relative;
-    height: 5px;
-    margin-top: 0;
-    border-radius: 999px;
-    background: var(--pl3-color-white-10);
-    overflow: hidden;
-}
-
-.PL3-upcomingPlayerProgress {
-    display: block;
-    width: 0;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, var(--pl3-color-accent-cyan) 0%, var(--pl3-color-accent-violet) 100%);
-    box-shadow: 0 0 16px rgba(115, 231, 255, 0.34);
-    transition: width 140ms linear;
-}
-
-.PL3-upcomingPlayerFooter {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    min-width: 0;
-    margin-top: 0;
-}
-
-.PL3-upcomingPlayerActions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    width: 100%;
-    min-width: 0;
-    margin-top: 0;
-}
-
-.PL3-upcomingPlayerActions .PL3-upcomingPlayerBtn,
-.PL3-upcomingPlayerActions .PL3-upcomingInfoBtn {
-    flex: 1 1 0;
-    width: auto;
-    min-width: 0;
-    margin-top: 0;
-}
-
-.PL3-upcomingPlayerBtn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    min-width: 0;
-    padding: 0 10px;
-    border: 1px solid rgba(223, 179, 255, 0.24);
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgb(162 31 249 / 94%), rgb(99 9 138 / 86%));
-    color: var(--pl3-color-text);
-    cursor: pointer;
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    text-transform: uppercase;
-    box-shadow:
-        inset 0 1px 0 var(--pl3-color-white-10),
-        0 8px 16px rgba(15, 7, 40, 0.16);
-    transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
-    flex: 0 0 auto;
-    align-self: auto;
-}
-
-.PL3-upcomingPlayerBtn:hover {
-    background: linear-gradient(180deg, rgba(82, 39, 172, 0.98), rgba(46, 18, 106, 0.9));
-    border-color: rgba(223, 179, 255, 0.34);
-    transform: translateY(-1px);
-}
-
-.PL3-upcomingPlayerBtn:active {
-    transform: translateY(0);
-}
-
-.PL3-upcomingPlayerBtn:focus-visible {
-    outline: 2px solid rgba(var(--pl3-rgb-white), 0.6);
-    outline-offset: 2px;
-}
-
-.PL3-upcomingPlayerBtn i {
-    font-size: 12px;
-}
-
-.PL3-upcomingPlayerTime {
-    display: inline-flex;
-    align-items: center;
-    color: var(--pl3-color-white-68);
-    font-size: 0.48rem;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: 0.04em;
-    font-variant-numeric: tabular-nums;
-    flex: 0 0 auto;
-    min-width: 2.35rem;
-}
-
-.PL3-upcomingPlayerFooter .PL3-upcomingPlayerTime:first-child {
-    justify-content: flex-start;
-}
-
-.PL3-upcomingPlayerFooter .PL3-upcomingPlayerTime:last-child {
-    justify-content: flex-end;
-}
-
-.PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayerVisualizer {
-    filter:
-        drop-shadow(0 0 20px rgba(var(--pl3-rgb-accent-violet), 0.36)) drop-shadow(0 0 10px rgba(var(--pl3-rgb-accent-cyan), 0.26));
-}
-
-.PL3-upcomingPlayerCard.is-playing .PL3-upcomingPlayerBtn {
-    background: linear-gradient(180deg, rgba(49, 148, 188, 0.92), rgba(74, 34, 143, 0.88));
-    border-color: rgba(115, 231, 255, 0.24);
-}
-
-.PL3-upcoming--playingNow .PL3-upcomingInfoBtn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-width: 0;
-    width: auto;
-    align-self: flex-start;
-    margin-top: 0;
-    max-height: none;
-    padding: 0 10px;
-    border-radius: 12px;
-    color: var(--pl3-color-text);
-    font-size: 0.62rem;
-    font-weight: 800;
-    line-height: 1;
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
-    text-decoration: none;
-}
-
-.PL3-upcomingInfoBtn {
-    background: linear-gradient(180deg, var(--pl3-color-white-12), var(--pl3-color-white-06));
-    border: 1px solid var(--pl3-color-white-14);
-    transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
-}
-
-.PL3-upcomingInfoBtn:hover {
-    background: var(--pl3-color-white-14);
-    border-color: var(--pl3-color-white-24);
-    transform: translateY(-1px);
-}
-
-.PL3-upcomingInfoBtn:active {
-    transform: translateY(0px);
-}
-
-.PL3-upcomingInfoBtn:focus-visible {
-    outline: 2px solid var(--pl3-color-white-55);
-    outline-offset: 2px;
-}
-
-.PL3-upcoming--playingNow .PL3-upcomingInfoBtn {
-    width: auto;
-    justify-content: center;
-}
-
-@keyframes PL3-upcomingPlayerGlow {
-
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 0.22;
-    }
-
-    50% {
-        transform: scale(1.08);
-        opacity: 0.34;
-    }
-}
-
 /* ===== Preview Video Modal ===== */
 #PL3-preview-modal[hidden] {
     display: none;
@@ -2052,106 +1821,6 @@ button {
 
 #PL3-preview-modal.PL3-preview--open .PL3-previewInner {
     animation: PL3-previewInnerWiggle 520ms ease both;
-}
-
-@keyframes PL3-upcomingBorderShine {
-    0% {
-        background-position: 0 0;
-    }
-
-    50% {
-        background-position: 400% 0;
-    }
-
-    100% {
-        background-position: 0 0;
-    }
-}
-
-@keyframes PL3-upcomingMagicBorder {
-    0% {
-        opacity: 0.5;
-    }
-
-    50% {
-        opacity: 0.9;
-    }
-
-    100% {
-        opacity: 0.5;
-    }
-}
-
-@keyframes PL3-upcomingSparkle {
-    0% {
-        filter: blur(8px) brightness(0.8);
-    }
-
-    50% {
-        filter: blur(8px) brightness(1.2);
-    }
-
-    100% {
-        filter: blur(8px) brightness(0.8);
-    }
-}
-
-@keyframes PL3-upcomingShimmer {
-    0% {
-        transform: translateX(-200%);
-    }
-
-    100% {
-        transform: translateX(200%);
-    }
-}
-
-@keyframes PL3-upcomingGlow {
-
-    0%,
-    100% {
-        box-shadow: 0 0 14px rgba(196, 77, 255, 0.30), 0 0 26px rgba(255, 107, 189, 0.20);
-    }
-
-    50% {
-        box-shadow: 0 0 22px rgba(196, 77, 255, 0.50), 0 0 38px rgba(255, 107, 189, 0.34);
-    }
-}
-
-@keyframes PL3-upcomingFloat {
-
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-
-    50% {
-        transform: translate3d(0, -4px, 0) scale(1.012);
-    }
-}
-
-@keyframes PL3-upcomingHaloDrift {
-
-    0%,
-    100% {
-        opacity: 0.34;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
-}
-
-@keyframes PL3-upcomingPulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.04);
-    }
 }
 
 @keyframes PL3-previewInnerWiggle {
@@ -3195,51 +2864,9 @@ button {
 
 
 @media (min-width: 425px) {
-    :root {
-        --pl3-upcoming-player-art-size: 108px;
-        --pl3-upcoming-player-canvas-space: 26px;
-    }
-
     .PL3-card {
         width: 400px;
     }
-
-    .PL3-upcoming {
-        gap: 14px;
-        padding: 14px 18px;
-    }
-
-    .PL3-upcoming--playingNow {
-        padding: 10px;
-    }
-
-    .PL3-upcoming--playingNow .PL3-upcomingDesc {
-        font-size: 1.22rem;
-        max-width: none;
-    }
-
-    .PL3-upcomingPlayer {
-        gap: 10px;
-        padding: 10px;
-    }
-
-    .PL3-upcomingPlayerArtWrap {
-        border-radius: calc(var(--pl3-upcoming-player-art-shell-radius) + 1px);
-    }
-
-    .PL3-upcomingPlayerTitle {
-        font-size: 1rem;
-    }
-
-    .PL3-upcomingPlayerBtn {
-        padding: 0 12px;
-        font-size: 0.64rem;
-    }
-
-    .PL3-upcomingInfoBtn {
-        font-size: 0.66rem;
-    }
-
 }
 
 
@@ -3249,6 +2876,7 @@ button {
         --pl3-part-pad-y: 10px;
         --pl3-gap-md: 10px;
         --pl3-gap-sm: 8px;
+        --pl3-tablet-panel-band-h: 3.25rem;
         --pl3-tablet-highlight-column: 50;
         --pl3-tablet-gallery-column: 50;
         --pl3-section-header: 19;
@@ -3264,10 +2892,8 @@ button {
         --pl3-version-platform-gap: 16px;
         --pl3-gallery-pill-gap: 10px;
         --pl3-gallery-unit-max: 8rem;
-        --pl3-gallery-pad-block-start: 0.18rem;
+        --pl3-gallery-pad-block-start: 0.48rem;
         --pl3-gallery-pad-block-end: 0.08rem;
-        --pl3-upcoming-player-art-size: 120px;
-        --pl3-upcoming-player-canvas-space: 28px;
         --pl3-highlight-panel-max-h: 37vh;
         --pl3-gallery-panel-max-h: clamp(440px, 64vh, 680px);
     }
@@ -3286,8 +2912,12 @@ button {
             "highlight gallery";
     }
 
+
     .PL3-subTitle {
-        font-size: 2rem;
+        font-size: 1.6rem;
+        position: absolute;
+        bottom: -3.5rem;
+        letter-spacing: -0.02em;
     }
 
     .PL3-heroImgWrap {
@@ -3315,67 +2945,6 @@ button {
 
     .PL3-heroBtn {
         padding: 0 12px;
-    }
-
-    .PL3-upcoming--playingNow {
-        padding: 12px;
-        gap: 16px;
-    }
-
-    .PL3-upcoming--playingNow .PL3-upcomingDesc {
-        font-size: 1.34rem;
-    }
-
-    .PL3-upcomingPlayer {
-        grid-template-areas:
-            "header"
-            "art"
-            "body";
-        grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: auto auto auto;
-        justify-items: center;
-        align-items: start;
-        gap: 12px;
-        padding: 12px;
-        margin-left: 0;
-        border-radius: 20px;
-    }
-
-    .PL3-upcomingPlayer>.PL3-upcomingHeader {
-        width: 100%;
-    }
-
-    .PL3-upcomingPlayerArtWrap {
-        justify-self: center;
-        align-self: start;
-        border-radius: calc(var(--pl3-upcoming-player-art-shell-radius) + 2px);
-    }
-
-    .PL3-upcomingPlayerBody {
-        align-self: start;
-        width: 100%;
-        max-width: 250px;
-    }
-
-    .PL3-upcomingPlayer .PL3-upcomingArt {
-        border-radius: 12px;
-    }
-
-    .PL3-upcomingPlayerTitle {
-        font-size: 1rem;
-    }
-
-    .PL3-upcomingPlayerSub {
-        font-size: 0.68rem;
-    }
-
-    .PL3-upcomingPlayerBtn {
-        font-size: 0.68rem;
-        padding: 0 14px;
-    }
-
-    .PL3-upcomingInfoBtn {
-        font-size: 0.7rem;
     }
 
     .PL3-groupPanel {
@@ -3417,8 +2986,15 @@ button {
     }
 
     .PL3-galleryHeader {
+        min-height: var(--pl3-tablet-panel-band-h);
         position: relative;
         z-index: 2;
+        align-items: flex-end;
+        margin-bottom: 0;
+    }
+
+    .PL3-tabNav {
+        min-height: var(--pl3-tablet-panel-band-h);
         align-items: flex-end;
     }
 
@@ -3428,7 +3004,7 @@ button {
         overflow-y: hidden;
         position: relative;
         z-index: 1;
-        margin-top: 1rem;
+        margin-top: 0;
     }
 
     .PL3-part--highlight {
@@ -3440,7 +3016,18 @@ button {
     .PL3-part--gallery {
         align-self: start;
         height: min(100%, var(--pl3-gallery-panel-max-h));
+        gap: 0;
     }
+
+
+    .PL3-focusHeader {
+        font-size: 1.5rem;
+    }
+
+    .PL3-galleryGhostPlaylistImg {
+        padding: 2rem 0.75rem 0.6rem;
+    }
+
 
 }
 
@@ -3451,98 +3038,48 @@ button {
         font-size: 2.75rem;
     }
 
-    .PL3-upcoming--playingNow {
-        padding: 1.5rem 1.35rem 1.2rem;
-    }
-
-    .PL3-upcomingPlayer {
-        grid-template-areas:
-            "header art"
-            "body body";
-        grid-template-columns: auto auto;
-        grid-template-rows: auto auto;
-        column-gap: 1.4rem;
-        row-gap: 1rem;
-        justify-content: center;
-        justify-items: start;
-        align-content: center;
-        align-items: center;
-        padding: 0;
-    }
-
-    .PL3-upcomingPlayer>.PL3-upcomingHeader {
-        width: auto;
-        align-self: center;
-        justify-content: flex-start;
-    }
-
-    .PL3-upcomingPlayerArtWrap {
-        justify-self: start;
-        align-self: center;
-        width: clamp(150px, 15vw, 190px);
-    }
-
-    .PL3-upcomingPlayerBody {
-        justify-self: stretch;
-        width: auto;
-        max-width: none;
-        align-self: start;
-        gap: 10px;
-    }
-
-    .PL3-upcomingPlayerTop,
-    .PL3-upcomingPlayerCopy {
-        text-align: left;
-    }
-
-    .PL3-upcomingPlayerTop {
-        width: 100%;
-    }
-
-    .PL3-upcomingPlayerCopy {
-        width: 100%;
-        max-width: 20rem;
-    }
-
-    .PL3-upcomingPlayerTitle {
-        font-size: 1.5rem;
-    }
-
-    .PL3-upcomingPlayerSub {
-        font-size: 1rem;
-        margin-top: 6px;
-    }
-
-    .PL3-upcomingPlayerActions {
-        display: grid;
-        grid-template-columns: repeat(2, 9rem);
-        justify-content: center;
-        gap: 14px;
-    }
-
-    .PL3-upcomingPlayerBody .PL3-upcomingPlayerActions .PL3-upcomingPlayerBtn,
-    .PL3-upcomingPlayerBody .PL3-upcomingPlayerActions .PL3-upcomingInfoBtn {
-        flex: 0 0 auto;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .PL3-upcoming--playingNow .PL3-upcomingDesc {
+    .PL3-focusHeader {
         font-size: 2rem;
-        white-space: normal;
-        margin-left: 0;
-        max-width: 8.5ch;
     }
 
-    .PL3-upcomingPlayerTime {
-        font-size: .7rem;
+    #PL3-tabPanel-release {
+        --pl3-focus-art-size: 200px;
     }
+
+    .PL3-focusArtCol {
+        flex: 0 0 var(--pl3-focus-art-size);
+        width: var(--pl3-focus-art-size);
+        height: var(--pl3-focus-art-size);
+    }
+
+    .PL3-focusArtWrap {
+        width: var(--pl3-focus-art-size);
+        height: var(--pl3-focus-art-size);
+    }
+
+    .PL3-focusLinksCol {
+        width: 160px;
+    }
+
+    .PL3-subTitle {
+        font-size: 2.1rem;
+        position: absolute;
+        bottom: -5rem;
+    }
+
+    .PL3-tabPanels {
+        max-height: 350px;
+    }
+
+    .PL3-galleryGhostPlaylistImg {
+        padding: 3rem 0.75rem 0.6rem;
+    }
+
 }
 
 
 @media (prefers-reduced-motion: reduce) {
 
-    .PL3-upcomingPlayerArtWrap::before,
     .cycle-pillar,
     .cycle-arrow {
         animation: none !important;
