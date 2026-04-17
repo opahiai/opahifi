@@ -160,6 +160,9 @@ body {
     --pl3-pill-playlist-max-w: 140px;
     --pl3-pill-h: 30px;
 
+    /* ── Focus panel art size ── */
+    --pl3-focus-art-size: 150px;
+
     /* ── Panel outer / inner padding ── */
     --pl3-panel-pad-x: 0px;
     --pl3-panel-inner-pad-top: clamp(12px, calc(8px + 1.2vw), 16px);
@@ -505,7 +508,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 /* ===== Focus panel ===== */
 
 /* Panel fills the tab panel, centers the layout block */
-#PL3-tabPanel-release {
+#PL3-tabPanel-release:not([hidden]) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -539,16 +542,16 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     gap: 12px;
 }
 
-/* 150×150 square, no tricks */
+/* art size controlled by --pl3-focus-art-size */
 .PL3-focusArtCol {
-    flex: 0 0 150px;
-    width: 150px;
-    height: 150px;
+    flex: 0 0 var(--pl3-focus-art-size);
+    width: var(--pl3-focus-art-size);
+    height: var(--pl3-focus-art-size);
 }
 
 .PL3-focusArtWrap {
-    width: 150px;
-    height: 150px;
+    width: var(--pl3-focus-art-size);
+    height: var(--pl3-focus-art-size);
     border-radius: var(--pl3-tile-radius, 8px);
     overflow: hidden;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -574,7 +577,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 /* Pills: exact same height as Stream/Follow/Shop buttons (--pl3-pill-h = 30px) */
 .PL3-focusPill {
     width: 100%;
-    max-width: 150px;
+    max-width: var(--pl3-focus-art-size);
     height: var(--pl3-pill-h);
     min-height: var(--pl3-pill-h);
     display: flex;
@@ -1088,8 +1091,14 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     perspective: 1200px;
 }
 
+.PL3-galleryGhostHex--release {
+    box-shadow: var(--pl3-gallery-shadow);
+}
+
 .PL3-galleryGhostHex--playlist:hover,
-.PL3-galleryGhostHex--playlist:focus-within {
+.PL3-galleryGhostHex--playlist:focus-within,
+.PL3-galleryGhostHex--release:hover,
+.PL3-galleryGhostHex--release:focus-within {
     transform: translateY(calc(var(--pl3-gallery-hover-lift) * -1)) scale(var(--pl3-gallery-hover-scale));
     box-shadow: var(--pl3-gallery-shadow-hover);
     z-index: 2;
@@ -1338,6 +1347,37 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-galleryItemBtn.PL3-artHost--detached::after {
     opacity: 0;
+}
+
+.PL3-galleryGhostHex>.PL3-galleryItemBtn {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    aspect-ratio: auto;
+    border-radius: inherit;
+    background: transparent;
+    box-shadow: none;
+}
+
+.PL3-galleryGhostHex>.PL3-galleryItemBtn::before {
+    background: none;
+    box-shadow: none;
+}
+
+.PL3-galleryGhostHex>.PL3-galleryItemBtn:hover,
+.PL3-galleryGhostHex>.PL3-galleryItemBtn:focus-visible,
+.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-galleryItemBtn--active,
+.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-artHost--detached,
+.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-artHost--detached:hover,
+.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-artHost--detached:focus-visible,
+.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-artHost--detached.PL3-galleryItemBtn--active {
+    transform: none;
+    box-shadow: none;
+}
+
+.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-galleryItemBtn--active::after {
+    opacity: 1;
+    border-color: var(--pl3-gallery-shell-active);
 }
 
 .PL3-part--gallery .PL3-gallery.PL3-gallery--locked .PL3-galleryItemBtn {
@@ -3013,15 +3053,19 @@ button {
         font-size: 2rem;
     }
 
+    #PL3-tabPanel-release {
+        --pl3-focus-art-size: 200px;
+    }
+
     .PL3-focusArtCol {
-        flex: 0 0 200px;
-        width: 200px;
-        height: 200px;
+        flex: 0 0 var(--pl3-focus-art-size);
+        width: var(--pl3-focus-art-size);
+        height: var(--pl3-focus-art-size);
     }
 
     .PL3-focusArtWrap {
-        width: 200px;
-        height: 200px;
+        width: var(--pl3-focus-art-size);
+        height: var(--pl3-focus-art-size);
     }
 
     .PL3-focusLinksCol {

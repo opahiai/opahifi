@@ -67,7 +67,8 @@
         GLITTAA_PHOENIX: 'glittaa-phoenix',
         SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
-        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch'
+        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch',
+        WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya'
     });
 
     const SINGLE = Object.freeze({
@@ -79,7 +80,8 @@
         GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
         FULL_MINDNESS: 'full-mindness',
-        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch'
+        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch',
+        WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya'
     });
 
     const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
@@ -151,6 +153,16 @@
             title: 'Let\'s not do Brunch',
             titleLines: ['LET\'S NOT', 'DO BRUNCH'],
             cover: 'img/music/base/base-letsnotdobrunch.png',
+            songIds: [],
+            singlesById: {}
+        },
+        {
+            id: 8,
+            key: GROUP.WELLWOLF_HOWL_LEHLUYA,
+            title: 'Wellwolf Howl-Lehluya',
+            titleLines: ['WELLWOLF', 'HOWL-LEHLUYA'],
+            shareImage: 'img/music/base/base-wellwolfhowllehluya.png',
+            cover: 'img/music/base/base-wellwolfhowllehluya.png',
             songIds: [],
             singlesById: {}
         }
@@ -292,6 +304,20 @@
                 'Amazon Music': 'https://music.amazon.com/albums/B0GS2JC8QD?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_CGFq3eGi1CLBa46vBJBJNB3oc&trackAsin=B0GS23XMP6',
                 'Other': 'https://youtu.be/nlRw2m9_Qh4?si=Xe-ZF1Ogg2ynabpj'
             }
+        },
+        [SINGLE.WELLWOLF_HOWL_LEHLUYA]: {
+            id: SINGLE.WELLWOLF_HOWL_LEHLUYA,
+            groupKey: GROUP.WELLWOLF_HOWL_LEHLUYA,
+            title: 'Wellwolf Howl-Lehluya',
+            image: 'img/music/base/base-wellwolfhowllehluya.png',
+            lyricsPath: 'lyrics/wellwolf-hoawlehluya.txt',
+            links: {
+                'YouTube Music': 'https://music.youtube.com/playlist?list=OLAK5uy_k3iThKSj0H5nDqf-dpU5EMM-ccRcglZaY&si=d2V3JFEBlqkSJi55',
+                'Other': 'https://youtu.be/bjecZnXbXBc?si=Llwj6s7pyO2fRMmY',
+                'Spotify': 'https://open.spotify.com/track/4OHlXoJFuPhfm4plY7Coop?si=86049caec0384f95',
+                'Apple Music': 'https://music.apple.com/us/album/wellwolf-howl-lehluya-single/1894120765',
+                'Amazon Music': 'https://music.amazon.com/tracks/B0GXHSFW83?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_YaZDAKqp0vQwgwM7y8yENc9Zw'
+            }
         }
     };
 
@@ -304,7 +330,8 @@
         SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
         SINGLE.BELIEVE_THE_TRUTH_FAIRY,
         SINGLE.FULL_MINDNESS,
-        SINGLE.LETS_NOT_DO_BRUNCH
+        SINGLE.LETS_NOT_DO_BRUNCH,
+        SINGLE.WELLWOLF_HOWL_LEHLUYA
     ];
 
 
@@ -626,7 +653,7 @@ class PL3GalleryLayout {
     constructor(section) {
         this.section = section;
         this.gallery = section.querySelector('.PL3-gallery');
-        this.buttons = this.gallery ? Array.from(this.gallery.querySelectorAll('.PL3-galleryItemBtn')) : [];
+        this.buttons = this.gallery ? Array.from(this.gallery.querySelectorAll('.PL3-galleryRow .PL3-galleryItemBtn')) : [];
         this.tabletMedia = typeof window.matchMedia === 'function'
             ? window.matchMedia('(min-width: 768px)')
             : null;
