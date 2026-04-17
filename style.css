@@ -593,6 +593,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     cursor: pointer;
     padding: 0 11px;
     white-space: nowrap;
+    text-decoration: none;
     transition: filter 0.2s ease;
     background: linear-gradient(135deg, rgb(83 5 211 / 81%) 0%, rgb(133 6 255 / 66%) 100%);
 }

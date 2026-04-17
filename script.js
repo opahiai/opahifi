@@ -1409,10 +1409,10 @@ class PL3HighlightSection {
             }, { passive: false });
         }
 
-        // Video card Watch buttons with a specific playlist
-        const videoPanel = this.dom.highlightPart?.querySelector('#PL3-tabPanel-videos');
-        if (videoPanel) {
-            videoPanel.addEventListener('click', (ev) => {
+        // Any highlight control can launch a specific preview playlist.
+        const highlightPart = this.dom.highlightPart;
+        if (highlightPart) {
+            highlightPart.addEventListener('click', (ev) => {
                 const btn = ev.target.closest('[data-pl3-video-embed]');
                 if (!btn) return;
                 ev.preventDefault();
