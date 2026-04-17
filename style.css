@@ -1116,10 +1116,10 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-galleryGhostPlaylistBtn {
     position: absolute;
-    inset: 0;
+    inset: 5px;
     display: block;
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
     border: 0;
     padding: 0;
     background: transparent;
@@ -1140,7 +1140,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     z-index: 2;
     transform: translateX(-50%);
     font-family: 'Oswald', sans-serif;
-    font-size: .8rem;
+    font-size: 0.94rem;
     font-weight: 700;
     letter-spacing: -0.05em;
     line-height: 1;
@@ -1154,7 +1154,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     width: 100%;
     height: 100%;
     display: block;
-    padding: 2.2rem 0.75rem 0.75rem;
+    padding: 2.2rem 0.75rem 0rem;
     object-fit: contain;
     filter: drop-shadow(0 8px 18px rgba(17, 9, 33, 0.12));
     transform: scale(1);
@@ -3008,6 +3008,12 @@ button {
     .PL3-focusHeader {
         font-size: 1.5rem;
     }
+
+    .PL3-galleryGhostPlaylistImg {
+        padding: 2rem 0.75rem 0.6rem;
+    }
+
+
 }
 
 
@@ -3050,6 +3056,9 @@ button {
         max-height: 350px;
     }
 
+    .PL3-galleryGhostPlaylistImg {
+        padding: 3rem 0.75rem 0.6rem;
+    }
 
 }
 
