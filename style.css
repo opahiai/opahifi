@@ -1092,14 +1092,8 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     perspective: 1200px;
 }
 
-.PL3-galleryGhostHex--release {
-    box-shadow: var(--pl3-gallery-shadow);
-}
-
 .PL3-galleryGhostHex--playlist:hover,
-.PL3-galleryGhostHex--playlist:focus-within,
-.PL3-galleryGhostHex--release:hover,
-.PL3-galleryGhostHex--release:focus-within {
+.PL3-galleryGhostHex--playlist:focus-within {
     transform: translateY(calc(var(--pl3-gallery-hover-lift) * -1)) scale(var(--pl3-gallery-hover-scale));
     box-shadow: var(--pl3-gallery-shadow-hover);
     z-index: 2;
@@ -1348,37 +1342,6 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 
 .PL3-galleryItemBtn.PL3-artHost--detached::after {
     opacity: 0;
-}
-
-.PL3-galleryGhostHex>.PL3-galleryItemBtn {
-    position: absolute;
-    inset: 0;
-    inline-size: 100%;
-    aspect-ratio: auto;
-    border-radius: inherit;
-    background: transparent;
-    box-shadow: none;
-}
-
-.PL3-galleryGhostHex>.PL3-galleryItemBtn::before {
-    background: none;
-    box-shadow: none;
-}
-
-.PL3-galleryGhostHex>.PL3-galleryItemBtn:hover,
-.PL3-galleryGhostHex>.PL3-galleryItemBtn:focus-visible,
-.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-galleryItemBtn--active,
-.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-artHost--detached,
-.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-artHost--detached:hover,
-.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-artHost--detached:focus-visible,
-.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-artHost--detached.PL3-galleryItemBtn--active {
-    transform: none;
-    box-shadow: none;
-}
-
-.PL3-galleryGhostHex>.PL3-galleryItemBtn.PL3-galleryItemBtn--active::after {
-    opacity: 1;
-    border-color: var(--pl3-gallery-shell-active);
 }
 
 .PL3-part--gallery .PL3-gallery.PL3-gallery--locked .PL3-galleryItemBtn {
@@ -2934,8 +2897,11 @@ button {
             "highlight gallery";
     }
 
+
     .PL3-subTitle {
         font-size: 2rem;
+        position: absolute;
+        bottom: -4.5rem;
     }
 
     .PL3-heroImgWrap {
@@ -3072,6 +3038,14 @@ button {
     .PL3-focusLinksCol {
         width: 160px;
     }
+
+    .PL3-subTitle {
+
+        position: absolute;
+        bottom: -5rem;
+    }
+
+
 }
 
 
