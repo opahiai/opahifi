@@ -523,13 +523,16 @@ a {
 }
 
 .fm-table th {
-    padding: 0.7rem;
+    padding: 1.9rem 0.2rem;
     border-radius: 0.85rem;
     background: rgba(255, 255, 255, 0.04);
-    font-size: 0.5rem;
+    font-size: 0.7rem;
     font-weight: 900;
     letter-spacing: 0.2em;
     text-align: center;
+    text-decoration: underline;
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.32em;
     text-transform: uppercase;
 }
 
@@ -539,12 +542,12 @@ a {
 
 .fm-table th:nth-child(2) {
     color: #67e8f9;
-    background: rgba(34, 211, 238, 0.08);
+    background: rgb(34 211 238 / 50%);
 }
 
 .fm-table th:nth-child(3) {
     color: #c084fc;
-    background: rgba(168, 85, 247, 0.12);
+    background: rgb(168 85 247 / 42%);
 }
 
 .fm-table tbody tr:hover {
@@ -589,18 +592,25 @@ a {
 }
 
 .fm-section--cta {
-    max-width: 80rem;
-    margin: 0 auto;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    /* max-width: 80rem; */
+    /* margin: 0 auto; */
+    /* padding-top: 3rem; */
+    /* padding-bottom: 3rem; */
+    display: flex;
+    justify-content: center;
     text-align: center;
 }
 
 .fm-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
     position: relative;
     overflow: hidden;
-    padding: 2rem;
-    border-radius: 2rem;
+    padding: 0.5rem;
+    border-radius: 999px;
     background: linear-gradient(to bottom right, #9333ea, #7e22ce, #0891b2);
     box-shadow: 0 25px 50px rgba(168, 85, 247, 0.2);
 }
@@ -646,11 +656,13 @@ a {
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     min-height: 3.5rem;
     padding: 1rem 1.5rem;
     border-radius: 999px;
     font-size: 0.875rem;
+    white-space: nowrap;
     transition: transform 0.3s ease, background 0.3s ease;
 }
 
@@ -715,6 +727,10 @@ a {
         padding-left: 1rem;
         padding-right: 1rem;
     }
+
+    .fm-section--usage {
+        padding: 2rem;
+    }
 }
 
 @media (min-width: 640px) {
@@ -737,7 +753,7 @@ a {
     }
 
     .fm-cta {
-        padding: 3rem;
+        /* padding: 3rem; */
     }
 
     .fm-cta__actions {
@@ -979,7 +995,7 @@ a {
         border-radius: 0;
         text-align: left;
         background: transparent;
-        font-size: 0.625rem;
+        font-size: 0.8rem;
     }
 
     .fm-table th:nth-child(2) {
@@ -1026,12 +1042,12 @@ a {
     }
 
     .fm-section--cta {
-        padding-top: 6rem;
-        padding-bottom: 6rem;
+        /* padding-top: 6rem; */
+        /* padding-bottom: 6rem; */
     }
 
     .fm-cta {
-        padding: 4rem;
+        /* padding: 4rem; */
         border-radius: 4rem;
     }
 
