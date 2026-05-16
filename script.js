@@ -67,7 +67,7 @@
         GLITTAA_PHOENIX: 'glittaa-phoenix',
         SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
-        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch',
+        YEAH_LETS_DO_BRUNCH: 'yeah-lets-do-brunch',
         WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya'
     });
 
@@ -80,7 +80,7 @@
         GLITTAA_PHOENIX_SUNRIZE_MAX_MIX: 'glittaa-phoenix-sunrize-max-mix',
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
         FULL_MINDNESS: 'full-mindness',
-        LETS_NOT_DO_BRUNCH: 'lets-not-do-brunch',
+        YEAH_LETS_DO_BRUNCH: 'yeah-lets-do-brunch',
         WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya'
     });
 
@@ -149,10 +149,10 @@
         },
         {
             id: 7,
-            key: GROUP.LETS_NOT_DO_BRUNCH,
-            title: 'Let\'s not do Brunch',
-            titleLines: ['LET\'S NOT', 'DO BRUNCH'],
-            cover: 'img/music/base/base-letsnotdobrunch.png',
+            key: GROUP.YEAH_LETS_DO_BRUNCH,
+            title: 'Yeah, Let\'s Do Brunch',
+            titleLines: ['YEAH, LET\'S', ' DO BRUNCH'],
+            cover: 'img/music/base/base-yeahletsdobrunch.png',
             songIds: [],
             singlesById: {}
         },
@@ -291,12 +291,12 @@
                 'Apple Music': 'https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886'
             }
         },
-        [SINGLE.LETS_NOT_DO_BRUNCH]: {
-            id: SINGLE.LETS_NOT_DO_BRUNCH,
-            groupKey: GROUP.LETS_NOT_DO_BRUNCH,
-            title: 'Let\'s not do Brunch',
-            image: 'img/music/base/base-letsnotdobrunch.png',
-            lyricsPath: 'lyrics/lets-not-do-brunch.txt',
+        [SINGLE.YEAH_LETS_DO_BRUNCH]: {
+            id: SINGLE.YEAH_LETS_DO_BRUNCH,
+            groupKey: GROUP.YEAH_LETS_DO_BRUNCH,
+            title: 'Yeah, Let\'s Do Brunch',
+            image: 'img/music/base/base-yeahletsdobrunch.png',
+            lyricsPath: 'lyrics/yeah-lets-do-brunch.txt',
             links: {
                 'Spotify': 'https://open.spotify.com/track/10pJOBA2Krl8QiAi7XUGE7?si=66f1ed7937454034',
                 'Apple Music': 'https://music.apple.com/us/album/lets-do-brunch-single/1883970912',
@@ -330,7 +330,7 @@
         SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
         SINGLE.BELIEVE_THE_TRUTH_FAIRY,
         SINGLE.FULL_MINDNESS,
-        SINGLE.LETS_NOT_DO_BRUNCH,
+        SINGLE.YEAH_LETS_DO_BRUNCH,
         SINGLE.WELLWOLF_HOWL_LEHLUYA
     ];
 
