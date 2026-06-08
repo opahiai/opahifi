@@ -3245,7 +3245,6 @@ class PL3Controller {
         const slogan = this.section.querySelector('.PL3-heroSlogan');
         const tabs = this.section.querySelector('.PL3-tabs');
         const focusFrameWrap = this.section.querySelector('.PL3-focusFrameWrap');
-        const galleryHeader = this.section.querySelector('.PL3-galleryHeader');
         const galleryGhostHexes = Array.from(this.section.querySelectorAll('.PL3-galleryGhostHex'));
         const galleryItems = Array.from(this.section.querySelectorAll('.PL3-galleryItemBtn'));
         const galleryImages = Array.from(this.section.querySelectorAll('.PL3-galleryImg'));
@@ -3257,7 +3256,6 @@ class PL3Controller {
             slogan,
             tabs,
             focusFrameWrap,
-            galleryHeader,
             ...galleryGhostHexes,
             ...galleryItems,
             ...galleryImages
@@ -3300,7 +3298,6 @@ class PL3Controller {
             opacity: 1,
             duration: 0.68
         }, '-=0.44');
-        addStep(galleryHeader, { y: 0, opacity: 1, duration: 0.58 }, '-=0.34');
         addStep(galleryGhostHexes, {
             y: 0,
             scale: 1,

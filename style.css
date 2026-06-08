@@ -84,7 +84,7 @@ body {
 
     /* 3-screen section split (unitless numbers out of 100). These should sum to 100. */
     --pl3-section-header: 17;
-    --pl3-section-highlight: 40;
+    --pl3-section-highlight: 83;
     --pl3-section-gallery: 36;
 
     /* Derived percentages for grid usage */
@@ -305,10 +305,9 @@ body {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
         "header"
-        "highlight"
-        "gallery";
+        "highlight";
     grid-template-rows:
-        minmax(0, var(--pl3-section-header-pct)) minmax(0, var(--pl3-section-highlight-pct)) minmax(0, var(--pl3-section-gallery-pct));
+        minmax(0, var(--pl3-section-header-pct)) minmax(0, var(--pl3-section-highlight-pct));
 }
 
 .PL3-part {
@@ -327,7 +326,6 @@ html.pl3-js .PL3-section--preload .PL3-heroTitle,
 html.pl3-js .PL3-section--preload .PL3-heroBtn,
 html.pl3-js .PL3-section--preload .PL3-heroSlogan,
 html.pl3-js .PL3-section--preload .PL3-tabs,
-html.pl3-js .PL3-section--preload .PL3-galleryHeader,
 html.pl3-js .PL3-section--preload .PL3-galleryGhostHex,
 html.pl3-js .PL3-section--preload .PL3-galleryItemBtn,
 html.pl3-js .PL3-section--preload .PL3-galleryImg {
@@ -356,8 +354,7 @@ html.pl3-js .PL3-section--preload .PL3-heroBtn {
 }
 
 html.pl3-js .PL3-section--preload .PL3-heroSlogan,
-html.pl3-js .PL3-section--preload .PL3-tabs,
-html.pl3-js .PL3-section--preload .PL3-galleryHeader {
+html.pl3-js .PL3-section--preload .PL3-tabs {
     opacity: 0;
     transform: translateY(28px);
 }
@@ -476,7 +473,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .PL3-tabPanels {
-    max-height: 300px;
+
     flex: 1;
     min-width: 0;
     min-height: 0;
@@ -974,23 +971,6 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     flex-direction: column;
     min-height: 0;
     gap: var(--pl3-gallery-pill-gap);
-}
-
-.PL3-galleryHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 0 0 auto;
-    position: relative;
-    overflow: visible;
-}
-
-.PL3-subTitle {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.72rem;
-    font-weight: 800;
-    line-height: 0.8;
-    align-self: flex-start;
 }
 
 .PL3-gallery {
@@ -2880,7 +2860,7 @@ button {
         --pl3-tablet-highlight-column: 50;
         --pl3-tablet-gallery-column: 50;
         --pl3-section-header: 19;
-        --pl3-section-highlight: 37;
+        --pl3-section-highlight: 81;
         --pl3-section-gallery: 37;
         --pl3-split-gap: 2.6vh;
         --pl3-panel-art-dock-size: 148px;
@@ -2904,20 +2884,12 @@ button {
 
     .PL3-split {
         grid-template-columns:
-            minmax(0, var(--pl3-tablet-highlight-col-w)) minmax(0, var(--pl3-tablet-gallery-col-w));
+            minmax(0, 1fr);
         grid-template-rows:
             minmax(0, var(--pl3-tablet-header-pct)) minmax(0, 1fr);
         grid-template-areas:
-            "header header"
-            "highlight gallery";
-    }
-
-
-    .PL3-subTitle {
-        font-size: 1.6rem;
-        position: absolute;
-        bottom: -3.5rem;
-        letter-spacing: -0.02em;
+            "header"
+            "highlight";
     }
 
     .PL3-heroImgWrap {
@@ -2983,14 +2955,6 @@ button {
         font-size: 1.7rem;
         line-height: 1.02;
         width: 100%;
-    }
-
-    .PL3-galleryHeader {
-        min-height: var(--pl3-tablet-panel-band-h);
-        position: relative;
-        z-index: 2;
-        align-items: flex-end;
-        margin-bottom: 0;
     }
 
     .PL3-tabNav {
@@ -3061,16 +3025,6 @@ button {
         width: 160px;
     }
 
-    .PL3-subTitle {
-        font-size: 2.1rem;
-        position: absolute;
-        bottom: -5rem;
-    }
-
-    .PL3-tabPanels {
-        max-height: 350px;
-    }
-
     .PL3-galleryGhostPlaylistImg {
         padding: 3rem 0.75rem 0.6rem;
     }
@@ -3084,4 +3038,9 @@ button {
     .cycle-arrow {
         animation: none !important;
     }
+}
+
+#PL3-tabPanel-gallery {
+    flex-direction: column;
+    padding: 12px;
 }
