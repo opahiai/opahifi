@@ -68,7 +68,9 @@
         SPLENDA_LOVE_RABBIT_HELL: 'splenda-love-rabbit-hell',
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
         YEAH_LETS_DO_BRUNCH: 'yeah-lets-do-brunch',
-        WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya'
+        WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya',
+        HALLUCINATING: 'hallucinating',
+        AI_HALLUCINATIONS_VS_HUMANS: 'ai-hallucinations-vs-humans'
     });
 
     const SINGLE = Object.freeze({
@@ -81,7 +83,9 @@
         BELIEVE_THE_TRUTH_FAIRY: 'believe-the-truth-fairy',
         FULL_MINDNESS: 'full-mindness',
         YEAH_LETS_DO_BRUNCH: 'yeah-lets-do-brunch',
-        WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya'
+        WELLWOLF_HOWL_LEHLUYA: 'wellwolf-howl-lehluya',
+        HALLUCINATING: 'hallucinating',
+        AI_HALLUCINATIONS_VS_HUMANS: 'ai-hallucinations-vs-humans'
     });
 
     const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
@@ -163,6 +167,26 @@
             titleLines: ['WELLWOLF', 'HOWL-LEHLUYA'],
             shareImage: 'img/music/base/base-wellwolfhowllehluya.png',
             cover: 'img/music/base/base-wellwolfhowllehluya.png',
+            songIds: [],
+            singlesById: {}
+        },
+        {
+            id: 9,
+            key: GROUP.HALLUCINATING,
+            title: 'Hallucinating',
+            titleLines: ['HALLUCINATING'],
+            shareImage: 'img/music/base/base-hallucinatingdumdum.png',
+            cover: 'img/music/base/base-hallucinatingdumdum.png',
+            songIds: [],
+            singlesById: {}
+        },
+        {
+            id: 10,
+            key: GROUP.AI_HALLUCINATIONS_VS_HUMANS,
+            title: 'AI Hallucinations vs Humans',
+            titleLines: ['AI HALLUCINATIONS', 'VS HUMANS'],
+            shareImage: 'img/music/base/base-hallucinatingdumdum.png',
+            cover: 'img/music/base/base-hallucinatingdumdum.png',
             songIds: [],
             singlesById: {}
         }
@@ -318,20 +342,38 @@
                 'Apple Music': 'https://music.apple.com/us/album/wellwolf-howl-lehluya-single/1894120765',
                 'Amazon Music': 'https://music.amazon.com/tracks/B0GXHSFW83?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_YaZDAKqp0vQwgwM7y8yENc9Zw'
             }
+        },
+        [SINGLE.HALLUCINATING]: {
+            id: SINGLE.HALLUCINATING,
+            groupKey: GROUP.HALLUCINATING,
+            title: 'Hallucinating',
+            image: 'img/music/base/base-hallucinatingdumdum.png',
+            lyricsPath: 'lyrics/hallucinating-dum-dum.txt',
+            links: {}
+        },
+        [SINGLE.AI_HALLUCINATIONS_VS_HUMANS]: {
+            id: SINGLE.AI_HALLUCINATIONS_VS_HUMANS,
+            groupKey: GROUP.AI_HALLUCINATIONS_VS_HUMANS,
+            title: 'AI Hallucinations vs Humans',
+            image: 'img/music/base/base-hallucinatingdumdum.png',
+            lyricsPath: 'lyrics/hallucinating-dum-dum.txt',
+            links: {}
         }
     };
 
     const singleIdsInOrder = [
+        SINGLE.FULL_MINDNESS,
+        SINGLE.HALLUCINATING,
+        SINGLE.SPLENDA_LOVE_RABBIT_HELL,
+        SINGLE.YEAH_LETS_DO_BRUNCH,
+        SINGLE.AI_HALLUCINATIONS_VS_HUMANS,
+        SINGLE.BELIEVE_THE_TRUTH_FAIRY,
         SINGLE.OLD_LOVE_STORY_DESERT_DISCO_DUET,
         SINGLE.OLD_LOVE_STORY_OPA_MAX_MIX,
-        SINGLE.OPA_PA_PA_PARTY,
         SINGLE.GLITTAA,
-        SINGLE.SPLENDA_LOVE_RABBIT_HELL,
         SINGLE.GLITTAA_PHOENIX_SUNRIZE_MAX_MIX,
-        SINGLE.BELIEVE_THE_TRUTH_FAIRY,
-        SINGLE.FULL_MINDNESS,
-        SINGLE.YEAH_LETS_DO_BRUNCH,
-        SINGLE.WELLWOLF_HOWL_LEHLUYA
+        SINGLE.WELLWOLF_HOWL_LEHLUYA,
+        SINGLE.OPA_PA_PA_PARTY
     ];
 
 

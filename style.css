@@ -413,13 +413,24 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     display: flex;
     flex-direction: row;
     flex-shrink: 0;
-    width: var(--pl3-tab-nav-top-width);
-    max-width: 100%;
+    width: min(92vw, 420px);
+    max-width: calc(100vw - 22px);
     gap: var(--pl3-tab-nav-gap);
-    z-index: 1;
+    z-index: 20;
     justify-content: flex-start;
-    padding-top: 0;
+    padding: 5px;
     align-self: center;
+    position: fixed;
+    left: 50%;
+    right: auto;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    border: 1px solid var(--pl3-color-white-12);
+    border-radius: 999px;
+    background: rgba(5, 8, 20, 0.86);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.42), inset 0 1px 0 var(--pl3-color-white-08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .PL3-tabBtn {
@@ -432,8 +443,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     justify-content: center;
     background: var(--pl3-color-white-04);
     border: 1px solid var(--pl3-color-white-10);
-    border-bottom: 1px solid var(--pl3-color-white-10);
-    border-radius: 8px 8px 0 0;
+    border-radius: 999px;
     color: var(--pl3-color-white-30);
     cursor: pointer;
     font-family: inherit;
@@ -463,12 +473,9 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
         radial-gradient(160% 140% at 0% 0%, rgba(167, 94, 255, 0.72), rgba(102, 32, 210, 0.52) 40%, rgba(30, 12, 74, 0.92) 100%),
         linear-gradient(180deg, rgba(128, 48, 220, 0.88), rgba(74, 18, 168, 0.90));
     border-color: rgba(190, 130, 255, 0.38);
-    border-bottom-color: transparent;
-    /* merges into panel */
     color: var(--pl3-color-text-strong);
     text-shadow: 0 0 10px rgba(210, 160, 255, 0.6);
     box-shadow: inset 0 1px 0 rgba(220, 170, 255, 0.22);
-    margin-bottom: -1px;
     z-index: 2;
 }
 
@@ -488,6 +495,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     overflow: hidden;
     position: relative;
     z-index: 1;
+    padding-bottom: calc(var(--pl3-pill-h) + 24px + env(safe-area-inset-bottom));
 }
 
 .PL3-tabPanel {
@@ -809,6 +817,57 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     border-top: 0;
 }
 
+.opahifi-cycle--opa {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.opahifi-cycle--opa .cycle-pillar {
+    filter: none;
+    box-shadow:
+        inset 0 0 0 999px rgba(3, 5, 18, 0.18),
+        inset 0 1px 0 var(--pl3-color-white-08);
+}
+
+.cycle-pillar--overflow {
+    background:
+        radial-gradient(90% 140% at 10% 0%, rgba(255, 111, 76, 0.7), transparent 58%),
+        linear-gradient(135deg, #7d1015 0%, #260b1c 100%);
+}
+
+.cycle-pillar--perception {
+    background:
+        radial-gradient(90% 140% at 12% 0%, rgba(84, 198, 255, 0.62), transparent 58%),
+        linear-gradient(135deg, #123a83 0%, #180d44 100%);
+}
+
+.cycle-pillar--ascension {
+    background:
+        radial-gradient(90% 140% at 12% 0%, rgba(255, 94, 184, 0.62), transparent 58%),
+        linear-gradient(135deg, #6a1682 0%, #1b0d38 100%);
+}
+
+.opahifi-cycle--opa .cycle-pillarInner {
+    align-items: flex-start;
+    justify-content: center;
+    padding: clamp(1rem, 4vw, 1.5rem);
+}
+
+.opahifi-cycle--opa .cycle-pillarInner h3 {
+    font-size: clamp(1.65rem, 8vw, 2.75rem);
+}
+
+.opahifi-cycle--opa .cycle-pillarInner p {
+    max-width: 34rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(0.86rem, 3.4vw, 1.04rem);
+    font-weight: 500;
+    line-height: 1.28;
+    color: rgba(255, 255, 255, 0.86);
+}
+
 .PL3-tabPlaceholder {
     display: flex;
     flex-direction: column;
@@ -837,7 +896,9 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     flex-direction: row;
     width: 100%;
     height: 100%;
+    gap: 1px;
     overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .PL3-videoCard {
@@ -853,6 +914,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
     justify-content: flex-end;
     overflow: hidden;
     padding: 8px 4px;
+    background: #090914;
     box-sizing: border-box;
     cursor: pointer;
     text-decoration: none;
@@ -869,7 +931,7 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 }
 
 .PL3-videoCard+.PL3-videoCard {
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 0;
 }
 
 .PL3-videoScene {
@@ -1321,6 +1383,134 @@ html.pl3-js .PL3-section--preload .PL3-galleryImg {
 .PL3-galleryItemBtn.PL3-galleryItemBtn--active::after {
     opacity: 1;
     border-color: var(--pl3-gallery-shell-active);
+}
+
+.PL3-gallery--opa {
+    --pl3-gallery-max-count: 4;
+    --pl3-gallery-rows: 4;
+    --pl3-gallery-scale: 1;
+    --pl3-gallery-unit-min: clamp(3.8rem, 18vw, 5rem);
+    --pl3-gallery-unit-max: clamp(5rem, 22vw, 7.15rem);
+    --pl3-gallery-col-gap: clamp(0.08rem, 0.7vw, 0.34rem);
+    --pl3-gallery-pad-inline: clamp(0.2rem, 1.6vw, 0.7rem);
+    --pl3-gallery-pad-block-start: clamp(0.45rem, 1.2vh, 0.8rem);
+    --pl3-gallery-pad-block-end: clamp(1.2rem, 2vh, 1.8rem);
+    justify-content: center;
+    align-items: center;
+    gap: clamp(0.16rem, 0.8vh, 0.46rem);
+    overflow: auto;
+    transform: none;
+    background:
+        radial-gradient(circle at 18% 18%, rgba(255, 70, 70, 0.22), transparent 34%),
+        radial-gradient(circle at 52% 48%, rgba(87, 205, 255, 0.18), transparent 32%),
+        radial-gradient(circle at 82% 76%, rgba(255, 80, 180, 0.2), transparent 35%);
+}
+
+.PL3-gallery--opa::before {
+    content: "";
+    position: absolute;
+    inset: clamp(0.7rem, 3vw, 1.6rem);
+    z-index: -1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 18% 82%, rgba(255, 255, 255, 0.14)),
+        radial-gradient(100% 90% at 50% 50%, rgba(255, 255, 255, 0.08), transparent 64%);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.PL3-opaCluster {
+    position: relative;
+    width: min(100%, calc((var(--pl3-gallery-unit) * 4) + (var(--pl3-gallery-col-gap) * 3) + 1.2rem));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.28rem, 1vw, 0.62rem);
+    margin-inline: auto;
+}
+
+.PL3-opaCluster--play {
+    justify-content: center;
+    width: var(--pl3-gallery-unit);
+    margin-bottom: calc(var(--pl3-gallery-item-h) * -0.18);
+    z-index: 3;
+}
+
+.PL3-opaCluster--overflow {
+    align-self: flex-start;
+}
+
+.PL3-opaCluster--perception {
+    align-self: center;
+    transform: translateX(clamp(0.4rem, 6vw, 1.8rem));
+}
+
+.PL3-opaCluster--ascension {
+    align-self: flex-end;
+    transform: translateX(clamp(0.1rem, 3vw, 1rem));
+}
+
+.PL3-opaClusterLabel {
+    flex: 0 0 auto;
+    width: min(100%, calc((var(--pl3-gallery-unit) * 4) + (var(--pl3-gallery-col-gap) * 3)));
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0.45rem 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    background: rgba(5, 8, 20, 0.54);
+    box-shadow: inset 0 1px 0 var(--pl3-color-white-08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.PL3-opaClusterLabel strong {
+    font-size: clamp(0.7rem, 2.8vw, 0.95rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.PL3-opaClusterLabel span {
+    font-size: clamp(0.56rem, 2.2vw, 0.68rem);
+    line-height: 1.08;
+    color: var(--pl3-color-white-70);
+}
+
+.PL3-opaTileGrid {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--pl3-gallery-col-gap);
+    min-width: 0;
+    width: 100%;
+}
+
+.PL3-gallery--opa .PL3-galleryGhostHex,
+.PL3-gallery--opa .PL3-galleryItemBtn {
+    flex: 0 0 var(--pl3-gallery-unit);
+}
+
+.PL3-galleryGhostPlaylistSub {
+    position: absolute;
+    top: 2.08rem;
+    left: 50%;
+    z-index: 2;
+    width: 72%;
+    transform: translateX(-50%);
+    font-size: 0.52rem;
+    font-weight: 700;
+    line-height: 1.05;
+    color: rgba(31, 23, 41, 0.74);
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.PL3-gallery--opa .PL3-galleryGhostPlaylistImg {
+    padding-top: 2.65rem;
 }
 
 .PL3-galleryItemBtn.PL3-artHost--detached,
@@ -2810,6 +3000,10 @@ button {
     padding: 0;
 }
 
+#PL3-tabPanel-gallery {
+    flex-direction: column;
+    padding: 12px;
+}
 
 @media (min-width: 361px) {
     :root {
@@ -2997,6 +3191,35 @@ button {
 
 
 @media (min-width: 1024px) {
+    .PL3-tabNav {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        transform: none;
+        width: min(100%, var(--pl3-tab-nav-top-width));
+        max-width: 520px;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .PL3-tabBtn {
+        border-radius: 8px 8px 0 0;
+    }
+
+    .PL3-tabBtn[aria-selected="true"] {
+        border-bottom-color: transparent;
+        margin-bottom: -1px;
+    }
+
+    .PL3-tabPanels {
+        padding-bottom: 0;
+    }
+
     .PL3-heroSlogan {
         left: 30px;
         font-size: 2.75rem;
@@ -3029,6 +3252,32 @@ button {
         padding: 3rem 0.75rem 0.6rem;
     }
 
+    .PL3-gallery--opa {
+        --pl3-gallery-unit-min: 5.6rem;
+        --pl3-gallery-unit-max: 8.2rem;
+        --pl3-gallery-pad-block-start: 1rem;
+        --pl3-gallery-pad-block-end: 1rem;
+        gap: clamp(0.4rem, 1.2vh, 0.75rem);
+    }
+
+    .PL3-opaCluster {
+        flex-direction: row;
+        width: min(100%, calc((var(--pl3-gallery-unit) * 4) + (var(--pl3-gallery-col-gap) * 3) + 8.8rem));
+    }
+
+    .PL3-opaClusterLabel {
+        flex-basis: 7.4rem;
+        width: auto;
+    }
+
+    .PL3-opaTileGrid {
+        width: auto;
+    }
+
+    .opahifi-cycle--opa {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
 }
 
 
@@ -3038,9 +3287,4 @@ button {
     .cycle-arrow {
         animation: none !important;
     }
-}
-
-#PL3-tabPanel-gallery {
-    flex-direction: column;
-    padding: 12px;
 }
