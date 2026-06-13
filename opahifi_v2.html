@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OpaHiFi - The Organic Journey</title>
+
+  <!-- Google Fonts: Oswald -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-base: #020204;
+      --orb-scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      font-family: 'Oswald', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden; 
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .layout-wrapper {
+      width: 100vw; 
+      height: 100dvh; 
+      display: flex;
+      flex-direction: column;
+      background-color: var(--bg-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (min-width: 769px) {
+      .layout-wrapper {
+        width: 40vw; 
+        box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
+        border-left: 1px solid rgba(255, 255, 255, 0.05);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+    }
+
+    /* 1. Header Nav */
+    .nav-area {
+      flex: 0 0 5vh; 
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.9rem; 
+      letter-spacing: 6px;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Settings Gear & Panel */
+    .settings-btn {
+      position: absolute;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .settings-btn:hover { opacity: 1; }
+    .settings-btn svg { width: 20px; height: 20px; fill: #fff; }
+
+    .settings-panel {
+      position: absolute;
+      top: 6vh;
+      right: 15px;
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 200;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      transform: translateY(-10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .settings-panel.active {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .settings-title {
+      color: #fff;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slider-label { color: #888; font-size: 10px; letter-spacing: 0.5px; }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      width: 120px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      margin-top: -6px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+
+    /* 2. Banner Showcase */
+    .cover-area {
+      flex: 0 0 15vh; 
+      width: 100%;
+      background: url('https://raw.githubusercontent.com/opahiai/opahifi/main/img/opa/cover.png') center/cover no-repeat;
+      z-index: 10;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* 3. The Organic Journey Container */
+    .journey-container {
+      flex-grow: 1; 
+      width: 100%; 
+      position: relative;
+      background: var(--bg-base);
+    }
+
+    /* The Continuous, Organic Winding SVG Path */
+    .journey-svg {
+      position: absolute;
+      top: 0; 
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .glow-line {
+      fill: none;
+      stroke: url(#spectrum-grad);
+      stroke-width: 3px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 8px rgba(175, 82, 222, 0.8));
+    }
+
+    /* Wrapper for Absolute Positioning of Orbs */
+    .nodes-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    /* =========================================
+       THE ORB STATES (Base, Expanded, Hero)
+       ========================================= */
+       
+    /* BASE STATE: The Glowing Map Circles */
+    .journey-orb {
+      position: absolute;
+      transform: translate(-50%, -50%) scale(1);
+      width: calc(11vh * var(--orb-scale)); 
+      height: calc(11vh * var(--orb-scale)); 
+      max-width: calc(100px * var(--orb-scale)); 
+      max-height: calc(100px * var(--orb-scale)); 
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      opacity: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      /* Silky smooth Apple-style morph transition */
+      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Hover scaling only applies if NOT interacting with the cards */
+    .journey-orb:hover:not(.expanded):not(.hero-mode) {
+      transform: translate(-50%, -50%) scale(1.4);
+      z-index: 100;
+    }
+
+    /* TRUE ACCORDION BEHAVIOR: Shrink the others! */
+    .nodes-wrapper.has-expanded .journey-orb:not(.expanded):not(.hero-mode) {
+      transform: translate(-50%, -50%) scale(0.5);
+      opacity: 0.3;
+      filter: blur(2px);
+      z-index: 1;
+    }
+
+    /* STATE 2: The 1-Click Expanded Preview Card */
+    .journey-orb.expanded {
+      width: 260px !important; 
+      height: 330px !important; 
+      max-width: 90vw !important;
+      max-height: none !important;
+      border-radius: 16px !important;
+      background: rgba(15, 15, 18, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      z-index: 200 !important;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(175, 82, 222, 0.3);
+      
+      /* Base expanded transform (fallback). 
+         The specific nodes below override this so they push INWARDS from the screen edges! */
+      transform: translate(-50%, -50%) scale(1) !important;
+    }
+
+    /* INWARD EDGE EXPANSION: Stops nodes from bleeding off the screen edges */
+    .journey-orb.node-1.expanded { transform: translate(-16%, -90%) scale(1) !important; }
+    .journey-orb.node-2.expanded { transform: translate(-24%, -50%) scale(1) !important; }
+    .journey-orb.node-3.expanded { transform: translate(-20%, -10%) scale(1) !important; }
+    .journey-orb.node-4.expanded { transform: translate(-50%, -10%) scale(1) !important; }
+    .journey-orb.node-5.expanded { transform: translate(-50%, -50%) scale(1) !important; }
+    .journey-orb.node-6.expanded { transform: translate(-50%, -80%) scale(1) !important; }
+    .journey-orb.node-7.expanded { transform: translate(-80%, -90%) scale(1) !important; }
+    .journey-orb.node-8.expanded { transform: translate(-80%, -50%) scale(1) !important; }
+    .journey-orb.node-9.expanded { transform: translate(-80%, -20%) scale(1) !important; }
+
+
+    /* STATE 3: The "Universe" Morph (Shrinks to top left!) */
+    .journey-orb.hero-mode {
+      width: 100px !important;
+      height: 100px !important;
+      max-width: none !important;
+      max-height: none !important;
+      border-radius: 12px !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      left: 20px !important; 
+      top: 4vh !important; /* Matches the top of the screen dynamically */
+      transform: translate(0, 0) scale(1) !important;
+      z-index: 9999 !important;
+      background: rgba(15, 15, 18, 0.95);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+    }
+
+    /* --- THE PURE CSS IMAGE CROP MAGIC --- */
+    .orb-img-crop {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: 50%; /* Starts circular */
+      overflow: hidden;
+      background: #ffffff;
+      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    
+    /* When expanded, the image takes the top 260px area (perfect 1:1 square), leaving room at the bottom */
+    .journey-orb.expanded .orb-img-crop { 
+      border-radius: 16px 16px 0 0; 
+      height: 260px; 
+    }
+    
+    /* When in Hero/Universe mode, it keeps the cover art shape full */
+    .journey-orb.hero-mode .orb-img-crop { 
+      border-radius: 12px; 
+      height: 100%;
+    }
+
+    /* This wrapper mathematically forces the top 34.7% of the image OUT OF BOUNDS perfectly forever in base state */
+    .orb-img-wrapper {
+      position: absolute;
+      bottom: 0; 
+      left: 0;
+      width: 100%; 
+      height: 153.14%; /* (100 / 0.653) */
+      pointer-events: none;
+      transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* FIX: 1-Click Un-Crop ONLY applies to expanded preview card. 
+       Universe mode reverts to height: 153.14% to slice the text off! */
+    .journey-orb.expanded .orb-img-wrapper {
+      height: 100%;
+    }
+
+    .orb-img-wrapper img {
+      width: 100%; 
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom; 
+      pointer-events: none;
+    }
+
+    /* --- UI ELEMENTS INSIDE THE ORBS --- */
+
+    /* The Sleek Frosted Glass Pill */
+    .orb-pill {
+      position: absolute;
+      top: calc(100% + 2px); 
+      left: 50%; 
+      transform: translateX(-50%); 
+      white-space: nowrap; 
+      background: rgba(15, 15, 18, 0.85); 
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 14px; 
+      border-radius: 16px; 
+      color: #ffffff;
+      font-family: 'Oswald', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-align: center; 
+      line-height: 1.2; 
+      text-transform: uppercase;
+      pointer-events: none; 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Fade out pill when accordion shrinks OR expands */
+    .nodes-wrapper.has-expanded .journey-orb:not(.expanded) .orb-pill {
+      opacity: 0;
+    }
+
+    .journey-orb.expanded .orb-pill, 
+    .journey-orb.hero-mode .orb-pill {
+      opacity: 0;
+      transform: translateX(-50%) translateY(10px);
+    }
+
+    /* The "Enter Universe" Hover Button (Now sits cleanly in the bottom card space) */
+    .enter-btn {
+      position: absolute;
+      bottom: 12px; 
+      left: 50%;
+      transform: translateX(-50%) translateY(10px) scale(0.9);
+      opacity: 0;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255,59,48,1), rgba(175,82,222,1));
+      border: none;
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      height: 44px;
+      width: 85%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 22px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 6px 15px rgba(175, 82, 222, 0.4);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 10;
+    }
+
+    /* Reveal button ONLY in the preview card */
+    .journey-orb.expanded .enter-btn {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+    
+    /* Hide button when expanded to fullscreen */
+    .journey-orb.hero-mode .enter-btn {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .enter-btn:hover {
+      box-shadow: 0 8px 25px rgba(175, 82, 222, 0.8);
+      transform: translateX(-50%) translateY(0) scale(1.05);
+    }
+
+    @keyframes popIn {
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    /* =========================================
+       THE GLOBAL "PUSH AWAY" EFFECT
+       ========================================= */
+    
+    /* Pulls the entire layout up so the orb anchors perfectly to the top of the physical screen */
+    .universe-active .nav-area {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      margin-top: -20vh !important; 
+    }
+
+    .universe-active .cover-area,
+    .universe-active .journey-svg,
+    .universe-active .button-bar,
+    .universe-active .journey-orb:not(.hero-mode) {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: scale(0.95) !important; /* Pushes the world backward smoothly */
+    }
+
+    /* =========================================
+       THE UNIVERSE CONTENT CONTAINER 
+       (Fades in next to the top-left image)
+       ========================================= */
+    .universe-content {
+      position: absolute;
+      top: 4vh; /* Matches the hero image top */
+      left: 140px; /* 20px left + 100px hero image + 20px gap */
+      right: 70px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 9998;
+      color: white;
+      transform: translateX(20px);
+    }
+
+    .universe-active .universe-content {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+      transition-delay: 0.2s; /* Waits for the image to finish shrinking to the corner */
+    }
+
+    .universe-title {
+      font-size: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+
+    .universe-subtitle {
+      font-size: 11px;
+      color: #af52de;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* The Exit Button for Universe Mode */
+    .global-close-btn {
+      position: absolute;
+      top: 3vh; /* Matches the hero image top */
+      right: 3vh;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.8) rotate(-90deg);
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 10000;
+    }
+
+    .universe-active .global-close-btn {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) rotate(0deg);
+      transition-delay: 0.3s;
+    }
+
+    /* EXACT ORGANIC SCATTER COORDINATES */
+    .node-1 { left: 16%; top: 80%; animation-delay: 0.1s; box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3); }
+    .node-2 { left: 22%; top: 46%; animation-delay: 0.3s; box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3); }
+    .node-3 { left: 19%; top: 21%; animation-delay: 0.5s; box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3); }
+    .node-4 { left: 51%; top: 22%; animation-delay: 0.7s; box-shadow: 0 4px 15px rgba(175, 82, 222, 0.3); }
+    .node-5 { left: 50%; top: 50%; animation-delay: 0.9s; box-shadow: 0 4px 15px rgba(175, 82, 222, 0.3); } 
+    .node-6 { left: 46%; top: 76%; animation-delay: 1.1s; box-shadow: 0 4px 15px rgba(175, 82, 222, 0.3); }
+    .node-7 { left: 78%; top: 82%; animation-delay: 1.3s; box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3); }
+    .node-8 { left: 80%; top: 58%; animation-delay: 1.5s; box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3); }
+    .node-9 { left: 78%; top: 18%; animation-delay: 1.7s; box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3); }
+
+    .node-1:hover, .node-2:hover, .node-3:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255, 59, 48, 0.8); }
+    .node-4:hover, .node-5:hover, .node-6:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 30px rgba(175, 82, 222, 0.8); }
+    .node-7:hover, .node-8:hover, .node-9:hover { box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 30px rgba(0, 122, 255, 0.8); }
+
+    /* 4. Bottom Tab Bar Buttons */
+    .button-bar {
+      flex: 0 0 7vh; 
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      align-items: center;
+      background: #050505; 
+      z-index: 10;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .menu-btn {
+      background: #1c1c1e;
+      border: 1px solid #333;
+      color: #8e8e93;
+      padding: 6px 20px; 
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      outline: none;
+    }
+
+    .menu-btn.active {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="layout-wrapper" id="layout-wrapper">
+    <!-- 1. Navigation Header -->
+    <div class="nav-area">
+      OPAHIFI
+      <!-- Gear Icon -->
+      <div class="settings-btn" id="settings-btn">
+        <svg viewBox="0 0 24 24">
+          <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+        </svg>
+      </div>
+      
+      <!-- Settings Panel -->
+      <div class="settings-panel" id="settings-panel">
+        <div class="settings-title">Orb Size</div>
+        <div class="slider-container">
+          <div class="slider-label">MIN</div>
+          <input type="range" id="size-slider" min="0.5" max="1.5" step="0.1" value="1">
+          <div class="slider-label">MAX</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Cover Showcase Area -->
+    <div class="cover-area"></div>
+
+    <!-- 3. The Winding Organic Journey -->
+    <div class="journey-container">
+      
+      <svg class="journey-svg" id="svg-layer">
+        <defs>
+          <linearGradient id="spectrum-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff3b30" />
+            <stop offset="50%" stop-color="#af52de" />
+            <stop offset="100%" stop-color="#007aff" />
+          </linearGradient>
+        </defs>
+        <path class="glow-line" id="glow-line" d="" />
+      </svg>
+
+      <!-- The 9 Nodes -->
+      <div class="nodes-wrapper" id="nodes-wrapper">
+        <div class="journey-orb node-1" data-title="Full-<br>Mindness">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-fullmindness.png" alt="Full Mindness"></div></div>
+          <div class="orb-pill">Full-<br>Mindness</div>
+        </div>
+
+        <div class="journey-orb node-2" data-title="Yeah, Let's<br>Do Brunch">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-yeahletsdobrunch.png" alt="Brunch"></div></div>
+          <div class="orb-pill">Yeah, Let's<br>Do Brunch</div>
+        </div>
+
+        <div class="journey-orb node-3" data-title="Hallucinating<br>Dum Dum">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-hallucinatingdumdum.png" alt="Dum Dum"></div></div>
+          <div class="orb-pill">Hallucinating<br>Dum Dum</div>
+        </div>
+
+        <div class="journey-orb node-4" data-title="Splenda Love<br>Rabbit Hell">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-splendaloverabbithell.png" alt="Splenda Love"></div></div>
+          <div class="orb-pill">Splenda Love<br>Rabbit Hell</div>
+        </div>
+
+        <div class="journey-orb node-5" data-title="The Truth<br>Fairy's">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-believethetruthfairy.png" alt="Truth Fairy"></div></div>
+          <div class="orb-pill">The Truth<br>Fairy's</div>
+        </div>
+
+        <div class="journey-orb node-6" data-title="Old Love<br>Story">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-oldlovestory.png" alt="Old Love Story"></div></div>
+          <div class="orb-pill">Old Love<br>Story</div>
+        </div>
+
+        <div class="journey-orb node-7" data-title="Glittaa<br>Phoenix">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-glittaaphoenix.png" alt="GLITTA Phoenix"></div></div>
+          <div class="orb-pill">Glittaa<br>Phoenix</div>
+        </div>
+
+        <div class="journey-orb node-8" data-title="Wellwolf<br>Howl-lehluya">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-wellwolfhowllehluya.png" alt="Wellwolf"></div></div>
+          <div class="orb-pill">Wellwolf<br>Howl-lehluya</div>
+        </div>
+
+        <div class="journey-orb node-9" data-title="Opa Pa<br>Pa Party">
+          <div class="orb-img-crop"><div class="orb-img-wrapper"><img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-opapapaparty.png" alt="Opa Party"></div></div>
+          <div class="orb-pill">Opa Pa<br>Pa Party</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Navigation Footer -->
+    <div class="button-bar">
+      <button class="menu-btn">Videos</button>
+      <button class="menu-btn active">Gallery</button>
+      <button class="menu-btn">About</button>
+    </div>
+
+    <!-- THE UNIVERSE OVERLAY DETAILS -->
+    <div class="universe-content" id="universe-content">
+      <div class="universe-title" id="universe-title">SONG TITLE</div>
+      <div class="universe-subtitle">The Universe</div>
+    </div>
+
+    <!-- GLOBAL CLOSE BUTTON -->
+    <div class="global-close-btn" id="global-close-btn">&times;</div>
+
+  </div>
+
+  <script>
+    // -----------------------------------------------------------
+    // Bulletproof JS Line Generator
+    // -----------------------------------------------------------
+    function updatePath() {
+      const orbs = Array.from(document.querySelectorAll('.journey-orb'));
+      const path = document.getElementById('glow-line');
+      if (!path || orbs.length === 0) return;
+      
+      let d = '';
+      
+      orbs.forEach((orb, i) => {
+        const x = orb.offsetLeft; 
+        const y = orb.offsetTop;
+        
+        if (i === 0) {
+          d += `M ${x} ${y} `;
+        } else {
+          const prevX = orbs[i-1].offsetLeft;
+          const prevY = orbs[i-1].offsetTop;
+          const midY = prevY + (y - prevY) / 2;
+          d += `C ${prevX} ${midY}, ${x} ${midY}, ${x} ${y} `;
+        }
+      });
+      
+      path.setAttribute('d', d);
+      
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = length;
+      path.style.strokeDashoffset = length;
+      
+      path.getBoundingClientRect();
+      path.style.transition = 'stroke-dashoffset 2s ease-in-out';
+      path.style.strokeDashoffset = '0';
+    }
+
+    window.addEventListener('load', () => { setTimeout(updatePath, 150); });
+    window.addEventListener('resize', updatePath);
+
+    // Settings Panel Logic
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
+    const sizeSlider = document.getElementById('size-slider');
+
+    settingsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsPanel.classList.toggle('active');
+    });
+
+    sizeSlider.addEventListener('input', (e) => {
+      document.documentElement.style.setProperty('--orb-scale', e.target.value);
+      updatePath();
+    });
+
+    // -----------------------------------------------------------
+    // Shared Element UI Logic (Accordion -> Fullscreen Morph)
+    // -----------------------------------------------------------
+    const orbs = document.querySelectorAll('.journey-orb');
+    const layoutWrapper = document.getElementById('layout-wrapper');
+    const nodesWrapper = document.getElementById('nodes-wrapper');
+    const universeTitle = document.getElementById('universe-title');
+    const globalCloseBtn = document.getElementById('global-close-btn');
+
+    orbs.forEach(orb => {
+      // 1. Inject the inner interactive elements dynamically
+      orb.insertAdjacentHTML('beforeend', `
+        <button class="enter-btn">ENTER UNIVERSE</button>
+      `);
+
+      // 2. State Controller
+      orb.addEventListener('click', (e) => {
+        // Action: Expand into Universe Mode
+        if (e.target.closest('.enter-btn')) {
+          e.stopPropagation();
+          
+          // FIX: We MUST remove 'expanded' so the CSS text-crop rule naturally reapplies!
+          orb.classList.remove('expanded'); 
+          nodesWrapper.classList.remove('has-expanded');
+
+          orb.classList.add('hero-mode');
+          layoutWrapper.classList.add('universe-active');
+          
+          // Set the Universe Title dynamically (removing the <br> tags)
+          universeTitle.innerHTML = orb.dataset.title.replace('<br>', ' ');
+          return;
+        }
+
+        // Action: Open Accordion Preview Card
+        if (!orb.classList.contains('hero-mode')) {
+          const isExpanded = orb.classList.contains('expanded');
+          
+          // Collapse any other open cards
+          orbs.forEach(o => o.classList.remove('expanded'));
+          nodesWrapper.classList.remove('has-expanded');
+
+          if (!isExpanded) {
+            orb.classList.add('expanded');
+            nodesWrapper.classList.add('has-expanded'); // Triggers the accordion shrink effect
+          }
+        }
+      });
+    });
+
+    // Global Close Button -> Back to Map
+    globalCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      orbs.forEach(o => o.classList.remove('hero-mode', 'expanded'));
+      nodesWrapper.classList.remove('has-expanded');
+      layoutWrapper.classList.remove('universe-active');
+    });
+
+    // Background Click -> Collapse preview cards
+    document.addEventListener('click', (e) => {
+      if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
+        settingsPanel.classList.remove('active');
+      }
+
+      // Close expanded accordions if clicking outside (and not in Universe mode)
+      if (!e.target.closest('.journey-orb') && !layoutWrapper.classList.contains('universe-active')) {
+        orbs.forEach(o => o.classList.remove('expanded'));
+        nodesWrapper.classList.remove('has-expanded');
+      }
+    });
+
+  </script>
+</body>
+</html>

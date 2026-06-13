@@ -1,393 +1,576 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpaHiFi - Listen</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;700;900&family=Great+Vibes&display=swap"
-        rel="stylesheet">
-    <link rel="icon" href="img/ico/favicon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script>
-        document.documentElement.classList.add('pl3-js');
-    </script>
-    <meta name="color-scheme" content="dark">
-    <meta name="theme-color" content="#050711">
-    <style>
-        html {
-            background: #050711;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpaHiFi - The O-P-A Slanted Grid</title>
+  
+  <style>
+    :root {
+      --color-red: #ff3b30;
+      --color-purple: #af52de;
+      --color-blue: #007aff;
+      --bg-dark: #020204;
+      --glass: rgba(10, 10, 15, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      
+      /* Pure mathematical variables to define the diagonal slants perfectly */
+      --slant-percent: 8%; /* How far the dividers shift left/right to create the 45° angle */
+    }
 
-        body {
-            min-height: 100%;
-            background:
-                radial-gradient(1200px 600px at 20% 10%, rgba(31, 111, 235, 0.18), transparent 60%),
-                radial-gradient(900px 500px at 80% 30%, rgba(140, 70, 255, 0.16), transparent 55%),
-                radial-gradient(900px 520px at 25% 85%, rgba(239, 68, 68, 0.18), transparent 60%),
-                linear-gradient(180deg, #060914 0%, #050711 100%);
-            color: #fff;
-        }
-    </style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LHJPDBZDMB"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-LHJPDBZDMB');
-    </script>
+    body {
+      background-color: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden; /* Absolutely prevents page scrollbars */
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Mobile-First Base Layout */
+    .layout-wrapper {
+      width: 100vw; 
+      height: 100dvh; 
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; 
+      align-items: center;
+      overflow: hidden; 
+      background-color: var(--bg-dark);
+      position: relative;
+    }
+
+    /* Clean Desktop Frame (Min-width architecture only) */
+    @media (min-width: 769px) {
+      .layout-wrapper {
+        width: 40vw; 
+        box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
+        border-left: 1px solid rgba(255, 255, 255, 0.05);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+    }
+
+    /* Exact layout budgets requested */
+    .nav-area {
+      display: flex;
+      width: 100%;
+      height: 5vh; 
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.95rem; 
+      letter-spacing: 4px;
+      background: #0a0a0c;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .cover-area {
+      display: block;
+      width: 100%;
+      height: 15vh; 
+      background: url('https://opahifi.com/img/opa/cover.png') center/cover no-repeat;
+      flex-shrink: 0;
+      border-bottom: 2px solid #000000;
+      z-index: 10;
+    }
+
+    /* Main Spectrum Section - takes remaining 75vh */
+    .spectrum-container {
+      width: 100%; 
+      height: 75vh;
+      display: flex;
+      flex-direction: column;
+      background: #000000;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* Three Equal Horizontal Rows with solid black borders */
+    .slice-row {
+      display: flex;
+      width: 100%;
+      height: calc(100% / 3);
+      position: relative;
+      overflow: hidden;
+      background-color: #000000;
+      border-bottom: 3px solid #000000;
+    }
+
+    .slice-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Base setup for each slanted grid cell */
+    .track-slice {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff; /* White card background allows seamless illustration bleed */
+      transition: filter 0.3s ease;
+    }
+
+    /* Keep illustration flat, upright, and perfectly preserved inside safe bounds */
+    .track-slice img {
+      width: auto;
+      height: 78%; /* Keeps the art completely inside the safe zone, never cut by boundaries */
+      max-width: 80%;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.06));
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .track-slice:hover img {
+      transform: scale(1.05);
+    }
+
+    /* =========================================
+       MATHEMATICAL GEOMETRIC CLIP-PATHS
+       ========================================= */
+
+    /* ROW 1: Slanted Right (/) */
+    .slice-dumdum {
+      left: 0;
+      width: calc(33.33% + var(--slant-percent));
+      clip-path: polygon(0% 0%, 100% 0%, calc(100% - var(--slant-percent) * 3) 100%, 0% 100%);
+    }
+    .slice-splenda {
+      left: calc(33.33% - var(--slant-percent));
+      width: calc(33.33% + var(--slant-percent) * 2);
+      clip-path: polygon(calc(var(--slant-percent) * 2) 0%, 100% 0%, calc(100% - var(--slant-percent) * 2) 100%, 0% 100%);
+    }
+    .slice-opapapa {
+      left: calc(66.66% - var(--slant-percent));
+      width: calc(33.33% + var(--slant-percent));
+      clip-path: polygon(calc(var(--slant-percent)) 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+
+    /* ROW 2: Slanted Left (\) */
+    .slice-brunch {
+      left: 0;
+      width: calc(33.33% + var(--slant-percent));
+      clip-path: polygon(0% 0%, calc(100% - var(--slant-percent)) 0%, 100% 100%, 0% 100%);
+    }
+    .slice-truthfairy {
+      left: calc(33.33% - var(--slant-percent));
+      width: calc(33.33% + var(--slant-percent) * 2);
+      clip-path: polygon(0% 0%, calc(100% - var(--slant-percent) * 2) 0%, 100% 100%, calc(var(--slant-percent) * 2) 100%);
+    }
+    .slice-wellwolf {
+      left: calc(66.66% - var(--slant-percent));
+      width: calc(33.33% + var(--slant-percent));
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, calc(var(--slant-percent) * 3) 100%);
+    }
+
+    /* ROW 3: Slanted Right (/) */
+    .slice-fullmindness {
+      left: 0;
+      width: calc(33.33% + var(--slant-percent));
+      clip-path: polygon(0% 0%, 100% 0%, calc(100% - var(--slant-percent) * 3) 100%, 0% 100%);
+    }
+    .slice-oldlove {
+      left: calc(33.33% - var(--slant-percent));
+      width: calc(33.33% + var(--slant-percent) * 2);
+      clip-path: polygon(calc(var(--slant-percent) * 2) 0%, 100% 0%, calc(100% - var(--slant-percent) * 2) 100%, 0% 100%);
+    }
+    .slice-glitta {
+      left: calc(66.66% - var(--slant-percent));
+      width: calc(33.33% + var(--slant-percent));
+      clip-path: polygon(calc(var(--slant-percent)) 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+
+    /* =========================================
+       RESPONSIVE Divider SVG Line Overlay
+       ========================================= */
+    .row-divider-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .divider-line {
+      stroke: #000000;
+      stroke-width: 0.6%; /* Super crisp vector divider boundaries */
+    }
+
+    /* Highlight paths mapped exactly to slanted boundaries */
+    .highlight-path {
+      fill: none;
+      stroke: transparent;
+      stroke-width: 1%;
+      transition: stroke 0.2s ease;
+    }
+
+    /* =========================================
+       PREMIUM "NOW PLAYING" GLASS PANEL
+       ========================================= */
+    .preview-panel {
+      position: absolute;
+      bottom: 2vh;
+      left: 5%;
+      width: 90%;
+      height: 14vh;
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      gap: 16px;
+      transform: translateY(200%);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .preview-panel.active {
+      transform: translateY(0);
+    }
+
+    .preview-thumb {
+      width: 10vh;
+      height: 10vh;
+      border-radius: 8px;
+      background: #fff;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    .preview-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .preview-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+
+    .preview-title {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .preview-meta {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Canvas frequency visualizer */
+    .visualizer-container {
+      width: 80px;
+      height: 4vh;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    #visualizer-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Close Button */
+    .close-panel-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .close-panel-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* =========================================
+       BOTTOM BUTTON BAR AREA (5vh)
+       ========================================= */
+    .button-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      height: 5vh; 
+      align-items: center;
+      background: #050505;
+      flex-shrink: 0;
+      z-index: 10;
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .menu-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 4px 16px; 
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      outline: none;
+    }
+
+    .menu-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+    }
+
+    .menu-btn.active {
+      background: #ffffff;
+      color: #050505;
+      border-color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+    }
+
+  </style>
 </head>
-
 <body>
 
-    <section id="p_listen3" class="PL3-section PL3-section--preload" aria-label="OpaHiFi">
-        <div class="PL3-wrap">
-            <div class="PL3-card">
-                <nav class="PL3-nav" aria-label="OpaHiFi navigation">
-                    <div class="PL3-navInner">
-                        <div class="PL3-heroTitle">OpaHiFi</div>
-                        <div class="PL3-btnRow" aria-label="Actions">
-                            <button class="PL3-heroBtn" type="button" data-pl3-action="listen">
-                                <span class="PL3-heroBtn-text">Stream</span>
-                                <div class="PL3-heroBtn-icons">
-                                    <a href="https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP" target="_blank"
-                                        rel="noopener" aria-label="Spotify">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/spotify-white.svg" alt="Spotify">
-                                    </a>
-                                    <a href="https://music.apple.com/us/artist/opahifi/1867221913" target="_blank"
-                                        rel="noopener" aria-label="Apple Music">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/apple-white.svg" alt="Apple Music">
-                                    </a>
-                                    <a href="https://music.youtube.com/channel/UCyCvRtCK73bbnKqSzC1FOVA" target="_blank"
-                                        rel="noopener" aria-label="YouTube Music">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/youtubemusic-white.svg"
-                                            alt="YouTube Music">
-                                    </a>
-                                    <a href="https://www.youtube.com/@OpaHiFi" target="_blank" rel="noopener"
-                                        aria-label="YouTube">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/youtube-white.svg" alt="YouTube">
-                                    </a>
-                                    <a href="https://music.amazon.com/artists/B0GCXHGG79/opahifi" target="_blank"
-                                        rel="noopener" aria-label="Amazon Music">
-                                        <i class="fa-brands fa-amazon PL3-heroBtn-icon" aria-hidden="true"></i>
-                                    </a>
-                                    <span class="PL3-heroBtn-close" data-pl3-close-btn aria-label="Close">×</span>
-                                </div>
-                            </button>
-                            <button class="PL3-heroBtn" type="button" data-pl3-action="follow">
-                                <span class="PL3-heroBtn-text">Follow</span>
-                                <div class="PL3-heroBtn-icons">
-                                    <a href="https://instagram.com/opahifi" target="_blank" rel="noopener"
-                                        aria-label="Instagram">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/instagram-white.svg" alt="Instagram">
-                                    </a>
-                                    <a href="https://www.youtube.com/@OpaHiFi" target="_blank" rel="noopener"
-                                        aria-label="YouTube">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/youtube-white.svg" alt="YouTube">
-                                    </a>
-                                    <a href="https://tiktok.com/@opahifi" target="_blank" rel="noopener"
-                                        aria-label="TikTok">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/tiktok-white.svg" alt="TikTok">
-                                    </a>
-                                    <a href="mailto:contact@opahifi.com" aria-label="Email">
-                                        <svg class="PL3-heroBtn-icon" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#FFFFFF"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            aria-hidden="true" focusable="false">
-                                            <path
-                                                d="M4 6h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
-                                            <path d="m22 8-10 7L2 8" />
-                                        </svg>
-                                    </a>
-                                    <span class="PL3-heroBtn-close" data-pl3-close-btn aria-label="Close">×</span>
-                                </div>
-                            </button>
-                            <button class="PL3-heroBtn" type="button" data-pl3-action="shop">
-                                <span class="PL3-heroBtn-text">Shop</span>
-                            </button>
-                        </div>
-                    </div>
-                </nav>
-                <div class="PL3-split">
-                    <!-- 1) Header -->
-                    <div class="PL3-part PL3-part--header" aria-label="Header">
-                        <div class="PL3-heroRow" aria-label="Hero">
-                            <div class="PL3-heroText" aria-label="Title and slogan">
-                                <div class="PL3-heroSlogan">OVERFLOW.<br />PERCEPTION.<br />ASCENSION.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="layout-wrapper">
+    <!-- Navigation Header (5vh) -->
+    <div class="nav-area">OPAHIFI</div>
 
-                    <!-- 3) Highlight -->
-                    <div class="PL3-part PL3-part--highlight" aria-label="Highlight">
-                        <div class="PL3-tabs" data-pl3-tabs>
+    <!-- Cover Showcase Area (15vh) -->
+    <div class="cover-area"></div>
 
-                            <!-- Tab navigation -->
-                            <div class="PL3-tabNav" role="tablist" aria-label="Content sections">
-                                <button class="PL3-tabBtn" role="tab" aria-selected="true"
-                                    aria-controls="PL3-tabPanel-gallery" data-pl3-tab="gallery">
-                                    <span class="PL3-tabLabel">Gallery</span>
-                                </button>
-                                <button class="PL3-tabBtn" role="tab" aria-selected="false"
-                                    aria-controls="PL3-tabPanel-videos" data-pl3-tab="videos">
-                                    <span class="PL3-tabLabel">Videos</span>
-                                </button>
-                                <button class="PL3-tabBtn" role="tab" aria-selected="false"
-                                    aria-controls="PL3-tabPanel-about" data-pl3-tab="about">
-                                    <span class="PL3-tabLabel">About</span>
-                                </button>
-                            </div>
-
-                            <!-- Tab panels -->
-                            <div class="PL3-tabPanels">
-                                <div class="PL3-tabPanel" id="PL3-tabPanel-gallery" role="tabpanel" aria-label="Gallery">
-
-     
-                        <div class="PL3-gallery PL3-gallery--opa" aria-label="OpaHiFi OPA journey map">
-                            <div class="PL3-opaCluster PL3-opaCluster--play">
-                                <span class="PL3-galleryGhostHex PL3-galleryGhostHex--playlist">
-                                    <div class="PL3-galleryGhostPlaylistCard">
-                                        <button class="PL3-galleryGhostPlaylistBtn" type="button"
-                                            data-pl3-playlist-toggle aria-expanded="false" aria-label="Open playlists">
-                                            <span class="PL3-galleryGhostPlaylistLabel">PLAY ALL</span>
-                                            <span class="PL3-galleryGhostPlaylistSub">Start the OPA Journey</span>
-                                            <img class="PL3-galleryGhostPlaylistImg" src="img/btns/playlist.png"
-                                                alt="Play the List" loading="lazy" onerror="this.hidden=true">
-                                        </button>
-                                        <div class="PL3-galleryGhostPlaylistBack" data-pl3-ghost-playlist-links
-                                            data-pl3-playlist-toggle aria-expanded="false" aria-label="Playlist links">
-                                            <span class="PL3-galleryGhostPlaylistBackTitle">Playlists:</span>
-                                            <div class="PL3-galleryGhostPlaylistBackRow">
-                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
-                                                    href="https://open.spotify.com/playlist/5rAMYPsUmFoq3yoBnIGYQR?si=qw3P1s6eT7OLxatM2zUb3w"
-                                                    target="_blank" rel="noopener" aria-label="Spotify playlist">
-                                                    <img class="PL3-playlistPillIcon" src="img/ico/spotify-white.svg"
-                                                        alt="Spotify">
-                                                </a>
-                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
-                                                    href="https://music.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF&si=S9qhguENixnuD3Ps"
-                                                    target="_blank" rel="noopener" aria-label="YouTube Music playlist">
-                                                    <img class="PL3-playlistPillIcon"
-                                                        src="img/ico/youtubemusic-white.svg" alt="YouTube Music">
-                                                </a>
-                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
-                                                    href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF"
-                                                    target="_blank" rel="noopener" aria-label="YouTube playlist">
-                                                    <img class="PL3-playlistPillIcon" src="img/ico/youtube-white.svg"
-                                                        alt="YouTube">
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </span>
-                            </div>
-                            <section class="PL3-opaCluster PL3-opaCluster--overflow" aria-label="Overflow">
-                                <div class="PL3-opaClusterLabel">
-                                    <strong>O — Overflow</strong>
-                                    <span>Open Wound / Outage</span>
-                                </div>
-                                <div class="PL3-opaTileGrid">
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Full-Mindness" data-pl3-group="full-mindness">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-fullmindness.png" alt="Full-Mindness cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Hallucinating" data-pl3-group="hallucinating">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-hallucinatingdumdum.png" alt="Hallucinating cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Splenda Love Rabbit Hell" data-pl3-group="splenda-love-rabbit-hell">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-splendaloverabbithell.png" alt="Splenda Love Rabbit Hell cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Yeah, Let's Do Brunch" data-pl3-group="yeah-lets-do-brunch">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-yeahletsdobrunch.png" alt="Yeah, Let's Do Brunch cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                </div>
-                            </section>
-                            <section class="PL3-opaCluster PL3-opaCluster--perception" aria-label="Perception">
-                                <div class="PL3-opaClusterLabel">
-                                    <strong>P — Perception</strong>
-                                    <span>Pause / Pulse Check</span>
-                                </div>
-                                <div class="PL3-opaTileGrid">
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open AI Hallucinations vs Humans" data-pl3-group="ai-hallucinations-vs-humans">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-hallucinatingdumdum.png" alt="AI Hallucinations vs Humans cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Believe the Truth Fairy" data-pl3-group="believe-the-truth-fairy">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-believethetruthfairy.png" alt="Believe the Truth Fairy cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Old Love Story" data-pl3-group="old-love-story">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-oldlovestory.png" alt="Old Love Story cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                </div>
-                            </section>
-                            <section class="PL3-opaCluster PL3-opaCluster--ascension" aria-label="Ascension">
-                                <div class="PL3-opaClusterLabel">
-                                    <strong>A — Ascension</strong>
-                                    <span>Anthem / Alive</span>
-                                </div>
-                                <div class="PL3-opaTileGrid">
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Glittaa Phoenix" data-pl3-group="glittaa-phoenix">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-glittaaphoenix.png" alt="Glittaa Phoenix cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Wellwolf Howl-Lehluya" data-pl3-group="wellwolf-howl-lehluya">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-wellwolfhowllehluya.png" alt="Wellwolf Howl-Lehluya cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                    <button class="PL3-galleryItemBtn" type="button" aria-label="Open Opa pa pa party" data-pl3-group="opa-pa-pa-party">
-                                        <img class="PL3-galleryImg" src="img/music/base/base-opapapaparty.png" alt="Opa pa pa party cover" loading="lazy" onerror="this.src='img/music/opahifi_album.png'">
-                                    </button>
-                                </div>
-                            </section>
-                        </div>
-                    
-                                </div>
-<div class="PL3-tabPanel" id="PL3-tabPanel-videos" role="tabpanel" aria-label="Videos"
-                                    hidden>
-                                    <div class="PL3-videoGrid">
-                                        <a class="PL3-videoCard PL3-videoCard--meet"
-                                            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9"
-                                            data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9"
-                                            aria-label="Watch Meet Opa">
-                                            <span class="PL3-videoScene" aria-hidden="true">
-                                                <img class="PL3-videoThumb PL3-videoThumb--bg"
-                                                    src="img/opa/videos/opa-meet-bg.png" alt="" loading="lazy">
-                                                <span class="PL3-videoWatchBtn">
-                                                    <img class="PL3-videoThumb PL3-videoThumb--fg"
-                                                        src="img/opa/videos/opa-meet.png" alt="" loading="lazy">
-                                                    <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                                    <span class="PL3-videoWatchBtnLabel">MEET OPA!</span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                        <a class="PL3-videoCard"
-                                            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T"
-                                            data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T"
-                                            aria-label="Watch Video Clips">
-                                            <span class="PL3-videoScene" aria-hidden="true">
-                                                <img class="PL3-videoThumb PL3-videoThumb--bg"
-                                                    src="img/opa/videos/opa-video-bg.png" alt="" loading="lazy">
-                                                <span class="PL3-videoWatchBtn">
-                                                    <img class="PL3-videoThumb PL3-videoThumb--fg"
-                                                        src="img/opa/videos/opa-video.png" alt="" loading="lazy">
-                                                    <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                                    <span class="PL3-videoWatchBtnLabel">VIDEO CLIPS</span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                        <a class="PL3-videoCard"
-                                            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA"
-                                            data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA"
-                                            aria-label="Watch Lyrics Shorts">
-                                            <span class="PL3-videoScene" aria-hidden="true">
-                                                <img class="PL3-videoThumb PL3-videoThumb--bg"
-                                                    src="img/opa/videos/opa-lyrics-bg.png" alt="" loading="lazy">
-                                                <span class="PL3-videoWatchBtn">
-                                                    <img class="PL3-videoThumb PL3-videoThumb--fg"
-                                                        src="img/opa/videos/opa-lyrics.png" alt="" loading="lazy">
-                                                    <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                                    <span class="PL3-videoWatchBtnLabel">LYRICS SHORTS</span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="PL3-tabPanel" id="PL3-tabPanel-about" role="tabpanel" aria-label="About"
-                                    hidden>
-                                    <div class="opahifi-cycle opahifi-cycle--opa">
-                                        <article class="cycle-pillar cycle-pillar--overflow">
-                                            <div class="cycle-pillarInner">
-                                                <h3>Overflow</h3>
-                                                <p>The world gets loud. The brain gets louder. Overflow is where chaos, fake sweetness, and pressure become the beat.</p>
-                                            </div>
-                                        </article>
-                                        <article class="cycle-pillar cycle-pillar--perception">
-                                            <div class="cycle-pillarInner">
-                                                <h3>Perception</h3>
-                                                <p>Pause before you believe. Pause before you react. Perception asks what is real, what is true, and what is actually love.</p>
-                                            </div>
-                                        </article>
-                                        <article class="cycle-pillar cycle-pillar--ascension">
-                                            <div class="cycle-pillarInner">
-                                                <h3>Ascension</h3>
-                                                <p>After the noise, something rises. Ascension is rebirth, kindness, movement, and choosing joy anyway.</p>
-                                            </div>
-                                        </article>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="PL3-groupPanel" id="PL3-group-panel" aria-hidden="true">
-                    <div class="PL3-groupPanelInner">
-                        <div class="PL3-groupPanelTop">
-                            <div class="PL3-groupPanelArtDockWrap">
-                                <div class="PL3-groupPanelArtDock" data-pl3-group-art-dock aria-hidden="true"></div>
-                                <button class="PL3-groupPanelShareBtn" type="button" data-pl3-group-share
-                                    aria-label="Share">
-                                    <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            <div class="PL3-groupPanelGroupMeta" data-pl3-group-meta>
-                                <div class="PL3-groupPanelGroupTitle" data-pl3-group-title></div>
-                                <div class="PL3-groupPanelGroupCount" data-pl3-group-count></div>
-                            </div>
-                        </div>
-                        <div class="PL3-groupPanelMeta">
-                            <div class="PL3-groupPanelVersions" data-pl3-group-versions></div>
-                        </div>
-                        <div class="PL3-groupPanelFooter">
-                            <button class="PL3-groupPanelCloseBtn" type="button" data-pl3-group-close
-                                aria-label="Close panel">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- The Diamond Interlocking Spectrum (75vh space segment) -->
+    <div class="spectrum-container">
+      
+      <!-- ROW 1 (Slanted Right /) -->
+      <div class="slice-row">
+        <div class="track-slice slice-dumdum" data-hl-id="hl-1-1" data-title="Hallucinating Dum Dum" data-desc="100% RED SPECTRUM • THE SYSTEM CRASH" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-hallucinatingdumdum.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-hallucinatingdumdum.png" alt="Hallucinating Dum Dum">
         </div>
-    </section>
-    <div class="PL3-modal PL3-previewModal" id="PL3-preview-modal" hidden aria-hidden="true">
-        <div class="PL3-previewOverlay" data-pl3-preview-close></div>
-        <div class="PL3-previewPanel" role="dialog" aria-modal="true" aria-label="Video preview">
-            <div class="PL3-previewInner">
-                <div class="PL3-previewHeader">
-                    <div class="PL3-previewTitle">Preview</div>
-                    <div class="PL3-previewHeaderActions">
-                        <button class="PL3-previewSound" type="button" data-pl3-preview-sound aria-label="Toggle sound">
-                            <i class="fa-solid fa-volume-high" aria-hidden="true"></i>
-
-                        </button>
-                        <button class="PL3-previewClose" type="button" data-pl3-preview-close
-                            aria-label="Close">×</button>
-                    </div>
-                </div>
-                <div class="PL3-previewFrame">
-                    <iframe id="PL3-preview-iframe" title="YouTube preview"
-                        allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
+        <div class="track-slice slice-splenda" data-hl-id="hl-1-2" data-title="Splenda Love & Rabbit Hell" data-desc="85% RED • 15% PURPLE • THE BREAKING POINT" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-splendaloverabbithell.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-splendaloverabbithell.png" alt="Splenda Love and Rabbit Hell">
         </div>
+        <div class="track-slice slice-opapapa" data-hl-id="hl-1-3" data-title="Opa Pa Pa Party" data-desc="100% BLUE SPECTRUM • THE ABSOLUTE PEAK" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-opapapaparty.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-opapapaparty.png" alt="Opa Pa Pa Party">
+        </div>
+
+        <!-- Divider Vectors & Active Selection Polygons -->
+        <svg class="row-divider-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <!-- Sky Blue Highlight Polygons -->
+          <polygon id="hl-1-1" class="highlight-path" points="0,0 41.33,0 25.33,100 0,100" />
+          <polygon id="hl-1-2" class="highlight-path" points="41.33,0 74.66,0 58.66,100 25.33,100" />
+          <polygon id="hl-1-3" class="highlight-path" points="74.66,0 100,0 100,100 58.66,100" />
+
+          <!-- Solid Black Dividers -->
+          <line x1="25.33" y1="100" x2="41.33" y2="0" class="divider-line" />
+          <line x1="58.66" y1="100" x2="74.66" y2="0" class="divider-line" />
+        </svg>
+      </div>
+
+      <!-- ROW 2 (Slanted Left \) -->
+      <div class="slice-row">
+        <div class="track-slice slice-brunch" data-hl-id="hl-2-1" data-title="Yeah Let's Do Brunch" data-desc="100% RED SPECTRUM • THE SUPERFICIAL LOOP" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-yeahletsdobrunch.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-yeahletsdobrunch.png" alt="Yeah Let's Do Brunch">
+        </div>
+        <div class="track-slice slice-truthfairy" data-hl-id="hl-2-2" data-title="The Truth Fairy" data-desc="100% PURPLE SPECTRUM • THE PERSPECTIVE SHIFT" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-believethetruthfairy.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-believethetruthfairy.png" alt="The Truth Fairy's">
+        </div>
+        <div class="track-slice slice-wellwolf" data-hl-id="hl-2-3" data-title="Wellwolf Howl-lehluya" data-desc="100% BLUE SPECTRUM • AUTHENTIC REALITY" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-wellwolfhowllehluya.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-wellwolfhowllehluya.png" alt="Wellwolf Howl-lehluya">
+        </div>
+
+        <!-- Divider Vectors & Active Selection Polygons -->
+        <svg class="row-divider-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <!-- Sky Blue Highlight Polygons -->
+          <polygon id="hl-2-1" class="highlight-path" points="0,0 25.33,0 41.33,100 0,100" />
+          <polygon id="hl-2-2" class="highlight-path" points="25.33,0 58.66,0 74.66,100 41.33,100" />
+          <polygon id="hl-2-3" class="highlight-path" points="58.66,0 100,0 100,100 74.66,100" />
+
+          <!-- Solid Black Dividers -->
+          <line x1="41.33" y1="100" x2="25.33" y2="0" class="divider-line" />
+          <line x1="74.66" y1="100" x2="58.66" y2="0" class="divider-line" />
+        </svg>
+      </div>
+
+      <!-- ROW 3 (Slanted Right /) -->
+      <div class="slice-row">
+        <div class="track-slice slice-fullmindness" data-hl-id="hl-3-1" data-title="Full Mindness" data-desc="100% RED SPECTRUM • THE BASELINE CHOICE" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-fullmindness.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-fullmindness.png" alt="Full Mindness">
+        </div>
+        <div class="track-slice slice-oldlove" data-hl-id="hl-3-2" data-title="Old Love Story" data-desc="95% PURPLE • 5% BLUE • THE CRITIQUE" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-oldlovestory.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-oldlovestory.png" alt="Old Love Story">
+        </div>
+        <div class="track-slice slice-glitta" data-hl-id="hl-3-3" data-title="GLITTA Phoenix" data-desc="80% PURPLE • 20% BLUE • THE TRANSITION" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-glittaaphoenix.png">
+          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-glittaaphoenix.png" alt="GLITTA Phoenix">
+        </div>
+
+        <!-- Divider Vectors & Active Selection Polygons -->
+        <svg class="row-divider-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <!-- Sky Blue Highlight Polygons -->
+          <polygon id="hl-3-1" class="highlight-path" points="0,0 41.33,0 25.33,100 0,100" />
+          <polygon id="hl-3-2" class="highlight-path" points="41.33,0 74.66,0 58.66,100 25.33,100" />
+          <polygon id="hl-3-3" class="highlight-path" points="74.66,0 100,0 100,100 58.66,100" />
+
+          <!-- Solid Black Dividers -->
+          <line x1="25.33" y1="100" x2="41.33" y2="0" class="divider-line" />
+          <line x1="58.66" y1="100" x2="74.66" y2="0" class="divider-line" />
+        </svg>
+      </div>
+
+      <!-- Premium Glass overlay preview controller -->
+      <div class="preview-panel" id="preview-panel">
+        <div class="preview-thumb">
+          <img id="panel-img" src="" alt="Thumbnail">
+        </div>
+        <div class="preview-info">
+          <div class="preview-title" id="panel-title">Track Name</div>
+          <div class="preview-meta" id="panel-desc">Metadata details</div>
+        </div>
+        <div class="visualizer-container">
+          <canvas id="visualizer-canvas"></canvas>
+        </div>
+        <div class="close-panel-btn" id="close-panel-btn">&times;</div>
+      </div>
+
     </div>
 
-    <div class="PL3-modal PL3-artZoomModal" id="PL3-art-zoom-modal" hidden aria-hidden="true">
-        <div class="PL3-artZoomOverlay" data-pl3-art-zoom-close></div>
-        <div class="PL3-artZoomPanel" role="dialog" aria-modal="true" aria-label="Expanded cover art">
-            <div class="PL3-artZoomInner">
-                <button class="PL3-artZoomClose" type="button" data-pl3-art-zoom-close aria-label="Close">×</button>
-                <img class="PL3-artZoomImage" id="PL3-art-zoom-image" alt="">
-            </div>
-        </div>
+    <!-- Navigation Footer (5vh) -->
+    <div class="button-bar">
+      <button class="menu-btn">Videos</button>
+      <button class="menu-btn active">Gallery</button>
+      <button class="menu-btn">About</button>
     </div>
+  </div>
 
-    <script src="https://unpkg.com/wavesurfer.js@7.12.6/dist/wavesurfer.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Flip.min.js"></script>
-    <script src="script.js"></script>
+  <script>
+    // Tab Interaction Controller
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
 
+    // Premium Live Preview Console Logic
+    const slices = document.querySelectorAll('.track-slice');
+    const panel = document.getElementById('preview-panel');
+    const panelImg = document.getElementById('panel-img');
+    const panelTitle = document.getElementById('panel-title');
+    const panelDesc = document.getElementById('panel-desc');
+    const closeBtn = document.getElementById('close-panel-btn');
+
+    // Live Canvas Audio Visualizer
+    const canvas = document.getElementById('visualizer-canvas');
+    const ctx = canvas.getContext('2d');
+    let animationId;
+    let isPlaying = false;
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawVisualizer() {
+      if (!isPlaying) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const barCount = 10;
+      const barWidth = (canvas.width / barCount) - 3;
+      ctx.fillStyle = '#ffffff';
+
+      for (let i = 0; i < barCount; i++) {
+        const speedMultiplier = 0.007 + (i * 0.002);
+        const amplitude = canvas.height * 0.7;
+        const barHeight = Math.abs(Math.sin(Date.now() * speedMultiplier) * amplitude) + 4;
+        
+        const x = i * (barWidth + 3);
+        const y = canvas.height - barHeight;
+        
+        ctx.beginPath();
+        ctx.roundRect(x, y, barWidth, barHeight, 2);
+        ctx.fill();
+      }
+      animationId = requestAnimationFrame(drawVisualizer);
+    }
+
+    slices.forEach(slice => {
+      slice.addEventListener('click', () => {
+        // Clear all highlights
+        document.querySelectorAll('.row-divider-svg .highlight-path').forEach(p => {
+          p.setAttribute('stroke', 'transparent');
+        });
+
+        // Set clicked highlight sky blue
+        const hlId = slice.getAttribute('data-hl-id');
+        if (hlId) {
+          const poly = document.getElementById(hlId);
+          if (poly) {
+            poly.setAttribute('stroke', '#64b5f6'); // Matching the beautiful sky-blue outline from your mockup
+          }
+        }
+
+        // Populate and open preview panel
+        panelImg.src = slice.getAttribute('data-img');
+        panelTitle.textContent = slice.getAttribute('data-title');
+        panelDesc.textContent = slice.getAttribute('data-desc');
+        panel.classList.add('active');
+
+        // Fire simulation audio active
+        isPlaying = true;
+        cancelAnimationFrame(animationId);
+        drawVisualizer();
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      panel.classList.remove('active');
+      document.querySelectorAll('.row-divider-svg .highlight-path').forEach(p => {
+        p.setAttribute('stroke', 'transparent');
+      });
+      isPlaying = false;
+      cancelAnimationFrame(animationId);
+    });
+  </script>
 </body>
-
 </html>
