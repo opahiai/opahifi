@@ -2522,15 +2522,19 @@ button {
 }
 
 .PL3-groupVersionItem {
+    --mix-color-1: #fff;
+    --mix-color-2: #fff;
+    --mix-color-3: var(--mix-color-2);
+    --version-chevron-color: #fff;
     display: grid;
-    grid-template-columns: var(--pl3-version-art-size) minmax(0, 1fr) var(--pl3-info-btn-size);
+    grid-template-columns: var(--pl3-version-art-size) minmax(0, 1fr) 24px;
     column-gap: var(--pl3-version-row-gap);
     align-items: center;
     border-radius: 10px;
     border: 1px solid var(--pl3-version-card-border);
     background: var(--pl3-version-card-bg);
     box-shadow: var(--pl3-version-card-shadow);
-    padding: var(--pl3-version-row-pad);
+    padding: var(--pl3-version-row-pad) 0 var(--pl3-version-row-pad) var(--pl3-version-row-pad);
     cursor: pointer;
     transition: opacity 0.12s, background 0.15s, box-shadow 0.15s, border-color 0.15s;
     overflow: hidden;
@@ -2604,14 +2608,15 @@ button {
 }
 
 .PL3-groupVersionInfoBtn {
-    flex: 0 0 var(--pl3-info-btn-size);
-    width: var(--pl3-info-btn-size);
-    height: var(--pl3-info-btn-size);
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(166, 94, 255, 0.28), rgba(83, 30, 163, 0.16));
-    border: 1px solid rgba(226, 195, 255, 0.22);
-    color: rgba(255, 255, 255, 0.82);
-    font-size: 0.7rem;
+    flex: 0 0 24px;
+    width: 24px;
+    height: calc(100% + var(--pl3-version-row-pad) * 2);
+    border-radius: 0 9px 9px 0;
+    background: #000;
+    border: 0;
+    color: var(--version-chevron-color);
+    font-size: 1.25rem;
+    font-weight: 800;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2624,6 +2629,7 @@ button {
     transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
     position: relative;
     overflow: hidden;
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.18);
 }
 
 .PL3-groupVersionInfoGlyph {

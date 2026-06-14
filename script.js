@@ -89,6 +89,13 @@
     });
 
     const platformOrder = ['Spotify', 'Apple Music', 'YouTube Music', 'Amazon Music', 'Other'];
+    const platformIcons = {
+        'Spotify': 'img/ico/spotify-white.svg',
+        'Apple Music': 'img/ico/apple-white.svg',
+        'YouTube Music': 'img/ico/youtubemusic-white.svg',
+        'Amazon Music': 'img/ico/amazon-white.svg',
+        'Other': 'img/ico/youtube-white.svg'
+    };
 
     const groups = [
         {
@@ -204,6 +211,7 @@
             title: 'Old Love Story',
             version: 'Desert Disco Duet Remix',
             image: 'img/music/versions/version-oldlovestory-desertdiscoduet.png',
+            mixColors: ['#fff0f5', '#5c14b5'],
             lyricsPath: 'lyrics/old-love-story.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE',
@@ -219,6 +227,7 @@
             title: 'Old Love Story',
             version: 'Opa Max Mix',
             image: 'img/music/versions/version-oldlovestory-maxmix.png',
+            mixColors: ['#e8d36b', '#f4c97a', '#f4af86'],
             lyricsPath: 'lyrics/old-love-story.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=m7wP4U97FC8',
@@ -262,6 +271,7 @@
             title: 'Splenda Love Rabbit Hell',
             version: 'Opa Max Mix',
             image: 'img/music/versions/version-splendaloverabbithell-maxmix.png',
+            mixColors: ['#e8d36b', '#f4c97a', '#f4af86'],
             lyricsPath: 'lyrics/splenda-love-rabbit-hell.txt',
             links: {
                 'Spotify': 'https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842',
@@ -277,6 +287,7 @@
             title: 'GLITTAA Phoenix',
             version: 'Opa Sunrize Max Mix',
             image: 'img/music/versions/version-glittaaphoenix-sunrisemaxmix.png',
+            mixColors: ['#e8d36b', '#f4c97a', '#f4af86'],
             lyricsPath: 'lyrics/glittaa-pheonix-sunrise-mix.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP',
@@ -306,6 +317,7 @@
             title: 'Full-Mindness',
             version: 'Opa Mayhem Mix',
             image: 'img/music/versions/version-fullmindness-mayhemmix.png',
+            mixColors: ['#60c6e6', '#5c14b5'],
             lyricsPath: 'lyrics/full-mindness.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z',
@@ -346,10 +358,16 @@
         [SINGLE.HALLUCINATING]: {
             id: SINGLE.HALLUCINATING,
             groupKey: GROUP.HALLUCINATING,
-            title: 'Hallucinating',
+            title: 'Hallucinating Dum Dum',
             image: 'img/music/base/base-hallucinatingdumdum.png',
             lyricsPath: 'lyrics/hallucinating-dum-dum.txt',
-            links: {}
+            links: {
+                'YouTube Music': 'https://music.youtube.com/watch?v=d5x0I9ffxwI&si=XE-Yl4gqJkmqfsJk',
+                'Amazon Music': 'https://music.amazon.com/albums/B0H3PX4NXX?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_zWfHrxwuQbquYWxem0QHrLJzx&trackAsin=B0H3PZ7XM1',
+                'Spotify': 'https://open.spotify.com/track/74dIXy89cJ5oPrG9MFGd3X?si=91d0eec0dfd54961',
+                'Apple Music': 'https://music.apple.com/us/song/hallucinating-dum-dum/6776020941',
+                'Other': 'https://youtu.be/d5x0I9ffxwI?si=3ehe5ANC_b68E693'
+            }
         },
         [SINGLE.AI_HALLUCINATIONS_VS_HUMANS]: {
             id: SINGLE.AI_HALLUCINATIONS_VS_HUMANS,
@@ -388,6 +406,7 @@
 
     window.musicDataGrouped = {
         platformOrder,
+        platformIcons,
         groups,
         singlesById
     };
@@ -2331,6 +2350,7 @@ class PL3GroupPanel {
             const row = document.createElement('article');
             row.className = 'PL3-groupVersionItem';
             row.dataset.pl3SongId = song.id;
+            this.applyMixColorVars(row, song);
 
             const art = document.createElement('img');
             art.className = 'PL3-groupVersionArt';
@@ -2362,7 +2382,7 @@ class PL3GroupPanel {
             const infoIcon = document.createElement('span');
             infoIcon.className = 'PL3-groupVersionInfoGlyph PL3-groupVersionInfoGlyph--info';
             infoIcon.setAttribute('aria-hidden', 'true');
-            infoIcon.textContent = 'ℹ';
+            infoIcon.innerHTML = '&#8250;';
 
             const backIcon = document.createElement('span');
             backIcon.className = 'PL3-groupVersionInfoGlyph PL3-groupVersionInfoGlyph--back';
@@ -2431,6 +2451,18 @@ class PL3GroupPanel {
         return { platform, url };
     }
 
+    applyMixColorVars(element, song) {
+        if (!element || !Array.isArray(song?.mixColors)) return;
+        const colors = song.mixColors.filter(Boolean);
+        colors.forEach((color, index) => {
+            element.style.setProperty(`--mix-color-${index + 1}`, color);
+        });
+        if (colors.length === 2) {
+            element.style.setProperty('--mix-color-3', colors[1]);
+        }
+        element.style.setProperty('--version-chevron-color', '#fff');
+    }
+
     createPlatformEntry(platform, url, versionLabel) {
         const platformLabel = this.displayPlatformName(platform);
         const hasUrl = !!String(url || '').trim();
@@ -2458,12 +2490,7 @@ class PL3GroupPanel {
     }
 
     createPlatformIcon(platform) {
-        const iconUrlByPlatform = {
-            'Spotify': 'img/ico/spotify-white.svg',
-            'Apple Music': 'img/ico/apple-white.svg',
-            'YouTube Music': 'img/ico/youtubemusic-white.svg',
-            'Other': 'img/ico/youtube-white.svg'
-        };
+        const iconUrlByPlatform = this.data.platformIcons || {};
 
         if (iconUrlByPlatform[platform]) {
             const img = document.createElement('img');
