@@ -2,575 +2,216 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpaHiFi - The O-P-A Slanted Grid</title>
-  
-  <style>
-    :root {
-      --color-red: #ff3b30;
-      --color-purple: #af52de;
-      --color-blue: #007aff;
-      --bg-dark: #020204;
-      --glass: rgba(10, 10, 15, 0.85);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      
-      /* Pure mathematical variables to define the diagonal slants perfectly */
-      --slant-percent: 8%; /* How far the dividers shift left/right to create the 45° angle */
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OpaHiFi - The Organic Journey</title>
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    body {
-      background-color: #000000;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      overflow: hidden; /* Absolutely prevents page scrollbars */
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Mobile-First Base Layout */
-    .layout-wrapper {
-      width: 100vw; 
-      height: 100dvh; 
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between; 
-      align-items: center;
-      overflow: hidden; 
-      background-color: var(--bg-dark);
-      position: relative;
-    }
-
-    /* Clean Desktop Frame (Min-width architecture only) */
-    @media (min-width: 769px) {
-      .layout-wrapper {
-        width: 40vw; 
-        box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
-        border-left: 1px solid rgba(255, 255, 255, 0.05);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
-      }
-    }
-
-    /* Exact layout budgets requested */
-    .nav-area {
-      display: flex;
-      width: 100%;
-      height: 5vh; 
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-weight: 800;
-      font-size: 0.95rem; 
-      letter-spacing: 4px;
-      background: #0a0a0c;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      flex-shrink: 0;
-      z-index: 10;
-    }
-
-    .cover-area {
-      display: block;
-      width: 100%;
-      height: 15vh; 
-      background: url('https://opahifi.com/img/opa/cover.png') center/cover no-repeat;
-      flex-shrink: 0;
-      border-bottom: 2px solid #000000;
-      z-index: 10;
-    }
-
-    /* Main Spectrum Section - takes remaining 75vh */
-    .spectrum-container {
-      width: 100%; 
-      height: 75vh;
-      display: flex;
-      flex-direction: column;
-      background: #000000;
-      overflow: hidden;
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    /* Three Equal Horizontal Rows with solid black borders */
-    .slice-row {
-      display: flex;
-      width: 100%;
-      height: calc(100% / 3);
-      position: relative;
-      overflow: hidden;
-      background-color: #000000;
-      border-bottom: 3px solid #000000;
-    }
-
-    .slice-row:last-child {
-      border-bottom: none;
-    }
-
-    /* Base setup for each slanted grid cell */
-    .track-slice {
-      position: absolute;
-      top: 0;
-      height: 100%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #ffffff; /* White card background allows seamless illustration bleed */
-      transition: filter 0.3s ease;
-    }
-
-    /* Keep illustration flat, upright, and perfectly preserved inside safe bounds */
-    .track-slice img {
-      width: auto;
-      height: 78%; /* Keeps the art completely inside the safe zone, never cut by boundaries */
-      max-width: 80%;
-      object-fit: contain;
-      pointer-events: none;
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.06));
-      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .track-slice:hover img {
-      transform: scale(1.05);
-    }
-
-    /* =========================================
-       MATHEMATICAL GEOMETRIC CLIP-PATHS
-       ========================================= */
-
-    /* ROW 1: Slanted Right (/) */
-    .slice-dumdum {
-      left: 0;
-      width: calc(33.33% + var(--slant-percent));
-      clip-path: polygon(0% 0%, 100% 0%, calc(100% - var(--slant-percent) * 3) 100%, 0% 100%);
-    }
-    .slice-splenda {
-      left: calc(33.33% - var(--slant-percent));
-      width: calc(33.33% + var(--slant-percent) * 2);
-      clip-path: polygon(calc(var(--slant-percent) * 2) 0%, 100% 0%, calc(100% - var(--slant-percent) * 2) 100%, 0% 100%);
-    }
-    .slice-opapapa {
-      left: calc(66.66% - var(--slant-percent));
-      width: calc(33.33% + var(--slant-percent));
-      clip-path: polygon(calc(var(--slant-percent)) 0%, 100% 0%, 100% 100%, 0% 100%);
-    }
-
-    /* ROW 2: Slanted Left (\) */
-    .slice-brunch {
-      left: 0;
-      width: calc(33.33% + var(--slant-percent));
-      clip-path: polygon(0% 0%, calc(100% - var(--slant-percent)) 0%, 100% 100%, 0% 100%);
-    }
-    .slice-truthfairy {
-      left: calc(33.33% - var(--slant-percent));
-      width: calc(33.33% + var(--slant-percent) * 2);
-      clip-path: polygon(0% 0%, calc(100% - var(--slant-percent) * 2) 0%, 100% 100%, calc(var(--slant-percent) * 2) 100%);
-    }
-    .slice-wellwolf {
-      left: calc(66.66% - var(--slant-percent));
-      width: calc(33.33% + var(--slant-percent));
-      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, calc(var(--slant-percent) * 3) 100%);
-    }
-
-    /* ROW 3: Slanted Right (/) */
-    .slice-fullmindness {
-      left: 0;
-      width: calc(33.33% + var(--slant-percent));
-      clip-path: polygon(0% 0%, 100% 0%, calc(100% - var(--slant-percent) * 3) 100%, 0% 100%);
-    }
-    .slice-oldlove {
-      left: calc(33.33% - var(--slant-percent));
-      width: calc(33.33% + var(--slant-percent) * 2);
-      clip-path: polygon(calc(var(--slant-percent) * 2) 0%, 100% 0%, calc(100% - var(--slant-percent) * 2) 100%, 0% 100%);
-    }
-    .slice-glitta {
-      left: calc(66.66% - var(--slant-percent));
-      width: calc(33.33% + var(--slant-percent));
-      clip-path: polygon(calc(var(--slant-percent)) 0%, 100% 0%, 100% 100%, 0% 100%);
-    }
-
-    /* =========================================
-       RESPONSIVE Divider SVG Line Overlay
-       ========================================= */
-    .row-divider-svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    .divider-line {
-      stroke: #000000;
-      stroke-width: 0.6%; /* Super crisp vector divider boundaries */
-    }
-
-    /* Highlight paths mapped exactly to slanted boundaries */
-    .highlight-path {
-      fill: none;
-      stroke: transparent;
-      stroke-width: 1%;
-      transition: stroke 0.2s ease;
-    }
-
-    /* =========================================
-       PREMIUM "NOW PLAYING" GLASS PANEL
-       ========================================= */
-    .preview-panel {
-      position: absolute;
-      bottom: 2vh;
-      left: 5%;
-      width: 90%;
-      height: 14vh;
-      background: var(--glass);
-      backdrop-filter: blur(20px) saturate(1.8);
-      -webkit-backdrop-filter: blur(20px) saturate(1.8);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      padding: 16px;
-      gap: 16px;
-      transform: translateY(200%);
-      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    }
-
-    .preview-panel.active {
-      transform: translateY(0);
-    }
-
-    .preview-thumb {
-      width: 10vh;
-      height: 10vh;
-      border-radius: 8px;
-      background: #fff;
-      padding: 4px;
-      flex-shrink: 0;
-    }
-
-    .preview-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .preview-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-grow: 1;
-      overflow: hidden;
-    }
-
-    .preview-title {
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 0.95rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .preview-meta {
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.5);
-      margin-top: 4px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    /* Canvas frequency visualizer */
-    .visualizer-container {
-      width: 80px;
-      height: 4vh;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-    }
-
-    #visualizer-canvas {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Close Button */
-    .close-panel-btn {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #fff;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .close-panel-btn:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
-    /* =========================================
-       BOTTOM BUTTON BAR AREA (5vh)
-       ========================================= */
-    .button-bar {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      width: 100%;
-      height: 5vh; 
-      align-items: center;
-      background: #050505;
-      flex-shrink: 0;
-      z-index: 10;
-      border-top: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .menu-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: rgba(255, 255, 255, 0.6);
-      padding: 4px 16px; 
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      outline: none;
-    }
-
-    .menu-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.35);
-      color: #ffffff;
-    }
-
-    .menu-btn.active {
-      background: #ffffff;
-      color: #050505;
-      border-color: #ffffff;
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
-    }
-
-  </style>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/journey.css">
+  <link rel="stylesheet" href="css/universe.css">
 </head>
+
 <body>
+  <div class="layout-wrapper" id="layout-wrapper">
 
-  <div class="layout-wrapper">
-    <!-- Navigation Header (5vh) -->
-    <div class="nav-area">OPAHIFI</div>
+    <!-- ── NAV ── -->
+    <nav class="nav-area">
+      OPAHIFI
 
-    <!-- Cover Showcase Area (15vh) -->
-    <div class="cover-area"></div>
-
-    <!-- The Diamond Interlocking Spectrum (75vh space segment) -->
-    <div class="spectrum-container">
-      
-      <!-- ROW 1 (Slanted Right /) -->
-      <div class="slice-row">
-        <div class="track-slice slice-dumdum" data-hl-id="hl-1-1" data-title="Hallucinating Dum Dum" data-desc="100% RED SPECTRUM • THE SYSTEM CRASH" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-hallucinatingdumdum.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-hallucinatingdumdum.png" alt="Hallucinating Dum Dum">
-        </div>
-        <div class="track-slice slice-splenda" data-hl-id="hl-1-2" data-title="Splenda Love & Rabbit Hell" data-desc="85% RED • 15% PURPLE • THE BREAKING POINT" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-splendaloverabbithell.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-splendaloverabbithell.png" alt="Splenda Love and Rabbit Hell">
-        </div>
-        <div class="track-slice slice-opapapa" data-hl-id="hl-1-3" data-title="Opa Pa Pa Party" data-desc="100% BLUE SPECTRUM • THE ABSOLUTE PEAK" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-opapapaparty.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-opapapaparty.png" alt="Opa Pa Pa Party">
-        </div>
-
-        <!-- Divider Vectors & Active Selection Polygons -->
-        <svg class="row-divider-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <!-- Sky Blue Highlight Polygons -->
-          <polygon id="hl-1-1" class="highlight-path" points="0,0 41.33,0 25.33,100 0,100" />
-          <polygon id="hl-1-2" class="highlight-path" points="41.33,0 74.66,0 58.66,100 25.33,100" />
-          <polygon id="hl-1-3" class="highlight-path" points="74.66,0 100,0 100,100 58.66,100" />
-
-          <!-- Solid Black Dividers -->
-          <line x1="25.33" y1="100" x2="41.33" y2="0" class="divider-line" />
-          <line x1="58.66" y1="100" x2="74.66" y2="0" class="divider-line" />
+      <button class="settings-btn" id="settings-btn" aria-label="Settings" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61
+            l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81
+            c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29
+            L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58
+            C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61
+            l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54
+            c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94
+            l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z
+            M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
         </svg>
+      </button>
+
+      <div class="settings-panel" id="settings-panel" role="dialog" aria-label="Orb size settings">
+        <div class="settings-title">Orb Size</div>
+        <div class="slider-container">
+          <span class="slider-label">MIN</span>
+          <input type="range" id="size-slider" min="0.5" max="1.5" step="0.1" value="1" aria-label="Orb size">
+          <span class="slider-label">MAX</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── COVER ── -->
+    <div class="cover-area" role="img" aria-label="OpaHiFi cover art"></div>
+
+    <!-- ── JOURNEY MAP ── -->
+    <main class="journey-container">
+      <svg class="journey-svg" id="svg-layer" aria-hidden="true">
+        <defs>
+          <linearGradient id="spectrum-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="#ff3b30"/>
+            <stop offset="50%"  stop-color="#af52de"/>
+            <stop offset="100%" stop-color="#007aff"/>
+          </linearGradient>
+        </defs>
+        <path class="glow-line" id="glow-line" d=""/>
+      </svg>
+
+      <div class="nodes-wrapper" id="nodes-wrapper">
+
+        <div class="journey-orb node-1" data-index="0" data-group-key="full-mindness" data-title="Full-Mindness">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-fullmindness.png" alt="Full Mindness">
+          </div></div>
+          <div class="orb-pill">Full-<br>Mindness</div>
+        </div>
+
+        <div class="journey-orb node-2" data-index="1" data-group-key="yeah-lets-do-brunch" data-title="Yeah Let's Do Brunch">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-yeahletsdobrunch.png" alt="Brunch">
+          </div></div>
+          <div class="orb-pill">Yeah, Let's<br>Do Brunch</div>
+        </div>
+
+        <div class="journey-orb node-3" data-index="2" data-group-key="hallucinating" data-title="Hallucinating Dum Dum">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-hallucinatingdumdum.png" alt="Dum Dum">
+          </div></div>
+          <div class="orb-pill">Hallucinating<br>Dum Dum</div>
+        </div>
+
+        <div class="journey-orb node-4" data-index="3" data-group-key="splenda-love-rabbit-hell" data-title="Splenda Love Rabbit Hell">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-splendaloverabbithell.png" alt="Splenda Love">
+          </div></div>
+          <div class="orb-pill">Splenda Love<br>Rabbit Hell</div>
+        </div>
+
+        <div class="journey-orb node-5" data-index="4" data-group-key="believe-the-truth-fairy" data-title="The Truth Fairy's">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-believethetruthfairy.png" alt="Truth Fairy">
+          </div></div>
+          <div class="orb-pill">The Truth<br>Fairy's</div>
+        </div>
+
+        <div class="journey-orb node-6" data-index="5" data-group-key="old-love-story" data-title="Old Love Story">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-oldlovestory.png" alt="Old Love Story">
+          </div></div>
+          <div class="orb-pill">Old Love<br>Story</div>
+        </div>
+
+        <div class="journey-orb node-7" data-index="6" data-group-key="glittaa-phoenix" data-title="Glittaa Phoenix">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-glittaaphoenix.png" alt="Glittaa Phoenix">
+          </div></div>
+          <div class="orb-pill">Glittaa<br>Phoenix</div>
+        </div>
+
+        <div class="journey-orb node-8" data-index="7" data-group-key="wellwolf-howl-lehluya" data-title="Wellwolf Howl-lehluya">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-wellwolfhowllehluya.png" alt="Wellwolf">
+          </div></div>
+          <div class="orb-pill">Wellwolf<br>Howl-lehluya</div>
+        </div>
+
+        <div class="journey-orb node-9" data-index="8" data-group-key="opa-pa-pa-party" data-title="Opa Pa Pa Party">
+          <div class="orb-img-crop"><div class="orb-img-wrapper">
+            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-opapapaparty.png" alt="Opa Party">
+          </div></div>
+          <div class="orb-pill">Opa Pa<br>Pa Party</div>
+        </div>
+
+      </div><!-- /nodes-wrapper -->
+
+      <!-- Song thumbnail nav strip -->
+      <div class="song-view-footer" id="song-view-footer">
+        <div class="song-node-row" id="song-node-row" aria-label="Song navigation"></div>
       </div>
 
-      <!-- ROW 2 (Slanted Left \) -->
-      <div class="slice-row">
-        <div class="track-slice slice-brunch" data-hl-id="hl-2-1" data-title="Yeah Let's Do Brunch" data-desc="100% RED SPECTRUM • THE SUPERFICIAL LOOP" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-yeahletsdobrunch.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-yeahletsdobrunch.png" alt="Yeah Let's Do Brunch">
-        </div>
-        <div class="track-slice slice-truthfairy" data-hl-id="hl-2-2" data-title="The Truth Fairy" data-desc="100% PURPLE SPECTRUM • THE PERSPECTIVE SHIFT" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-believethetruthfairy.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-believethetruthfairy.png" alt="The Truth Fairy's">
-        </div>
-        <div class="track-slice slice-wellwolf" data-hl-id="hl-2-3" data-title="Wellwolf Howl-lehluya" data-desc="100% BLUE SPECTRUM • AUTHENTIC REALITY" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-wellwolfhowllehluya.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-wellwolfhowllehluya.png" alt="Wellwolf Howl-lehluya">
-        </div>
+    </main>
 
-        <!-- Divider Vectors & Active Selection Polygons -->
-        <svg class="row-divider-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <!-- Sky Blue Highlight Polygons -->
-          <polygon id="hl-2-1" class="highlight-path" points="0,0 25.33,0 41.33,100 0,100" />
-          <polygon id="hl-2-2" class="highlight-path" points="25.33,0 58.66,0 74.66,100 41.33,100" />
-          <polygon id="hl-2-3" class="highlight-path" points="58.66,0 100,0 100,100 74.66,100" />
+    <!-- ── BOTTOM BAR ── -->
+    <footer class="bottom-bar-container">
 
-          <!-- Solid Black Dividers -->
-          <line x1="41.33" y1="100" x2="25.33" y2="0" class="divider-line" />
-          <line x1="74.66" y1="100" x2="58.66" y2="0" class="divider-line" />
-        </svg>
+      <div class="map-tabs">
+        <button class="menu-btn" id="map-left-btn">Videos</button>
+        <button class="menu-btn active" id="map-center-btn">Gallery</button>
+        <button class="menu-btn" id="map-right-btn">About</button>
       </div>
 
-      <!-- ROW 3 (Slanted Right /) -->
-      <div class="slice-row">
-        <div class="track-slice slice-fullmindness" data-hl-id="hl-3-1" data-title="Full Mindness" data-desc="100% RED SPECTRUM • THE BASELINE CHOICE" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-fullmindness.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-fullmindness.png" alt="Full Mindness">
-        </div>
-        <div class="track-slice slice-oldlove" data-hl-id="hl-3-2" data-title="Old Love Story" data-desc="95% PURPLE • 5% BLUE • THE CRITIQUE" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-oldlovestory.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-oldlovestory.png" alt="Old Love Story">
-        </div>
-        <div class="track-slice slice-glitta" data-hl-id="hl-3-3" data-title="GLITTA Phoenix" data-desc="80% PURPLE • 20% BLUE • THE TRANSITION" data-img="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-glittaaphoenix.png">
-          <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-glittaaphoenix.png" alt="GLITTA Phoenix">
-        </div>
-
-        <!-- Divider Vectors & Active Selection Polygons -->
-        <svg class="row-divider-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <!-- Sky Blue Highlight Polygons -->
-          <polygon id="hl-3-1" class="highlight-path" points="0,0 41.33,0 25.33,100 0,100" />
-          <polygon id="hl-3-2" class="highlight-path" points="41.33,0 74.66,0 58.66,100 25.33,100" />
-          <polygon id="hl-3-3" class="highlight-path" points="74.66,0 100,0 100,100 58.66,100" />
-
-          <!-- Solid Black Dividers -->
-          <line x1="25.33" y1="100" x2="41.33" y2="0" class="divider-line" />
-          <line x1="58.66" y1="100" x2="74.66" y2="0" class="divider-line" />
-        </svg>
+      <div class="carousel-indicator" id="carousel-indicator">
+        <div class="carousel-dot active"></div>
+        <div class="carousel-dot"></div>
+        <div class="carousel-dot"></div>
       </div>
 
-      <!-- Premium Glass overlay preview controller -->
-      <div class="preview-panel" id="preview-panel">
-        <div class="preview-thumb">
-          <img id="panel-img" src="" alt="Thumbnail">
-        </div>
-        <div class="preview-info">
-          <div class="preview-title" id="panel-title">Track Name</div>
-          <div class="preview-meta" id="panel-desc">Metadata details</div>
-        </div>
-        <div class="visualizer-container">
-          <canvas id="visualizer-canvas"></canvas>
-        </div>
-        <div class="close-panel-btn" id="close-panel-btn">&times;</div>
+      <div class="universe-tabs">
+        <button class="nav-arrow-btn" id="nav-back">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+          <span id="nav-back-text">HUB</span>
+        </button>
+        <button class="nav-arrow-btn" id="nav-home">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>HOME</span>
+        </button>
+        <button class="nav-arrow-btn" id="nav-next">
+          <span id="nav-next-text">NEXT</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </button>
       </div>
 
+    </footer>
+
+    <!-- ── UNIVERSE OVERLAY ── -->
+    <div class="universe-underlay" id="universe-underlay">
+      <div class="universe-underlay-img" id="universe-underlay-img"></div>
+      <div class="universe-underlay-overlay"></div>
     </div>
 
-    <!-- Navigation Footer (5vh) -->
-    <div class="button-bar">
-      <button class="menu-btn">Videos</button>
-      <button class="menu-btn active">Gallery</button>
-      <button class="menu-btn">About</button>
+    <div class="universe-slider-viewport">
+      <div class="universe-slider" id="universe-slider">
+
+        <!-- Slide 0: Welcome -->
+        <div class="universe-slide">
+          <div class="slide-1-content">
+            <div class="universe-intro">
+              <div class="intro-welcome">WELCOME</div>
+              <div class="intro-sub">TO THE UNIVERSE OF:</div>
+            </div>
+            <div class="universe-crisp-art" id="universe-crisp-art"></div>
+          </div>
+        </div>
+
+        <!-- Slide 1: Lyrics -->
+        <div class="universe-slide">
+          <div class="glass-panel" id="universe-lyrics">
+            <!-- Populated dynamically by script.js / musicData -->
+          </div>
+        </div>
+
+        <!-- Slide 2: Stats -->
+        <div class="universe-slide">
+          <div class="glass-panel infographic" id="universe-stats">
+            <!-- Populated dynamically by script.js / musicData -->
+          </div>
+        </div>
+
+      </div>
     </div>
-  </div>
 
-  <script>
-    // Tab Interaction Controller
-    document.querySelectorAll('.menu-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
+  </div><!-- /layout-wrapper -->
 
-    // Premium Live Preview Console Logic
-    const slices = document.querySelectorAll('.track-slice');
-    const panel = document.getElementById('preview-panel');
-    const panelImg = document.getElementById('panel-img');
-    const panelTitle = document.getElementById('panel-title');
-    const panelDesc = document.getElementById('panel-desc');
-    const closeBtn = document.getElementById('close-panel-btn');
+  <!-- Data layer (populated by your CMS / build step) -->
+  <script src="js/script.js"></script>
 
-    // Live Canvas Audio Visualizer
-    const canvas = document.getElementById('visualizer-canvas');
-    const ctx = canvas.getContext('2d');
-    let animationId;
-    let isPlaying = false;
-
-    function resizeCanvas() {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function drawVisualizer() {
-      if (!isPlaying) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      const barCount = 10;
-      const barWidth = (canvas.width / barCount) - 3;
-      ctx.fillStyle = '#ffffff';
-
-      for (let i = 0; i < barCount; i++) {
-        const speedMultiplier = 0.007 + (i * 0.002);
-        const amplitude = canvas.height * 0.7;
-        const barHeight = Math.abs(Math.sin(Date.now() * speedMultiplier) * amplitude) + 4;
-        
-        const x = i * (barWidth + 3);
-        const y = canvas.height - barHeight;
-        
-        ctx.beginPath();
-        ctx.roundRect(x, y, barWidth, barHeight, 2);
-        ctx.fill();
-      }
-      animationId = requestAnimationFrame(drawVisualizer);
-    }
-
-    slices.forEach(slice => {
-      slice.addEventListener('click', () => {
-        // Clear all highlights
-        document.querySelectorAll('.row-divider-svg .highlight-path').forEach(p => {
-          p.setAttribute('stroke', 'transparent');
-        });
-
-        // Set clicked highlight sky blue
-        const hlId = slice.getAttribute('data-hl-id');
-        if (hlId) {
-          const poly = document.getElementById(hlId);
-          if (poly) {
-            poly.setAttribute('stroke', '#64b5f6'); // Matching the beautiful sky-blue outline from your mockup
-          }
-        }
-
-        // Populate and open preview panel
-        panelImg.src = slice.getAttribute('data-img');
-        panelTitle.textContent = slice.getAttribute('data-title');
-        panelDesc.textContent = slice.getAttribute('data-desc');
-        panel.classList.add('active');
-
-        // Fire simulation audio active
-        isPlaying = true;
-        cancelAnimationFrame(animationId);
-        drawVisualizer();
-      });
-    });
-
-    closeBtn.addEventListener('click', () => {
-      panel.classList.remove('active');
-      document.querySelectorAll('.row-divider-svg .highlight-path').forEach(p => {
-        p.setAttribute('stroke', 'transparent');
-      });
-      isPlaying = false;
-      cancelAnimationFrame(animationId);
-    });
-  </script>
+  <!-- App (use type="module" if not bundling) -->
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

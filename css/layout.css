@@ -1,0 +1,59 @@
+/* =========================================
+   BASE & LAYOUT
+   ========================================= */
+body {
+  background-color: var(--bg-base);
+  font-family: var(--font-main);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.layout-wrapper {
+  width: 100vw;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: var(--nav-height) var(--cover-height) minmax(0, 1fr) var(--footer-height);
+  background-color: var(--bg-base);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 769px) {
+  .layout-wrapper {
+    width: 40vw;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* =========================================
+   FADE-IN ANIMATION
+   ========================================= */
+@keyframes fadeInUI {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Elements that fade in on first load, stay visible on return */
+.nav-area,
+.cover-area,
+.bottom-bar-container {
+  opacity: 0;
+}
+
+.nav-area          { animation: fadeInUI 0.8s ease 0.3s forwards; }
+.cover-area        { animation: fadeInUI 0.8s ease 0.5s forwards; }
+.bottom-bar-container { animation: fadeInUI 0.8s ease 0.4s forwards; }
+
+/* Skip re-animation when returning home */
+.page-ready .nav-area,
+.page-ready .cover-area,
+.page-ready .bottom-bar-container {
+  animation: none;
+  opacity: 1;
+}
