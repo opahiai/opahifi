@@ -1489,34 +1489,135 @@
     // -------------------------------------------------------
     // Universe Player
     // -------------------------------------------------------
+    class BottomNavController {
+      constructor({
+        root = document.documentElement,
+        backButton,
+        homeButton,
+        nextButton,
+        backText,
+        dots = [],
+        maxSlideIndex = 0,
+        onBackToHub = () => { },
+        onHome = () => { },
+        onSlideChange = () => { }
+      }) {
+        this.root = root;
+        this.backButton = backButton;
+        this.homeButton = homeButton;
+        this.nextButton = nextButton;
+        this.backText = backText;
+        this.dots = Array.from(dots);
+        this.maxSlideIndex = maxSlideIndex;
+        this.onBackToHub = onBackToHub;
+        this.onHome = onHome;
+        this.onSlideChange = onSlideChange;
+        this.slideIndex = 0;
+      }
+
+      init() {
+        this.backButton?.addEventListener('click', e => {
+          e.stopPropagation();
+          this.back();
+        });
+
+        this.homeButton?.addEventListener('click', e => {
+          e.stopPropagation();
+          this.onHome();
+        });
+
+        this.nextButton?.addEventListener('click', e => {
+          e.stopPropagation();
+          this.next();
+        });
+
+        this.sync();
+      }
+
+      setSlide(index) {
+        const nextIndex = Math.max(0, Math.min(this.maxSlideIndex, index));
+        if (nextIndex === this.slideIndex) {
+          this.sync();
+          return;
+        }
+
+        this.slideIndex = nextIndex;
+        this.sync();
+        this.onSlideChange(this.slideIndex);
+      }
+
+      setState({
+        slideIndex = this.slideIndex,
+        maxSlideIndex = this.maxSlideIndex,
+        backLabel,
+        nextDisabled
+      } = {}) {
+        this.maxSlideIndex = maxSlideIndex;
+        this.slideIndex = Math.max(0, Math.min(this.maxSlideIndex, slideIndex));
+        this.sync({ backLabel, nextDisabled });
+      }
+
+      reset() {
+        this.setSlide(0);
+      }
+
+      back() {
+        if (this.slideIndex === 0) {
+          this.onBackToHub();
+          return;
+        }
+
+        this.setSlide(this.slideIndex - 1);
+      }
+
+      next() {
+        if (this.slideIndex >= this.maxSlideIndex) return;
+        this.setSlide(this.slideIndex + 1);
+      }
+
+      sync({ backLabel, nextDisabled } = {}) {
+        this.root.style.setProperty('--slide-index', this.slideIndex);
+        if (this.backText) this.backText.innerText = backLabel || (this.slideIndex === 0 ? 'HUB' : 'BACK');
+        const isNextDisabled = typeof nextDisabled === 'boolean'
+          ? nextDisabled
+          : this.slideIndex >= this.maxSlideIndex;
+        this.nextButton?.classList.toggle('disabled', isNextDisabled);
+        this.dots.forEach((dot, i) => dot.classList.toggle('active', i === this.slideIndex));
+      }
+    }
+
     const layoutWrapper = document.getElementById('layout-wrapper');
     const nodesWrapper = document.getElementById('nodes-wrapper');
     const crispArt = document.getElementById('universe-crisp-art');
     const underlayImg = document.getElementById('universe-underlay-img');
-    const btnBackText = document.getElementById('nav-back-text');
-    const btnNext = document.getElementById('nav-next');
-    const carouselDots = document.querySelectorAll('.carousel-dot');
 
     let currentUniverseIndex = -1;
-    let currentSlideIndex = 0;
     const MAX_SLIDES = 2;
-
-    function updateSliderUI() {
-      document.documentElement.style.setProperty('--slide-index', currentSlideIndex);
-      if (btnBackText) btnBackText.innerText = currentSlideIndex === 0 ? 'HUB' : 'BACK';
-      btnNext.classList.toggle('disabled', currentSlideIndex >= MAX_SLIDES);
-      carouselDots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlideIndex));
-    }
+    const bottomNav = new BottomNavController({
+      backButton: document.getElementById('nav-back'),
+      homeButton: document.getElementById('nav-home'),
+      nextButton: document.getElementById('nav-next'),
+      backText: document.getElementById('nav-back-text'),
+      dots: document.querySelectorAll('.carousel-dot'),
+      maxSlideIndex: MAX_SLIDES,
+      onBackToHub: () => {
+        layoutWrapper.classList.remove('universe-active');
+        if (currentUniverseIndex !== -1) {
+          orbs[currentUniverseIndex].classList.remove('hero-mode');
+        }
+      },
+      onHome: () => closeUniverse()
+    });
+    bottomNav.init();
 
     function openUniverse(index) {
       currentUniverseIndex = index;
-      currentSlideIndex = 0;
+      bottomNav.reset();
 
       const imgSrc = orbs[index].querySelector('img').src;
       crispArt.style.backgroundImage = `url(${imgSrc})`;
       underlayImg.style.backgroundImage = `url(${imgSrc})`;
 
-      updateSliderUI();
       layoutWrapper.classList.add('universe-active');
     }
 
@@ -1527,8 +1628,7 @@
       orbs.forEach(o => o.classList.remove('hero-mode', 'expanded'));
 
       currentUniverseIndex = -1;
-      currentSlideIndex = 0;
-      document.documentElement.style.setProperty('--slide-index', 0);
+      bottomNav.reset();
 
       // Mark page as ready — suppresses popIn re-animation
       layoutWrapper.classList.add('page-ready');
@@ -1653,36 +1753,6 @@
           layoutWrapper.classList.add('hub-active');
         }
       });
-    });
-
-    // -------------------------------------------------------
-    // Nav Controls
-    // -------------------------------------------------------
-    document.getElementById('nav-back').addEventListener('click', e => {
-      e.stopPropagation();
-      if (currentSlideIndex === 0) {
-        // Back to hub: remove universe overlay, keep card open
-        layoutWrapper.classList.remove('universe-active');
-        if (currentUniverseIndex !== -1) {
-          orbs[currentUniverseIndex].classList.remove('hero-mode');
-        }
-      } else {
-        currentSlideIndex--;
-        updateSliderUI();
-      }
-    });
-
-    document.getElementById('nav-home').addEventListener('click', e => {
-      e.stopPropagation();
-      closeUniverse();
-    });
-
-    document.getElementById('nav-next').addEventListener('click', e => {
-      e.stopPropagation();
-      if (currentSlideIndex < MAX_SLIDES) {
-        currentSlideIndex++;
-        updateSliderUI();
-      }
     });
 
     // -------------------------------------------------------
