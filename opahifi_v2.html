@@ -15,6 +15,7 @@
       --font-main: 'Oswald', -apple-system, BlinkMacSystemFont, sans-serif;
       --nav-height: 5vh;
       --cover-height: 15vh;
+      --footer-height: 7vh;
       --orb-scale: 1;
       --orb-size: calc(11vh * var(--orb-scale));
       --orb-max: calc(100px * var(--orb-scale));
@@ -47,8 +48,8 @@
     .layout-wrapper {
       width: 100vw;
       height: 100dvh;
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-rows: var(--nav-height) var(--cover-height) minmax(0, 1fr) var(--footer-height);
       background-color: var(--bg-base);
       position: relative;
       overflow: hidden;
@@ -67,7 +68,6 @@
        NAV
        ========================================= */
     .nav-area {
-      flex: 0 0 var(--nav-height);
       display: flex;
       width: 100%;
       align-items: center;
@@ -203,7 +203,6 @@
        COVER
        ========================================= */
     .cover-area {
-      flex: 0 0 var(--cover-height);
       width: 100%;
       background: url('https://raw.githubusercontent.com/opahiai/opahifi/main/img/opa/cover.png') center/cover no-repeat;
       z-index: 10;
@@ -233,7 +232,6 @@
        BOTTOM BAR
        ========================================= */
     .bottom-bar-container {
-      flex: 0 0 7vh;
       position: relative;
       background: #050505;
       z-index: 10005;
@@ -369,6 +367,94 @@
       transition: opacity 0.8s ease 1.0s;
     }
 
+    .song-active .carousel-indicator {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .song-view-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 350;
+      opacity: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(2, 2, 4, 0), rgba(2, 2, 4, 0.92) 55%, #020204);
+      transition: opacity 0.25s ease;
+    }
+
+    .song-active .song-view-footer {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .song-node-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      max-width: 100%;
+      padding: 0 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .song-node-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .song-node {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.45);
+      background: #fff;
+      cursor: pointer;
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .song-node.active {
+      border-color: #fff;
+      transform: scale(1.18);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.72);
+    }
+
+    .song-node-img-crop {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .song-node-img-wrapper {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 153.14%;
+      pointer-events: none;
+    }
+
+    .song-node-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      display: block;
+      pointer-events: none;
+    }
+
     .carousel-dot {
       width: 6px;
       height: 6px;
@@ -387,7 +473,7 @@
        JOURNEY MAP
        ========================================= */
     .journey-container {
-      flex-grow: 1;
+      min-height: 0;
       width: 100%;
       position: relative;
       background: var(--bg-base);
@@ -538,11 +624,11 @@
        EXPANDED ORB (the card)
        ========================================= */
     .journey-orb.expanded {
-      top: 50% !important;
+      top: calc((100% - 64px) / 2) !important;
       left: 50% !important;
-      width: 320px !important;
-      height: 380px !important;
-      max-width: 90vw !important;
+      width: min(86%, 640px) !important;
+      height: min(520px, calc(100% - 92px)) !important;
+      max-width: none !important;
       max-height: none !important;
       border-radius: 16px !important;
       background: var(--glass-bg-solid);
@@ -1234,7 +1320,7 @@
 
     <div class="cover-area"></div>
 
-    <div class="journey-container">
+    <div class="journey-container content-area">
       <svg class="journey-svg" id="svg-layer">
         <defs>
           <linearGradient id="spectrum-grad" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -1335,13 +1421,17 @@
         </div>
 
       </div>
+
+      <div class="song-view-footer" id="song-view-footer">
+        <div class="song-node-row" id="song-node-row" aria-label="Song navigation"></div>
+      </div>
     </div>
 
-    <div class="bottom-bar-container">
+    <div class="bottom-bar-container footer-area">
       <div class="map-tabs">
-        <button class="menu-btn">Videos</button>
-        <button class="menu-btn active">Gallery</button>
-        <button class="menu-btn">About</button>
+        <button class="menu-btn" id="map-left-btn">Videos</button>
+        <button class="menu-btn active" id="map-center-btn">Gallery</button>
+        <button class="menu-btn" id="map-right-btn">About</button>
       </div>
 
       <div class="carousel-indicator" id="carousel-indicator">
@@ -1364,7 +1454,7 @@
           <span>HOME</span>
         </div>
         <div class="nav-arrow-btn" id="nav-next">
-          <span>NEXT</span>
+          <span id="nav-next-text">NEXT</span>
           <svg viewBox="0 0 24 24">
             <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
           </svg>
@@ -1496,34 +1586,33 @@
         homeButton,
         nextButton,
         backText,
+        nextText,
         dots = [],
-        maxSlideIndex = 0,
-        onBackToHub = () => { },
-        onHome = () => { },
-        onSlideChange = () => { }
+        modes = {},
+        mode = 'gallery'
       }) {
         this.root = root;
         this.backButton = backButton;
         this.homeButton = homeButton;
         this.nextButton = nextButton;
         this.backText = backText;
+        this.nextText = nextText;
+        this.dotsContainer = dots?.parentElement || null;
         this.dots = Array.from(dots);
-        this.maxSlideIndex = maxSlideIndex;
-        this.onBackToHub = onBackToHub;
-        this.onHome = onHome;
-        this.onSlideChange = onSlideChange;
-        this.slideIndex = 0;
+        this.modes = modes;
+        this.mode = mode;
+        this.index = 0;
       }
 
       init() {
         this.backButton?.addEventListener('click', e => {
           e.stopPropagation();
-          this.back();
+          this.prev();
         });
 
         this.homeButton?.addEventListener('click', e => {
           e.stopPropagation();
-          this.onHome();
+          this.getMode().onHome?.();
         });
 
         this.nextButton?.addEventListener('click', e => {
@@ -1534,55 +1623,99 @@
         this.sync();
       }
 
-      setSlide(index) {
-        const nextIndex = Math.max(0, Math.min(this.maxSlideIndex, index));
-        if (nextIndex === this.slideIndex) {
+      getMode() {
+        return this.modes[this.mode] || {};
+      }
+
+      configureMode(mode, config = {}) {
+        this.modes[mode] = { ...(this.modes[mode] || {}), ...config };
+        if (mode === this.mode) this.sync();
+      }
+
+      setMode(mode, index = 0) {
+        this.mode = mode;
+        this.setIndex(index, { force: true });
+      }
+
+      setState({ mode = this.mode, index = this.index, count, labels, wrap } = {}) {
+        if (mode !== this.mode) this.mode = mode;
+        const nextMode = this.getMode();
+        if (typeof count === 'number') nextMode.count = count;
+        if (labels) nextMode.labels = { ...(nextMode.labels || {}), ...labels };
+        if (typeof wrap === 'boolean') nextMode.wrap = wrap;
+        this.setIndex(index, { force: true });
+      }
+
+      setIndex(index, { force = false } = {}) {
+        const modeConfig = this.getMode();
+        const count = Math.max(1, modeConfig.count || 1);
+        const wrap = modeConfig.wrap !== false;
+        let nextIndex = index;
+        if (wrap) {
+          nextIndex = ((nextIndex % count) + count) % count;
+        } else {
+          nextIndex = Math.max(0, Math.min(count - 1, nextIndex));
+        }
+
+        if (!force && nextIndex === this.index) {
           this.sync();
           return;
         }
 
-        this.slideIndex = nextIndex;
+        this.index = nextIndex;
         this.sync();
-        this.onSlideChange(this.slideIndex);
-      }
-
-      setState({
-        slideIndex = this.slideIndex,
-        maxSlideIndex = this.maxSlideIndex,
-        backLabel,
-        nextDisabled
-      } = {}) {
-        this.maxSlideIndex = maxSlideIndex;
-        this.slideIndex = Math.max(0, Math.min(this.maxSlideIndex, slideIndex));
-        this.sync({ backLabel, nextDisabled });
+        modeConfig.onChange?.(this.index);
       }
 
       reset() {
-        this.setSlide(0);
+        this.setIndex(0, { force: true });
       }
 
-      back() {
-        if (this.slideIndex === 0) {
-          this.onBackToHub();
+      prev() {
+        const modeConfig = this.getMode();
+        if (modeConfig.onPrev) {
+          modeConfig.onPrev(this.index);
           return;
         }
-
-        this.setSlide(this.slideIndex - 1);
+        this.setIndex(this.index - 1);
       }
 
       next() {
-        if (this.slideIndex >= this.maxSlideIndex) return;
-        this.setSlide(this.slideIndex + 1);
+        const modeConfig = this.getMode();
+        if (modeConfig.onNext) {
+          modeConfig.onNext(this.index);
+          return;
+        }
+        this.setIndex(this.index + 1);
       }
 
-      sync({ backLabel, nextDisabled } = {}) {
-        this.root.style.setProperty('--slide-index', this.slideIndex);
-        if (this.backText) this.backText.innerText = backLabel || (this.slideIndex === 0 ? 'HUB' : 'BACK');
-        const isNextDisabled = typeof nextDisabled === 'boolean'
-          ? nextDisabled
-          : this.slideIndex >= this.maxSlideIndex;
+      renderDots(count) {
+        if (!this.dotsContainer) return;
+        if (this.dots.length === count) return;
+        this.dotsContainer.replaceChildren();
+        this.dots = Array.from({ length: count }, () => {
+          const dot = document.createElement('div');
+          dot.className = 'carousel-dot';
+          this.dotsContainer.appendChild(dot);
+          return dot;
+        });
+      }
+
+      sync() {
+        const modeConfig = this.getMode();
+        const count = Math.max(1, modeConfig.count || 1);
+        const labels = modeConfig.labels || {};
+        this.renderDots(count);
+        this.root.style.setProperty('--slide-index', this.index);
+        const backLabel = typeof labels.back === 'function' ? labels.back(this.index) : labels.back;
+        const nextLabel = typeof labels.next === 'function' ? labels.next(this.index) : labels.next;
+        if (this.backText) this.backText.innerText = backLabel || 'PREV';
+        if (this.nextText) this.nextText.innerText = nextLabel || 'NEXT';
+        const isNextDisabled = modeConfig.wrap === false && this.index >= count - 1;
+        const isBackDisabled = modeConfig.wrap === false && this.index <= 0;
         this.nextButton?.classList.toggle('disabled', isNextDisabled);
-        this.dots.forEach((dot, i) => dot.classList.toggle('active', i === this.slideIndex));
+        this.backButton?.classList.toggle('disabled', isBackDisabled);
+        this.dots.forEach((dot, i) => dot.classList.toggle('active', i === this.index));
       }
     }
 
@@ -1590,48 +1723,253 @@
     const nodesWrapper = document.getElementById('nodes-wrapper');
     const crispArt = document.getElementById('universe-crisp-art');
     const underlayImg = document.getElementById('universe-underlay-img');
+    const songNodeRow = document.getElementById('song-node-row');
+    const mapLeftBtn = document.getElementById('map-left-btn');
+    const mapCenterBtn = document.getElementById('map-center-btn');
+    const mapRightBtn = document.getElementById('map-right-btn');
+
+    class SongPillNav {
+      constructor({ left, center, right, onPrev, onHome, onNext }) {
+        this.buttons = { left, center, right };
+        this.labels = {
+          gallery: ['Videos', 'Gallery', 'About'],
+          song: ['Prev', 'Home', 'Next']
+        };
+        this.mode = 'gallery';
+        this.onPrev = onPrev;
+        this.onHome = onHome;
+        this.onNext = onNext;
+      }
+
+      init() {
+        this.buttons.left?.addEventListener('click', e => {
+          if (this.mode !== 'song') return;
+          e.stopPropagation();
+          this.onPrev();
+        });
+        this.buttons.center?.addEventListener('click', e => {
+          if (this.mode !== 'song') return;
+          e.stopPropagation();
+          this.onHome();
+        });
+        this.buttons.right?.addEventListener('click', e => {
+          if (this.mode !== 'song') return;
+          e.stopPropagation();
+          this.onNext();
+        });
+      }
+
+      setMode(mode) {
+        this.mode = mode;
+        const labels = this.labels[mode] || this.labels.gallery;
+        [this.buttons.left, this.buttons.center, this.buttons.right].forEach((button, index) => {
+          if (!button) return;
+          button.textContent = labels[index];
+          button.classList.toggle('active', index === 1);
+        });
+      }
+    }
 
     let currentUniverseIndex = -1;
+    let currentSongIndex = -1;
+    const SONG_GROUP_PARAM = 'pl3';
+    const SONG_VERSION_PARAM = 'pl3s';
     const MAX_SLIDES = 2;
     const bottomNav = new BottomNavController({
       backButton: document.getElementById('nav-back'),
       homeButton: document.getElementById('nav-home'),
       nextButton: document.getElementById('nav-next'),
       backText: document.getElementById('nav-back-text'),
+      nextText: document.getElementById('nav-next-text'),
       dots: document.querySelectorAll('.carousel-dot'),
-      maxSlideIndex: MAX_SLIDES,
-      onBackToHub: () => {
-        layoutWrapper.classList.remove('universe-active');
-        if (currentUniverseIndex !== -1) {
-          orbs[currentUniverseIndex].classList.remove('hero-mode');
+      modes: {
+        gallery: {
+          count: 1,
+          labels: { back: 'PREV', next: 'NEXT' },
+          onHome: () => closeSongView()
+        },
+        universe: {
+          count: MAX_SLIDES + 1,
+          labels: { back: index => index === 0 ? 'HUB' : 'BACK', next: 'NEXT' },
+          wrap: false,
+          onHome: () => closeUniverse(),
+          onChange: index => {
+            document.documentElement.style.setProperty('--slide-index', index);
+          },
+          onPrev: index => {
+            if (index === 0) {
+              layoutWrapper.classList.remove('universe-active');
+              layoutWrapper.classList.add('song-active');
+              if (currentUniverseIndex !== -1) {
+                orbs[currentUniverseIndex].classList.remove('hero-mode');
+                openSongView(currentUniverseIndex, { fromNav: true });
+              }
+              return;
+            }
+            bottomNav.setIndex(index - 1);
+          }
         }
-      },
-      onHome: () => closeUniverse()
+      }
     });
     bottomNav.init();
 
+    const songPillNav = new SongPillNav({
+      left: mapLeftBtn,
+      center: mapCenterBtn,
+      right: mapRightBtn,
+      onPrev: () => openSongView(currentSongIndex - 1, { fromNav: true }),
+      onHome: () => closeSongView(),
+      onNext: () => openSongView(currentSongIndex + 1, { fromNav: true })
+    });
+    songPillNav.init();
+
+    const songNodes = orbs.map((orb, index) => {
+      const node = document.createElement('button');
+      node.type = 'button';
+      node.className = 'song-node';
+      node.title = orb.dataset.title || `Song ${index + 1}`;
+      node.setAttribute('aria-label', node.title);
+      const imgSrc = orb.querySelector('.orb-img-wrapper img')?.getAttribute('src');
+      if (imgSrc) {
+        node.innerHTML = `
+          <span class="song-node-img-crop">
+            <span class="song-node-img-wrapper">
+              <img src="${imgSrc}" alt="">
+            </span>
+          </span>
+        `;
+      }
+      node.addEventListener('click', e => {
+        e.stopPropagation();
+        openSongView(index, { fromNav: true });
+      });
+      songNodeRow?.appendChild(node);
+      return node;
+    });
+
+    function syncSongNodes(index) {
+      songNodes.forEach((node, i) => {
+        const isActive = i === index;
+        node.classList.toggle('active', isActive);
+        if (window.gsap) {
+          window.gsap.to(node, {
+            scale: isActive ? 1.18 : 1,
+            duration: 0.24,
+            ease: 'back.out(1.7)',
+            overwrite: true
+          });
+        }
+      });
+    }
+
+    function getSongKeyFromUrl() {
+      const url = new URL(window.location.href);
+      const paramKey = url.searchParams.get(SONG_GROUP_PARAM) || url.searchParams.get('song');
+      if (paramKey) return paramKey;
+
+      const pathParts = url.pathname.split('/').filter(Boolean);
+      const songRouteIndex = pathParts.indexOf('s');
+      return songRouteIndex >= 0 ? decodeURIComponent(pathParts[songRouteIndex + 1] || '') : '';
+    }
+
+    function getSongIndexFromUrl() {
+      const key = getSongKeyFromUrl();
+      if (!key) return -1;
+      return orbs.findIndex(orb => orb.dataset.groupKey === key);
+    }
+
+    function updateSongViewUrl(index, { replace = false } = {}) {
+      if (!window.history?.pushState) return;
+      const groupKey = orbs[index]?.dataset.groupKey;
+      if (!groupKey) return;
+
+      const url = new URL(window.location.href);
+      url.searchParams.set(SONG_GROUP_PARAM, groupKey);
+      url.searchParams.delete(SONG_VERSION_PARAM);
+      url.searchParams.delete('song');
+      url.hash = '';
+
+      const state = { view: 'song', groupKey, index };
+      if (url.href === window.location.href) {
+        window.history.replaceState(state, '', url);
+        return;
+      }
+
+      window.history[replace ? 'replaceState' : 'pushState'](state, '', url);
+    }
+
+    function clearSongViewUrl({ replace = false } = {}) {
+      if (!window.history?.pushState) return;
+
+      const url = new URL(window.location.href);
+      const hadSongParam = url.searchParams.has(SONG_GROUP_PARAM) || url.searchParams.has(SONG_VERSION_PARAM) || url.searchParams.has('song');
+      url.searchParams.delete(SONG_GROUP_PARAM);
+      url.searchParams.delete(SONG_VERSION_PARAM);
+      url.searchParams.delete('song');
+      url.hash = '';
+
+      if (!hadSongParam || url.href === window.location.href) return;
+      window.history[replace ? 'replaceState' : 'pushState']({ view: 'gallery' }, '', url);
+    }
+
     function openUniverse(index) {
       currentUniverseIndex = index;
-      bottomNav.reset();
+      bottomNav.setMode('universe', 0);
 
       const imgSrc = orbs[index].querySelector('img').src;
       crispArt.style.backgroundImage = `url(${imgSrc})`;
       underlayImg.style.backgroundImage = `url(${imgSrc})`;
 
+      layoutWrapper.classList.remove('song-active');
       layoutWrapper.classList.add('universe-active');
     }
 
     // FIX 4: closeUniverse sets page-ready so nodes skip re-animation
-    function closeUniverse() {
-      layoutWrapper.classList.remove('universe-active', 'hub-active');
+    function closeUniverse({ updateUrl = true } = {}) {
+      layoutWrapper.classList.remove('universe-active', 'hub-active', 'song-active');
       nodesWrapper.classList.remove('has-expanded');
       orbs.forEach(o => o.classList.remove('hero-mode', 'expanded'));
 
       currentUniverseIndex = -1;
-      bottomNav.reset();
+      currentSongIndex = -1;
+      songPillNav.setMode('gallery');
+      bottomNav.setMode('gallery', 0);
 
       // Mark page as ready — suppresses popIn re-animation
       layoutWrapper.classList.add('page-ready');
+      if (updateUrl) clearSongViewUrl();
+    }
+
+    function closeSongView({ updateUrl = true } = {}) {
+      layoutWrapper.classList.remove('song-active', 'hub-active', 'universe-active');
+      nodesWrapper.classList.remove('has-expanded');
+      orbs.forEach(o => o.classList.remove('hero-mode', 'expanded'));
+      currentSongIndex = -1;
+      currentUniverseIndex = -1;
+      syncSongNodes(-1);
+      songPillNav.setMode('gallery');
+      bottomNav.setMode('gallery', 0);
+      layoutWrapper.classList.add('page-ready');
+      if (updateUrl) clearSongViewUrl();
+    }
+
+    function openSongView(index, { fromNav = false, updateUrl = true } = {}) {
+      index = ((index % orbs.length) + orbs.length) % orbs.length;
+      const orb = orbs[index];
+      if (!orb) return;
+
+      currentSongIndex = index;
+      currentUniverseIndex = index;
+      orbs.forEach(o => o.classList.remove('expanded', 'hero-mode'));
+      orb.classList.add('expanded');
+      nodesWrapper.classList.add('has-expanded');
+      layoutWrapper.classList.add('hub-active', 'song-active');
+      layoutWrapper.classList.remove('universe-active');
+      syncSongNodes(index);
+      songPillNav.setMode('song');
+
+      bottomNav.setMode('gallery', 0);
+      if (updateUrl) updateSongViewUrl(index);
     }
 
     // -------------------------------------------------------
@@ -1743,17 +2081,27 @@
 
         const isExpanded = orb.classList.contains('expanded');
 
-        orbs.forEach(o => o.classList.remove('expanded'));
-        nodesWrapper.classList.remove('has-expanded');
-        layoutWrapper.classList.remove('hub-active');
-
-        if (!isExpanded) {
-          orb.classList.add('expanded');
-          nodesWrapper.classList.add('has-expanded');
-          layoutWrapper.classList.add('hub-active');
+        if (isExpanded) {
+          closeSongView();
+        } else {
+          openSongView(idx);
         }
       });
     });
+
+    window.addEventListener('popstate', () => {
+      const songIndex = getSongIndexFromUrl();
+      if (songIndex >= 0) {
+        openSongView(songIndex, { fromNav: true, updateUrl: false });
+      } else {
+        closeSongView({ updateUrl: false });
+      }
+    });
+
+    const initialSongIndex = getSongIndexFromUrl();
+    if (initialSongIndex >= 0) {
+      openSongView(initialSongIndex, { fromNav: true, updateUrl: false });
+    }
 
     // -------------------------------------------------------
     // Background click cleanup
@@ -1762,10 +2110,8 @@
       if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
         settingsPanel.classList.remove('active');
       }
-      if (!e.target.closest('.journey-orb') && !layoutWrapper.classList.contains('universe-active')) {
-        orbs.forEach(o => o.classList.remove('expanded'));
-        nodesWrapper.classList.remove('has-expanded');
-        layoutWrapper.classList.remove('hub-active');
+      if (!e.target.closest('.journey-orb, .song-view-footer') && !layoutWrapper.classList.contains('universe-active')) {
+        closeSongView();
       }
     });
   </script>
