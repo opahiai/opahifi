@@ -774,7 +774,7 @@
 
     .card-subtitle {
       font-size: 11px;
-      color: #af52de;
+      color: #fff;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-top: 4px;
@@ -807,7 +807,8 @@
       --mix-color-1: #fff;
       --mix-color-2: #fff;
       --mix-color-3: var(--mix-color-2);
-      --version-chevron-color: #fff;
+      --version-glow-bg: #fff;
+      --version-chevron-color: #000;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
@@ -847,7 +848,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #000;
+      background: var(--version-glow-bg);
       color: var(--version-chevron-color);
       box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.18);
     }
@@ -1256,7 +1257,8 @@
           <div class="orb-pill">Full-<br>Mindness</div>
         </div>
 
-        <div class="journey-orb node-2" data-index="1" data-group-key="yeah-lets-do-brunch" data-title="Yeah Let's Do Brunch">
+        <div class="journey-orb node-2" data-index="1" data-group-key="yeah-lets-do-brunch"
+          data-title="Yeah Let's Do Brunch">
           <div class="orb-img-crop">
             <div class="orb-img-wrapper"><img
                 src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-yeahletsdobrunch.png"
@@ -1265,7 +1267,8 @@
           <div class="orb-pill">Yeah, Let's<br>Do Brunch</div>
         </div>
 
-        <div class="journey-orb node-3" data-index="2" data-group-key="hallucinating" data-title="Hallucinating Dum Dum">
+        <div class="journey-orb node-3" data-index="2" data-group-key="hallucinating"
+          data-title="Hallucinating Dum Dum">
           <div class="orb-img-crop">
             <div class="orb-img-wrapper"><img
                 src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-hallucinatingdumdum.png"
@@ -1274,7 +1277,8 @@
           <div class="orb-pill">Hallucinating<br>Dum Dum</div>
         </div>
 
-        <div class="journey-orb node-4" data-index="3" data-group-key="splenda-love-rabbit-hell" data-title="Splenda Love Rabbit Hell">
+        <div class="journey-orb node-4" data-index="3" data-group-key="splenda-love-rabbit-hell"
+          data-title="Splenda Love Rabbit Hell">
           <div class="orb-img-crop">
             <div class="orb-img-wrapper"><img
                 src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-splendaloverabbithell.png"
@@ -1283,7 +1287,8 @@
           <div class="orb-pill">Splenda Love<br>Rabbit Hell</div>
         </div>
 
-        <div class="journey-orb node-5" data-index="4" data-group-key="believe-the-truth-fairy" data-title="The Truth Fairy's">
+        <div class="journey-orb node-5" data-index="4" data-group-key="believe-the-truth-fairy"
+          data-title="The Truth Fairy's">
           <div class="orb-img-crop">
             <div class="orb-img-wrapper"><img
                 src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-believethetruthfairy.png"
@@ -1310,7 +1315,8 @@
           <div class="orb-pill">Glittaa<br>Phoenix</div>
         </div>
 
-        <div class="journey-orb node-8" data-index="7" data-group-key="wellwolf-howl-lehluya" data-title="Wellwolf Howl-lehluya">
+        <div class="journey-orb node-8" data-index="7" data-group-key="wellwolf-howl-lehluya"
+          data-title="Wellwolf Howl-lehluya">
           <div class="orb-img-crop">
             <div class="orb-img-wrapper"><img
                 src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-wellwolfhowllehluya.png"
@@ -1578,7 +1584,8 @@
       if (!colors.length) return '';
       const vars = colors.map((color, index) => `--mix-color-${index + 1}:${escapeHtml(color)}`);
       if (colors.length === 2) vars.push(`--mix-color-3:${escapeHtml(colors[1])}`);
-      vars.push('--version-chevron-color:#fff');
+      vars.push(`--version-glow-bg:linear-gradient(180deg, ${colors.map(escapeHtml).join(', ')})`);
+      vars.push('--version-chevron-color:#000');
       return ` style="${vars.join(';')}"`;
     }
 

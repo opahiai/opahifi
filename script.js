@@ -209,7 +209,7 @@
             id: SINGLE.OLD_LOVE_STORY_DESERT_DISCO_DUET,
             groupKey: GROUP.OLD_LOVE_STORY,
             title: 'Old Love Story',
-            version: 'Desert Disco Duet Remix',
+            version: 'Desert Disco Duet',
             image: 'img/music/versions/version-oldlovestory-desertdiscoduet.png',
             mixColors: ['#fff0f5', '#5c14b5'],
             lyricsPath: 'lyrics/old-love-story.txt',
@@ -227,7 +227,7 @@
             title: 'Old Love Story',
             version: 'Opa Max Mix',
             image: 'img/music/versions/version-oldlovestory-maxmix.png',
-            mixColors: ['#e8d36b', '#f4c97a', '#f4af86'],
+            mixColors: ['#60c6e6', '#5c14b5'],
             lyricsPath: 'lyrics/old-love-story.txt',
             links: {
                 'YouTube Music': 'https://music.youtube.com/watch?v=m7wP4U97FC8',
@@ -271,7 +271,7 @@
             title: 'Splenda Love Rabbit Hell',
             version: 'Opa Max Mix',
             image: 'img/music/versions/version-splendaloverabbithell-maxmix.png',
-            mixColors: ['#e8d36b', '#f4c97a', '#f4af86'],
+            mixColors: ['#60c6e6', '#5c14b5'],
             lyricsPath: 'lyrics/splenda-love-rabbit-hell.txt',
             links: {
                 'Spotify': 'https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842',
@@ -2460,7 +2460,8 @@ class PL3GroupPanel {
         if (colors.length === 2) {
             element.style.setProperty('--mix-color-3', colors[1]);
         }
-        element.style.setProperty('--version-chevron-color', '#fff');
+        element.style.setProperty('--version-glow-bg', `linear-gradient(180deg, ${colors.join(', ')})`);
+        element.style.setProperty('--version-chevron-color', '#000');
     }
 
     createPlatformEntry(platform, url, versionLabel) {

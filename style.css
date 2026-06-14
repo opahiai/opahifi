@@ -2525,7 +2525,8 @@ button {
     --mix-color-1: #fff;
     --mix-color-2: #fff;
     --mix-color-3: var(--mix-color-2);
-    --version-chevron-color: #fff;
+    --version-glow-bg: #fff;
+    --version-chevron-color: #000;
     display: grid;
     grid-template-columns: var(--pl3-version-art-size) minmax(0, 1fr) 24px;
     column-gap: var(--pl3-version-row-gap);
@@ -2612,7 +2613,7 @@ button {
     width: 24px;
     height: calc(100% + var(--pl3-version-row-pad) * 2);
     border-radius: 0 9px 9px 0;
-    background: #000;
+    background: var(--version-glow-bg);
     border: 0;
     color: var(--version-chevron-color);
     font-size: 1.25rem;
