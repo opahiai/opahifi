@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpaHiFi Backbone Prototype</title>
+  <title>OPAHiFi Backbone Prototype</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Oswald:wght@500;600;700&family=Poppins:wght@300;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --ophf-cover-area: 24dvh;
-      --ophf-nav-h: 72px;
-      --ophf-topbar-h: 56px;
+      --ophf-nav-h: 44px;
+      --ophf-topbar-h: 44px;
       --ophf-rail-h: 76px;
       --ophf-black: #020204;
       --ophf-purple: #25123D;
@@ -117,16 +117,16 @@
     }
 
     .ophf-wordmarkOpa {
-      font-weight: 800;
+      font-weight: 900;
       font-size: clamp(25px, 7.8vw, 39px);
-      letter-spacing: -0.085em;
+      letter-spacing: -0.06em;
     }
 
-    .ophf-wordmarkAi {
-      margin-left: 0.02em;
+    .ophf-wordmarkHiFi {
+      margin-left: 0.08em;
       font-weight: 600;
-      font-size: clamp(22px, 6.8vw, 34px);
-      letter-spacing: 0.015em;
+      font-size: clamp(22px, 6.7vw, 34px);
+      letter-spacing: -0.01em;
     }
 
     .ophf-menuBtn {
@@ -338,7 +338,6 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 0 0 clamp(2px, 1.5vw, 10px);
     }
 
     .ophf-songField {
@@ -400,27 +399,53 @@
       position: relative;
       min-width: 0;
       min-height: 0;
+      container-type: size;
+      --ophf-node-label-font-size: clamp(8px, 2.25vw, 11px);
+      --ophf-node-label-pad-y: 7px;
+      --ophf-node-label-h: calc(
+        var(--ophf-node-label-font-size)
+        + var(--ophf-node-label-font-size)
+        + var(--ophf-node-label-pad-y)
+      );
+      --ophf-node-label-gap: 0px;
+      --ophf-node-edge-pad: clamp(4px, 2.4cqw, 7px);
+      --ophf-node-label-protrusion: calc(var(--ophf-node-label-h) * 0.78);
+      --ophf-node-max: 74px;
+      --ophf-node: clamp(
+        34px,
+        calc(
+          min(100cqw, 100cqh)
+          - var(--ophf-node-label-protrusion)
+          - var(--ophf-node-edge-pad)
+          - var(--ophf-node-edge-pad)
+        ),
+        var(--ophf-node-max)
+      );
+    }
+
+    @media (min-width: 760px) {
+      .ophf-mapCell {
+        --ophf-node-max: 96px;
+      }
     }
 
     .ophf-songUnit {
       position: absolute;
       left: 50%;
-      top: calc(50% + ((var(--ophf-node-label-h) + var(--ophf-node-label-gap)) / 2));
-      display: grid;
-      grid-template-rows: var(--ophf-node) var(--ophf-node-label-h);
-      justify-items: center;
-      align-items: start;
-      gap: var(--ophf-node-label-gap);
-      width: min(96%, calc(var(--ophf-node) + 34px));
-      height: var(--ophf-node-total);
+      top: 50%;
+      width: min(96%, calc(var(--ophf-node) + 40px));
+      height: var(--ophf-node);
       transform: translate(-50%, -50%);
     }
 
     .ophf-songNode {
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 50%;
       width: var(--ophf-node);
       height: var(--ophf-node);
       border-radius: 999px;
+      transform: translateX(-50%);
       overflow: hidden;
       background: #111;
       box-shadow:
@@ -431,7 +456,7 @@
     }
 
     .ophf-songNode:active {
-      transform: scale(0.95);
+      transform: translateX(-50%) scale(0.95);
     }
 
     .ophf-nodeArtCrop {
@@ -450,7 +475,7 @@
       bottom: 0;
       width: 100%;
       height: var(--ophf-node-art-h);
-      object-fit: fill;
+      object-fit: cover;
       object-position: center bottom;
       display: block;
     }
@@ -466,24 +491,41 @@
     }
 
     .ophf-songLabel {
-      width: 100%;
-      height: var(--ophf-node-label-h);
+      position: absolute;
+      z-index: 3;
+      top: 85%;
+      left: 50%;
+      width: min(100%, calc(var(--ophf-node) + 36px));
+      min-height: var(--ophf-node-label-h);
+      max-height: var(--ophf-node-label-h);
+      padding: 3px 7px 4px;
       overflow: hidden;
+      border-radius: 999px;
+      background: rgba(2, 2, 4, 0.86);
+      box-shadow:
+        inset 0 0 0 1px rgba(248, 248, 248, 0.2),
+        0 5px 13px rgba(0, 0, 0, 0.45);
       color: var(--ophf-light);
       font-family: Oswald, sans-serif;
-      font-size: clamp(8px, 2.3vw, 12px);
+      font-size: var(--ophf-node-label-font-size);
       font-weight: 700;
-      letter-spacing: 0.055em;
-      line-height: 0.95;
+      letter-spacing: 0.045em;
+      line-height: 0.9;
       text-align: center;
       text-transform: uppercase;
-      text-shadow:
-        0 2px 6px rgba(0, 0, 0, 0.95),
-        0 0 12px rgba(2, 2, 4, 0.95);
+      text-shadow: none;
       pointer-events: none;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+    }
+
+    .ophf-songLabelLine {
+      display: block;
+      white-space: nowrap;
     }
 
     .ophf-detailScreen {
@@ -568,7 +610,8 @@
 
     .ophf-listenGrid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(82px, 108px));
+      justify-content: start;
       gap: 7px;
     }
 
@@ -578,6 +621,8 @@
     .ophf-bottomBtn {
       display: grid;
       place-items: center;
+      width: 100%;
+      max-width: 148px;
       min-height: 38px;
       border-radius: 999px;
       background: rgba(248, 248, 248, 0.1);
@@ -627,8 +672,10 @@
     }
 
     .ophf-universeBtn {
-      width: 100%;
+      width: min(100%, 280px);
+      max-width: 280px;
       min-height: 52px;
+      margin-inline: auto;
       background:
         radial-gradient(circle at 20% 0%, rgba(195, 77, 172, 0.8), transparent 42%),
         linear-gradient(135deg, rgba(37, 78, 181, 0.92), rgba(119, 13, 31, 0.86));
@@ -644,7 +691,7 @@
       height: var(--ophf-rail-h);
       display: none;
       align-items: center;
-      gap: 10px;
+      gap: 5px;
       overflow-x: auto;
       overscroll-behavior-x: contain;
       padding: 10px 12px;
@@ -664,8 +711,8 @@
     .ophf-railBtn {
       position: relative;
       flex: 0 0 auto;
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       padding: 0;
       border-radius: 999px;
       overflow: hidden;
@@ -698,7 +745,8 @@
       left: 0;
       z-index: 30;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, clamp(86px, 28vw, 138px));
+      justify-content: center;
       height: var(--ophf-nav-h);
       padding: 8px clamp(8px, 3vw, 18px) max(8px, env(safe-area-inset-bottom));
       gap: 8px;
@@ -733,34 +781,15 @@
         width: min(900px, 100%);
         margin-inline: auto;
       }
-
-      .ophf-listenGrid {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-      }
     }
-
-    /* @media (max-width: 360px) {
-      .ophf-galleryScreen {
-        padding-inline: 8px;
-      }
-
-      .ophf-songLabel {
-        font-size: 7.8px;
-        letter-spacing: 0.035em;
-      }
-
-      .ophf-listenGrid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    } */
   </style>
 </head>
 <body>
   <div class="ophf-app" data-ophf-mode="gallery">
     <header class="ophf-coverArea">
       <nav class="ophf-navbar" aria-label="Main navigation">
-        <div class="ophf-wordmark" aria-label="OpaHiFi">
-          <span class="ophf-wordmarkOpa">opa</span><span class="ophf-wordmarkAi">AI</span>
+        <div class="ophf-wordmark" aria-label="OPAHiFi">
+          <span class="ophf-wordmarkOpa">opa</span><span class="ophf-wordmarkHiFi">HiFi</span>
         </div>
         <button class="ophf-menuBtn" type="button" aria-label="Open menu">
           <span class="ophf-menuGlyph" aria-hidden="true"></span>
@@ -862,7 +891,7 @@
         journey: 1,
         grid: [1, 1],
         title: "Full-Mindness",
-        label: "Full-Mindness",
+        labelLines: ["Full-", "Mindness"],
         file: "base-fullmindness.png",
         latest: false,
         versions: [
@@ -879,7 +908,7 @@
         journey: 2,
         grid: [1, 2],
         title: "Yeah, Let’s Do Brunch",
-        label: "Brunch",
+        labelLines: ["Yeah, Let’s", "Do Brunch"],
         file: "base-yeahletsdobrunch.png",
         latest: false,
         versions: [
@@ -896,7 +925,7 @@
         journey: 3,
         grid: [1, 3],
         title: "Hallucinating",
-        label: "Hallucinating",
+        labelLines: ["Hallucinating", "Dum Dum"],
         file: "base-hallucinatingdumdum.png",
         latest: false,
         versions: [
@@ -919,7 +948,7 @@
         journey: 4,
         grid: [2, 3],
         title: "Splenda Love Rabbit Hell",
-        label: "Splenda",
+        labelLines: ["Splenda Love", "Rabbit Hell"],
         file: "base-splendaloverabbithell.png",
         latest: false,
         versions: [
@@ -936,7 +965,7 @@
         journey: 5,
         grid: [3, 3],
         title: "Believe the Truth Fairy",
-        label: "Truth Fairy",
+        labelLines: ["Believe The", "Truth Fairy"],
         file: "base-believethetruthfairy.png",
         latest: false,
         versions: [
@@ -953,7 +982,7 @@
         journey: 6,
         grid: [3, 2],
         title: "Old Love Story",
-        label: "Old Love",
+        labelLines: ["Old Love", "Story"],
         file: "base-oldlovestory.png",
         latest: false,
         versions: [
@@ -970,7 +999,7 @@
         journey: 7,
         grid: [3, 1],
         title: "Glittaa Phoenix",
-        label: "Glittaa",
+        labelLines: ["Glittaa", "Phoenix"],
         file: "base-glittaaphoenix.png",
         latest: false,
         versions: [
@@ -987,7 +1016,7 @@
         journey: 8,
         grid: [2, 1],
         title: "Opa Pa Pa Party",
-        label: "Opa Party",
+        labelLines: ["Opa Pa", "Pa Party"],
         file: "base-opapapaparty.png",
         latest: false,
         versions: [
@@ -1004,7 +1033,7 @@
         journey: 9,
         grid: [2, 2],
         title: "Wellwolf Howl-Lehluya",
-        label: "Wellwolf",
+        labelLines: ["Wellwolf", "Howl-Lehluya"],
         file: "base-wellwolfhowllehluya.png",
         latest: true,
         versions: [
@@ -1085,28 +1114,6 @@
       };
     }
 
-    function ophfClamp(min, value, max) {
-      return Math.max(min, Math.min(value, max));
-    }
-
-    function ophfUpdateNodeMetrics() {
-      const field = document.querySelector(".ophf-songField");
-      if (!field) return;
-
-      const box = field.getBoundingClientRect();
-      const cell = Math.min(box.width, box.height) / 3;
-      const tiny = cell < 92;
-      const labelH = tiny ? 14 : ophfClamp(16, window.innerWidth * 0.045, 22);
-      const labelGap = tiny ? 3 : ophfClamp(4, window.innerWidth * 0.012, 7);
-      const edgePad = tiny ? 3 : 5;
-      const maxNode = window.innerWidth >= 760 ? 96 : 74;
-      const node = ophfClamp(34, cell - (2 * (labelH + labelGap + edgePad)), maxNode);
-
-    //   document.documentElement.style.setProperty("--ophf-node", `${node}px`);
-    //   document.documentElement.style.setProperty("--ophf-node-label-h", `${labelH}px`);
-    //   document.documentElement.style.setProperty("--ophf-node-label-gap", `${labelGap}px`);
-    }
-
     function ophfRenderMap() {
       ophfEls.mapGrid.innerHTML = "";
 
@@ -1133,7 +1140,12 @@
 
           const label = document.createElement("div");
           label.className = "ophf-songLabel";
-          label.textContent = song.label;
+          (song.labelLines || [song.title]).forEach((line) => {
+            const lineEl = document.createElement("span");
+            lineEl.className = "ophf-songLabelLine";
+            lineEl.textContent = line;
+            label.appendChild(lineEl);
+          });
 
           const crop = document.createElement("span");
           crop.className = "ophf-nodeArtCrop";
@@ -1231,7 +1243,7 @@
         ophfEls.coverImg.src = ophfHeroCover;
         ophfEls.coverImg.style.display = "block";
         ophfEls.coverKicker.textContent = "Gallery Map";
-        ophfEls.coverName.textContent = "OpaHiFi Journey";
+        ophfEls.coverName.textContent = "OPAHiFi Journey";
         ophfEls.coverPill.textContent = "3×3 Map";
         return;
       }
@@ -1278,8 +1290,8 @@
     function ophfShareCurrent() {
       const song = ophfGetSong(ophfState.songId);
       const shareData = {
-        title: `OpaHiFi — ${song.title}`,
-        text: `Listen to ${song.title} on OpaHiFi`,
+        title: `OPAHiFi — ${song.title}`,
+        text: `Listen to ${song.title} on OPAHiFi`,
         url: `${location.origin}${location.pathname}#${song.id}`
       };
 
@@ -1311,11 +1323,9 @@
         if (ophfState.mode === "detail") ophfMoveSong(1);
       });
 
-      window.addEventListener("resize", ophfUpdateNodeMetrics);
     }
 
     function ophfInit() {
-      ophfUpdateNodeMetrics();
       ophfRenderMap();
       ophfRenderRail();
       ophfBindEvents();
