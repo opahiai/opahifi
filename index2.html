@@ -10,9 +10,16 @@
   <style>
     :root {
       --ophf-cover-area: 24dvh;
-      --ophf-nav-h: 44px;
+      --ophf-nav-h: 40px;
       --ophf-topbar-h: 44px;
       --ophf-rail-h: 76px;
+      --ophf-gallery-pad: clamp(8px, 2.5vw, 18px);
+      --ophf-gallery-gap: clamp(8px, 2.4vw, 14px);
+      --ophf-promo-band-h: clamp(68px, 13dvh, 92px);
+      --ophf-grid-label-space: clamp(20px, 4dvh, 30px);
+      --ophf-main-h: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h));
+      --ophf-main-h-detail: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h) - var(--ophf-rail-h));
+      --ophf-gallery-panel-h: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h) - (var(--ophf-gallery-pad) * 2));
       --ophf-black: #020204;
       --ophf-purple: #25123D;
       --ophf-royal: #182475;
@@ -218,32 +225,19 @@
       text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
     }
 
-    .ophf-coverPill {
-      flex: 0 0 auto;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(2, 2, 4, 0.58);
-      box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.13);
-      font-family: Oswald, sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ophf-lavender);
-    }
-
     .ophf-main {
       position: fixed;
       top: var(--ophf-cover-area);
       right: 0;
-      bottom: var(--ophf-nav-h);
       left: 0;
+      height: var(--ophf-main-h);
       z-index: 5;
       min-height: 0;
       overflow: hidden;
     }
 
     .ophf-app[data-ophf-mode="detail"] .ophf-main {
-      bottom: calc(var(--ophf-nav-h) + var(--ophf-rail-h));
+      height: var(--ophf-main-h-detail);
     }
 
     .ophf-screen {
@@ -260,22 +254,23 @@
 
     .ophf-galleryScreen {
       overflow: hidden;
-      padding: clamp(8px, 2.5vw, 18px);
+      padding: var(--ophf-gallery-pad);
     }
 
     .ophf-galleryPanel {
-      height: 100%;
+      height: var(--ophf-gallery-panel-h);
       min-height: 0;
       display: grid;
-      grid-template-rows: clamp(78px, 17dvh, 112px) minmax(0, 1fr);
-      gap: clamp(8px, 2.4vw, 14px);
+      grid-template-rows: var(--ophf-promo-band-h) minmax(0, 1fr);
+      gap: var(--ophf-gallery-gap);
     }
 
     .ophf-promoBand {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: clamp(8px, 2.4vw, 14px);
-      min-height: 0;
+      gap: var(--ophf-gallery-gap);
+      height: var(--ophf-promo-band-h);
+      min-height: var(--ophf-promo-band-h);
     }
 
     .ophf-promoTile {
@@ -338,6 +333,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      padding-bottom: var(--ophf-grid-label-space);
     }
 
     .ophf-songField {
@@ -400,7 +396,7 @@
       min-width: 0;
       min-height: 0;
       container-type: size;
-      --ophf-node-label-font-size: clamp(8px, 2.25vw, 11px);
+      --ophf-node-label-font-size: clamp(8px, 7cqh, 11px);
       --ophf-node-label-pad-y: 7px;
       --ophf-node-label-h: calc(
         var(--ophf-node-label-font-size)
@@ -408,7 +404,7 @@
         + var(--ophf-node-label-pad-y)
       );
       --ophf-node-label-gap: 0px;
-      --ophf-node-edge-pad: clamp(4px, 2.4cqw, 7px);
+      --ophf-node-edge-pad: clamp(4px, 2.4cqh, 7px);
       --ophf-node-label-protrusion: calc(var(--ophf-node-label-h) * 0.78);
       --ophf-node-max: 74px;
       --ophf-node: clamp(
@@ -769,10 +765,8 @@
     @media (min-width: 760px) {
       :root {
         --ophf-cover-area: 24dvh;
-      }
-
-      .ophf-galleryPanel {
-        grid-template-rows: 112px minmax(0, 1fr);
+        --ophf-promo-band-h: 84px;
+        --ophf-grid-label-space: 36px;
       }
 
       .ophf-promoBand,
@@ -805,7 +799,6 @@
           <p class="ophf-coverKicker" data-ophf-cover-kicker>Gallery Map</p>
           <h1 class="ophf-coverName" data-ophf-cover-name>OpaHiFi Journey</h1>
         </div>
-        <div class="ophf-coverPill" data-ophf-cover-pill>3×3 Map</div>
       </div>
     </header>
 
