@@ -1,1337 +1,1336 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OPAHiFi Backbone Prototype</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Oswald:wght@500;600;700&family=Poppins:wght@300;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ophf-cover-area: 24dvh;
-      --ophf-nav-h: 40px;
-      --ophf-topbar-h: 44px;
-      --ophf-rail-h: 76px;
-      --ophf-gallery-pad: clamp(8px, 2.5vw, 18px);
-      --ophf-gallery-gap: clamp(8px, 2.4vw, 14px);
-      --ophf-promo-band-h: clamp(68px, 13dvh, 92px);
-      --ophf-grid-label-space: clamp(20px, 4dvh, 30px);
-      --ophf-main-h: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h));
-      --ophf-main-h-detail: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h) - var(--ophf-rail-h));
-      --ophf-gallery-panel-h: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h) - (var(--ophf-gallery-pad) * 2));
-      --ophf-black: #020204;
-      --ophf-purple: #25123D;
-      --ophf-royal: #182475;
-      --ophf-blue: #254EB5;
-      --ophf-bright: #6B95DC;
-      --ophf-violet: #6351B4;
-      --ophf-magenta: #C34DAC;
-      --ophf-pink: #E44261;
-      --ophf-red: #770D1F;
-      --ophf-fire: #DC3612;
-      --ophf-lavender: #BFBEEE;
-      --ophf-light: #F8F8F8;
-      --ophf-node: 60px;
-      --ophf-node-label-h: 18px;
-      --ophf-node-label-gap: 5px;
-      --ophf-node-total: calc(var(--ophf-node) + var(--ophf-node-label-h) + var(--ophf-node-label-gap));
-      --ophf-node-art-h: 153.846%;
-      --ophf-radius-xl: 26px;
-      --ophf-radius-md: 18px;
-      --ophf-ease: 180ms ease;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      background: var(--ophf-black);
-      color: var(--ophf-light);
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    button,
-    select,
-    a {
-      font: inherit;
-    }
-
-    button {
-      border: 0;
-      color: inherit;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .ophf-app {
-      position: relative;
-      width: 100vw;
-      height: 100dvh;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 25% 10%, rgba(195, 77, 172, 0.25), transparent 28%),
-        radial-gradient(circle at 80% 34%, rgba(37, 78, 181, 0.22), transparent 32%),
-        linear-gradient(180deg, #040407 0%, #10071d 50%, #020204 100%);
-    }
-
-    .ophf-coverArea {
-      position: fixed;
-      inset: 0 0 auto 0;
-      z-index: 20;
-      height: var(--ophf-cover-area);
-      overflow: hidden;
-      border-bottom: 1px solid rgba(248, 248, 248, 0.1);
-      background:
-        linear-gradient(180deg, rgba(2, 2, 4, 0.88), rgba(2, 2, 4, 0.48)),
-        radial-gradient(circle at 50% 20%, rgba(99, 81, 180, 0.5), transparent 45%);
-    }
-
-    .ophf-coverArea::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 0 0;
-      height: 42%;
-      background: linear-gradient(180deg, transparent, rgba(2, 2, 4, 0.86));
-      pointer-events: none;
-    }
-
-    .ophf-navbar {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: var(--ophf-topbar-h);
-      padding: 0 clamp(12px, 4vw, 32px);
-    }
-
-    .ophf-wordmark {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0.04em;
-      font-family: Poppins, Inter, system-ui, sans-serif;
-      text-transform: none;
-      line-height: 0.9;
-      color: var(--ophf-light);
-      text-shadow: 0 0 22px rgba(107, 149, 220, 0.6);
-    }
-
-    .ophf-wordmarkOpa {
-      font-weight: 900;
-      font-size: clamp(25px, 7.8vw, 39px);
-      letter-spacing: -0.06em;
-    }
-
-    .ophf-wordmarkHiFi {
-      margin-left: 0.08em;
-      font-weight: 600;
-      font-size: clamp(22px, 6.7vw, 34px);
-      letter-spacing: -0.01em;
-    }
-
-    .ophf-menuBtn {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      background: rgba(248, 248, 248, 0.08);
-      box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.14);
-    }
-
-    .ophf-menuGlyph,
-    .ophf-menuGlyph::before,
-    .ophf-menuGlyph::after {
-      display: block;
-      width: 18px;
-      height: 2px;
-      border-radius: 99px;
-      background: var(--ophf-light);
-    }
-
-    .ophf-menuGlyph {
-      position: relative;
-    }
-
-    .ophf-menuGlyph::before,
-    .ophf-menuGlyph::after {
-      content: "";
-      position: absolute;
-      left: 0;
-    }
-
-    .ophf-menuGlyph::before {
-      top: -6px;
-    }
-
-    .ophf-menuGlyph::after {
-      top: 6px;
-    }
-
-    .ophf-coverSlot {
-      position: absolute;
-      inset: var(--ophf-topbar-h) 0 0 0;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-    }
-
-    .ophf-coverImg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 58%;
-      opacity: 0.78;
-      filter: saturate(1.12) contrast(1.04);
-      transform: scale(1.02);
-    }
-
-    .ophf-coverTitle {
-      position: absolute;
-      z-index: 3;
-      left: clamp(12px, 4vw, 32px);
-      right: clamp(12px, 4vw, 32px);
-      bottom: 10px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
-      pointer-events: none;
-    }
-
-    .ophf-coverKicker {
-      margin: 0 0 3px;
-      font-family: Oswald, sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      color: var(--ophf-lavender);
-      text-transform: uppercase;
-    }
-
-    .ophf-coverName {
-      margin: 0;
-      max-width: 74vw;
-      font-family: Oswald, sans-serif;
-      font-size: clamp(18px, 5vw, 34px);
-      line-height: 0.92;
-      text-transform: uppercase;
-      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
-    }
-
-    .ophf-main {
-      position: fixed;
-      top: var(--ophf-cover-area);
-      right: 0;
-      left: 0;
-      height: var(--ophf-main-h);
-      z-index: 5;
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .ophf-app[data-ophf-mode="detail"] .ophf-main {
-      height: var(--ophf-main-h-detail);
-    }
-
-    .ophf-screen {
-      width: 100%;
-      height: 100%;
-      min-height: 0;
-      display: none;
-    }
-
-    .ophf-app[data-ophf-mode="gallery"] .ophf-galleryScreen,
-    .ophf-app[data-ophf-mode="detail"] .ophf-detailScreen {
-      display: block;
-    }
-
-    .ophf-galleryScreen {
-      overflow: hidden;
-      padding: var(--ophf-gallery-pad);
-    }
-
-    .ophf-galleryPanel {
-      height: var(--ophf-gallery-panel-h);
-      min-height: 0;
-      display: grid;
-      grid-template-rows: var(--ophf-promo-band-h) minmax(0, 1fr);
-      gap: var(--ophf-gallery-gap);
-    }
-
-    .ophf-promoBand {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--ophf-gallery-gap);
-      height: var(--ophf-promo-band-h);
-      min-height: var(--ophf-promo-band-h);
-    }
-
-    .ophf-promoTile {
-      position: relative;
-      min-width: 0;
-      overflow: hidden;
-      border-radius: var(--ophf-radius-md);
-      padding: clamp(10px, 3vw, 16px);
-      background:
-        linear-gradient(145deg, rgba(248, 248, 248, 0.12), rgba(248, 248, 248, 0.035)),
-        radial-gradient(circle at 15% 0%, rgba(228, 66, 97, 0.35), transparent 46%),
-        rgba(37, 18, 61, 0.66);
-      box-shadow:
-        inset 0 0 0 1px rgba(248, 248, 248, 0.12),
-        0 12px 30px rgba(0, 0, 0, 0.22);
-      text-align: left;
-    }
-
-    .ophf-promoTile::after {
-      content: "";
-      position: absolute;
-      inset: auto -16px -24px auto;
-      width: 78px;
-      height: 78px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(107, 149, 220, 0.48), transparent 68%);
-      pointer-events: none;
-    }
-
-    .ophf-promoTilePlay {
-      background:
-        linear-gradient(145deg, rgba(248, 248, 248, 0.12), rgba(248, 248, 248, 0.035)),
-        radial-gradient(circle at 80% 10%, rgba(37, 78, 181, 0.45), transparent 48%),
-        rgba(24, 36, 117, 0.55);
-    }
-
-    .ophf-promoEyebrow {
-      display: block;
-      margin-bottom: 7px;
-      font-family: Oswald, sans-serif;
-      font-size: clamp(10px, 2.9vw, 13px);
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      color: var(--ophf-lavender);
-    }
-
-    .ophf-promoTitle {
-      display: block;
-      max-width: 13ch;
-      font-family: Oswald, sans-serif;
-      font-size: clamp(19px, 5.2vw, 30px);
-      line-height: 0.92;
-      text-transform: uppercase;
-      color: var(--ophf-light);
-    }
-
-    .ophf-fieldStage {
-      min-height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      padding-bottom: var(--ophf-grid-label-space);
-    }
-
-    .ophf-songField {
-      position: relative;
-      height: min(100%, calc(100vw - clamp(20px, 5vw, 48px)));
-      max-width: min(680px, calc(100vw - clamp(20px, 5vw, 48px)));
-      aspect-ratio: 1 / 1;
-      border-radius: clamp(18px, 5vw, 34px);
-      overflow: hidden;
-      background:
-        linear-gradient(rgba(248, 248, 248, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(248, 248, 248, 0.045) 1px, transparent 1px),
-        radial-gradient(circle at center, rgba(99, 81, 180, 0.22), transparent 58%),
-        rgba(2, 2, 4, 0.28);
-      background-size: 33.333% 33.333%, 33.333% 33.333%, 100% 100%, 100% 100%;
-      box-shadow:
-        inset 0 0 0 1px rgba(248, 248, 248, 0.09),
-        0 24px 70px rgba(0, 0, 0, 0.25);
-    }
-
-    .ophf-spiralSvg {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      pointer-events: none;
-    }
-
-    .ophf-spiralGlow {
-      fill: none;
-      stroke: rgba(195, 77, 172, 0.45);
-      stroke-width: 0.08;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: blur(0.04px);
-    }
-
-    .ophf-spiralLine {
-      fill: none;
-      stroke: url(#ophfSpiralGradient);
-      stroke-width: 0.036;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .ophf-mapGrid {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      grid-template-rows: repeat(3, minmax(0, 1fr));
-      width: 100%;
-      height: 100%;
-    }
-
-    .ophf-mapCell {
-      position: relative;
-      min-width: 0;
-      min-height: 0;
-      container-type: size;
-      --ophf-node-label-font-size: clamp(8px, 7cqh, 11px);
-      --ophf-node-label-pad-y: 7px;
-      --ophf-node-label-h: calc(
-        var(--ophf-node-label-font-size)
-        + var(--ophf-node-label-font-size)
-        + var(--ophf-node-label-pad-y)
-      );
-      --ophf-node-label-gap: 0px;
-      --ophf-node-edge-pad: clamp(4px, 2.4cqh, 7px);
-      --ophf-node-label-protrusion: calc(var(--ophf-node-label-h) * 0.78);
-      --ophf-node-max: 74px;
-      --ophf-node: clamp(
-        34px,
-        calc(
-          min(100cqw, 100cqh)
-          - var(--ophf-node-label-protrusion)
-          - var(--ophf-node-edge-pad)
-          - var(--ophf-node-edge-pad)
-        ),
-        var(--ophf-node-max)
-      );
-    }
-
-    @media (min-width: 760px) {
-      .ophf-mapCell {
-        --ophf-node-max: 96px;
-      }
-    }
-
-    .ophf-songUnit {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: min(96%, calc(var(--ophf-node) + 40px));
-      height: var(--ophf-node);
-      transform: translate(-50%, -50%);
-    }
-
-    .ophf-songNode {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: var(--ophf-node);
-      height: var(--ophf-node);
-      border-radius: 999px;
-      transform: translateX(-50%);
-      overflow: hidden;
-      background: #111;
-      box-shadow:
-        0 0 0 2px rgba(248, 248, 248, 0.9),
-        0 0 0 5px rgba(2, 2, 4, 0.62),
-        0 0 28px rgba(107, 149, 220, 0.36);
-      transition: transform var(--ophf-ease), box-shadow var(--ophf-ease);
-    }
-
-    .ophf-songNode:active {
-      transform: translateX(-50%) scale(0.95);
-    }
-
-    .ophf-nodeArtCrop {
-      position: absolute;
-      inset: 0;
-      display: block;
-      border-radius: inherit;
-      overflow: hidden;
-      background: var(--ophf-black);
-    }
-
-    .ophf-songNodeImg {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: var(--ophf-node-art-h);
-      object-fit: cover;
-      object-position: center bottom;
-      display: block;
-    }
-
-    .ophf-songNodeFallback {
-      position: absolute;
-      inset: 0;
-      display: block;
-      background:
-        radial-gradient(circle at 30% 22%, var(--ophf-pink), transparent 38%),
-        radial-gradient(circle at 68% 72%, var(--ophf-blue), transparent 42%),
-        linear-gradient(135deg, var(--ophf-purple), var(--ophf-black));
-    }
-
-    .ophf-songLabel {
-      position: absolute;
-      z-index: 3;
-      top: 85%;
-      left: 50%;
-      width: min(100%, calc(var(--ophf-node) + 36px));
-      min-height: var(--ophf-node-label-h);
-      max-height: var(--ophf-node-label-h);
-      padding: 3px 7px 4px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(2, 2, 4, 0.86);
-      box-shadow:
-        inset 0 0 0 1px rgba(248, 248, 248, 0.2),
-        0 5px 13px rgba(0, 0, 0, 0.45);
-      color: var(--ophf-light);
-      font-family: Oswald, sans-serif;
-      font-size: var(--ophf-node-label-font-size);
-      font-weight: 700;
-      letter-spacing: 0.045em;
-      line-height: 0.9;
-      text-align: center;
-      text-transform: uppercase;
-      text-shadow: none;
-      pointer-events: none;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 0;
-    }
-
-    .ophf-songLabelLine {
-      display: block;
-      white-space: nowrap;
-    }
-
-    .ophf-detailScreen {
-      overflow: hidden;
-    }
-
-    .ophf-detailScroller {
-      height: 100%;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      padding: clamp(10px, 3vw, 18px);
-    }
-
-    .ophf-trackPanel,
-    .ophf-detailBlock,
-    .ophf-actionBlock {
-      width: min(760px, 100%);
-      margin: 0 auto clamp(12px, 3vw, 18px);
-      border-radius: var(--ophf-radius-xl);
-      background: rgba(248, 248, 248, 0.07);
-      box-shadow:
-        inset 0 0 0 1px rgba(248, 248, 248, 0.11),
-        0 18px 50px rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(16px);
-    }
-
-    .ophf-trackPanel {
-      display: grid;
-      grid-template-columns: clamp(88px, 27vw, 170px) minmax(0, 1fr);
-      gap: clamp(12px, 3.5vw, 18px);
-      padding: clamp(12px, 3.5vw, 18px);
-    }
-
-    .ophf-trackCover {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      border-radius: 20px;
-      object-fit: cover;
-      object-position: center 66%;
-      box-shadow:
-        0 0 0 1px rgba(248, 248, 248, 0.16),
-        0 16px 35px rgba(0, 0, 0, 0.35);
-      background: var(--ophf-purple);
-    }
-
-    .ophf-trackMeta {
-      min-width: 0;
-    }
-
-    .ophf-trackTitle {
-      margin: 0;
-      font-family: Oswald, sans-serif;
-      font-size: clamp(24px, 8vw, 42px);
-      line-height: 0.94;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
-
-    .ophf-versionTitle {
-      margin: 7px 0 2px;
-      color: var(--ophf-lavender);
-      font-size: clamp(13px, 3.6vw, 16px);
-      font-weight: 700;
-    }
-
-    .ophf-versionCount {
-      margin: 0 0 10px;
-      color: rgba(248, 248, 248, 0.68);
-      font-size: 12px;
-    }
-
-    .ophf-versionPicker {
-      width: 100%;
-      min-height: 40px;
-      margin-bottom: 10px;
-      padding: 0 11px;
-      border: 1px solid rgba(248, 248, 248, 0.16);
-      border-radius: 12px;
-      color: var(--ophf-light);
-      background: rgba(2, 2, 4, 0.72);
-    }
-
-    .ophf-listenGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(82px, 108px));
-      justify-content: start;
-      gap: 7px;
-    }
-
-    .ophf-listenBtn,
-    .ophf-shareBtn,
-    .ophf-universeBtn,
-    .ophf-bottomBtn {
-      display: grid;
-      place-items: center;
-      width: 100%;
-      max-width: 148px;
-      min-height: 38px;
-      border-radius: 999px;
-      background: rgba(248, 248, 248, 0.1);
-      box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.13);
-      color: var(--ophf-light);
-      font-family: Oswald, sans-serif;
-      font-size: 12px;
-      letter-spacing: 0.09em;
-      text-decoration: none;
-      text-transform: uppercase;
-    }
-
-    .ophf-shareBtn {
-      background: linear-gradient(135deg, rgba(228, 66, 97, 0.64), rgba(37, 78, 181, 0.56));
-    }
-
-    .ophf-detailBlock {
-      padding: clamp(14px, 4vw, 22px);
-    }
-
-    .ophf-detailHeading {
-      margin: 0 0 10px;
-      font-family: Oswald, sans-serif;
-      font-size: 20px;
-      line-height: 1;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .ophf-lyrics {
-      margin: 0;
-      white-space: pre-wrap;
-      color: rgba(248, 248, 248, 0.86);
-      font-size: clamp(14px, 3.7vw, 16px);
-      line-height: 1.48;
-    }
-
-    .ophf-notes {
-      margin: 12px 0 0;
-      color: rgba(248, 248, 248, 0.68);
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .ophf-actionBlock {
-      padding: clamp(14px, 4vw, 22px);
-    }
-
-    .ophf-universeBtn {
-      width: min(100%, 280px);
-      max-width: 280px;
-      min-height: 52px;
-      margin-inline: auto;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(195, 77, 172, 0.8), transparent 42%),
-        linear-gradient(135deg, rgba(37, 78, 181, 0.92), rgba(119, 13, 31, 0.86));
-      font-size: 15px;
-    }
-
-    .ophf-miniRail {
-      position: fixed;
-      right: 0;
-      bottom: var(--ophf-nav-h);
-      left: 0;
-      z-index: 15;
-      height: var(--ophf-rail-h);
-      display: none;
-      align-items: center;
-      gap: 5px;
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      padding: 10px 12px;
-      background: rgba(2, 2, 4, 0.82);
-      border-top: 1px solid rgba(248, 248, 248, 0.1);
-      scrollbar-width: none;
-    }
-
-    .ophf-miniRail::-webkit-scrollbar {
-      display: none;
-    }
-
-    .ophf-app[data-ophf-mode="detail"] .ophf-miniRail {
-      display: flex;
-    }
-
-    .ophf-railBtn {
-      position: relative;
-      flex: 0 0 auto;
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(248, 248, 248, 0.08);
-      box-shadow: 0 0 0 1px rgba(248, 248, 248, 0.16);
-    }
-
-    .ophf-railBtn[aria-current="true"] {
-      box-shadow:
-        0 0 0 2px var(--ophf-light),
-        0 0 22px rgba(195, 77, 172, 0.72);
-    }
-
-    .ophf-railImg {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: var(--ophf-node-art-h);
-      object-fit: fill;
-      object-position: center bottom;
-      display: block;
-    }
-
-    .ophf-bottomNav {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 30;
-      display: grid;
-      grid-template-columns: repeat(3, clamp(86px, 28vw, 138px));
-      justify-content: center;
-      height: var(--ophf-nav-h);
-      padding: 8px clamp(8px, 3vw, 18px) max(8px, env(safe-area-inset-bottom));
-      gap: 8px;
-      background: rgba(2, 2, 4, 0.94);
-      border-top: 1px solid rgba(248, 248, 248, 0.1);
-    }
-
-    .ophf-bottomBtn {
-      min-height: 48px;
-      background: rgba(248, 248, 248, 0.08);
-    }
-
-    .ophf-bottomBtnActive {
-      background:
-        radial-gradient(circle at 50% 0%, rgba(107, 149, 220, 0.45), transparent 48%),
-        rgba(248, 248, 248, 0.12);
-      color: var(--ophf-light);
-    }
-
-    @media (min-width: 760px) {
-      :root {
-        --ophf-cover-area: 24dvh;
-        --ophf-promo-band-h: 84px;
-        --ophf-grid-label-space: 36px;
-      }
-
-      .ophf-promoBand,
-      .ophf-fieldStage,
-      .ophf-detailScroller {
-        width: min(900px, 100%);
-        margin-inline: auto;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="ophf-app" data-ophf-mode="gallery">
-    <header class="ophf-coverArea">
-      <nav class="ophf-navbar" aria-label="Main navigation">
-        <div class="ophf-wordmark" aria-label="OPAHiFi">
-          <span class="ophf-wordmarkOpa">opa</span><span class="ophf-wordmarkHiFi">HiFi</span>
-        </div>
-        <button class="ophf-menuBtn" type="button" aria-label="Open menu">
-          <span class="ophf-menuGlyph" aria-hidden="true"></span>
-        </button>
-      </nav>
-
-      <div class="ophf-coverSlot">
-        <img class="ophf-coverImg" data-ophf-cover-img src="https://opahifi.com/img/opa/cover.png" alt="" />
-      </div>
-
-      <div class="ophf-coverTitle">
-        <div>
-          <p class="ophf-coverKicker" data-ophf-cover-kicker>Gallery Map</p>
-          <h1 class="ophf-coverName" data-ophf-cover-name>OpaHiFi Journey</h1>
-        </div>
-      </div>
-    </header>
-
-    <main class="ophf-main">
-      <section class="ophf-screen ophf-galleryScreen" aria-label="Gallery map">
-        <div class="ophf-galleryPanel">
-          <div class="ophf-promoBand">
-            <button class="ophf-promoTile" type="button" data-ophf-latest>
-              <span class="ophf-promoEyebrow">Latest Release</span>
-              <span class="ophf-promoTitle">Wellwolf</span>
-            </button>
-            <button class="ophf-promoTile ophf-promoTilePlay" type="button" data-ophf-playall>
-              <span class="ophf-promoEyebrow">Playlist Order</span>
-              <span class="ophf-promoTitle">Play All</span>
-            </button>
-          </div>
-
-          <div class="ophf-fieldStage">
-            <div class="ophf-songField" aria-label="Journey song map">
-              <svg class="ophf-spiralSvg" viewBox="0 0 3 3" aria-hidden="true">
-                <defs>
-                  <linearGradient id="ophfSpiralGradient" x1="0" y1="0" x2="3" y2="3" gradientUnits="userSpaceOnUse">
-                    <stop offset="0" stop-color="#6B95DC" />
-                    <stop offset="0.46" stop-color="#C34DAC" />
-                    <stop offset="1" stop-color="#DC3612" />
-                  </linearGradient>
-                </defs>
-                <path class="ophf-spiralGlow" d="M .5 .5 L 1.5 .5 L 2.5 .5 L 2.5 1.5 L 2.5 2.5 L 1.5 2.5 L .5 2.5 L .5 1.5 L 1.5 1.5" />
-                <path class="ophf-spiralLine" d="M .5 .5 L 1.5 .5 L 2.5 .5 L 2.5 1.5 L 2.5 2.5 L 1.5 2.5 L .5 2.5 L .5 1.5 L 1.5 1.5" />
-              </svg>
-              <div class="ophf-mapGrid" data-ophf-map-grid></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="ophf-screen ophf-detailScreen" aria-label="Version detail">
-        <div class="ophf-detailScroller">
-          <article class="ophf-trackPanel">
-            <img class="ophf-trackCover" data-ophf-track-cover alt="" />
-            <div class="ophf-trackMeta">
-              <h2 class="ophf-trackTitle" data-ophf-track-title></h2>
-              <p class="ophf-versionTitle" data-ophf-version-title></p>
-              <p class="ophf-versionCount" data-ophf-version-count></p>
-              <select class="ophf-versionPicker" data-ophf-version-picker aria-label="Choose version"></select>
-              <div class="ophf-listenGrid" data-ophf-links></div>
-            </div>
-          </article>
-
-          <section class="ophf-detailBlock">
-            <h3 class="ophf-detailHeading">Lyrics</h3>
-            <p class="ophf-lyrics" data-ophf-lyrics></p>
-          </section>
-
-          <section class="ophf-detailBlock">
-            <h3 class="ophf-detailHeading">Version Notes</h3>
-            <p class="ophf-notes" data-ophf-notes></p>
-          </section>
-
-          <section class="ophf-actionBlock">
-            <button class="ophf-universeBtn" type="button">Enter Universe</button>
-          </section>
-        </div>
-      </section>
-    </main>
-
-    <aside class="ophf-miniRail" data-ophf-mini-rail aria-label="Mini song rail"></aside>
-
-    <nav class="ophf-bottomNav" aria-label="Bottom navigation">
-      <button class="ophf-bottomBtn" type="button" data-ophf-nav-a>Videos</button>
-      <button class="ophf-bottomBtn ophf-bottomBtnActive" type="button" data-ophf-nav-b>Gallery</button>
-      <button class="ophf-bottomBtn" type="button" data-ophf-nav-c>About</button>
-    </nav>
-  </div>
-
-  <script>
-    const ophfBasePath = "https://opahifi.com/img/music/base/";
-    const ophfHeroCover = "https://opahifi.com/img/opa/cover.png";
-
-    const ophfSongs = [
-      {
-        id: "fullmindness",
-        journey: 1,
-        grid: [1, 1],
-        title: "Full-Mindness",
-        labelLines: ["Full-", "Mindness"],
-        file: "base-fullmindness.png",
-        latest: false,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
-            notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
-          }
-        ]
-      },
-      {
-        id: "brunch",
-        journey: 2,
-        grid: [1, 2],
-        title: "Yeah, Let’s Do Brunch",
-        labelLines: ["Yeah, Let’s", "Do Brunch"],
-        file: "base-yeahletsdobrunch.png",
-        latest: false,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "Yeah let's do brunch\nSo sad we lost touch\nI miss you so so much\nI just need to finish my memoir.",
-            notes: "The fake-connection chapter. Warm words, empty follow-through."
-          }
-        ]
-      },
-      {
-        id: "hallucinating",
-        journey: 3,
-        grid: [1, 3],
-        title: "Hallucinating",
-        labelLines: ["Hallucinating", "Dum Dum"],
-        file: "base-hallucinatingdumdum.png",
-        latest: false,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "Hallucinating\nMe, me, and I\nHallucinating\nWatchin’ life fly by\nLike a dumb bot.",
-            notes: "The crash point: human panic starts behaving like a broken model."
-          },
-          {
-            title: "Tight Hook Draft",
-            links: {},
-            lyrics: "Quiet room woke stress up — now it’s ready to rumble\nHe mumbles nonsense — makes a monster from a mumble.",
-            notes: "Alternate lyric draft for a cleaner hallucination bridge."
-          }
-        ]
-      },
-      {
-        id: "splenda",
-        journey: 4,
-        grid: [2, 3],
-        title: "Splenda Love Rabbit Hell",
-        labelLines: ["Splenda Love", "Rabbit Hell"],
-        file: "base-splendaloverabbithell.png",
-        latest: false,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
-            notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
-          }
-        ]
-      },
-      {
-        id: "truthfairy",
-        journey: 5,
-        grid: [3, 3],
-        title: "Believe the Truth Fairy",
-        labelLines: ["Believe The", "Truth Fairy"],
-        file: "base-believethetruthfairy.png",
-        latest: false,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "Believe what you want —\nThere’s always another view\nBefore you spread fear and hate —\nStop — think it through.",
-            notes: "The truth checkpoint. Belief is allowed; blind certainty is the danger."
-          }
-        ]
-      },
-      {
-        id: "oldlove",
-        journey: 6,
-        grid: [3, 2],
-        title: "Old Love Story",
-        labelLines: ["Old Love", "Story"],
-        file: "base-oldlovestory.png",
-        latest: false,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
-            notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
-          }
-        ]
-      },
-      {
-        id: "glittaa",
-        journey: 7,
-        grid: [3, 1],
-        title: "Glittaa Phoenix",
-        labelLines: ["Glittaa", "Phoenix"],
-        file: "base-glittaaphoenix.png",
-        latest: false,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
-            notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
-          }
-        ]
-      },
-      {
-        id: "opaparty",
-        journey: 8,
-        grid: [2, 1],
-        title: "Opa Pa Pa Party",
-        labelLines: ["Opa Pa", "Pa Party"],
-        file: "base-opapapaparty.png",
-        latest: false,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "There ain’t no party like an\nOpa pa pa pa party\nWith all your party pi pi pi—\nPi pi people.",
-            notes: "The joy-release chapter. The journey becomes physical, loud, and communal."
-          }
-        ]
-      },
-      {
-        id: "wellwolf",
-        journey: 9,
-        grid: [2, 2],
-        title: "Wellwolf Howl-Lehluya",
-        labelLines: ["Wellwolf", "Howl-Lehluya"],
-        file: "base-wellwolfhowllehluya.png",
-        latest: true,
-        versions: [
-          {
-            title: "Main Version",
-            links: {},
-            lyrics: "Wellwolf no bloodlust no fame thirst\nRun on love not to be first\nBite with kindness not to hurt\nBeat with heart not for sport.",
-            notes: "The kindness endpoint. The monster myth flips into care."
-          }
-        ]
-      }
-    ];
-
-    const ophfPlaylistOrder = [
-      "opaparty",
-      "wellwolf",
-      "glittaa",
-      "truthfairy",
-      "fullmindness",
-      "hallucinating",
-      "splenda",
-      "oldlove",
-      "brunch"
-    ];
-
-    const ophfPlatforms = ["Spotify", "Apple", "YouTube", "YouTube Music", "Amazon"];
-
-    const ophfEls = {
-      app: document.querySelector(".ophf-app"),
-      coverImg: document.querySelector("[data-ophf-cover-img]"),
-      coverKicker: document.querySelector("[data-ophf-cover-kicker]"),
-      coverName: document.querySelector("[data-ophf-cover-name]"),
-      coverPill: document.querySelector("[data-ophf-cover-pill]"),
-      mapGrid: document.querySelector("[data-ophf-map-grid]"),
-      latest: document.querySelector("[data-ophf-latest]"),
-      playAll: document.querySelector("[data-ophf-playall]"),
-      trackCover: document.querySelector("[data-ophf-track-cover]"),
-      trackTitle: document.querySelector("[data-ophf-track-title]"),
-      versionTitle: document.querySelector("[data-ophf-version-title]"),
-      versionCount: document.querySelector("[data-ophf-version-count]"),
-      versionPicker: document.querySelector("[data-ophf-version-picker]"),
-      links: document.querySelector("[data-ophf-links]"),
-      lyrics: document.querySelector("[data-ophf-lyrics]"),
-      notes: document.querySelector("[data-ophf-notes]"),
-      miniRail: document.querySelector("[data-ophf-mini-rail]"),
-      navA: document.querySelector("[data-ophf-nav-a]"),
-      navB: document.querySelector("[data-ophf-nav-b]"),
-      navC: document.querySelector("[data-ophf-nav-c]")
-    };
-
-    const ophfState = {
-      mode: "gallery",
-      songId: "wellwolf",
-      versionIndex: 0
-    };
-
-    function ophfCoverUrl(song) {
-      return `${ophfBasePath}${song.file}`;
-    }
-
-    function ophfGetSong(id) {
-      return ophfSongs.find((song) => song.id === id) || ophfSongs[0];
-    }
-
-    function ophfGetLatestSong() {
-      return ophfSongs.find((song) => song.latest) || ophfSongs[ophfSongs.length - 1];
-    }
-
-    function ophfSetImageFallback(img, song) {
-      img.onerror = () => {
-        img.onerror = null;
-        img.style.display = "none";
-        if (img.parentElement && !img.parentElement.querySelector(".ophf-songNodeFallback")) {
-          const fallback = document.createElement("span");
-          fallback.className = "ophf-songNodeFallback";
-          img.parentElement.appendChild(fallback);
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OPAHiFi Backbone Prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Oswald:wght@500;600;700&family=Poppins:wght@300;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ophf-cover-area: 24dvh;
+            --ophf-nav-button-h: 30px;
+            --ophf-nav-pad-top: 8px;
+            --ophf-nav-pad-bottom: max(8px, env(safe-area-inset-bottom));
+            --ophf-nav-h: calc(var(--ophf-nav-button-h) + var(--ophf-nav-pad-top) + var(--ophf-nav-pad-bottom));
+            --ophf-topbar-h: 44px;
+            --ophf-rail-h: 76px;
+            --ophf-gallery-pad: clamp(8px, 2.5vw, 18px);
+            --ophf-gallery-gap: clamp(8px, 2.4vw, 14px);
+            --ophf-promo-band-h: clamp(68px, 13dvh, 92px);
+            --ophf-main-h: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h));
+            --ophf-main-h-detail: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h) - var(--ophf-rail-h));
+            --ophf-gallery-panel-h: calc(100dvh - var(--ophf-cover-area) - var(--ophf-nav-h) - (var(--ophf-gallery-pad) * 2));
+            --ophf-black: #020204;
+            --ophf-purple: #25123D;
+            --ophf-royal: #182475;
+            --ophf-blue: #254EB5;
+            --ophf-bright: #6B95DC;
+            --ophf-violet: #6351B4;
+            --ophf-magenta: #C34DAC;
+            --ophf-pink: #E44261;
+            --ophf-red: #770D1F;
+            --ophf-fire: #DC3612;
+            --ophf-lavender: #BFBEEE;
+            --ophf-light: #F8F8F8;
+            --ophf-node: 60px;
+            --ophf-node-label-h: 18px;
+            --ophf-node-label-gap: 5px;
+            --ophf-node-total: calc(var(--ophf-node) + var(--ophf-node-label-h) + var(--ophf-node-label-gap));
+            --ophf-node-art-h: 153.846%;
+            --ophf-radius-xl: 26px;
+            --ophf-radius-md: 18px;
+            --ophf-ease: 180ms ease;
         }
-      };
-    }
 
-    function ophfRenderMap() {
-      ophfEls.mapGrid.innerHTML = "";
+        * {
+            box-sizing: border-box;
+        }
 
-      ophfSongs
-        .slice()
-        .sort((a, b) => a.journey - b.journey)
-        .forEach((song) => {
-          const cell = document.createElement("div");
-          cell.className = "ophf-mapCell";
-          cell.style.gridRow = song.grid[0];
-          cell.style.gridColumn = song.grid[1];
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: var(--ophf-black);
+            color: var(--ophf-light);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
 
-          const node = document.createElement("button");
-          node.className = "ophf-songNode";
-          node.type = "button";
-          node.setAttribute("aria-label", `Open ${song.title}`);
-          node.addEventListener("click", () => ophfOpenSong(song.id));
+        button,
+        select,
+        a {
+            font: inherit;
+        }
 
-          const img = document.createElement("img");
-          img.className = "ophf-songNodeImg";
-          img.src = ophfCoverUrl(song);
-          img.alt = "";
-          ophfSetImageFallback(img, song);
+        button {
+            border: 0;
+            color: inherit;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-          const label = document.createElement("div");
-          label.className = "ophf-songLabel";
-          (song.labelLines || [song.title]).forEach((line) => {
-            const lineEl = document.createElement("span");
-            lineEl.className = "ophf-songLabelLine";
-            lineEl.textContent = line;
-            label.appendChild(lineEl);
-          });
+        .ophf-app {
+            position: relative;
+            width: 100vw;
+            height: 100dvh;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 25% 10%, rgba(195, 77, 172, 0.25), transparent 28%),
+                radial-gradient(circle at 80% 34%, rgba(37, 78, 181, 0.22), transparent 32%),
+                linear-gradient(180deg, #040407 0%, #10071d 50%, #020204 100%);
+        }
 
-          const crop = document.createElement("span");
-          crop.className = "ophf-nodeArtCrop";
-          crop.appendChild(img);
+        .ophf-coverArea {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 20;
+            height: var(--ophf-cover-area);
+            overflow: hidden;
+            border-bottom: 1px solid rgba(248, 248, 248, 0.1);
+            background:
+                linear-gradient(180deg, rgba(2, 2, 4, 0.88), rgba(2, 2, 4, 0.48)),
+                radial-gradient(circle at 50% 20%, rgba(99, 81, 180, 0.5), transparent 45%);
+        }
 
-          node.appendChild(crop);
-          const unit = document.createElement("div");
-          unit.className = "ophf-songUnit";
+        .ophf-coverArea::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 42%;
+            background: linear-gradient(180deg, transparent, rgba(2, 2, 4, 0.86));
+            pointer-events: none;
+        }
 
-          unit.appendChild(node);
-          unit.appendChild(label);
-          cell.appendChild(unit);
-          ophfEls.mapGrid.appendChild(cell);
-        });
-    }
+        .ophf-navbar {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: var(--ophf-topbar-h);
+            padding: 0 clamp(12px, 4vw, 32px);
+        }
 
-    function ophfRenderRail() {
-      ophfEls.miniRail.innerHTML = "";
+        .ophf-wordmark {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.04em;
+            font-family: Poppins, Inter, system-ui, sans-serif;
+            text-transform: none;
+            line-height: 0.9;
+            color: var(--ophf-light);
+            text-shadow: 0 0 22px rgba(107, 149, 220, 0.6);
+        }
 
-      ophfSongs
-        .slice()
-        .sort((a, b) => a.journey - b.journey)
-        .forEach((song) => {
-          const btn = document.createElement("button");
-          btn.className = "ophf-railBtn";
-          btn.type = "button";
-          btn.setAttribute("aria-label", song.title);
-          btn.setAttribute("aria-current", song.id === ophfState.songId ? "true" : "false");
-          btn.addEventListener("click", () => ophfOpenSong(song.id));
+        .ophf-wordmarkOpa {
+            font-weight: 900;
+            font-size: clamp(25px, 7.8vw, 39px);
+            letter-spacing: -0.06em;
+        }
 
-          const img = document.createElement("img");
-          img.className = "ophf-railImg";
-          img.src = ophfCoverUrl(song);
-          img.alt = "";
-          ophfSetImageFallback(img, song);
+        .ophf-wordmarkHiFi {
+            margin-left: 0.08em;
+            font-weight: 600;
+            font-size: clamp(22px, 6.7vw, 34px);
+            letter-spacing: -0.01em;
+        }
 
-          const crop = document.createElement("span");
-          crop.className = "ophf-nodeArtCrop";
-          crop.appendChild(img);
+        .ophf-menuBtn {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: rgba(248, 248, 248, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.14);
+        }
 
-          btn.appendChild(crop);
-          ophfEls.miniRail.appendChild(btn);
-        });
-    }
+        .ophf-menuGlyph,
+        .ophf-menuGlyph::before,
+        .ophf-menuGlyph::after {
+            display: block;
+            width: 18px;
+            height: 2px;
+            border-radius: 99px;
+            background: var(--ophf-light);
+        }
 
-    function ophfRenderLinks(version) {
-      ophfEls.links.innerHTML = "";
+        .ophf-menuGlyph {
+            position: relative;
+        }
 
-      ophfPlatforms.forEach((name) => {
-        const a = document.createElement("a");
-        a.className = "ophf-listenBtn";
-        a.href = version.links[name] || "#";
-        a.textContent = name;
-        a.setAttribute("aria-label", `${name} link`);
-        ophfEls.links.appendChild(a);
-      });
+        .ophf-menuGlyph::before,
+        .ophf-menuGlyph::after {
+            content: "";
+            position: absolute;
+            left: 0;
+        }
 
-      const share = document.createElement("button");
-      share.className = "ophf-shareBtn";
-      share.type = "button";
-      share.textContent = "Share";
-      share.addEventListener("click", ophfShareCurrent);
-      ophfEls.links.appendChild(share);
-    }
+        .ophf-menuGlyph::before {
+            top: -6px;
+        }
 
-    function ophfRenderDetail() {
-      const song = ophfGetSong(ophfState.songId);
-      const version = song.versions[ophfState.versionIndex] || song.versions[0];
+        .ophf-menuGlyph::after {
+            top: 6px;
+        }
 
-      ophfEls.trackCover.src = ophfCoverUrl(song);
-      ophfEls.trackCover.alt = `${song.title} cover`;
-      ophfEls.trackTitle.textContent = song.title;
-      ophfEls.versionTitle.textContent = version.title;
-      ophfEls.versionCount.textContent = `${song.versions.length} version${song.versions.length === 1 ? "" : "s"}`;
-      ophfEls.lyrics.textContent = version.lyrics;
-      ophfEls.notes.textContent = version.notes;
+        .ophf-coverSlot {
+            position: absolute;
+            inset: var(--ophf-topbar-h) 0 0 0;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+        }
 
-      ophfEls.versionPicker.innerHTML = "";
-      song.versions.forEach((item, index) => {
-        const option = document.createElement("option");
-        option.value = String(index);
-        option.textContent = item.title;
-        option.selected = index === ophfState.versionIndex;
-        ophfEls.versionPicker.appendChild(option);
-      });
-      ophfEls.versionPicker.hidden = song.versions.length <= 1;
+        .ophf-coverImg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 58%;
+            opacity: 0.78;
+            filter: saturate(1.12) contrast(1.04);
+            transform: scale(1.02);
+        }
 
-      ophfRenderLinks(version);
-      ophfRenderRail();
-      ophfRenderCover(song);
-    }
+        .ophf-coverTitle {
+            position: absolute;
+            z-index: 3;
+            left: clamp(12px, 4vw, 32px);
+            right: clamp(12px, 4vw, 32px);
+            bottom: 10px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            pointer-events: none;
+        }
 
-    function ophfRenderCover(song = null) {
-      if (ophfState.mode === "gallery") {
-        ophfEls.coverImg.src = ophfHeroCover;
-        ophfEls.coverImg.style.display = "block";
-        ophfEls.coverKicker.textContent = "Gallery Map";
-        ophfEls.coverName.textContent = "OPAHiFi Journey";
-        ophfEls.coverPill.textContent = "3×3 Map";
-        return;
-      }
+        .ophf-coverKicker {
+            margin: 0 0 3px;
+            font-family: Oswald, sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            color: var(--ophf-lavender);
+            text-transform: uppercase;
+        }
 
-      const activeSong = song || ophfGetSong(ophfState.songId);
-      ophfEls.coverImg.src = ophfCoverUrl(activeSong);
-      ophfEls.coverImg.style.display = "block";
-      ophfEls.coverKicker.textContent = "Now Viewing";
-      ophfEls.coverName.textContent = activeSong.title;
-      ophfEls.coverPill.textContent = `Song ${activeSong.journey}`;
-    }
+        .ophf-coverName {
+            margin: 0;
+            max-width: 74vw;
+            font-family: Oswald, sans-serif;
+            font-size: clamp(18px, 5vw, 34px);
+            line-height: 0.92;
+            text-transform: uppercase;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+        }
 
-    function ophfSetBottomNav() {
-      const isGallery = ophfState.mode === "gallery";
-      ophfEls.navA.textContent = isGallery ? "Videos" : "Prev";
-      ophfEls.navB.textContent = isGallery ? "Gallery" : "Home";
-      ophfEls.navC.textContent = isGallery ? "About" : "Next";
-      ophfEls.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
-    }
+        .ophf-main {
+            position: fixed;
+            top: var(--ophf-cover-area);
+            right: 0;
+            left: 0;
+            height: var(--ophf-main-h);
+            z-index: 5;
+            min-height: 0;
+            overflow: hidden;
+        }
 
-    function ophfOpenGallery() {
-      ophfState.mode = "gallery";
-      ophfEls.app.dataset.ophfMode = "gallery";
-      ophfRenderCover();
-      ophfSetBottomNav();
-    }
+        .ophf-app[data-ophf-mode="detail"] .ophf-main {
+            height: var(--ophf-main-h-detail);
+        }
 
-    function ophfOpenSong(songId, versionIndex = 0) {
-      ophfState.mode = "detail";
-      ophfState.songId = songId;
-      ophfState.versionIndex = versionIndex;
-      ophfEls.app.dataset.ophfMode = "detail";
-      ophfRenderDetail();
-      ophfSetBottomNav();
-    }
+        .ophf-screen {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            display: none;
+        }
 
-    function ophfMoveSong(direction) {
-      const ordered = ophfSongs.slice().sort((a, b) => a.journey - b.journey);
-      const currentIndex = ordered.findIndex((song) => song.id === ophfState.songId);
-      const nextIndex = (currentIndex + direction + ordered.length) % ordered.length;
-      ophfOpenSong(ordered[nextIndex].id);
-    }
+        .ophf-app[data-ophf-mode="gallery"] .ophf-galleryScreen,
+        .ophf-app[data-ophf-mode="detail"] .ophf-detailScreen {
+            display: block;
+        }
 
-    function ophfShareCurrent() {
-      const song = ophfGetSong(ophfState.songId);
-      const shareData = {
-        title: `OPAHiFi — ${song.title}`,
-        text: `Listen to ${song.title} on OPAHiFi`,
-        url: `${location.origin}${location.pathname}#${song.id}`
-      };
+        .ophf-galleryScreen {
+            overflow: hidden;
+            padding: var(--ophf-gallery-pad);
+        }
 
-      if (navigator.share) {
-        navigator.share(shareData).catch(() => {});
-      } else if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareData.url);
-      }
-    }
+        .ophf-galleryPanel {
+            height: var(--ophf-gallery-panel-h);
+            min-height: 0;
+            display: grid;
+            grid-template-rows: var(--ophf-promo-band-h) minmax(0, 1fr);
+            gap: var(--ophf-gallery-gap);
+        }
 
-    function ophfBindEvents() {
-      ophfEls.latest.addEventListener("click", () => ophfOpenSong(ophfGetLatestSong().id));
-      ophfEls.playAll.addEventListener("click", () => ophfOpenSong(ophfPlaylistOrder[0]));
+        .ophf-promoBand {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--ophf-gallery-gap);
+            height: var(--ophf-promo-band-h);
+            min-height: var(--ophf-promo-band-h);
+        }
 
-      ophfEls.versionPicker.addEventListener("change", (event) => {
-        ophfState.versionIndex = Number(event.target.value) || 0;
-        ophfRenderDetail();
-      });
+        .ophf-promoTile {
+            position: relative;
+            min-width: 0;
+            overflow: hidden;
+            border-radius: var(--ophf-radius-md);
+            padding: clamp(10px, 3vw, 16px);
+            background:
+                linear-gradient(145deg, rgba(248, 248, 248, 0.12), rgba(248, 248, 248, 0.035)),
+                radial-gradient(circle at 15% 0%, rgba(228, 66, 97, 0.35), transparent 46%),
+                rgba(37, 18, 61, 0.66);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.12),
+                0 12px 30px rgba(0, 0, 0, 0.22);
+            text-align: left;
+        }
 
-      ophfEls.navA.addEventListener("click", () => {
-        if (ophfState.mode === "detail") ophfMoveSong(-1);
-      });
+        .ophf-promoTile::after {
+            content: "";
+            position: absolute;
+            inset: auto -16px -24px auto;
+            width: 78px;
+            height: 78px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(107, 149, 220, 0.48), transparent 68%);
+            pointer-events: none;
+        }
 
-      ophfEls.navB.addEventListener("click", () => {
-        if (ophfState.mode === "detail") ophfOpenGallery();
-      });
+        .ophf-promoTilePlay {
+            background:
+                linear-gradient(145deg, rgba(248, 248, 248, 0.12), rgba(248, 248, 248, 0.035)),
+                radial-gradient(circle at 80% 10%, rgba(37, 78, 181, 0.45), transparent 48%),
+                rgba(24, 36, 117, 0.55);
+        }
 
-      ophfEls.navC.addEventListener("click", () => {
-        if (ophfState.mode === "detail") ophfMoveSong(1);
-      });
+        .ophf-promoEyebrow {
+            display: block;
+            margin-bottom: 7px;
+            font-family: Oswald, sans-serif;
+            font-size: clamp(10px, 2.9vw, 13px);
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            color: var(--ophf-lavender);
+        }
 
-    }
+        .ophf-promoTitle {
+            display: block;
+            max-width: 13ch;
+            font-family: Oswald, sans-serif;
+            font-size: clamp(19px, 5.2vw, 30px);
+            line-height: 0.92;
+            text-transform: uppercase;
+            color: var(--ophf-light);
+        }
 
-    function ophfInit() {
-      ophfRenderMap();
-      ophfRenderRail();
-      ophfBindEvents();
-      ophfSetBottomNav();
-      ophfRenderCover();
+        .ophf-fieldStage {
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-      const hashId = location.hash.replace("#", "");
-      if (hashId && ophfSongs.some((song) => song.id === hashId)) {
-        ophfOpenSong(hashId);
-      }
-    }
+        .ophf-songField {
+            position: relative;
+            height: min(100%, calc(100vw - clamp(20px, 5vw, 48px)));
+            max-width: min(680px, calc(100vw - clamp(20px, 5vw, 48px)));
+            aspect-ratio: 1 / 1;
+            border-radius: clamp(18px, 5vw, 34px);
+            overflow: hidden;
+            background:
+                linear-gradient(rgba(248, 248, 248, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(248, 248, 248, 0.045) 1px, transparent 1px),
+                radial-gradient(circle at center, rgba(99, 81, 180, 0.22), transparent 58%),
+                rgba(2, 2, 4, 0.28);
+            background-size: 33.333% 33.333%, 33.333% 33.333%, 100% 100%, 100% 100%;
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.09),
+                0 24px 70px rgba(0, 0, 0, 0.25);
+        }
 
-    ophfInit();
-  </script>
+        .ophf-spiralSvg {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            pointer-events: none;
+        }
+
+        .ophf-spiralGlow {
+            fill: none;
+            stroke: rgba(195, 77, 172, 0.45);
+            stroke-width: 0.08;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: blur(0.04px);
+        }
+
+        .ophf-spiralLine {
+            fill: none;
+            stroke: url(#ophfSpiralGradient);
+            stroke-width: 0.036;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .ophf-mapGrid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-rows: repeat(3, minmax(0, 1fr));
+            width: 100%;
+            height: 100%;
+            padding-bottom: var(--ophf-node-label-h);
+        }
+
+        .ophf-mapCell {
+            position: relative;
+            min-width: 0;
+            min-height: 0;
+            container-type: size;
+            --ophf-node-label-font-size: clamp(8px, 7cqh, 11px);
+            --ophf-node-label-pad-y: 7px;
+            --ophf-node-label-h: calc(var(--ophf-node-label-font-size) + var(--ophf-node-label-font-size) + var(--ophf-node-label-pad-y));
+            --ophf-node-label-gap: 0px;
+            --ophf-node-edge-pad: clamp(4px, 2.4cqh, 7px);
+            --ophf-node-label-protrusion: calc(var(--ophf-node-label-h) * 0.78);
+            --ophf-node-max: 74px;
+            --ophf-node: clamp(34px,
+                    calc(min(100cqw, 100cqh) - var(--ophf-node-label-protrusion) - var(--ophf-node-edge-pad) - var(--ophf-node-edge-pad)),
+                    var(--ophf-node-max));
+        }
+
+        @media (min-width: 760px) {
+            .ophf-mapCell {
+                --ophf-node-max: 96px;
+            }
+        }
+
+        .ophf-songUnit {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: min(96%, calc(var(--ophf-node) + 40px));
+            height: var(--ophf-node);
+            transform: translate(-50%, -50%);
+        }
+
+        .ophf-songNode {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: var(--ophf-node);
+            height: var(--ophf-node);
+            border-radius: 999px;
+            transform: translateX(-50%);
+            overflow: hidden;
+            background: #111;
+            box-shadow:
+                0 0 0 2px rgba(248, 248, 248, 0.9),
+                0 0 0 5px rgba(2, 2, 4, 0.62),
+                0 0 28px rgba(107, 149, 220, 0.36);
+            transition: transform var(--ophf-ease), box-shadow var(--ophf-ease);
+        }
+
+        .ophf-songNode:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        .ophf-nodeArtCrop {
+            position: absolute;
+            inset: 0;
+            display: block;
+            border-radius: inherit;
+            overflow: hidden;
+            background: var(--ophf-black);
+        }
+
+        .ophf-songNodeImg {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: var(--ophf-node-art-h);
+            object-fit: cover;
+            object-position: center bottom;
+            display: block;
+        }
+
+        .ophf-songNodeFallback {
+            position: absolute;
+            inset: 0;
+            display: block;
+            background:
+                radial-gradient(circle at 30% 22%, var(--ophf-pink), transparent 38%),
+                radial-gradient(circle at 68% 72%, var(--ophf-blue), transparent 42%),
+                linear-gradient(135deg, var(--ophf-purple), var(--ophf-black));
+        }
+
+        .ophf-songLabel {
+            position: absolute;
+            z-index: 3;
+            top: 85%;
+            left: 50%;
+            width: min(100%, calc(var(--ophf-node) + 36px));
+            min-height: var(--ophf-node-label-h);
+            max-height: var(--ophf-node-label-h);
+            padding: 3px 7px 4px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(2, 2, 4, 0.86);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.2),
+                0 5px 13px rgba(0, 0, 0, 0.45);
+            color: var(--ophf-light);
+            font-family: Oswald, sans-serif;
+            font-size: var(--ophf-node-label-font-size);
+            font-weight: 700;
+            letter-spacing: 0.045em;
+            line-height: 0.9;
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: none;
+            pointer-events: none;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+        }
+
+        .ophf-songLabelLine {
+            display: block;
+            white-space: nowrap;
+        }
+
+        .ophf-detailScreen {
+            overflow: hidden;
+        }
+
+        .ophf-detailScroller {
+            height: 100%;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: clamp(10px, 3vw, 18px);
+        }
+
+        .ophf-trackPanel,
+        .ophf-detailBlock,
+        .ophf-actionBlock {
+            width: min(760px, 100%);
+            margin: 0 auto clamp(12px, 3vw, 18px);
+            border-radius: var(--ophf-radius-xl);
+            background: rgba(248, 248, 248, 0.07);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.11),
+                0 18px 50px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(16px);
+        }
+
+        .ophf-trackPanel {
+            display: grid;
+            grid-template-columns: clamp(88px, 27vw, 170px) minmax(0, 1fr);
+            gap: clamp(12px, 3.5vw, 18px);
+            padding: clamp(12px, 3.5vw, 18px);
+        }
+
+        .ophf-trackCover {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 20px;
+            object-fit: cover;
+            object-position: center 66%;
+            box-shadow:
+                0 0 0 1px rgba(248, 248, 248, 0.16),
+                0 16px 35px rgba(0, 0, 0, 0.35);
+            background: var(--ophf-purple);
+        }
+
+        .ophf-trackMeta {
+            min-width: 0;
+        }
+
+        .ophf-trackTitle {
+            margin: 0;
+            font-family: Oswald, sans-serif;
+            font-size: clamp(24px, 8vw, 42px);
+            line-height: 0.94;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .ophf-versionTitle {
+            margin: 7px 0 2px;
+            color: var(--ophf-lavender);
+            font-size: clamp(13px, 3.6vw, 16px);
+            font-weight: 700;
+        }
+
+        .ophf-versionCount {
+            margin: 0 0 10px;
+            color: rgba(248, 248, 248, 0.68);
+            font-size: 12px;
+        }
+
+        .ophf-versionPicker {
+            width: 100%;
+            min-height: 40px;
+            margin-bottom: 10px;
+            padding: 0 11px;
+            border: 1px solid rgba(248, 248, 248, 0.16);
+            border-radius: 12px;
+            color: var(--ophf-light);
+            background: rgba(2, 2, 4, 0.72);
+        }
+
+        .ophf-listenGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(82px, 108px));
+            justify-content: start;
+            gap: 7px;
+        }
+
+        .ophf-listenBtn,
+        .ophf-shareBtn,
+        .ophf-universeBtn,
+        .ophf-bottomBtn {
+            display: grid;
+            place-items: center;
+            width: 100%;
+            max-width: 148px;
+            min-height: 38px;
+            border-radius: 999px;
+            background: rgba(248, 248, 248, 0.1);
+            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.13);
+            color: var(--ophf-light);
+            font-family: Oswald, sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.09em;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .ophf-shareBtn {
+            background: linear-gradient(135deg, rgba(228, 66, 97, 0.64), rgba(37, 78, 181, 0.56));
+        }
+
+        .ophf-detailBlock {
+            padding: clamp(14px, 4vw, 22px);
+        }
+
+        .ophf-detailHeading {
+            margin: 0 0 10px;
+            font-family: Oswald, sans-serif;
+            font-size: 20px;
+            line-height: 1;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .ophf-lyrics {
+            margin: 0;
+            white-space: pre-wrap;
+            color: rgba(248, 248, 248, 0.86);
+            font-size: clamp(14px, 3.7vw, 16px);
+            line-height: 1.48;
+        }
+
+        .ophf-notes {
+            margin: 12px 0 0;
+            color: rgba(248, 248, 248, 0.68);
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .ophf-actionBlock {
+            padding: clamp(14px, 4vw, 22px);
+        }
+
+        .ophf-universeBtn {
+            width: min(100%, 280px);
+            max-width: 280px;
+            min-height: 52px;
+            margin-inline: auto;
+            background:
+                radial-gradient(circle at 20% 0%, rgba(195, 77, 172, 0.8), transparent 42%),
+                linear-gradient(135deg, rgba(37, 78, 181, 0.92), rgba(119, 13, 31, 0.86));
+            font-size: 15px;
+        }
+
+        .ophf-miniRail {
+            position: fixed;
+            right: 0;
+            bottom: var(--ophf-nav-h);
+            left: 0;
+            z-index: 15;
+            height: var(--ophf-rail-h);
+            display: none;
+            align-items: center;
+            gap: 5px;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            padding: 10px 12px;
+            background: rgba(2, 2, 4, 0.82);
+            border-top: 1px solid rgba(248, 248, 248, 0.1);
+            scrollbar-width: none;
+        }
+
+        .ophf-miniRail::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ophf-app[data-ophf-mode="detail"] .ophf-miniRail {
+            display: flex;
+        }
+
+        .ophf-railBtn {
+            position: relative;
+            flex: 0 0 auto;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(248, 248, 248, 0.08);
+            box-shadow: 0 0 0 1px rgba(248, 248, 248, 0.16);
+        }
+
+        .ophf-railBtn[aria-current="true"] {
+            box-shadow:
+                0 0 0 2px var(--ophf-light),
+                0 0 22px rgba(195, 77, 172, 0.72);
+        }
+
+        .ophf-railImg {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: var(--ophf-node-art-h);
+            object-fit: fill;
+            object-position: center bottom;
+            display: block;
+        }
+
+        .ophf-bottomNav {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 30;
+            display: grid;
+            grid-template-columns: repeat(3, clamp(86px, 28vw, 138px));
+            justify-content: center;
+            height: var(--ophf-nav-h);
+            padding: var(--ophf-nav-pad-top) clamp(8px, 3vw, 18px) var(--ophf-nav-pad-bottom);
+            gap: 8px;
+            background: rgba(2, 2, 4, 0.94);
+            border-top: 1px solid rgba(248, 248, 248, 0.1);
+        }
+
+        .ophf-bottomBtn {
+            min-height: var(--ophf-nav-button-h);
+            background: rgba(248, 248, 248, 0.08);
+        }
+
+        .ophf-bottomBtnActive {
+            background:
+                radial-gradient(circle at 50% 0%, rgba(107, 149, 220, 0.45), transparent 48%),
+                rgba(248, 248, 248, 0.12);
+            color: var(--ophf-light);
+        }
+
+        @media (min-width: 760px) {
+            :root {
+                --ophf-cover-area: 24dvh;
+                --ophf-promo-band-h: 84px;
+            }
+
+            .ophf-promoBand,
+            .ophf-fieldStage,
+            .ophf-detailScroller {
+                width: min(900px, 100%);
+                margin-inline: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ophf-app" data-ophf-mode="gallery">
+        <header class="ophf-coverArea">
+            <nav class="ophf-navbar" aria-label="Main navigation">
+                <div class="ophf-wordmark" aria-label="OPAHiFi">
+                    <span class="ophf-wordmarkOpa">opa</span><span class="ophf-wordmarkHiFi">HiFi</span>
+                </div>
+                <button class="ophf-menuBtn" type="button" aria-label="Open menu">
+                    <span class="ophf-menuGlyph" aria-hidden="true"></span>
+                </button>
+            </nav>
+
+            <div class="ophf-coverSlot">
+                <img class="ophf-coverImg" data-ophf-cover-img src="https://opahifi.com/img/opa/cover.png" alt="" />
+            </div>
+
+            <div class="ophf-coverTitle">
+                <div>
+                    <p class="ophf-coverKicker" data-ophf-cover-kicker>Gallery Map</p>
+                    <h1 class="ophf-coverName" data-ophf-cover-name>OpaHiFi Journey</h1>
+                </div>
+            </div>
+        </header>
+
+        <main class="ophf-main">
+            <section class="ophf-screen ophf-galleryScreen" aria-label="Gallery map">
+                <div class="ophf-galleryPanel">
+                    <div class="ophf-promoBand">
+                        <button class="ophf-promoTile" type="button" data-ophf-latest>
+                            <span class="ophf-promoEyebrow">Latest Release</span>
+                            <span class="ophf-promoTitle">Wellwolf</span>
+                        </button>
+                        <button class="ophf-promoTile ophf-promoTilePlay" type="button" data-ophf-playall>
+                            <span class="ophf-promoEyebrow">Playlist Order</span>
+                            <span class="ophf-promoTitle">Play All</span>
+                        </button>
+                    </div>
+
+                    <div class="ophf-fieldStage">
+                        <div class="ophf-songField" aria-label="Journey song map">
+                            <svg class="ophf-spiralSvg" viewBox="0 0 3 3" aria-hidden="true">
+                                <defs>
+                                    <linearGradient id="ophfSpiralGradient" x1="0" y1="0" x2="3" y2="3"
+                                        gradientUnits="userSpaceOnUse">
+                                        <stop offset="0" stop-color="#6B95DC" />
+                                        <stop offset="0.46" stop-color="#C34DAC" />
+                                        <stop offset="1" stop-color="#DC3612" />
+                                    </linearGradient>
+                                </defs>
+                                <path class="ophf-spiralGlow"
+                                    d="M .5 .5 L 1.5 .5 L 2.5 .5 L 2.5 1.5 L 2.5 2.5 L 1.5 2.5 L .5 2.5 L .5 1.5 L 1.5 1.5" />
+                                <path class="ophf-spiralLine"
+                                    d="M .5 .5 L 1.5 .5 L 2.5 .5 L 2.5 1.5 L 2.5 2.5 L 1.5 2.5 L .5 2.5 L .5 1.5 L 1.5 1.5" />
+                            </svg>
+                            <div class="ophf-mapGrid" data-ophf-map-grid></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ophf-screen ophf-detailScreen" aria-label="Version detail">
+                <div class="ophf-detailScroller">
+                    <article class="ophf-trackPanel">
+                        <img class="ophf-trackCover" data-ophf-track-cover alt="" />
+                        <div class="ophf-trackMeta">
+                            <h2 class="ophf-trackTitle" data-ophf-track-title></h2>
+                            <p class="ophf-versionTitle" data-ophf-version-title></p>
+                            <p class="ophf-versionCount" data-ophf-version-count></p>
+                            <select class="ophf-versionPicker" data-ophf-version-picker
+                                aria-label="Choose version"></select>
+                            <div class="ophf-listenGrid" data-ophf-links></div>
+                        </div>
+                    </article>
+
+                    <section class="ophf-detailBlock">
+                        <h3 class="ophf-detailHeading">Lyrics</h3>
+                        <p class="ophf-lyrics" data-ophf-lyrics></p>
+                    </section>
+
+                    <section class="ophf-detailBlock">
+                        <h3 class="ophf-detailHeading">Version Notes</h3>
+                        <p class="ophf-notes" data-ophf-notes></p>
+                    </section>
+
+                    <section class="ophf-actionBlock">
+                        <button class="ophf-universeBtn" type="button">Enter Universe</button>
+                    </section>
+                </div>
+            </section>
+        </main>
+
+        <aside class="ophf-miniRail" data-ophf-mini-rail aria-label="Mini song rail"></aside>
+
+        <nav class="ophf-bottomNav" aria-label="Bottom navigation">
+            <button class="ophf-bottomBtn" type="button" data-ophf-nav-a>Videos</button>
+            <button class="ophf-bottomBtn ophf-bottomBtnActive" type="button" data-ophf-nav-b>Gallery</button>
+            <button class="ophf-bottomBtn" type="button" data-ophf-nav-c>About</button>
+        </nav>
+    </div>
+
+    <script>
+        const ophfBasePath = "https://opahifi.com/img/music/base/";
+        const ophfHeroCover = "https://opahifi.com/img/opa/cover.png";
+
+        const ophfSongs = [
+            {
+                id: "fullmindness",
+                journey: 1,
+                grid: [1, 1],
+                title: "Full-Mindness",
+                labelLines: ["Full-", "Mindness"],
+                file: "base-fullmindness.png",
+                latest: false,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
+                        notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
+                    }
+                ]
+            },
+            {
+                id: "brunch",
+                journey: 2,
+                grid: [1, 2],
+                title: "Yeah, Let’s Do Brunch",
+                labelLines: ["Yeah, Let’s", "Do Brunch"],
+                file: "base-yeahletsdobrunch.png",
+                latest: false,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "Yeah let's do brunch\nSo sad we lost touch\nI miss you so so much\nI just need to finish my memoir.",
+                        notes: "The fake-connection chapter. Warm words, empty follow-through."
+                    }
+                ]
+            },
+            {
+                id: "hallucinating",
+                journey: 3,
+                grid: [1, 3],
+                title: "Hallucinating",
+                labelLines: ["Hallucinating", "Dum Dum"],
+                file: "base-hallucinatingdumdum.png",
+                latest: false,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "Hallucinating\nMe, me, and I\nHallucinating\nWatchin’ life fly by\nLike a dumb bot.",
+                        notes: "The crash point: human panic starts behaving like a broken model."
+                    },
+                    {
+                        title: "Tight Hook Draft",
+                        links: {},
+                        lyrics: "Quiet room woke stress up — now it’s ready to rumble\nHe mumbles nonsense — makes a monster from a mumble.",
+                        notes: "Alternate lyric draft for a cleaner hallucination bridge."
+                    }
+                ]
+            },
+            {
+                id: "splenda",
+                journey: 4,
+                grid: [2, 3],
+                title: "Splenda Love Rabbit Hell",
+                labelLines: ["Splenda Love", "Rabbit Hell"],
+                file: "base-splendaloverabbithell.png",
+                latest: false,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
+                        notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
+                    }
+                ]
+            },
+            {
+                id: "truthfairy",
+                journey: 5,
+                grid: [3, 3],
+                title: "Believe the Truth Fairy",
+                labelLines: ["Believe The", "Truth Fairy"],
+                file: "base-believethetruthfairy.png",
+                latest: false,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "Believe what you want —\nThere’s always another view\nBefore you spread fear and hate —\nStop — think it through.",
+                        notes: "The truth checkpoint. Belief is allowed; blind certainty is the danger."
+                    }
+                ]
+            },
+            {
+                id: "oldlove",
+                journey: 6,
+                grid: [3, 2],
+                title: "Old Love Story",
+                labelLines: ["Old Love", "Story"],
+                file: "base-oldlovestory.png",
+                latest: false,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
+                        notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
+                    }
+                ]
+            },
+            {
+                id: "glittaa",
+                journey: 7,
+                grid: [3, 1],
+                title: "Glittaa Phoenix",
+                labelLines: ["Glittaa", "Phoenix"],
+                file: "base-glittaaphoenix.png",
+                latest: false,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
+                        notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
+                    }
+                ]
+            },
+            {
+                id: "opaparty",
+                journey: 8,
+                grid: [2, 1],
+                title: "Opa Pa Pa Party",
+                labelLines: ["Opa Pa", "Pa Party"],
+                file: "base-opapapaparty.png",
+                latest: false,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "There ain’t no party like an\nOpa pa pa pa party\nWith all your party pi pi pi—\nPi pi people.",
+                        notes: "The joy-release chapter. The journey becomes physical, loud, and communal."
+                    }
+                ]
+            },
+            {
+                id: "wellwolf",
+                journey: 9,
+                grid: [2, 2],
+                title: "Wellwolf Howl-Lehluya",
+                labelLines: ["Wellwolf", "Howl-Lehluya"],
+                file: "base-wellwolfhowllehluya.png",
+                latest: true,
+                versions: [
+                    {
+                        title: "Main Version",
+                        links: {},
+                        lyrics: "Wellwolf no bloodlust no fame thirst\nRun on love not to be first\nBite with kindness not to hurt\nBeat with heart not for sport.",
+                        notes: "The kindness endpoint. The monster myth flips into care."
+                    }
+                ]
+            }
+        ];
+
+        const ophfPlaylistOrder = [
+            "opaparty",
+            "wellwolf",
+            "glittaa",
+            "truthfairy",
+            "fullmindness",
+            "hallucinating",
+            "splenda",
+            "oldlove",
+            "brunch"
+        ];
+
+        const ophfPlatforms = ["Spotify", "Apple", "YouTube", "YouTube Music", "Amazon"];
+
+        const ophfEls = {
+            app: document.querySelector(".ophf-app"),
+            coverImg: document.querySelector("[data-ophf-cover-img]"),
+            coverKicker: document.querySelector("[data-ophf-cover-kicker]"),
+            coverName: document.querySelector("[data-ophf-cover-name]"),
+            coverPill: document.querySelector("[data-ophf-cover-pill]"),
+            mapGrid: document.querySelector("[data-ophf-map-grid]"),
+            latest: document.querySelector("[data-ophf-latest]"),
+            playAll: document.querySelector("[data-ophf-playall]"),
+            trackCover: document.querySelector("[data-ophf-track-cover]"),
+            trackTitle: document.querySelector("[data-ophf-track-title]"),
+            versionTitle: document.querySelector("[data-ophf-version-title]"),
+            versionCount: document.querySelector("[data-ophf-version-count]"),
+            versionPicker: document.querySelector("[data-ophf-version-picker]"),
+            links: document.querySelector("[data-ophf-links]"),
+            lyrics: document.querySelector("[data-ophf-lyrics]"),
+            notes: document.querySelector("[data-ophf-notes]"),
+            miniRail: document.querySelector("[data-ophf-mini-rail]"),
+            navA: document.querySelector("[data-ophf-nav-a]"),
+            navB: document.querySelector("[data-ophf-nav-b]"),
+            navC: document.querySelector("[data-ophf-nav-c]")
+        };
+
+        const ophfState = {
+            mode: "gallery",
+            songId: "wellwolf",
+            versionIndex: 0
+        };
+
+        function ophfCoverUrl(song) {
+            return `${ophfBasePath}${song.file}`;
+        }
+
+        function ophfGetSong(id) {
+            return ophfSongs.find((song) => song.id === id) || ophfSongs[0];
+        }
+
+        function ophfGetLatestSong() {
+            return ophfSongs.find((song) => song.latest) || ophfSongs[ophfSongs.length - 1];
+        }
+
+        function ophfSetImageFallback(img, song) {
+            img.onerror = () => {
+                img.onerror = null;
+                img.style.display = "none";
+                if (img.parentElement && !img.parentElement.querySelector(".ophf-songNodeFallback")) {
+                    const fallback = document.createElement("span");
+                    fallback.className = "ophf-songNodeFallback";
+                    img.parentElement.appendChild(fallback);
+                }
+            };
+        }
+
+        function ophfRenderMap() {
+            ophfEls.mapGrid.innerHTML = "";
+
+            ophfSongs
+                .slice()
+                .sort((a, b) => a.journey - b.journey)
+                .forEach((song) => {
+                    const cell = document.createElement("div");
+                    cell.className = "ophf-mapCell";
+                    cell.style.gridRow = song.grid[0];
+                    cell.style.gridColumn = song.grid[1];
+
+                    const node = document.createElement("button");
+                    node.className = "ophf-songNode";
+                    node.type = "button";
+                    node.setAttribute("aria-label", `Open ${song.title}`);
+                    node.addEventListener("click", () => ophfOpenSong(song.id));
+
+                    const img = document.createElement("img");
+                    img.className = "ophf-songNodeImg";
+                    img.src = ophfCoverUrl(song);
+                    img.alt = "";
+                    ophfSetImageFallback(img, song);
+
+                    const label = document.createElement("div");
+                    label.className = "ophf-songLabel";
+                    (song.labelLines || [song.title]).forEach((line) => {
+                        const lineEl = document.createElement("span");
+                        lineEl.className = "ophf-songLabelLine";
+                        lineEl.textContent = line;
+                        label.appendChild(lineEl);
+                    });
+
+                    const crop = document.createElement("span");
+                    crop.className = "ophf-nodeArtCrop";
+                    crop.appendChild(img);
+
+                    node.appendChild(crop);
+                    const unit = document.createElement("div");
+                    unit.className = "ophf-songUnit";
+
+                    unit.appendChild(node);
+                    unit.appendChild(label);
+                    cell.appendChild(unit);
+                    ophfEls.mapGrid.appendChild(cell);
+                });
+        }
+
+        function ophfRenderRail() {
+            ophfEls.miniRail.innerHTML = "";
+
+            ophfSongs
+                .slice()
+                .sort((a, b) => a.journey - b.journey)
+                .forEach((song) => {
+                    const btn = document.createElement("button");
+                    btn.className = "ophf-railBtn";
+                    btn.type = "button";
+                    btn.setAttribute("aria-label", song.title);
+                    btn.setAttribute("aria-current", song.id === ophfState.songId ? "true" : "false");
+                    btn.addEventListener("click", () => ophfOpenSong(song.id));
+
+                    const img = document.createElement("img");
+                    img.className = "ophf-railImg";
+                    img.src = ophfCoverUrl(song);
+                    img.alt = "";
+                    ophfSetImageFallback(img, song);
+
+                    const crop = document.createElement("span");
+                    crop.className = "ophf-nodeArtCrop";
+                    crop.appendChild(img);
+
+                    btn.appendChild(crop);
+                    ophfEls.miniRail.appendChild(btn);
+                });
+        }
+
+        function ophfRenderLinks(version) {
+            ophfEls.links.innerHTML = "";
+
+            ophfPlatforms.forEach((name) => {
+                const a = document.createElement("a");
+                a.className = "ophf-listenBtn";
+                a.href = version.links[name] || "#";
+                a.textContent = name;
+                a.setAttribute("aria-label", `${name} link`);
+                ophfEls.links.appendChild(a);
+            });
+
+            const share = document.createElement("button");
+            share.className = "ophf-shareBtn";
+            share.type = "button";
+            share.textContent = "Share";
+            share.addEventListener("click", ophfShareCurrent);
+            ophfEls.links.appendChild(share);
+        }
+
+        function ophfRenderDetail() {
+            const song = ophfGetSong(ophfState.songId);
+            const version = song.versions[ophfState.versionIndex] || song.versions[0];
+
+            ophfEls.trackCover.src = ophfCoverUrl(song);
+            ophfEls.trackCover.alt = `${song.title} cover`;
+            ophfEls.trackTitle.textContent = song.title;
+            ophfEls.versionTitle.textContent = version.title;
+            ophfEls.versionCount.textContent = `${song.versions.length} version${song.versions.length === 1 ? "" : "s"}`;
+            ophfEls.lyrics.textContent = version.lyrics;
+            ophfEls.notes.textContent = version.notes;
+
+            ophfEls.versionPicker.innerHTML = "";
+            song.versions.forEach((item, index) => {
+                const option = document.createElement("option");
+                option.value = String(index);
+                option.textContent = item.title;
+                option.selected = index === ophfState.versionIndex;
+                ophfEls.versionPicker.appendChild(option);
+            });
+            ophfEls.versionPicker.hidden = song.versions.length <= 1;
+
+            ophfRenderLinks(version);
+            ophfRenderRail();
+            ophfRenderCover(song);
+        }
+
+        function ophfRenderCover(song = null) {
+            if (ophfState.mode === "gallery") {
+                ophfEls.coverImg.src = ophfHeroCover;
+                ophfEls.coverImg.style.display = "block";
+                ophfEls.coverKicker.textContent = "Gallery Map";
+                ophfEls.coverName.textContent = "OPAHiFi Journey";
+                ophfEls.coverPill.textContent = "3×3 Map";
+                return;
+            }
+
+            const activeSong = song || ophfGetSong(ophfState.songId);
+            ophfEls.coverImg.src = ophfCoverUrl(activeSong);
+            ophfEls.coverImg.style.display = "block";
+            ophfEls.coverKicker.textContent = "Now Viewing";
+            ophfEls.coverName.textContent = activeSong.title;
+            ophfEls.coverPill.textContent = `Song ${activeSong.journey}`;
+        }
+
+        function ophfSetBottomNav() {
+            const isGallery = ophfState.mode === "gallery";
+            ophfEls.navA.textContent = isGallery ? "Videos" : "Prev";
+            ophfEls.navB.textContent = isGallery ? "Gallery" : "Home";
+            ophfEls.navC.textContent = isGallery ? "About" : "Next";
+            ophfEls.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
+        }
+
+        function ophfOpenGallery() {
+            ophfState.mode = "gallery";
+            ophfEls.app.dataset.ophfMode = "gallery";
+            ophfRenderCover();
+            ophfSetBottomNav();
+        }
+
+        function ophfOpenSong(songId, versionIndex = 0) {
+            ophfState.mode = "detail";
+            ophfState.songId = songId;
+            ophfState.versionIndex = versionIndex;
+            ophfEls.app.dataset.ophfMode = "detail";
+            ophfRenderDetail();
+            ophfSetBottomNav();
+        }
+
+        function ophfMoveSong(direction) {
+            const ordered = ophfSongs.slice().sort((a, b) => a.journey - b.journey);
+            const currentIndex = ordered.findIndex((song) => song.id === ophfState.songId);
+            const nextIndex = (currentIndex + direction + ordered.length) % ordered.length;
+            ophfOpenSong(ordered[nextIndex].id);
+        }
+
+        function ophfShareCurrent() {
+            const song = ophfGetSong(ophfState.songId);
+            const shareData = {
+                title: `OPAHiFi — ${song.title}`,
+                text: `Listen to ${song.title} on OPAHiFi`,
+                url: `${location.origin}${location.pathname}#${song.id}`
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => { });
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareData.url);
+            }
+        }
+
+        function ophfBindEvents() {
+            ophfEls.latest.addEventListener("click", () => ophfOpenSong(ophfGetLatestSong().id));
+            ophfEls.playAll.addEventListener("click", () => ophfOpenSong(ophfPlaylistOrder[0]));
+
+            ophfEls.versionPicker.addEventListener("change", (event) => {
+                ophfState.versionIndex = Number(event.target.value) || 0;
+                ophfRenderDetail();
+            });
+
+            ophfEls.navA.addEventListener("click", () => {
+                if (ophfState.mode === "detail") ophfMoveSong(-1);
+            });
+
+            ophfEls.navB.addEventListener("click", () => {
+                if (ophfState.mode === "detail") ophfOpenGallery();
+            });
+
+            ophfEls.navC.addEventListener("click", () => {
+                if (ophfState.mode === "detail") ophfMoveSong(1);
+            });
+
+        }
+
+        function ophfInit() {
+            ophfRenderMap();
+            ophfRenderRail();
+            ophfBindEvents();
+            ophfSetBottomNav();
+            ophfRenderCover();
+
+            const hashId = location.hash.replace("#", "");
+            if (hashId && ophfSongs.some((song) => song.id === hashId)) {
+                ophfOpenSong(hashId);
+            }
+        }
+
+        ophfInit();
+    </script>
 </body>
+
 </html>
