@@ -238,6 +238,10 @@
             text-transform: uppercase;
         }
 
+        .ophf-app[data-ophf-mode="detail"] .ophf-coverKicker {
+            color: var(--ophf-purple);
+        }
+
         .ophf-coverName {
             margin: 0;
             max-width: 74vw;
@@ -256,6 +260,29 @@
 
         .ophf-coverNameLine {
             display: block;
+        }
+
+        .ophf-diveBtn {
+            display: none;
+            flex: 0 0 auto;
+            min-height: 40px;
+            padding: 0 16px;
+            border-radius: 999px;
+            background:
+                radial-gradient(circle at 20% 0%, rgba(195, 77, 172, 0.72), transparent 42%),
+                linear-gradient(135deg, rgba(37, 78, 181, 0.88), rgba(119, 13, 31, 0.8));
+            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.16);
+            color: var(--ophf-light);
+            font-family: Oswald, sans-serif;
+            font-size: 13px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            pointer-events: auto;
+        }
+
+        .ophf-app[data-ophf-mode="detail"] .ophf-diveBtn {
+            display: inline-grid;
+            place-items: center;
         }
 
         .ophf-main {
@@ -513,7 +540,7 @@
             z-index: 3;
             top: 85%;
             left: 50%;
-            width: min(100%, calc(var(--ophf-node) + 36px));
+            width: min(100%, calc(var(--ophf-node) + 6px));
             min-height: var(--ophf-node-label-h);
             max-height: var(--ophf-node-label-h);
             padding: 3px 7px 4px;
@@ -558,8 +585,7 @@
         }
 
         .ophf-trackPanel,
-        .ophf-detailBlock,
-        .ophf-actionBlock {
+        .ophf-detailBlock {
             width: min(760px, 100%);
             margin: 0 auto clamp(12px, 3vw, 18px);
             border-radius: var(--ophf-radius-xl);
@@ -591,23 +617,27 @@
 
         .ophf-trackMeta {
             min-width: 0;
-            display: grid;
-            --ophf-listen-btn-size: 36px;
+            --ophf-listen-btn-size: 30px;
             --ophf-listen-gap: 6px;
-            --ophf-listen-strip-w: calc((var(--ophf-listen-btn-size) * 5) + (var(--ophf-listen-gap) * 4));
-            grid-template-columns: minmax(0, 1fr) var(--ophf-listen-strip-w);
-            grid-template-areas:
-                "version share"
-                "links links";
-            align-items: start;
-            gap: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .ophf-trackActions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
         }
 
         .ophf-shareSlot {
-            grid-area: share;
-            width: var(--ophf-listen-strip-w);
             display: flex;
             justify-content: flex-end;
+            flex: 0 0 auto;
+            margin-left: 12px;
         }
 
         .ophf-trackTitle {
@@ -625,7 +655,6 @@
         }
 
         .ophf-versionTitle {
-            grid-area: version;
             margin: 0;
             color: var(--ophf-lavender);
             font-size: clamp(22px, 5.8vw, 34px);
@@ -651,11 +680,10 @@
         }
 
         .ophf-listenGrid {
-            grid-area: links;
             display: flex;
             align-items: center;
-            justify-self: end;
-            width: var(--ophf-listen-strip-w);
+            flex: 0 1 auto;
+            min-width: 0;
         }
 
         .ophf-listenStrip {
@@ -666,7 +694,6 @@
 
         .ophf-listenBtn,
         .ophf-shareBtn,
-        .ophf-universeBtn,
         .ophf-bottomBtn {
             display: grid;
             place-items: center;
@@ -713,6 +740,18 @@
             height: 13px;
         }
 
+        @media (min-width: 501px) {
+            .ophf-trackActions {
+                justify-content: flex-start;
+                width: fit-content;
+                max-width: 100%;
+            }
+
+            .ophf-shareSlot {
+                margin-left: 0;
+            }
+        }
+
         .ophf-detailBlock {
             padding: clamp(14px, 4vw, 22px);
         }
@@ -739,21 +778,6 @@
             color: rgba(248, 248, 248, 0.68);
             font-size: 14px;
             line-height: 1.45;
-        }
-
-        .ophf-actionBlock {
-            padding: clamp(14px, 4vw, 22px);
-        }
-
-        .ophf-universeBtn {
-            width: min(100%, 280px);
-            max-width: 280px;
-            min-height: 52px;
-            margin-inline: auto;
-            background:
-                radial-gradient(circle at 20% 0%, rgba(195, 77, 172, 0.8), transparent 42%),
-                linear-gradient(135deg, rgba(37, 78, 181, 0.92), rgba(119, 13, 31, 0.86));
-            font-size: 15px;
         }
 
         .ophf-miniRail {
@@ -831,6 +855,10 @@
         .ophf-bottomBtn {
             min-height: var(--ophf-nav-button-h);
             background: rgba(248, 248, 248, 0.08);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.12),
+                0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: transform var(--ophf-ease), box-shadow var(--ophf-ease), background var(--ophf-ease);
         }
 
         .ophf-bottomBtnActive {
@@ -838,6 +866,11 @@
                 radial-gradient(circle at 50% 0%, rgba(107, 149, 220, 0.45), transparent 48%),
                 rgba(248, 248, 248, 0.12);
             color: var(--ophf-light);
+            transform: translateY(1px);
+            box-shadow:
+                inset 0 2px 10px rgba(0, 0, 0, 0.45),
+                inset 0 0 0 1px rgba(248, 248, 248, 0.18),
+                0 0 18px rgba(107, 149, 220, 0.18);
         }
 
         @media (min-width: 760px) {
@@ -869,7 +902,7 @@
             </nav>
 
             <div class="ophf-coverSlot">
-                <img class="ophf-coverImg" data-ophf-cover-img src="https://opahifi.com/img/opa/cover.png" alt="" />
+                <img class="ophf-coverImg" data-ophf-cover-img src="/img/opa/cover.png" alt="" />
             </div>
 
             <div class="ophf-coverTitle">
@@ -877,6 +910,7 @@
                     <p class="ophf-coverKicker" data-ophf-cover-kicker>Gallery Map</p>
                     <h1 class="ophf-coverName" data-ophf-cover-name>OpaHiFi Journey</h1>
                 </div>
+                <button class="ophf-diveBtn" type="button">Dive In &gt;</button>
             </div>
         </header>
 
@@ -921,13 +955,15 @@
                     <article class="ophf-trackPanel">
                         <img class="ophf-trackCover" data-ophf-track-cover alt="" />
                         <div class="ophf-trackMeta">
-                            <div class="ophf-shareSlot" data-ophf-share></div>
                             <h2 class="ophf-trackTitle" data-ophf-track-title></h2>
                             <p class="ophf-versionTitle" data-ophf-version-title></p>
                             <p class="ophf-versionCount" data-ophf-version-count></p>
+                            <div class="ophf-trackActions">
+                                <div class="ophf-listenGrid" data-ophf-links></div>
+                                <div class="ophf-shareSlot" data-ophf-share></div>
+                            </div>
                             <select class="ophf-versionPicker" data-ophf-version-picker
                                 aria-label="Choose version"></select>
-                            <div class="ophf-listenGrid" data-ophf-links></div>
                         </div>
                     </article>
 
@@ -936,9 +972,6 @@
                         <p class="ophf-lyrics" data-ophf-lyrics></p>
                     </section>
 
-                    <section class="ophf-actionBlock">
-                        <button class="ophf-universeBtn" type="button">Enter Universe</button>
-                    </section>
                 </div>
             </section>
         </main>
@@ -953,8 +986,8 @@
     </div>
 
     <script>
-        const ophfBasePath = "https://opahifi.com/img/music/base/";
-        const ophfHeroCover = "https://opahifi.com/img/opa/cover.png";
+        const ophfBasePath = "/img/music/base/";
+        const ophfHeroCover = "/img/opa/cover.png";
 
         const ophfSongs = [
             {
