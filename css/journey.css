@@ -2,6 +2,9 @@
    JOURNEY MAP
    ========================================= */
 .journey-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   min-height: 0;
   width: 100%;
   position: relative;
@@ -44,6 +47,36 @@
 /* =========================================
    NODES WRAPPER
    ========================================= */
+.highlights-section {
+  flex: 0 0 25%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.highlight-item {
+  flex: 0 0 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: white;
+  text-transform: uppercase;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.highlight-item:last-child {
+  border-right: none;
+}
+
+.gallery-section {
+  flex: 0 0 75%;
+  position: relative;
+  width: 100%;
+}
+
 .nodes-wrapper {
   position: absolute;
   top: 0;
@@ -51,6 +84,11 @@
   width: 100%;
   height: 100%;
   z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  place-items: center;
+  padding: 20px;
 }
 
 .nodes-wrapper.has-expanded {
@@ -62,18 +100,18 @@
    ========================================= */
 @keyframes popIn {
   from {
-    transform: translate(-50%, -50%) scale(0);
+    transform: scale(0);
     opacity: 0;
   }
+
   to {
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
 }
 
 .journey-orb {
-  position: absolute;
-  transform: translate(-50%, -50%) scale(0);
+  transform: scale(0);
   opacity: 0;
   animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
@@ -103,7 +141,7 @@
 /* After popIn completes, JS adds .animated — transitions take over */
 .journey-orb.animated {
   animation: none;
-  transform: translate(-50%, -50%) scale(1);
+  transform: scale(1);
   opacity: 1;
   transition:
     opacity 0.3s ease,
@@ -119,15 +157,18 @@
 }
 
 /* Skip animation on return to home */
-.page-ready .journey-orb        { animation: none !important; }
+.page-ready .journey-orb {
+  animation: none !important;
+}
+
 .page-ready .journey-orb.animated {
-  transform: translate(-50%, -50%) scale(1);
+  transform: scale(1);
   opacity: 1;
 }
 
 /* Hover (only when animated, not expanded) */
 .journey-orb.animated:hover:not(.expanded):not(.hero-mode) {
-  transform: translate(-50%, -50%) scale(1.4);
+  transform: scale(1.4);
   z-index: 100;
 }
 
@@ -136,36 +177,102 @@
 .hub-active .journey-orb.animated:not(.expanded) {
   opacity: 0 !important;
   pointer-events: none !important;
-  transform: translate(-50%, -50%) scale(0.5) !important;
+  transform: scale(0.5) !important;
 }
 
 /* =========================================
    NODE POSITIONS
    ========================================= */
-.node-1 { left: 16%; top: 80%; animation-delay: 0.10s; }
-.node-2 { left: 22%; top: 46%; animation-delay: 0.25s; }
-.node-3 { left: 19%; top: 21%; animation-delay: 0.40s; }
-.node-4 { left: 51%; top: 22%; animation-delay: 0.55s; }
-.node-5 { left: 50%; top: 50%; animation-delay: 0.70s; }
-.node-6 { left: 46%; top: 76%; animation-delay: 0.85s; }
-.node-7 { left: 78%; top: 82%; animation-delay: 1.00s; }
-.node-8 { left: 80%; top: 58%; animation-delay: 1.15s; }
-.node-9 { left: 78%; top: 18%; animation-delay: 1.30s; }
+.node-1 {
+  left: 16%;
+  top: 80%;
+  animation-delay: 0.10s;
+}
+
+.node-2 {
+  left: 22%;
+  top: 46%;
+  animation-delay: 0.25s;
+}
+
+.node-3 {
+  left: 19%;
+  top: 21%;
+  animation-delay: 0.40s;
+}
+
+.node-4 {
+  left: 51%;
+  top: 22%;
+  animation-delay: 0.55s;
+}
+
+.node-5 {
+  left: 50%;
+  top: 50%;
+  animation-delay: 0.70s;
+}
+
+.node-6 {
+  left: 46%;
+  top: 76%;
+  animation-delay: 0.85s;
+}
+
+.node-7 {
+  left: 78%;
+  top: 82%;
+  animation-delay: 1.00s;
+}
+
+.node-8 {
+  left: 80%;
+  top: 58%;
+  animation-delay: 1.15s;
+}
+
+.node-9 {
+  left: 78%;
+  top: 18%;
+  animation-delay: 1.30s;
+}
 
 /* =========================================
    NODE GLOWS
    ========================================= */
-.node-1, .node-2, .node-3 { box-shadow: 0 4px 15px rgba(255, 59,  48,  0.3); }
-.node-4, .node-5, .node-6 { box-shadow: 0 4px 15px rgba(175, 82,  222, 0.3); }
-.node-7, .node-8, .node-9 { box-shadow: 0 4px 15px rgba(0,   122, 255, 0.3); }
+.node-1,
+.node-2,
+.node-3 {
+  box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+}
 
-.node-1:hover, .node-2:hover, .node-3:hover {
+.node-4,
+.node-5,
+.node-6 {
+  box-shadow: 0 4px 15px rgba(175, 82, 222, 0.3);
+}
+
+.node-7,
+.node-8,
+.node-9 {
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+}
+
+.node-1:hover,
+.node-2:hover,
+.node-3:hover {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 59, 48, 0.8);
 }
-.node-4:hover, .node-5:hover, .node-6:hover {
+
+.node-4:hover,
+.node-5:hover,
+.node-6:hover {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(175, 82, 222, 0.8);
 }
-.node-7:hover, .node-8:hover, .node-9:hover {
+
+.node-7:hover,
+.node-8:hover,
+.node-9:hover {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 122, 255, 0.8);
 }
 
@@ -244,7 +351,7 @@
    ========================================= */
 .orb-pill {
   position: absolute;
-  top: calc(100% + 2px);
+  top: 90%;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
@@ -267,7 +374,9 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.nodes-wrapper.has-expanded .journey-orb:not(.expanded) .orb-pill { opacity: 0; }
+.nodes-wrapper.has-expanded .journey-orb:not(.expanded) .orb-pill {
+  opacity: 0;
+}
 
 .journey-orb.expanded .orb-pill,
 .journey-orb.hero-mode .orb-pill {
@@ -380,8 +489,14 @@
   padding-bottom: 20px;
 }
 
-.versions-list::-webkit-scrollbar { width: 4px; }
-.versions-list::-webkit-scrollbar-track { background: transparent; }
+.versions-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.versions-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .versions-list::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
@@ -475,77 +590,4 @@
 
 .platform-icon {
   width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: white;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  text-decoration: none;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.platform-icon:hover {
-  background: var(--color-purple);
-  transform: scale(1.1);
-}
-
-.platform-icon img { width: 14px; height: 14px; display: block; }
-.platform-icon i   { font-size: 14px; line-height: 1; }
-
-.platform-icon.is-disabled {
-  opacity: 0.34;
-  pointer-events: none;
-}
-
-/* =========================================
-   ENTER UNIVERSE BUTTON
-   ========================================= */
-.enter-btn {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%) translateY(10px) scale(0.9);
-  opacity: 0;
-  pointer-events: none;
-  background: linear-gradient(135deg, var(--color-red), var(--color-purple));
-  border: none;
-  color: white;
-  font-family: var(--font-main);
-  font-weight: 600;
-  font-size: 15px;
-  height: 44px;
-  width: 85%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 22px;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  box-shadow: 0 6px 15px rgba(175, 82, 222, 0.4);
-  transition: var(--transition-spring);
-  z-index: 10;
-}
-
-.journey-orb.expanded .enter-btn {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0) scale(1);
-}
-
-.journey-orb.expanded.hero-mode .enter-btn {
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-.enter-btn:hover {
-  box-shadow: 0 8px 25px rgba(175, 82, 222, 0.8);
-  transform: translateX(-50%) translateY(0) scale(1.05);
-}
+  height:

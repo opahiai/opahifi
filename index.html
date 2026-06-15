@@ -52,7 +52,16 @@
 
     <!-- ── JOURNEY MAP ── -->
     <main class="journey-container">
-      <svg class="journey-svg" id="svg-layer" aria-hidden="true">
+      <div id="highlights-section" class="highlights-section">
+        <div class="highlight-item latest-release">
+          Latest Release
+        </div>
+        <div class="highlight-item play-all">
+          PlayAll List
+        </div>
+      </div>
+      <div id="gallery-section" class="gallery-section">
+        <svg class="journey-svg" id="svg-layer" aria-hidden="true">
         <defs>
           <linearGradient id="spectrum-grad" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%"   stop-color="#ff3b30"/>
@@ -62,8 +71,7 @@
         </defs>
         <path class="glow-line" id="glow-line" d=""/>
       </svg>
-
-      <div class="nodes-wrapper" id="nodes-wrapper">
+        <div class="nodes-wrapper" id="nodes-wrapper">
 
         <div class="journey-orb node-1" data-index="0" data-group-key="full-mindness" data-title="Full-Mindness">
           <div class="orb-img-crop"><div class="orb-img-wrapper">
@@ -128,7 +136,8 @@
           <div class="orb-pill">Opa Pa<br>Pa Party</div>
         </div>
 
-      </div><!-- /nodes-wrapper -->
+      </div>
+      </div>
 
       <!-- Song thumbnail nav strip -->
       <div class="song-view-footer" id="song-view-footer">
@@ -215,3 +224,4 @@
   <script type="module" src="js/main.js"></script>
 </body>
 </html>
+
