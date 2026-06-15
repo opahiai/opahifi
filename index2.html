@@ -94,8 +94,8 @@
             overflow: hidden;
             border-bottom: 1px solid rgba(248, 248, 248, 0.1);
             background:
-                linear-gradient(180deg, rgba(2, 2, 4, 0.88), rgba(2, 2, 4, 0.48)),
-                radial-gradient(circle at 50% 20%, rgba(99, 81, 180, 0.5), transparent 45%);
+                linear-gradient(180deg, rgba(2, 2, 4, 0.96), rgba(2, 2, 4, 0.72)),
+                radial-gradient(circle at 50% 20%, rgba(99, 81, 180, 0.28), transparent 45%);
         }
 
         .ophf-coverArea::after {
@@ -103,7 +103,7 @@
             position: absolute;
             inset: auto 0 0 0;
             height: 42%;
-            background: linear-gradient(180deg, transparent, rgba(2, 2, 4, 0.86));
+            background: linear-gradient(180deg, transparent, rgba(2, 2, 4, 0.94));
             pointer-events: none;
         }
 
@@ -188,6 +188,10 @@
             overflow: hidden;
         }
 
+        .ophf-app[data-ophf-mode="detail"] .ophf-coverSlot {
+            place-items: end center;
+        }
+
         .ophf-coverImg {
             width: 100%;
             height: 100%;
@@ -196,6 +200,20 @@
             opacity: 0.78;
             filter: saturate(1.12) contrast(1.04);
             transform: scale(1.02);
+        }
+
+        .ophf-app[data-ophf-mode="detail"] .ophf-coverImg {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: min(100%, 460px);
+            max-width: none;
+            height: calc(100% * 1.53846);
+            object-fit: fill;
+            object-position: center bottom;
+            opacity: 0.9;
+            filter: blur(22px) saturate(1.08) contrast(1.02);
+            transform: translateX(-50%) scale(1.08);
         }
 
         .ophf-coverTitle {
@@ -228,6 +246,16 @@
             line-height: 0.92;
             text-transform: uppercase;
             text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+        }
+
+        .ophf-app[data-ophf-mode="detail"] .ophf-coverName {
+            max-width: 100%;
+            font-size: clamp(28px, 9.2vw, 64px);
+            line-height: 0.82;
+        }
+
+        .ophf-coverNameLine {
+            display: block;
         }
 
         .ophf-main {
@@ -563,6 +591,23 @@
 
         .ophf-trackMeta {
             min-width: 0;
+            display: grid;
+            --ophf-listen-btn-size: 36px;
+            --ophf-listen-gap: 6px;
+            --ophf-listen-strip-w: calc((var(--ophf-listen-btn-size) * 5) + (var(--ophf-listen-gap) * 4));
+            grid-template-columns: minmax(0, 1fr) var(--ophf-listen-strip-w);
+            grid-template-areas:
+                "version share"
+                "links links";
+            align-items: start;
+            gap: 10px 12px;
+        }
+
+        .ophf-shareSlot {
+            grid-area: share;
+            width: var(--ophf-listen-strip-w);
+            display: flex;
+            justify-content: flex-end;
         }
 
         .ophf-trackTitle {
@@ -574,11 +619,18 @@
             letter-spacing: 0.02em;
         }
 
+        .ophf-trackTitle:empty,
+        .ophf-versionCount:empty {
+            display: none;
+        }
+
         .ophf-versionTitle {
-            margin: 7px 0 2px;
+            grid-area: version;
+            margin: 0;
             color: var(--ophf-lavender);
-            font-size: clamp(13px, 3.6vw, 16px);
+            font-size: clamp(22px, 5.8vw, 34px);
             font-weight: 700;
+            line-height: 1;
         }
 
         .ophf-versionCount {
@@ -599,10 +651,17 @@
         }
 
         .ophf-listenGrid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(82px, 108px));
-            justify-content: start;
-            gap: 7px;
+            grid-area: links;
+            display: flex;
+            align-items: center;
+            justify-self: end;
+            width: var(--ophf-listen-strip-w);
+        }
+
+        .ophf-listenStrip {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: var(--ophf-listen-gap);
         }
 
         .ophf-listenBtn,
@@ -625,8 +684,33 @@
             text-transform: uppercase;
         }
 
+        .ophf-listenBtn {
+            width: var(--ophf-listen-btn-size);
+            max-width: var(--ophf-listen-btn-size);
+            min-height: var(--ophf-listen-btn-size);
+            border-radius: 10px;
+            padding: 0;
+        }
+
+        .ophf-listenIcon {
+            width: 15px;
+            height: 15px;
+            display: block;
+            object-fit: contain;
+        }
+
         .ophf-shareBtn {
+            width: 32px;
+            max-width: 32px;
+            min-height: 32px;
+            border-radius: 10px;
+            padding: 0;
             background: linear-gradient(135deg, rgba(228, 66, 97, 0.64), rgba(37, 78, 181, 0.56));
+        }
+
+        .ophf-shareBtn .ophf-listenIcon {
+            width: 13px;
+            height: 13px;
         }
 
         .ophf-detailBlock {
@@ -837,6 +921,7 @@
                     <article class="ophf-trackPanel">
                         <img class="ophf-trackCover" data-ophf-track-cover alt="" />
                         <div class="ophf-trackMeta">
+                            <div class="ophf-shareSlot" data-ophf-share></div>
                             <h2 class="ophf-trackTitle" data-ophf-track-title></h2>
                             <p class="ophf-versionTitle" data-ophf-version-title></p>
                             <p class="ophf-versionCount" data-ophf-version-count></p>
@@ -849,11 +934,6 @@
                     <section class="ophf-detailBlock">
                         <h3 class="ophf-detailHeading">Lyrics</h3>
                         <p class="ophf-lyrics" data-ophf-lyrics></p>
-                    </section>
-
-                    <section class="ophf-detailBlock">
-                        <h3 class="ophf-detailHeading">Version Notes</h3>
-                        <p class="ophf-notes" data-ophf-notes></p>
                     </section>
 
                     <section class="ophf-actionBlock">
@@ -1051,6 +1131,13 @@
         ];
 
         const ophfPlatforms = ["Spotify", "Apple", "YouTube", "YouTube Music", "Amazon"];
+        const ophfPlatformIcons = {
+            Spotify: "img/ico/spotify-white.svg",
+            Apple: "img/ico/apple-white.svg",
+            YouTube: "img/ico/youtube-white.svg",
+            "YouTube Music": "img/ico/youtubemusic-white.svg",
+            Amazon: "img/ico/amazon-white.svg"
+        };
 
         const ophfEls = {
             app: document.querySelector(".ophf-app"),
@@ -1062,13 +1149,13 @@
             latest: document.querySelector("[data-ophf-latest]"),
             playAll: document.querySelector("[data-ophf-playall]"),
             trackCover: document.querySelector("[data-ophf-track-cover]"),
+            shareSlot: document.querySelector("[data-ophf-share]"),
             trackTitle: document.querySelector("[data-ophf-track-title]"),
             versionTitle: document.querySelector("[data-ophf-version-title]"),
             versionCount: document.querySelector("[data-ophf-version-count]"),
             versionPicker: document.querySelector("[data-ophf-version-picker]"),
             links: document.querySelector("[data-ophf-links]"),
             lyrics: document.querySelector("[data-ophf-lyrics]"),
-            notes: document.querySelector("[data-ophf-notes]"),
             miniRail: document.querySelector("[data-ophf-mini-rail]"),
             navA: document.querySelector("[data-ophf-nav-a]"),
             navB: document.querySelector("[data-ophf-nav-b]"),
@@ -1103,6 +1190,42 @@
                     img.parentElement.appendChild(fallback);
                 }
             };
+        }
+
+        function ophfGetSongLabelLines(song) {
+            return song.labelLines && song.labelLines.length ? song.labelLines : [song.title];
+        }
+
+        function ophfSetCoverTitle(lines) {
+            ophfEls.coverName.innerHTML = "";
+            lines.forEach((line) => {
+                const lineEl = document.createElement("span");
+                lineEl.className = "ophf-coverNameLine";
+                lineEl.textContent = line;
+                ophfEls.coverName.appendChild(lineEl);
+            });
+        }
+
+        function ophfCreateIconImg(src) {
+            const icon = document.createElement("img");
+            icon.className = "ophf-listenIcon";
+            icon.src = src;
+            icon.alt = "";
+            return icon;
+        }
+
+        function ophfCreateShareIcon() {
+            const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            icon.setAttribute("class", "ophf-listenIcon");
+            icon.setAttribute("viewBox", "0 0 24 24");
+            icon.setAttribute("aria-hidden", "true");
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("fill", "currentColor");
+            path.setAttribute("d", "M15 5.25a3.75 3.75 0 1 0 1.58 7.15l-7.02 3.5a3.75 3.75 0 1 0 .67 1.34l7.02-3.5a3.75 3.75 0 1 0-.67-1.34l-7.02 3.5a3.75 3.75 0 0 0 0-2.8l7.02-3.5A3.74 3.74 0 0 0 15 5.25Z");
+            icon.appendChild(path);
+
+            return icon;
         }
 
         function ophfRenderMap() {
@@ -1185,21 +1308,19 @@
         function ophfRenderLinks(version) {
             ophfEls.links.innerHTML = "";
 
+            const strip = document.createElement("div");
+            strip.className = "ophf-listenStrip";
+
             ophfPlatforms.forEach((name) => {
                 const a = document.createElement("a");
                 a.className = "ophf-listenBtn";
                 a.href = version.links[name] || "#";
-                a.textContent = name;
                 a.setAttribute("aria-label", `${name} link`);
-                ophfEls.links.appendChild(a);
+                a.appendChild(ophfCreateIconImg(ophfPlatformIcons[name]));
+                strip.appendChild(a);
             });
 
-            const share = document.createElement("button");
-            share.className = "ophf-shareBtn";
-            share.type = "button";
-            share.textContent = "Share";
-            share.addEventListener("click", ophfShareCurrent);
-            ophfEls.links.appendChild(share);
+            ophfEls.links.appendChild(strip);
         }
 
         function ophfRenderDetail() {
@@ -1208,11 +1329,19 @@
 
             ophfEls.trackCover.src = ophfCoverUrl(song);
             ophfEls.trackCover.alt = `${song.title} cover`;
-            ophfEls.trackTitle.textContent = song.title;
+            ophfEls.trackTitle.textContent = "";
             ophfEls.versionTitle.textContent = version.title;
-            ophfEls.versionCount.textContent = `${song.versions.length} version${song.versions.length === 1 ? "" : "s"}`;
+            ophfEls.versionCount.textContent = "";
             ophfEls.lyrics.textContent = version.lyrics;
-            ophfEls.notes.textContent = version.notes;
+
+            ophfEls.shareSlot.innerHTML = "";
+            const share = document.createElement("button");
+            share.className = "ophf-shareBtn";
+            share.type = "button";
+            share.setAttribute("aria-label", "Share");
+            share.appendChild(ophfCreateShareIcon());
+            share.addEventListener("click", ophfShareCurrent);
+            ophfEls.shareSlot.appendChild(share);
 
             ophfEls.versionPicker.innerHTML = "";
             song.versions.forEach((item, index) => {
@@ -1234,8 +1363,8 @@
                 ophfEls.coverImg.src = ophfHeroCover;
                 ophfEls.coverImg.style.display = "block";
                 ophfEls.coverKicker.textContent = "Gallery Map";
-                ophfEls.coverName.textContent = "OPAHiFi Journey";
-                ophfEls.coverPill.textContent = "3×3 Map";
+                ophfSetCoverTitle(["OPAHiFi Journey"]);
+                if (ophfEls.coverPill) ophfEls.coverPill.textContent = "3x3 Map";
                 return;
             }
 
@@ -1243,8 +1372,8 @@
             ophfEls.coverImg.src = ophfCoverUrl(activeSong);
             ophfEls.coverImg.style.display = "block";
             ophfEls.coverKicker.textContent = "Now Viewing";
-            ophfEls.coverName.textContent = activeSong.title;
-            ophfEls.coverPill.textContent = `Song ${activeSong.journey}`;
+            ophfSetCoverTitle(ophfGetSongLabelLines(activeSong));
+            if (ophfEls.coverPill) ophfEls.coverPill.textContent = `Song ${activeSong.journey}`;
         }
 
         function ophfSetBottomNav() {
