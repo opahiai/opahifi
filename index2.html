@@ -575,19 +575,23 @@
 
         .ophf-detailScreen {
             overflow: hidden;
+            padding: clamp(10px, 3vw, 18px);
         }
 
         .ophf-detailScroller {
+            width: min(760px, 100%);
             height: 100%;
-            overflow-y: auto;
-            overscroll-behavior: contain;
-            padding: clamp(10px, 3vw, 18px);
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr);
+            gap: clamp(12px, 3vw, 18px);
+            min-height: 0;
         }
 
         .ophf-trackPanel,
         .ophf-detailBlock {
-            width: min(760px, 100%);
-            margin: 0 auto clamp(12px, 3vw, 18px);
+            width: 100%;
+            margin: 0;
             border-radius: var(--ophf-radius-xl);
             background: rgba(248, 248, 248, 0.07);
             box-shadow:
@@ -761,7 +765,11 @@
             min-height: 32px;
             border-radius: 10px;
             padding: 0;
-            background: linear-gradient(135deg, rgba(228, 66, 97, 0.64), rgba(37, 78, 181, 0.56));
+            background: var(--ophf-light);
+            box-shadow:
+                inset 0 0 0 1px rgba(2, 2, 4, 0.14),
+                0 8px 18px rgba(0, 0, 0, 0.18);
+            color: var(--ophf-purple);
         }
 
         .ophf-shareBtn .ophf-listenIcon {
@@ -785,6 +793,12 @@
             padding: clamp(14px, 4vw, 22px);
         }
 
+        .ophf-detailBlockLyrics {
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
         .ophf-detailHeading {
             margin: 0 0 10px;
             font-family: Oswald, sans-serif;
@@ -796,10 +810,14 @@
 
         .ophf-lyrics {
             margin: 0;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
             white-space: pre-wrap;
             color: rgba(248, 248, 248, 0.86);
             font-size: clamp(14px, 3.7vw, 16px);
             line-height: 1.48;
+            overscroll-behavior: contain;
         }
 
         .ophf-notes {
@@ -821,7 +839,7 @@
             gap: 5px;
             overflow-x: auto;
             overscroll-behavior-x: contain;
-            padding: 10px 12px;
+            padding: 10px 0;
             background: rgba(2, 2, 4, 0.82);
             border-top: 1px solid rgba(248, 248, 248, 0.1);
             scrollbar-width: none;
@@ -860,7 +878,7 @@
             bottom: 0;
             width: 100%;
             height: var(--ophf-node-art-h);
-            object-fit: fill;
+            object-fit: cover;
             object-position: center bottom;
             display: block;
         }
@@ -997,7 +1015,7 @@
                         </div>
                     </article>
 
-                    <section class="ophf-detailBlock">
+                    <section class="ophf-detailBlock ophf-detailBlockLyrics">
                         <h3 class="ophf-detailHeading">Lyrics</h3>
                         <p class="ophf-lyrics" data-ophf-lyrics></p>
                     </section>
@@ -1032,6 +1050,7 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
+                        lyricsPath: "lyrics/full-mindness.txt",
                         links: {},
                         lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
                         notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
@@ -1040,7 +1059,14 @@
                         title: "Opa Mayhem Mix",
                         image: "img/music/versions/version-fullmindness-mayhemmix.png",
                         mixColors: ["#60c6e6", "#5c14b5"],
-                        links: {},
+                        lyricsPath: "lyrics/full-mindness.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960",
+                            Apple: "https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886",
+                            YouTube: "https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh",
+                            "YouTube Music": "https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z",
+                            Amazon: "https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653"
+                        },
                         lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
                         notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
                     }
@@ -1058,7 +1084,14 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
-                        links: {},
+                        lyricsPath: "lyrics/yeah-lets-do-brunch.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/10pJOBA2Krl8QiAi7XUGE7?si=66f1ed7937454034",
+                            Apple: "https://music.apple.com/us/album/lets-do-brunch-single/1883970912",
+                            YouTube: "https://youtu.be/nlRw2m9_Qh4?si=Xe-ZF1Ogg2ynabpj",
+                            "YouTube Music": "https://music.youtube.com/watch?v=nlRw2m9_Qh4&si=G1BKK_61Wf_EIast",
+                            Amazon: "https://music.amazon.com/albums/B0GS2JC8QD?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_CGFq3eGi1CLBa46vBJBJNB3oc&trackAsin=B0GS23XMP6"
+                        },
                         lyrics: "Yeah let's do brunch\nSo sad we lost touch\nI miss you so so much\nI just need to finish my memoir.",
                         notes: "The fake-connection chapter. Warm words, empty follow-through."
                     }
@@ -1076,13 +1109,21 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
-                        links: {},
+                        lyricsPath: "lyrics/hallucinating-dum-dum.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/74dIXy89cJ5oPrG9MFGd3X?si=91d0eec0dfd54961",
+                            Apple: "https://music.apple.com/us/song/hallucinating-dum-dum/6776020941",
+                            YouTube: "https://youtu.be/d5x0I9ffxwI?si=3ehe5ANC_b68E693",
+                            "YouTube Music": "https://music.youtube.com/watch?v=d5x0I9ffxwI&si=XE-Yl4gqJkmqfsJk",
+                            Amazon: "https://music.amazon.com/albums/B0H3PX4NXX?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_zWfHrxwuQbquYWxem0QHrLJzx&trackAsin=B0H3PZ7XM1"
+                        },
                         lyrics: "Hallucinating\nMe, me, and I\nHallucinating\nWatchin’ life fly by\nLike a dumb bot.",
                         notes: "The crash point: human panic starts behaving like a broken model."
                     },
                     {
                         title: "Tight Hook Draft",
                         mixColors: ["#ffffff"],
+                        lyricsPath: "lyrics/hallucinating-dum-dum.txt",
                         links: {},
                         lyrics: "Quiet room woke stress up — now it’s ready to rumble\nHe mumbles nonsense — makes a monster from a mumble.",
                         notes: "Alternate lyric draft for a cleaner hallucination bridge."
@@ -1101,6 +1142,7 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
+                        lyricsPath: "lyrics/splenda-love-rabbit-hell.txt",
                         links: {},
                         lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
                         notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
@@ -1109,7 +1151,14 @@
                         title: "Opa Max Mix",
                         image: "img/music/versions/version-splendaloverabbithell-maxmix.png",
                         mixColors: ["#60c6e6", "#5c14b5"],
-                        links: {},
+                        lyricsPath: "lyrics/splenda-love-rabbit-hell.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842",
+                            Apple: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",
+                            YouTube: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F",
+                            "YouTube Music": "https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE",
+                            Amazon: "https://music.amazon.com/albums/B0GJQZXHNL"
+                        },
                         lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
                         notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
                     }
@@ -1127,7 +1176,14 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
-                        links: {},
+                        lyricsPath: "lyrics/believe-the-truth-fairy.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg",
+                            Apple: "https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683",
+                            YouTube: "https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC",
+                            "YouTube Music": "https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj",
+                            Amazon: "https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P"
+                        },
                         lyrics: "Believe what you want —\nThere’s always another view\nBefore you spread fear and hate —\nStop — think it through.",
                         notes: "The truth checkpoint. Belief is allowed; blind certainty is the danger."
                     }
@@ -1145,6 +1201,7 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
+                        lyricsPath: "lyrics/old-love-story.txt",
                         links: {},
                         lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
                         notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
@@ -1153,7 +1210,14 @@
                         title: "Desert Disco Duet",
                         image: "img/music/versions/version-oldlovestory-desertdiscoduet.png",
                         mixColors: ["#fff0f5", "#5c14b5"],
-                        links: {},
+                        lyricsPath: "lyrics/old-love-story.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII",
+                            Apple: "https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028",
+                            YouTube: "https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq",
+                            "YouTube Music": "https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE",
+                            Amazon: "https://music.amazon.com/albums/B0FXB4X48G"
+                        },
                         lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
                         notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
                     },
@@ -1161,7 +1225,14 @@
                         title: "Opa Max Mix",
                         image: "img/music/versions/version-oldlovestory-maxmix.png",
                         mixColors: ["#60c6e6", "#5c14b5"],
-                        links: {},
+                        lyricsPath: "lyrics/old-love-story.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/3GZsz52AKg9ml2mMtC6EEw",
+                            Apple: "https://music.apple.com/ng/song/old-love-story-opa-max-mix/1869842718",
+                            YouTube: "https://youtu.be/m7wP4U97FC8",
+                            "YouTube Music": "https://music.youtube.com/watch?v=m7wP4U97FC8",
+                            Amazon: "https://music.amazon.com/albums/B0GHC1X6R3"
+                        },
                         lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
                         notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
                     }
@@ -1179,7 +1250,14 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
-                        links: {},
+                        lyricsPath: "lyrics/glittaa-pheonix.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6",
+                            Apple: "https://music.apple.com/us/album/glittaa-phoenix-single/1853214791",
+                            YouTube: "https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX",
+                            "YouTube Music": "https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17",
+                            Amazon: "https://music.amazon.com/albums/B0G1N1Y83C"
+                        },
                         lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
                         notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
                     },
@@ -1187,7 +1265,14 @@
                         title: "Opa Sunrize Max Mix",
                         image: "img/music/versions/version-glittaaphoenix-sunrisemaxmix.png",
                         mixColors: ["#e8d36b", "#f4c97a", "#f4af86"],
-                        links: {},
+                        lyricsPath: "lyrics/glittaa-pheonix-sunrise-mix.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP",
+                            Apple: "https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659",
+                            YouTube: "https://www.youtube.com/watch?v=LOywm64SGCY",
+                            "YouTube Music": "https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP",
+                            Amazon: "https://music.amazon.com/tracks/B0GGHZ6L2F"
+                        },
                         lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
                         notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
                     }
@@ -1205,7 +1290,14 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
-                        links: {},
+                        lyricsPath: "lyrics/opa-pa-pa-party.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf",
+                            Apple: "https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737",
+                            YouTube: "https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8",
+                            "YouTube Music": "https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw",
+                            Amazon: "https://music.amazon.com/albums/B0FYVMVZS4"
+                        },
                         lyrics: "There ain’t no party like an\nOpa pa pa pa party\nWith all your party pi pi pi—\nPi pi people.",
                         notes: "The joy-release chapter. The journey becomes physical, loud, and communal."
                     }
@@ -1223,7 +1315,14 @@
                     {
                         title: "Main Version",
                         mixColors: ["#ffffff"],
-                        links: {},
+                        lyricsPath: "lyrics/wellwolf-hoawlehluya.txt",
+                        links: {
+                            Spotify: "https://open.spotify.com/track/4OHlXoJFuPhfm4plY7Coop?si=86049caec0384f95",
+                            Apple: "https://music.apple.com/us/album/wellwolf-howl-lehluya-single/1894120765",
+                            YouTube: "https://youtu.be/bjecZnXbXBc?si=Llwj6s7pyO2fRMmY",
+                            "YouTube Music": "https://music.youtube.com/playlist?list=OLAK5uy_k3iThKSj0H5nDqf-dpU5EMM-ccRcglZaY&si=d2V3JFEBlqkSJi55",
+                            Amazon: "https://music.amazon.com/tracks/B0GXHSFW83?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_YaZDAKqp0vQwgwM7y8yENc9Zw"
+                        },
                         lyrics: "Wellwolf no bloodlust no fame thirst\nRun on love not to be first\nBite with kindness not to hurt\nBeat with heart not for sport.",
                         notes: "The kindness endpoint. The monster myth flips into care."
                     }
@@ -1280,6 +1379,8 @@
             songId: "wellwolf",
             versionIndex: 0
         };
+        const ophfLyricsCache = new Map();
+        let ophfLyricsRequestId = 0;
 
         function ophfCoverUrl(song) {
             return `${ophfBasePath}${song.file}`;
@@ -1287,6 +1388,18 @@
 
         function ophfVersionImageUrl(song, version) {
             return version.image || ophfCoverUrl(song);
+        }
+
+        async function ophfLoadLyrics(version) {
+            const fallback = version.lyrics || "";
+            if (!version.lyricsPath) return fallback;
+            if (ophfLyricsCache.has(version.lyricsPath)) return ophfLyricsCache.get(version.lyricsPath);
+
+            const response = await fetch(version.lyricsPath, { cache: "force-cache" });
+            if (!response.ok) throw new Error(`Lyrics request failed: ${response.status}`);
+            const text = await response.text();
+            ophfLyricsCache.set(version.lyricsPath, text);
+            return text;
         }
 
         function ophfGetSong(id) {
@@ -1473,15 +1586,16 @@
             ophfEls.links.appendChild(strip);
         }
 
-        function ophfRenderDetail() {
+        async function ophfRenderDetail() {
             const song = ophfGetSong(ophfState.songId);
             const version = song.versions[ophfState.versionIndex] || song.versions[0];
+            const requestId = ++ophfLyricsRequestId;
 
             ophfEls.trackCover.src = ophfVersionImageUrl(song, version);
             ophfEls.trackCover.alt = `${song.title} cover`;
             ophfEls.trackTitle.textContent = "";
             ophfEls.versionTitle.textContent = version.title;
-            ophfEls.lyrics.textContent = version.lyrics;
+            ophfEls.lyrics.textContent = "Loading lyrics...";
 
             if (song.versions.length <= 1) {
                 ophfEls.versionMeta.textContent = "Opa & Only version";
@@ -1515,6 +1629,17 @@
             ophfRenderLinks(version);
             ophfRenderRail();
             ophfRenderCover(song);
+
+            try {
+                const lyrics = await ophfLoadLyrics(version);
+                if (requestId === ophfLyricsRequestId) {
+                    ophfEls.lyrics.textContent = lyrics || version.lyrics || "";
+                }
+            } catch {
+                if (requestId === ophfLyricsRequestId) {
+                    ophfEls.lyrics.textContent = version.lyrics || "";
+                }
+            }
         }
 
         function ophfRenderCover(song = null) {
