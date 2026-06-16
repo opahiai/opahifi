@@ -21,6 +21,9 @@
             --ophf-nav-h: calc(var(--ophf-nav-button-h) + var(--ophf-nav-pad-top) + var(--ophf-nav-pad-bottom));
             --ophf-topbar-h: 44px;
             --ophf-rail-h: 76px;
+            --ophf-listen-btn-size: 40px;
+            --ophf-listen-icon-size: 20px;
+            --ophf-listen-gap: 9px;
             --ophf-promo-content-max: 900px;
             --ophf-gallery-map-max-w: calc(var(--ophf-nav-button-w) + var(--ophf-nav-button-w) + var(--ophf-nav-button-w) + var(--ophf-nav-gap) + var(--ophf-nav-gap));
             --ophf-gallery-map-max-h: 680px;
@@ -313,6 +316,7 @@
         }
 
         .ophf-app[data-ophf-mode="gallery"] .ophf-galleryScreen,
+        .ophf-app[data-ophf-mode="videos"] .ophf-videosScreen,
         .ophf-app[data-ophf-mode="detail"] .ophf-detailScreen {
             display: block;
         }
@@ -366,10 +370,29 @@
         }
 
         .ophf-promoTilePlay {
+            overflow: visible;
             background:
                 linear-gradient(145deg, rgba(248, 248, 248, 0.12), rgba(248, 248, 248, 0.035)),
                 radial-gradient(circle at 80% 10%, rgba(37, 78, 181, 0.45), transparent 48%),
                 rgba(24, 36, 117, 0.55);
+        }
+
+        .ophf-promoTilePlay .ophf-promoEyebrow,
+        .ophf-promoTilePlay .ophf-promoTitle {
+            position: relative;
+            z-index: 2;
+        }
+
+        .ophf-promoPlaylistBtn {
+            position: absolute;
+            right: clamp(-18px, -3.6vw, -10px);
+            bottom: clamp(-22px, -4.2vw, -12px);
+            z-index: 3;
+            width: clamp(64px, 18vw, 92px);
+            height: auto;
+            display: block;
+            pointer-events: none;
+            filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
         }
 
         .ophf-promoEyebrow {
@@ -574,6 +597,171 @@
                 linear-gradient(135deg, var(--ophf-purple), var(--ophf-black));
         }
 
+        .ophf-videosScreen {
+            overflow: hidden;
+            padding: var(--ophf-gallery-pad);
+        }
+
+        .ophf-videosPanel {
+            height: var(--ophf-gallery-panel-h);
+            min-height: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .ophf-videoGrid {
+            display: flex;
+            width: 100%;
+            height: min(100%, clamp(280px, 48dvh, 420px));
+            overflow: hidden;
+            border-radius: clamp(22px, 5vw, 34px);
+            background:
+                linear-gradient(180deg, rgba(248, 248, 248, 0.08), rgba(248, 248, 248, 0.03)),
+                rgba(8, 10, 18, 0.72);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.08),
+                0 24px 70px rgba(0, 0, 0, 0.26);
+        }
+
+        .ophf-videoCard {
+            --ophf-video-fg-width: clamp(110px, 34vw, 170px);
+            --ophf-video-fg-offset-x: 0px;
+            position: relative;
+            flex: 1 1 0;
+            display: block;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--ophf-light);
+            isolation: isolate;
+            transition: transform 180ms ease, filter 180ms ease;
+        }
+
+        .ophf-videoCard + .ophf-videoCard {
+            border-left: 1px solid rgba(248, 248, 248, 0.08);
+        }
+
+        .ophf-videoCard:hover,
+        .ophf-videoCard:focus-visible {
+            filter: brightness(1.08);
+        }
+
+        .ophf-videoCard--meet {
+            --ophf-video-fg-offset-x: 8px;
+        }
+
+        .ophf-videoScene {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .ophf-videoThumb {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .ophf-videoThumb--bg {
+            object-fit: cover;
+            object-position: center center;
+            transform: scale(1.06);
+            filter: saturate(0.96) contrast(1.02);
+        }
+
+        .ophf-videoThumb--fg {
+            inset: auto auto 18px 50%;
+            width: var(--ophf-video-fg-width);
+            height: auto;
+            margin-left: calc((var(--ophf-video-fg-width) * -0.5) + var(--ophf-video-fg-offset-x));
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+            object-position: center bottom;
+            transform: scale(1.02);
+        }
+
+        .ophf-videoTitle {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            z-index: 2;
+            color: var(--ophf-light);
+            font-family: Oswald, sans-serif;
+            font-size: clamp(16px, 2.4vw, 24px);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            line-height: 0.92;
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .ophf-videoCard::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(6, 9, 28, 0.8) 0%, rgba(6, 9, 28, 0.08) 48%, rgba(6, 9, 28, 0.72) 100%);
+            pointer-events: none;
+        }
+
+        .ophf-videoPlayBtn {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 2;
+            display: grid;
+            place-items: center;
+            width: clamp(54px, 9vw, 72px);
+            height: clamp(54px, 9vw, 72px);
+            border-radius: 999px;
+            transform: translate(-50%, -50%);
+            background: rgba(248, 248, 248, 0.08);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.26),
+                0 10px 24px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(8px);
+            color: var(--ophf-light);
+            transition: background 140ms ease, transform 140ms ease;
+        }
+
+        .ophf-videoCard:hover .ophf-videoPlayBtn,
+        .ophf-videoCard:focus-visible .ophf-videoPlayBtn {
+            background: rgba(248, 248, 248, 0.14);
+            transform: translate(-50%, -50%) scale(1.04);
+        }
+
+        .ophf-videoPlayIcon {
+            width: 0;
+            height: 0;
+            margin-left: 4px;
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+            border-left: 14px solid currentColor;
+        }
+
+        .ophf-videoCard:hover .ophf-videoThumb--bg,
+        .ophf-videoCard:focus-visible .ophf-videoThumb--bg {
+            transform: scale(1.1);
+        }
+
+        .ophf-videoCard:hover .ophf-videoThumb--fg,
+        .ophf-videoCard:focus-visible .ophf-videoThumb--fg {
+            transform: scale(1.04);
+        }
+
+        @media (max-width: 700px) {
+            .ophf-videoTitle {
+                top: 10px;
+                left: 8px;
+                right: 8px;
+                font-size: clamp(13px, 4.1vw, 18px);
+            }
+        }
+
         .ophf-detailScreen {
             overflow: hidden;
             padding: clamp(10px, 3vw, 18px);
@@ -605,10 +793,13 @@
             display: grid;
             grid-template-columns: clamp(88px, 27vw, 170px) minmax(0, 1fr);
             gap: clamp(12px, 3.5vw, 18px);
+            align-items: start;
             padding: clamp(12px, 3.5vw, 18px);
         }
 
         .ophf-trackCover {
+            grid-column: 1;
+            grid-row: 1;
             width: 100%;
             aspect-ratio: 1 / 1;
             border-radius: 20px;
@@ -621,9 +812,9 @@
         }
 
         .ophf-trackMeta {
+            grid-column: 2;
+            grid-row: 1;
             min-width: 0;
-            --ophf-listen-btn-size: 30px;
-            --ophf-listen-gap: 6px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -631,10 +822,12 @@
         }
 
         .ophf-trackActions {
+            grid-column: 1 / -1;
+            grid-row: 2;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: var(--ophf-listen-gap);
             width: 100%;
         }
 
@@ -642,7 +835,7 @@
             display: flex;
             justify-content: flex-end;
             flex: 0 0 auto;
-            margin-left: 12px;
+            margin-left: 0;
         }
 
         .ophf-trackTitle {
@@ -754,7 +947,8 @@
             text-transform: uppercase;
         }
 
-        .ophf-listenBtn {
+        .ophf-listenBtn,
+        .ophf-shareBtn {
             width: var(--ophf-listen-btn-size);
             max-width: var(--ophf-listen-btn-size);
             min-height: var(--ophf-listen-btn-size);
@@ -763,18 +957,13 @@
         }
 
         .ophf-listenIcon {
-            width: 15px;
-            height: 15px;
+            width: var(--ophf-listen-icon-size);
+            height: var(--ophf-listen-icon-size);
             display: block;
             object-fit: contain;
         }
 
         .ophf-shareBtn {
-            width: 32px;
-            max-width: 32px;
-            min-height: 32px;
-            border-radius: 10px;
-            padding: 0;
             background: var(--ophf-light);
             box-shadow:
                 inset 0 0 0 1px rgba(2, 2, 4, 0.14),
@@ -783,19 +972,21 @@
         }
 
         .ophf-shareBtn .ophf-listenIcon {
-            width: 13px;
-            height: 13px;
+            width: var(--ophf-listen-icon-size);
+            height: var(--ophf-listen-icon-size);
         }
 
         @media (min-width: 501px) {
-            .ophf-trackActions {
-                justify-content: flex-start;
-                width: fit-content;
-                max-width: 100%;
+            .ophf-trackCover {
+                grid-row: 1 / span 2;
             }
 
-            .ophf-shareSlot {
-                margin-left: 0;
+            .ophf-trackActions {
+                grid-column: 2;
+                grid-row: 2;
+                justify-content: space-between;
+                width: 100%;
+                max-width: 100%;
             }
         }
 
@@ -848,8 +1039,9 @@
             align-items: center;
             gap: 5px;
             overflow-x: auto;
+            overflow-y: visible;
             overscroll-behavior-x: contain;
-            padding: 10px 0;
+            padding: 18px 0 8px;
             background: rgba(2, 2, 4, 0.82);
             border-top: 1px solid rgba(248, 248, 248, 0.1);
             scrollbar-width: none;
@@ -873,11 +1065,15 @@
             overflow: hidden;
             background: rgba(248, 248, 248, 0.08);
             box-shadow: 0 0 0 1px rgba(248, 248, 248, 0.16);
+            transition: transform var(--ophf-ease), box-shadow var(--ophf-ease);
         }
 
         .ophf-railBtn[aria-current="true"] {
+            z-index: 2;
+            transform: translateY(-10px) scale(1.14);
             box-shadow:
                 0 0 0 2px var(--ophf-light),
+                0 8px 18px rgba(0, 0, 0, 0.42),
                 0 0 22px rgba(195, 77, 172, 0.72);
         }
 
@@ -995,6 +1191,7 @@
                         <button class="ophf-promoTile ophf-promoTilePlay" type="button" data-ophf-playall>
                             <span class="ophf-promoEyebrow">Playlist Order</span>
                             <span class="ophf-promoTitle">Play All</span>
+                            <img class="ophf-promoPlaylistBtn" src="img/btns/playlist.png" alt="" aria-hidden="true">
                         </button>
                     </div>
 
@@ -1021,6 +1218,12 @@
                 </div>
             </section>
 
+            <section class="ophf-screen ophf-videosScreen" aria-label="Videos">
+                <div class="ophf-videosPanel">
+                    <div class="ophf-videoGrid" data-ophf-video-grid></div>
+                </div>
+            </section>
+
             <section class="ophf-screen ophf-detailScreen" aria-label="Version detail">
                 <div class="ophf-detailScroller">
                     <article class="ophf-trackPanel">
@@ -1032,10 +1235,10 @@
                                 <div class="ophf-versionNav" data-ophf-version-nav></div>
                             </div>
                             <p class="ophf-versionTitle" data-ophf-version-title></p>
-                            <div class="ophf-trackActions">
-                                <div class="ophf-listenGrid" data-ophf-links></div>
-                                <div class="ophf-shareSlot" data-ophf-share></div>
-                            </div>
+                        </div>
+                        <div class="ophf-trackActions">
+                            <div class="ophf-listenGrid" data-ophf-links></div>
+                            <div class="ophf-shareSlot" data-ophf-share></div>
                         </div>
                     </article>
 
@@ -1058,9 +1261,150 @@
     </div>
 
     <script>
+        class OpaHifiVideosView {
+            static cards = [
+                {
+                    id: "meet",
+                    title: "MEET OPA!",
+                    href: "https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9",
+                    bgSrc: "img/opa/videos/opa-meet-bg.png",
+                    fgSrc: "img/opa/videos/opa-meet.png",
+                    className: "ophf-videoCard ophf-videoCard--meet"
+                },
+                {
+                    id: "clips",
+                    title: "VIDEO CLIPS",
+                    href: "https://www.youtube.com/playlist?list=PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T",
+                    bgSrc: "img/opa/videos/opa-video-bg.png",
+                    fgSrc: "img/opa/videos/opa-video.png",
+                    className: "ophf-videoCard"
+                },
+                {
+                    id: "lyrics",
+                    title: "LYRICS SHORTS",
+                    href: "https://www.youtube.com/playlist?list=PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA",
+                    bgSrc: "img/opa/videos/opa-lyrics-bg.png",
+                    fgSrc: "img/opa/videos/opa-lyrics.png",
+                    className: "ophf-videoCard"
+                }
+            ];
+
+            constructor(root) {
+                this.root = root;
+                this.cleanup = [];
+            }
+
+            render() {
+                if (!this.root || this.root.childElementCount) return;
+
+                OpaHifiVideosView.cards.forEach((card) => {
+                    this.root.appendChild(this.createCard(card));
+                });
+            }
+
+            activate() {
+                this.render();
+                this.bindPointerMotion();
+            }
+
+            deactivate() {
+                this.resetPointerMotion();
+            }
+
+            createCard(card) {
+                const link = document.createElement("a");
+                link.className = card.className;
+                link.href = card.href;
+                link.target = "_blank";
+                link.rel = "noreferrer noopener";
+                link.setAttribute("aria-label", `Watch ${card.title}`);
+
+                const scene = document.createElement("span");
+                scene.className = "ophf-videoScene";
+                scene.setAttribute("aria-hidden", "true");
+
+                const bg = document.createElement("img");
+                bg.className = "ophf-videoThumb ophf-videoThumb--bg";
+                bg.src = card.bgSrc;
+                bg.alt = "";
+                bg.loading = "lazy";
+
+                const fg = document.createElement("img");
+                fg.className = "ophf-videoThumb ophf-videoThumb--fg";
+                fg.src = card.fgSrc;
+                fg.alt = "";
+                fg.loading = "lazy";
+
+                const title = document.createElement("span");
+                title.className = "ophf-videoTitle";
+                title.textContent = card.title;
+
+                const button = document.createElement("span");
+                button.className = "ophf-videoPlayBtn";
+
+                const play = document.createElement("span");
+                play.className = "ophf-videoPlayIcon";
+
+                button.appendChild(play);
+                scene.appendChild(title);
+                scene.appendChild(bg);
+                scene.appendChild(fg);
+                scene.appendChild(button);
+                link.appendChild(scene);
+                return link;
+            }
+
+            bindPointerMotion() {
+                if (!this.root || this.cleanup.length) return;
+                if (typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                    return;
+                }
+
+                this.root.querySelectorAll(".ophf-videoCard").forEach((card, index) => {
+                    const bg = card.querySelector(".ophf-videoThumb--bg");
+                    const fg = card.querySelector(".ophf-videoThumb--fg");
+                    if (!bg || !fg) return;
+
+                    const baseBgX = index === 1 ? 1.6 : -1.6;
+                    const moveCard = (ev) => {
+                        const rect = card.getBoundingClientRect();
+                        if (!rect.width || !rect.height) return;
+                        const px = ((ev.clientX - rect.left) / rect.width) - 0.5;
+                        const py = ((ev.clientY - rect.top) / rect.height) - 0.5;
+                        bg.style.transform = `translate(${(baseBgX + (px * 8)).toFixed(2)}%, ${(py * 5).toFixed(2)}%) scale(1.1)`;
+                        fg.style.transform = `translate(${(px * -4.5).toFixed(2)}%, ${(py * -2.2).toFixed(2)}%) scale(1.04)`;
+                    };
+
+                    const leaveCard = () => {
+                        bg.style.transform = "";
+                        fg.style.transform = "";
+                    };
+
+                    card.addEventListener("pointermove", moveCard);
+                    card.addEventListener("pointerleave", leaveCard);
+                    card.addEventListener("blur", leaveCard, true);
+                    this.cleanup.push(() => {
+                        card.removeEventListener("pointermove", moveCard);
+                        card.removeEventListener("pointerleave", leaveCard);
+                        card.removeEventListener("blur", leaveCard, true);
+                    });
+                });
+            }
+
+            resetPointerMotion() {
+                this.cleanup.forEach((cleanup) => cleanup());
+                this.cleanup = [];
+                if (!this.root) return;
+                this.root.querySelectorAll(".ophf-videoThumb--bg, .ophf-videoThumb--fg").forEach((node) => {
+                    node.style.transform = "";
+                });
+            }
+        }
+
         class OpaHifiGalleryApp {
             static basePath = "/img/music/base/";
             static heroCover = "/img/opa/cover.png";
+            static latestSongId = "wellwolf";
     
             static songs = [
                 {
@@ -1070,16 +1414,7 @@
                     title: "Full-Mindness",
                     labelLines: ["Full-", "Mindness"],
                     file: "base-fullmindness.png",
-                    latest: false,
                     versions: [
-                        {
-                            title: "Main Version",
-                            mixColors: ["#ffffff"],
-                            lyricsPath: "lyrics/full-mindness.txt",
-                            links: {},
-                            lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
-                            notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
-                        },
                         {
                             title: "Opa Mayhem Mix",
                             image: "img/music/versions/version-fullmindness-mayhemmix.png",
@@ -1104,7 +1439,6 @@
                     title: "Yeah, Let’s Do Brunch",
                     labelLines: ["Yeah, Let’s", "Do Brunch"],
                     file: "base-yeahletsdobrunch.png",
-                    latest: false,
                     versions: [
                         {
                             title: "Main Version",
@@ -1129,7 +1463,6 @@
                     title: "Hallucinating",
                     labelLines: ["Hallucinating", "Dum Dum"],
                     file: "base-hallucinatingdumdum.png",
-                    latest: false,
                     versions: [
                         {
                             title: "Main Version",
@@ -1144,14 +1477,6 @@
                             },
                             lyrics: "Hallucinating\nMe, me, and I\nHallucinating\nWatchin’ life fly by\nLike a dumb bot.",
                             notes: "The crash point: human panic starts behaving like a broken model."
-                        },
-                        {
-                            title: "Tight Hook Draft",
-                            mixColors: ["#ffffff"],
-                            lyricsPath: "lyrics/hallucinating-dum-dum.txt",
-                            links: {},
-                            lyrics: "Quiet room woke stress up — now it’s ready to rumble\nHe mumbles nonsense — makes a monster from a mumble.",
-                            notes: "Alternate lyric draft for a cleaner hallucination bridge."
                         }
                     ]
                 },
@@ -1162,16 +1487,7 @@
                     title: "Splenda Love Rabbit Hell",
                     labelLines: ["Splenda Love", "Rabbit Hell"],
                     file: "base-splendaloverabbithell.png",
-                    latest: false,
                     versions: [
-                        {
-                            title: "Main Version",
-                            mixColors: ["#ffffff"],
-                            lyricsPath: "lyrics/splenda-love-rabbit-hell.txt",
-                            links: {},
-                            lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
-                            notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
-                        },
                         {
                             title: "Opa Max Mix",
                             image: "img/music/versions/version-splendaloverabbithell-maxmix.png",
@@ -1196,7 +1512,6 @@
                     title: "Believe the Truth Fairy",
                     labelLines: ["Believe The", "Truth Fairy"],
                     file: "base-believethetruthfairy.png",
-                    latest: false,
                     versions: [
                         {
                             title: "Main Version",
@@ -1221,7 +1536,6 @@
                     title: "Old Love Story",
                     labelLines: ["Old Love", "Story"],
                     file: "base-oldlovestory.png",
-                    latest: false,
                     versions: [
                         {
                             title: "Desert Disco Duet",
@@ -1262,7 +1576,6 @@
                     title: "Glittaa Phoenix",
                     labelLines: ["Glittaa", "Phoenix"],
                     file: "base-glittaaphoenix.png",
-                    latest: false,
                     versions: [
                         {
                             title: "Main Version",
@@ -1302,7 +1615,6 @@
                     title: "Opa Pa Pa Party",
                     labelLines: ["Opa Pa", "Pa Party"],
                     file: "base-opapapaparty.png",
-                    latest: false,
                     versions: [
                         {
                             title: "Main Version",
@@ -1327,7 +1639,6 @@
                     title: "Wellwolf Howl-Lehluya",
                     labelLines: ["Wellwolf", "Howl-Lehluya"],
                     file: "base-wellwolfhowllehluya.png",
-                    latest: true,
                     versions: [
                         {
                             title: "Main Version",
@@ -1372,6 +1683,7 @@
             constructor(options = {}) {
                 this.basePath = options.basePath || this.constructor.basePath;
                 this.heroCover = options.heroCover || this.constructor.heroCover;
+                this.latestSongId = options.latestSongId || this.constructor.latestSongId;
                 this.songs = options.songs || this.constructor.songs;
                 this.playlistOrder = options.playlistOrder || this.constructor.playlistOrder;
                 this.platforms = options.platforms || this.constructor.platforms;
@@ -1388,6 +1700,7 @@
                     spiralGradient: document.querySelector("[data-ophf-spiral-gradient]"),
                     spiralGlow: document.querySelector("[data-ophf-spiral-glow]"),
                     spiralLine: document.querySelector("[data-ophf-spiral-line]"),
+                    videoGrid: document.querySelector("[data-ophf-video-grid]"),
                     latest: document.querySelector("[data-ophf-latest]"),
                     playAll: document.querySelector("[data-ophf-playall]"),
                     trackCover: document.querySelector("[data-ophf-track-cover]"),
@@ -1412,6 +1725,7 @@
                 this.lyricsRequestId = 0;
                 this.spiralFrame = 0;
                 this.mapResizeObserver = null;
+                this.videosView = new OpaHifiVideosView(this.els.videoGrid);
                 this.scheduleSpiralUpdate = this.scheduleSpiralUpdate.bind(this);
             }
 
@@ -1440,7 +1754,7 @@
         }
 
             getLatestSong() {
-            return this.songs.find((song) => song.latest) || this.songs[this.songs.length - 1];
+            return this.getSong(this.latestSongId);
         }
 
             setImageFallback(img, song) {
@@ -1483,10 +1797,30 @@
             icon.setAttribute("viewBox", "0 0 24 24");
             icon.setAttribute("aria-hidden", "true");
 
-            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            path.setAttribute("fill", "currentColor");
-            path.setAttribute("d", "M15 5.25a3.75 3.75 0 1 0 1.58 7.15l-7.02 3.5a3.75 3.75 0 1 0 .67 1.34l7.02-3.5a3.75 3.75 0 1 0-.67-1.34l-7.02 3.5a3.75 3.75 0 0 0 0-2.8l7.02-3.5A3.74 3.74 0 0 0 15 5.25Z");
-            icon.appendChild(path);
+            const lineA = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            lineA.setAttribute("d", "M8.7 10.7 15.3 7.2");
+            const lineB = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            lineB.setAttribute("d", "M8.7 13.3 15.3 16.8");
+            [lineA, lineB].forEach((line) => {
+                line.setAttribute("fill", "none");
+                line.setAttribute("stroke", "currentColor");
+                line.setAttribute("stroke-width", "2.3");
+                line.setAttribute("stroke-linecap", "round");
+                icon.appendChild(line);
+            });
+
+            [
+                [6.5, 12],
+                [17.5, 6],
+                [17.5, 18]
+            ].forEach(([cx, cy]) => {
+                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot.setAttribute("cx", cx);
+                dot.setAttribute("cy", cy);
+                dot.setAttribute("r", "2.8");
+                dot.setAttribute("fill", "currentColor");
+                icon.appendChild(dot);
+            });
 
             return icon;
         }
@@ -1704,7 +2038,7 @@
             share.type = "button";
             share.setAttribute("aria-label", "Share");
             share.appendChild(this.createShareIcon());
-            share.addEventListener("click", this.shareCurrent);
+            share.addEventListener("click", () => this.shareCurrent());
             this.els.shareSlot.appendChild(share);
 
             this.renderLinks(version);
@@ -1733,6 +2067,15 @@
                 return;
             }
 
+            if (this.state.mode === "videos") {
+                this.els.coverImg.src = this.heroCover;
+                this.els.coverImg.style.display = "block";
+                this.els.coverKicker.textContent = "Video Vault";
+                this.setCoverTitle(["Three Opa", "Channels"]);
+                if (this.els.coverPill) this.els.coverPill.textContent = "Playlists";
+                return;
+            }
+
             const activeSong = song || this.getSong(this.state.songId);
             this.els.coverImg.src = this.coverUrl(activeSong);
             this.els.coverImg.style.display = "block";
@@ -1743,13 +2086,19 @@
 
             setBottomNav() {
             const isGallery = this.state.mode === "gallery";
-            this.els.navA.textContent = isGallery ? "Videos" : "Prev";
-            this.els.navB.textContent = isGallery ? "Gallery" : "Home";
-            this.els.navC.textContent = isGallery ? "About" : "Next";
-            this.els.navA.classList.remove("ophf-bottomBtnActive");
+            const isVideos = this.state.mode === "videos";
+            const isDetail = this.state.mode === "detail";
+            this.els.navA.textContent = isDetail ? "Prev" : "Videos";
+            this.els.navB.textContent = isDetail ? "Home" : isVideos ? "Home" : "Gallery";
+            this.els.navC.textContent = isDetail ? "Next" : "About";
+            this.els.navA.classList.toggle("ophf-bottomBtnActive", isVideos);
             this.els.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
             this.els.navC.classList.remove("ophf-bottomBtnActive");
-            this.els.navA.removeAttribute("aria-current");
+            if (isVideos) {
+                this.els.navA.setAttribute("aria-current", "page");
+            } else {
+                this.els.navA.removeAttribute("aria-current");
+            }
             if (isGallery) {
                 this.els.navB.setAttribute("aria-current", "page");
             } else {
@@ -1759,6 +2108,7 @@
         }
 
             openGallery() {
+            this.videosView.deactivate();
             this.state.mode = "gallery";
             this.els.app.dataset.ophfMode = "gallery";
             this.renderCover();
@@ -1766,7 +2116,16 @@
             this.scheduleSpiralUpdate();
         }
 
+            openVideos() {
+            this.state.mode = "videos";
+            this.els.app.dataset.ophfMode = "videos";
+            this.videosView.activate();
+            this.renderCover();
+            this.setBottomNav();
+        }
+
             openSong(songId, versionIndex = 0) {
+            this.videosView.deactivate();
             this.state.mode = "detail";
             this.state.songId = songId;
             this.state.versionIndex = versionIndex;
@@ -1802,11 +2161,15 @@
             this.els.playAll.addEventListener("click", () => this.openSong(this.playlistOrder[0]));
 
             this.els.navA.addEventListener("click", () => {
-                if (this.state.mode === "detail") this.moveSong(-1);
+                if (this.state.mode === "detail") {
+                    this.moveSong(-1);
+                    return;
+                }
+                if (this.state.mode === "gallery") this.openVideos();
             });
 
             this.els.navB.addEventListener("click", () => {
-                if (this.state.mode === "detail") this.openGallery();
+                if (this.state.mode === "detail" || this.state.mode === "videos") this.openGallery();
             });
 
             this.els.navC.addEventListener("click", () => {
@@ -1823,6 +2186,7 @@
 
             init() {
             this.renderMap();
+            this.videosView.render();
             this.renderRail();
             this.bindEvents();
             this.setBottomNav();
