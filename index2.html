@@ -649,8 +649,7 @@
             letter-spacing: 0.02em;
         }
 
-        .ophf-trackTitle:empty,
-        .ophf-versionCount:empty {
+        .ophf-trackTitle:empty {
             display: none;
         }
 
@@ -662,21 +661,51 @@
             line-height: 1;
         }
 
-        .ophf-versionCount {
-            margin: 0 0 10px;
-            color: rgba(248, 248, 248, 0.68);
-            font-size: 12px;
+        .ophf-versionMeta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
         }
 
-        .ophf-versionPicker {
-            width: 100%;
-            min-height: 40px;
-            margin-bottom: 10px;
-            padding: 0 11px;
-            border: 1px solid rgba(248, 248, 248, 0.16);
-            border-radius: 12px;
+        .ophf-versionMetaText {
+            margin: 0;
+            color: rgba(248, 248, 248, 0.72);
+            font-family: Oswald, sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .ophf-versionNav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ophf-versionJump {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 28px;
+            padding: 0 10px;
+            border-radius: 999px;
+            background: rgba(248, 248, 248, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.14);
             color: var(--ophf-light);
-            background: rgba(2, 2, 4, 0.72);
+        }
+
+        .ophf-versionJumpGlyph {
+            font-family: Oswald, sans-serif;
+            font-size: 15px;
+            line-height: 1;
+        }
+
+        .ophf-versionJumpSwatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            box-shadow: inset 0 0 0 1px rgba(2, 2, 4, 0.12);
         }
 
         .ophf-listenGrid {
@@ -956,14 +985,15 @@
                         <img class="ophf-trackCover" data-ophf-track-cover alt="" />
                         <div class="ophf-trackMeta">
                             <h2 class="ophf-trackTitle" data-ophf-track-title></h2>
+                            <div class="ophf-versionMeta">
+                                <p class="ophf-versionMetaText" data-ophf-version-meta></p>
+                                <div class="ophf-versionNav" data-ophf-version-nav></div>
+                            </div>
                             <p class="ophf-versionTitle" data-ophf-version-title></p>
-                            <p class="ophf-versionCount" data-ophf-version-count></p>
                             <div class="ophf-trackActions">
                                 <div class="ophf-listenGrid" data-ophf-links></div>
                                 <div class="ophf-shareSlot" data-ophf-share></div>
                             </div>
-                            <select class="ophf-versionPicker" data-ophf-version-picker
-                                aria-label="Choose version"></select>
                         </div>
                     </article>
 
@@ -1001,6 +1031,15 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
+                        links: {},
+                        lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
+                        notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
+                    },
+                    {
+                        title: "Opa Mayhem Mix",
+                        image: "img/music/versions/version-fullmindness-mayhemmix.png",
+                        mixColors: ["#60c6e6", "#5c14b5"],
                         links: {},
                         lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
                         notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
@@ -1018,6 +1057,7 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
                         links: {},
                         lyrics: "Yeah let's do brunch\nSo sad we lost touch\nI miss you so so much\nI just need to finish my memoir.",
                         notes: "The fake-connection chapter. Warm words, empty follow-through."
@@ -1035,12 +1075,14 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
                         links: {},
                         lyrics: "Hallucinating\nMe, me, and I\nHallucinating\nWatchin’ life fly by\nLike a dumb bot.",
                         notes: "The crash point: human panic starts behaving like a broken model."
                     },
                     {
                         title: "Tight Hook Draft",
+                        mixColors: ["#ffffff"],
                         links: {},
                         lyrics: "Quiet room woke stress up — now it’s ready to rumble\nHe mumbles nonsense — makes a monster from a mumble.",
                         notes: "Alternate lyric draft for a cleaner hallucination bridge."
@@ -1058,6 +1100,15 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
+                        links: {},
+                        lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
+                        notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
+                    },
+                    {
+                        title: "Opa Max Mix",
+                        image: "img/music/versions/version-splendaloverabbithell-maxmix.png",
+                        mixColors: ["#60c6e6", "#5c14b5"],
                         links: {},
                         lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
                         notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
@@ -1075,6 +1126,7 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
                         links: {},
                         lyrics: "Believe what you want —\nThere’s always another view\nBefore you spread fear and hate —\nStop — think it through.",
                         notes: "The truth checkpoint. Belief is allowed; blind certainty is the danger."
@@ -1092,6 +1144,23 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
+                        links: {},
+                        lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
+                        notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
+                    },
+                    {
+                        title: "Desert Disco Duet",
+                        image: "img/music/versions/version-oldlovestory-desertdiscoduet.png",
+                        mixColors: ["#fff0f5", "#5c14b5"],
+                        links: {},
+                        lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
+                        notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
+                    },
+                    {
+                        title: "Opa Max Mix",
+                        image: "img/music/versions/version-oldlovestory-maxmix.png",
+                        mixColors: ["#60c6e6", "#5c14b5"],
                         links: {},
                         lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
                         notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
@@ -1109,6 +1178,15 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
+                        links: {},
+                        lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
+                        notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
+                    },
+                    {
+                        title: "Opa Sunrize Max Mix",
+                        image: "img/music/versions/version-glittaaphoenix-sunrisemaxmix.png",
+                        mixColors: ["#e8d36b", "#f4c97a", "#f4af86"],
                         links: {},
                         lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
                         notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
@@ -1126,6 +1204,7 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
                         links: {},
                         lyrics: "There ain’t no party like an\nOpa pa pa pa party\nWith all your party pi pi pi—\nPi pi people.",
                         notes: "The joy-release chapter. The journey becomes physical, loud, and communal."
@@ -1143,6 +1222,7 @@
                 versions: [
                     {
                         title: "Main Version",
+                        mixColors: ["#ffffff"],
                         links: {},
                         lyrics: "Wellwolf no bloodlust no fame thirst\nRun on love not to be first\nBite with kindness not to hurt\nBeat with heart not for sport.",
                         notes: "The kindness endpoint. The monster myth flips into care."
@@ -1184,9 +1264,9 @@
             trackCover: document.querySelector("[data-ophf-track-cover]"),
             shareSlot: document.querySelector("[data-ophf-share]"),
             trackTitle: document.querySelector("[data-ophf-track-title]"),
+            versionMeta: document.querySelector("[data-ophf-version-meta]"),
+            versionNav: document.querySelector("[data-ophf-version-nav]"),
             versionTitle: document.querySelector("[data-ophf-version-title]"),
-            versionCount: document.querySelector("[data-ophf-version-count]"),
-            versionPicker: document.querySelector("[data-ophf-version-picker]"),
             links: document.querySelector("[data-ophf-links]"),
             lyrics: document.querySelector("[data-ophf-lyrics]"),
             miniRail: document.querySelector("[data-ophf-mini-rail]"),
@@ -1203,6 +1283,10 @@
 
         function ophfCoverUrl(song) {
             return `${ophfBasePath}${song.file}`;
+        }
+
+        function ophfVersionImageUrl(song, version) {
+            return version.image || ophfCoverUrl(song);
         }
 
         function ophfGetSong(id) {
@@ -1259,6 +1343,39 @@
             icon.appendChild(path);
 
             return icon;
+        }
+
+        function ophfVersionMixBackground(version) {
+            const colors = Array.isArray(version.mixColors) ? version.mixColors.filter(Boolean) : [];
+            if (!colors.length) return "#ffffff";
+            if (colors.length === 1) return colors[0];
+            return `linear-gradient(135deg, ${colors.join(", ")})`;
+        }
+
+        function ophfCreateVersionJump(direction, targetVersion, targetIndex) {
+            const btn = document.createElement("button");
+            btn.className = "ophf-versionJump";
+            btn.type = "button";
+            btn.setAttribute("aria-label", `${direction < 0 ? "Previous" : "Next"} version`);
+            btn.addEventListener("click", () => ophfOpenSong(ophfState.songId, targetIndex));
+
+            const glyph = document.createElement("span");
+            glyph.className = "ophf-versionJumpGlyph";
+            glyph.textContent = direction < 0 ? "<" : ">";
+
+            const swatch = document.createElement("span");
+            swatch.className = "ophf-versionJumpSwatch";
+            swatch.style.background = ophfVersionMixBackground(targetVersion);
+
+            if (direction < 0) {
+                btn.appendChild(glyph);
+                btn.appendChild(swatch);
+            } else {
+                btn.appendChild(swatch);
+                btn.appendChild(glyph);
+            }
+
+            return btn;
         }
 
         function ophfRenderMap() {
@@ -1360,12 +1477,31 @@
             const song = ophfGetSong(ophfState.songId);
             const version = song.versions[ophfState.versionIndex] || song.versions[0];
 
-            ophfEls.trackCover.src = ophfCoverUrl(song);
+            ophfEls.trackCover.src = ophfVersionImageUrl(song, version);
             ophfEls.trackCover.alt = `${song.title} cover`;
             ophfEls.trackTitle.textContent = "";
             ophfEls.versionTitle.textContent = version.title;
-            ophfEls.versionCount.textContent = "";
             ophfEls.lyrics.textContent = version.lyrics;
+
+            if (song.versions.length <= 1) {
+                ophfEls.versionMeta.textContent = "Opa & Only version";
+            } else {
+                ophfEls.versionMeta.textContent = `Version ${ophfState.versionIndex + 1}/${song.versions.length}`;
+            }
+
+            ophfEls.versionNav.innerHTML = "";
+            if (song.versions.length > 1) {
+                if (ophfState.versionIndex > 0) {
+                    ophfEls.versionNav.appendChild(
+                        ophfCreateVersionJump(-1, song.versions[ophfState.versionIndex - 1], ophfState.versionIndex - 1)
+                    );
+                }
+                if (ophfState.versionIndex < song.versions.length - 1) {
+                    ophfEls.versionNav.appendChild(
+                        ophfCreateVersionJump(1, song.versions[ophfState.versionIndex + 1], ophfState.versionIndex + 1)
+                    );
+                }
+            }
 
             ophfEls.shareSlot.innerHTML = "";
             const share = document.createElement("button");
@@ -1375,16 +1511,6 @@
             share.appendChild(ophfCreateShareIcon());
             share.addEventListener("click", ophfShareCurrent);
             ophfEls.shareSlot.appendChild(share);
-
-            ophfEls.versionPicker.innerHTML = "";
-            song.versions.forEach((item, index) => {
-                const option = document.createElement("option");
-                option.value = String(index);
-                option.textContent = item.title;
-                option.selected = index === ophfState.versionIndex;
-                ophfEls.versionPicker.appendChild(option);
-            });
-            ophfEls.versionPicker.hidden = song.versions.length <= 1;
 
             ophfRenderLinks(version);
             ophfRenderRail();
@@ -1458,11 +1584,6 @@
         function ophfBindEvents() {
             ophfEls.latest.addEventListener("click", () => ophfOpenSong(ophfGetLatestSong().id));
             ophfEls.playAll.addEventListener("click", () => ophfOpenSong(ophfPlaylistOrder[0]));
-
-            ophfEls.versionPicker.addEventListener("change", (event) => {
-                ophfState.versionIndex = Number(event.target.value) || 0;
-                ophfRenderDetail();
-            });
 
             ophfEls.navA.addEventListener("click", () => {
                 if (ophfState.mode === "detail") ophfMoveSong(-1);
