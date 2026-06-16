@@ -453,7 +453,6 @@
             grid-template-rows: repeat(3, minmax(0, 1fr));
             width: 100%;
             height: 100%;
-            padding-bottom: var(--ophf-node-label-h);
         }
 
         .ophf-mapCell {
@@ -461,21 +460,18 @@
             min-width: 0;
             min-height: 0;
             container-type: size;
-            --ophf-node-label-font-size: clamp(8px, 7cqh, 11px);
-            --ophf-node-label-pad-y: 7px;
-            --ophf-node-label-h: calc(var(--ophf-node-label-font-size) + var(--ophf-node-label-font-size) + var(--ophf-node-label-pad-y));
-            --ophf-node-label-gap: 0px;
+            --ophf-node-title-h: clamp(20px, 21cqh, 28px);
+            --ophf-node-title-font-size: clamp(11px, 7cqh, 19px);
             --ophf-node-edge-pad: clamp(4px, 2.4cqh, 7px);
-            --ophf-node-label-protrusion: calc(var(--ophf-node-label-h) * 0.78);
-            --ophf-node-max: 74px;
+            --ophf-node-max: 82px;
             --ophf-node: clamp(34px,
-                    calc(min(100cqw, 100cqh) - var(--ophf-node-label-protrusion) - var(--ophf-node-edge-pad) - var(--ophf-node-edge-pad)),
+                    calc(min(100cqw, 100cqh) - var(--ophf-node-edge-pad) - var(--ophf-node-edge-pad)),
                     var(--ophf-node-max));
         }
 
         @media (min-width: 760px) {
             .ophf-mapCell {
-                --ophf-node-max: 96px;
+                --ophf-node-max: 106px;
             }
         }
 
@@ -483,7 +479,7 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            width: min(96%, calc(var(--ophf-node) + 40px));
+            width: var(--ophf-node);
             height: var(--ophf-node);
             transform: translate(-50%, -50%);
         }
@@ -494,10 +490,10 @@
             left: 50%;
             width: var(--ophf-node);
             height: var(--ophf-node);
-            border-radius: 999px;
+            border-radius: 24%;
             transform: translateX(-50%);
             overflow: hidden;
-            background: #111;
+            background: #fff;
             box-shadow:
                 0 0 0 2px rgba(248, 248, 248, 0.9),
                 0 0 0 5px rgba(2, 2, 4, 0.62),
@@ -509,6 +505,38 @@
             transform: translateX(-50%) scale(0.95);
         }
 
+        .ophf-songNodeTitle {
+            position: absolute;
+            top: 3px;
+            left: 0;
+            right: 0;
+            z-index: 3;
+            height: var(--ophf-node-title-h);
+            padding: 2px 4px 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            overflow: hidden;
+            background: #fff;
+            color: var(--ophf-black);
+            font-family: Oswald, sans-serif;
+            font-size: var(--ophf-node-title-font-size);
+            font-weight: 700;
+            letter-spacing: -0.035em;
+            line-height: 0.9;
+            text-align: center;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        .ophf-songNodeTitleLine {
+            display: block;
+            max-width: 100%;
+            white-space: nowrap;
+        }
+
         .ophf-nodeArtCrop {
             position: absolute;
             inset: 0;
@@ -516,6 +544,12 @@
             border-radius: inherit;
             overflow: hidden;
             background: var(--ophf-black);
+        }
+
+        .ophf-songNode .ophf-nodeArtCrop {
+            inset: var(--ophf-node-title-h) 0 0;
+            border-radius: 0;
+            background: #fff;
         }
 
         .ophf-songNodeImg {
@@ -538,44 +572,6 @@
                 radial-gradient(circle at 30% 22%, var(--ophf-pink), transparent 38%),
                 radial-gradient(circle at 68% 72%, var(--ophf-blue), transparent 42%),
                 linear-gradient(135deg, var(--ophf-purple), var(--ophf-black));
-        }
-
-        .ophf-songLabel {
-            position: absolute;
-            z-index: 3;
-            top: 85%;
-            left: 50%;
-            width: min(100%, calc(var(--ophf-node) + 6px));
-            min-height: var(--ophf-node-label-h);
-            max-height: var(--ophf-node-label-h);
-            padding: 3px 7px 4px;
-            overflow: hidden;
-            border-radius: 999px;
-            background: rgba(2, 2, 4, 0.86);
-            box-shadow:
-                inset 0 0 0 1px rgba(248, 248, 248, 0.2),
-                0 5px 13px rgba(0, 0, 0, 0.45);
-            color: var(--ophf-light);
-            font-family: Oswald, sans-serif;
-            font-size: var(--ophf-node-label-font-size);
-            font-weight: 700;
-            letter-spacing: 0.045em;
-            line-height: 0.9;
-            text-align: center;
-            text-transform: uppercase;
-            text-shadow: none;
-            pointer-events: none;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 0;
-        }
-
-        .ophf-songLabelLine {
-            display: block;
-            white-space: nowrap;
         }
 
         .ophf-detailScreen {
@@ -693,28 +689,37 @@
         }
 
         .ophf-versionJump {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
+            display: grid;
+            place-items: center;
+            width: 28px;
+            height: 28px;
             min-height: 28px;
-            padding: 0 10px;
+            padding: 0;
             border-radius: 999px;
-            background: rgba(248, 248, 248, 0.08);
-            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.14);
+            background: transparent;
+            box-shadow: none;
             color: var(--ophf-light);
         }
 
         .ophf-versionJumpGlyph {
+            position: relative;
+            z-index: 2;
             font-family: Oswald, sans-serif;
             font-size: 15px;
+            font-weight: 700;
             line-height: 1;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.62);
         }
 
         .ophf-versionJumpSwatch {
-            width: 12px;
-            height: 12px;
+            width: 28px;
+            height: 28px;
             border-radius: 999px;
-            box-shadow: inset 0 0 0 1px rgba(2, 2, 4, 0.12);
+            display: grid;
+            place-items: center;
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.28),
+                0 0 14px rgba(107, 149, 220, 0.28);
         }
 
         .ophf-listenGrid {
@@ -1053,390 +1058,392 @@
     </div>
 
     <script>
-        const ophfBasePath = "/img/music/base/";
-        const ophfHeroCover = "/img/opa/cover.png";
+        class OpaHifiGalleryApp {
+            static basePath = "/img/music/base/";
+            static heroCover = "/img/opa/cover.png";
+    
+            static songs = [
+                {
+                    id: "fullmindness",
+                    journey: 1,
+                    grid: [1, 1],
+                    title: "Full-Mindness",
+                    labelLines: ["Full-", "Mindness"],
+                    file: "base-fullmindness.png",
+                    latest: false,
+                    versions: [
+                        {
+                            title: "Main Version",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/full-mindness.txt",
+                            links: {},
+                            lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
+                            notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
+                        },
+                        {
+                            title: "Opa Mayhem Mix",
+                            image: "img/music/versions/version-fullmindness-mayhemmix.png",
+                            mixColors: ["#60c6e6", "#5c14b5"],
+                            lyricsPath: "lyrics/full-mindness.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960",
+                                Apple: "https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886",
+                                YouTube: "https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh",
+                                "YouTube Music": "https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z",
+                                Amazon: "https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653"
+                            },
+                            lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
+                            notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
+                        }
+                    ]
+                },
+                {
+                    id: "brunch",
+                    journey: 2,
+                    grid: [1, 2],
+                    title: "Yeah, Let’s Do Brunch",
+                    labelLines: ["Yeah, Let’s", "Do Brunch"],
+                    file: "base-yeahletsdobrunch.png",
+                    latest: false,
+                    versions: [
+                        {
+                            title: "Main Version",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/yeah-lets-do-brunch.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/10pJOBA2Krl8QiAi7XUGE7?si=66f1ed7937454034",
+                                Apple: "https://music.apple.com/us/album/lets-do-brunch-single/1883970912",
+                                YouTube: "https://youtu.be/nlRw2m9_Qh4?si=Xe-ZF1Ogg2ynabpj",
+                                "YouTube Music": "https://music.youtube.com/watch?v=nlRw2m9_Qh4&si=G1BKK_61Wf_EIast",
+                                Amazon: "https://music.amazon.com/albums/B0GS2JC8QD?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_CGFq3eGi1CLBa46vBJBJNB3oc&trackAsin=B0GS23XMP6"
+                            },
+                            lyrics: "Yeah let's do brunch\nSo sad we lost touch\nI miss you so so much\nI just need to finish my memoir.",
+                            notes: "The fake-connection chapter. Warm words, empty follow-through."
+                        }
+                    ]
+                },
+                {
+                    id: "hallucinating",
+                    journey: 3,
+                    grid: [1, 3],
+                    title: "Hallucinating",
+                    labelLines: ["Hallucinating", "Dum Dum"],
+                    file: "base-hallucinatingdumdum.png",
+                    latest: false,
+                    versions: [
+                        {
+                            title: "Main Version",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/hallucinating-dum-dum.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/74dIXy89cJ5oPrG9MFGd3X?si=91d0eec0dfd54961",
+                                Apple: "https://music.apple.com/us/song/hallucinating-dum-dum/6776020941",
+                                YouTube: "https://youtu.be/d5x0I9ffxwI?si=3ehe5ANC_b68E693",
+                                "YouTube Music": "https://music.youtube.com/watch?v=d5x0I9ffxwI&si=XE-Yl4gqJkmqfsJk",
+                                Amazon: "https://music.amazon.com/albums/B0H3PX4NXX?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_zWfHrxwuQbquYWxem0QHrLJzx&trackAsin=B0H3PZ7XM1"
+                            },
+                            lyrics: "Hallucinating\nMe, me, and I\nHallucinating\nWatchin’ life fly by\nLike a dumb bot.",
+                            notes: "The crash point: human panic starts behaving like a broken model."
+                        },
+                        {
+                            title: "Tight Hook Draft",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/hallucinating-dum-dum.txt",
+                            links: {},
+                            lyrics: "Quiet room woke stress up — now it’s ready to rumble\nHe mumbles nonsense — makes a monster from a mumble.",
+                            notes: "Alternate lyric draft for a cleaner hallucination bridge."
+                        }
+                    ]
+                },
+                {
+                    id: "splenda",
+                    journey: 4,
+                    grid: [2, 3],
+                    title: "Splenda Love Rabbit Hell",
+                    labelLines: ["Splenda Love", "Rabbit Hell"],
+                    file: "base-splendaloverabbithell.png",
+                    latest: false,
+                    versions: [
+                        {
+                            title: "Main Version",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/splenda-love-rabbit-hell.txt",
+                            links: {},
+                            lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
+                            notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
+                        },
+                        {
+                            title: "Opa Max Mix",
+                            image: "img/music/versions/version-splendaloverabbithell-maxmix.png",
+                            mixColors: ["#60c6e6", "#5c14b5"],
+                            lyricsPath: "lyrics/splenda-love-rabbit-hell.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842",
+                                Apple: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",
+                                YouTube: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F",
+                                "YouTube Music": "https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE",
+                                Amazon: "https://music.amazon.com/albums/B0GJQZXHNL"
+                            },
+                            lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
+                            notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
+                        }
+                    ]
+                },
+                {
+                    id: "truthfairy",
+                    journey: 5,
+                    grid: [3, 3],
+                    title: "Believe the Truth Fairy",
+                    labelLines: ["Believe The", "Truth Fairy"],
+                    file: "base-believethetruthfairy.png",
+                    latest: false,
+                    versions: [
+                        {
+                            title: "Main Version",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/believe-the-truth-fairy.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg",
+                                Apple: "https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683",
+                                YouTube: "https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC",
+                                "YouTube Music": "https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj",
+                                Amazon: "https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P"
+                            },
+                            lyrics: "Believe what you want —\nThere’s always another view\nBefore you spread fear and hate —\nStop — think it through.",
+                            notes: "The truth checkpoint. Belief is allowed; blind certainty is the danger."
+                        }
+                    ]
+                },
+                {
+                    id: "oldlove",
+                    journey: 6,
+                    grid: [3, 2],
+                    title: "Old Love Story",
+                    labelLines: ["Old Love", "Story"],
+                    file: "base-oldlovestory.png",
+                    latest: false,
+                    versions: [
+                        {
+                            title: "Desert Disco Duet",
+                            image: "img/music/versions/version-oldlovestory-desertdiscoduet.png",
+                            mixColors: ["#fff0f5", "#5c14b5"],
+                            lyricsPath: "lyrics/old-love-story.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII",
+                                Apple: "https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028",
+                                YouTube: "https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq",
+                                "YouTube Music": "https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE",
+                                Amazon: "https://music.amazon.com/albums/B0FXB4X48G"
+                            },
+                            lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
+                            notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
+                        },
+                        {
+                            title: "Opa Max Mix",
+                            image: "img/music/versions/version-oldlovestory-maxmix.png",
+                            mixColors: ["#60c6e6", "#5c14b5"],
+                            lyricsPath: "lyrics/old-love-story.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/3GZsz52AKg9ml2mMtC6EEw",
+                                Apple: "https://music.apple.com/ng/song/old-love-story-opa-max-mix/1869842718",
+                                YouTube: "https://youtu.be/m7wP4U97FC8",
+                                "YouTube Music": "https://music.youtube.com/watch?v=m7wP4U97FC8",
+                                Amazon: "https://music.amazon.com/albums/B0GHC1X6R3"
+                            },
+                            lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
+                            notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
+                        }
+                    ]
+                },
+                {
+                    id: "glittaa",
+                    journey: 7,
+                    grid: [3, 1],
+                    title: "Glittaa Phoenix",
+                    labelLines: ["Glittaa", "Phoenix"],
+                    file: "base-glittaaphoenix.png",
+                    latest: false,
+                    versions: [
+                        {
+                            title: "Main Version",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/glittaa-pheonix.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6",
+                                Apple: "https://music.apple.com/us/album/glittaa-phoenix-single/1853214791",
+                                YouTube: "https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX",
+                                "YouTube Music": "https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17",
+                                Amazon: "https://music.amazon.com/albums/B0G1N1Y83C"
+                            },
+                            lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
+                            notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
+                        },
+                        {
+                            title: "Opa Sunrize Max Mix",
+                            image: "img/music/versions/version-glittaaphoenix-sunrisemaxmix.png",
+                            mixColors: ["#e8d36b", "#f4c97a", "#f4af86"],
+                            lyricsPath: "lyrics/glittaa-pheonix-sunrise-mix.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP",
+                                Apple: "https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659",
+                                YouTube: "https://www.youtube.com/watch?v=LOywm64SGCY",
+                                "YouTube Music": "https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP",
+                                Amazon: "https://music.amazon.com/tracks/B0GGHZ6L2F"
+                            },
+                            lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
+                            notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
+                        }
+                    ]
+                },
+                {
+                    id: "opaparty",
+                    journey: 8,
+                    grid: [2, 1],
+                    title: "Opa Pa Pa Party",
+                    labelLines: ["Opa Pa", "Pa Party"],
+                    file: "base-opapapaparty.png",
+                    latest: false,
+                    versions: [
+                        {
+                            title: "Main Version",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/opa-pa-pa-party.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf",
+                                Apple: "https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737",
+                                YouTube: "https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8",
+                                "YouTube Music": "https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw",
+                                Amazon: "https://music.amazon.com/albums/B0FYVMVZS4"
+                            },
+                            lyrics: "There ain’t no party like an\nOpa pa pa pa party\nWith all your party pi pi pi—\nPi pi people.",
+                            notes: "The joy-release chapter. The journey becomes physical, loud, and communal."
+                        }
+                    ]
+                },
+                {
+                    id: "wellwolf",
+                    journey: 9,
+                    grid: [2, 2],
+                    title: "Wellwolf Howl-Lehluya",
+                    labelLines: ["Wellwolf", "Howl-Lehluya"],
+                    file: "base-wellwolfhowllehluya.png",
+                    latest: true,
+                    versions: [
+                        {
+                            title: "Main Version",
+                            mixColors: ["#ffffff"],
+                            lyricsPath: "lyrics/wellwolf-hoawlehluya.txt",
+                            links: {
+                                Spotify: "https://open.spotify.com/track/4OHlXoJFuPhfm4plY7Coop?si=86049caec0384f95",
+                                Apple: "https://music.apple.com/us/album/wellwolf-howl-lehluya-single/1894120765",
+                                YouTube: "https://youtu.be/bjecZnXbXBc?si=Llwj6s7pyO2fRMmY",
+                                "YouTube Music": "https://music.youtube.com/playlist?list=OLAK5uy_k3iThKSj0H5nDqf-dpU5EMM-ccRcglZaY&si=d2V3JFEBlqkSJi55",
+                                Amazon: "https://music.amazon.com/tracks/B0GXHSFW83?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_YaZDAKqp0vQwgwM7y8yENc9Zw"
+                            },
+                            lyrics: "Wellwolf no bloodlust no fame thirst\nRun on love not to be first\nBite with kindness not to hurt\nBeat with heart not for sport.",
+                            notes: "The kindness endpoint. The monster myth flips into care."
+                        }
+                    ]
+                }
+            ];
+    
+            static playlistOrder = [
+                "opaparty",
+                "wellwolf",
+                "glittaa",
+                "truthfairy",
+                "fullmindness",
+                "hallucinating",
+                "splenda",
+                "oldlove",
+                "brunch"
+            ];
+    
+            static platforms = ["Spotify", "Apple", "YouTube", "YouTube Music", "Amazon"];
+            static platformIcons = {
+                Spotify: "img/ico/spotify-white.svg",
+                Apple: "img/ico/apple-white.svg",
+                YouTube: "img/ico/youtube-white.svg",
+                "YouTube Music": "img/ico/youtubemusic-white.svg",
+                Amazon: "img/ico/amazon-white.svg"
+            };
+    
 
-        const ophfSongs = [
-            {
-                id: "fullmindness",
-                journey: 1,
-                grid: [1, 1],
-                title: "Full-Mindness",
-                labelLines: ["Full-", "Mindness"],
-                file: "base-fullmindness.png",
-                latest: false,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/full-mindness.txt",
-                        links: {},
-                        lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
-                        notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
-                    },
-                    {
-                        title: "Opa Mayhem Mix",
-                        image: "img/music/versions/version-fullmindness-mayhemmix.png",
-                        mixColors: ["#60c6e6", "#5c14b5"],
-                        lyricsPath: "lyrics/full-mindness.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960",
-                            Apple: "https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886",
-                            YouTube: "https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh",
-                            "YouTube Music": "https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z",
-                            Amazon: "https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653"
-                        },
-                        lyrics: "Breathe in the chaos, exhale with flair.\nYou’re way out of control — but at least you're aware.\nLife’s a spinning class — on a bike with no seat.",
-                        notes: "Journey opener. Chaos is not solved yet; it becomes the rhythm."
-                    }
-                ]
-            },
-            {
-                id: "brunch",
-                journey: 2,
-                grid: [1, 2],
-                title: "Yeah, Let’s Do Brunch",
-                labelLines: ["Yeah, Let’s", "Do Brunch"],
-                file: "base-yeahletsdobrunch.png",
-                latest: false,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/yeah-lets-do-brunch.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/10pJOBA2Krl8QiAi7XUGE7?si=66f1ed7937454034",
-                            Apple: "https://music.apple.com/us/album/lets-do-brunch-single/1883970912",
-                            YouTube: "https://youtu.be/nlRw2m9_Qh4?si=Xe-ZF1Ogg2ynabpj",
-                            "YouTube Music": "https://music.youtube.com/watch?v=nlRw2m9_Qh4&si=G1BKK_61Wf_EIast",
-                            Amazon: "https://music.amazon.com/albums/B0GS2JC8QD?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_CGFq3eGi1CLBa46vBJBJNB3oc&trackAsin=B0GS23XMP6"
-                        },
-                        lyrics: "Yeah let's do brunch\nSo sad we lost touch\nI miss you so so much\nI just need to finish my memoir.",
-                        notes: "The fake-connection chapter. Warm words, empty follow-through."
-                    }
-                ]
-            },
-            {
-                id: "hallucinating",
-                journey: 3,
-                grid: [1, 3],
-                title: "Hallucinating",
-                labelLines: ["Hallucinating", "Dum Dum"],
-                file: "base-hallucinatingdumdum.png",
-                latest: false,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/hallucinating-dum-dum.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/74dIXy89cJ5oPrG9MFGd3X?si=91d0eec0dfd54961",
-                            Apple: "https://music.apple.com/us/song/hallucinating-dum-dum/6776020941",
-                            YouTube: "https://youtu.be/d5x0I9ffxwI?si=3ehe5ANC_b68E693",
-                            "YouTube Music": "https://music.youtube.com/watch?v=d5x0I9ffxwI&si=XE-Yl4gqJkmqfsJk",
-                            Amazon: "https://music.amazon.com/albums/B0H3PX4NXX?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_zWfHrxwuQbquYWxem0QHrLJzx&trackAsin=B0H3PZ7XM1"
-                        },
-                        lyrics: "Hallucinating\nMe, me, and I\nHallucinating\nWatchin’ life fly by\nLike a dumb bot.",
-                        notes: "The crash point: human panic starts behaving like a broken model."
-                    },
-                    {
-                        title: "Tight Hook Draft",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/hallucinating-dum-dum.txt",
-                        links: {},
-                        lyrics: "Quiet room woke stress up — now it’s ready to rumble\nHe mumbles nonsense — makes a monster from a mumble.",
-                        notes: "Alternate lyric draft for a cleaner hallucination bridge."
-                    }
-                ]
-            },
-            {
-                id: "splenda",
-                journey: 4,
-                grid: [2, 3],
-                title: "Splenda Love Rabbit Hell",
-                labelLines: ["Splenda Love", "Rabbit Hell"],
-                file: "base-splendaloverabbithell.png",
-                latest: false,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/splenda-love-rabbit-hell.txt",
-                        links: {},
-                        lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
-                        notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
-                    },
-                    {
-                        title: "Opa Max Mix",
-                        image: "img/music/versions/version-splendaloverabbithell-maxmix.png",
-                        mixColors: ["#60c6e6", "#5c14b5"],
-                        lyricsPath: "lyrics/splenda-love-rabbit-hell.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842",
-                            Apple: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",
-                            YouTube: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F",
-                            "YouTube Music": "https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE",
-                            Amazon: "https://music.amazon.com/albums/B0GJQZXHNL"
-                        },
-                        lyrics: "Sweet in disguise, I buy lies I’m sellin’\nRegret rise—not wise—my gut’s rebelling\nPacked with compromise to serve my agenda.",
-                        notes: "The fake-love chapter. The sweetness is artificial and the narrator knows it."
-                    }
-                ]
-            },
-            {
-                id: "truthfairy",
-                journey: 5,
-                grid: [3, 3],
-                title: "Believe the Truth Fairy",
-                labelLines: ["Believe The", "Truth Fairy"],
-                file: "base-believethetruthfairy.png",
-                latest: false,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/believe-the-truth-fairy.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg",
-                            Apple: "https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683",
-                            YouTube: "https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC",
-                            "YouTube Music": "https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj",
-                            Amazon: "https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P"
-                        },
-                        lyrics: "Believe what you want —\nThere’s always another view\nBefore you spread fear and hate —\nStop — think it through.",
-                        notes: "The truth checkpoint. Belief is allowed; blind certainty is the danger."
-                    }
-                ]
-            },
-            {
-                id: "oldlove",
-                journey: 6,
-                grid: [3, 2],
-                title: "Old Love Story",
-                labelLines: ["Old Love", "Story"],
-                file: "base-oldlovestory.png",
-                latest: false,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/old-love-story.txt",
-                        links: {},
-                        lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
-                        notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
-                    },
-                    {
-                        title: "Desert Disco Duet",
-                        image: "img/music/versions/version-oldlovestory-desertdiscoduet.png",
-                        mixColors: ["#fff0f5", "#5c14b5"],
-                        lyricsPath: "lyrics/old-love-story.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII",
-                            Apple: "https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028",
-                            YouTube: "https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq",
-                            "YouTube Music": "https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE",
-                            Amazon: "https://music.amazon.com/albums/B0FXB4X48G"
-                        },
-                        lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
-                        notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
-                    },
-                    {
-                        title: "Opa Max Mix",
-                        image: "img/music/versions/version-oldlovestory-maxmix.png",
-                        mixColors: ["#60c6e6", "#5c14b5"],
-                        lyricsPath: "lyrics/old-love-story.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/3GZsz52AKg9ml2mMtC6EEw",
-                            Apple: "https://music.apple.com/ng/song/old-love-story-opa-max-mix/1869842718",
-                            YouTube: "https://youtu.be/m7wP4U97FC8",
-                            "YouTube Music": "https://music.youtube.com/watch?v=m7wP4U97FC8",
-                            Amazon: "https://music.amazon.com/albums/B0GHC1X6R3"
-                        },
-                        lyrics: "Old love story, are you dead?\nNow we cherish what we had.\nWhen love was a full baseball game.",
-                        notes: "The nostalgia chapter. It asks what real romance lost in the feed era."
-                    }
-                ]
-            },
-            {
-                id: "glittaa",
-                journey: 7,
-                grid: [3, 1],
-                title: "Glittaa Phoenix",
-                labelLines: ["Glittaa", "Phoenix"],
-                file: "base-glittaaphoenix.png",
-                latest: false,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/glittaa-pheonix.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6",
-                            Apple: "https://music.apple.com/us/album/glittaa-phoenix-single/1853214791",
-                            YouTube: "https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX",
-                            "YouTube Music": "https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17",
-                            Amazon: "https://music.amazon.com/albums/B0G1N1Y83C"
-                        },
-                        lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
-                        notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
-                    },
-                    {
-                        title: "Opa Sunrize Max Mix",
-                        image: "img/music/versions/version-glittaaphoenix-sunrisemaxmix.png",
-                        mixColors: ["#e8d36b", "#f4c97a", "#f4af86"],
-                        lyricsPath: "lyrics/glittaa-pheonix-sunrise-mix.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP",
-                            Apple: "https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659",
-                            YouTube: "https://www.youtube.com/watch?v=LOywm64SGCY",
-                            "YouTube Music": "https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP",
-                            Amazon: "https://music.amazon.com/tracks/B0GGHZ6L2F"
-                        },
-                        lyrics: "Tried to end me.\nYou failed.\nLet’s dance.\n¡GLITTAA!",
-                        notes: "The rebirth chapter. Destruction turns into rhythm and glitter."
-                    }
-                ]
-            },
-            {
-                id: "opaparty",
-                journey: 8,
-                grid: [2, 1],
-                title: "Opa Pa Pa Party",
-                labelLines: ["Opa Pa", "Pa Party"],
-                file: "base-opapapaparty.png",
-                latest: false,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/opa-pa-pa-party.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf",
-                            Apple: "https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737",
-                            YouTube: "https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8",
-                            "YouTube Music": "https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw",
-                            Amazon: "https://music.amazon.com/albums/B0FYVMVZS4"
-                        },
-                        lyrics: "There ain’t no party like an\nOpa pa pa pa party\nWith all your party pi pi pi—\nPi pi people.",
-                        notes: "The joy-release chapter. The journey becomes physical, loud, and communal."
-                    }
-                ]
-            },
-            {
-                id: "wellwolf",
-                journey: 9,
-                grid: [2, 2],
-                title: "Wellwolf Howl-Lehluya",
-                labelLines: ["Wellwolf", "Howl-Lehluya"],
-                file: "base-wellwolfhowllehluya.png",
-                latest: true,
-                versions: [
-                    {
-                        title: "Main Version",
-                        mixColors: ["#ffffff"],
-                        lyricsPath: "lyrics/wellwolf-hoawlehluya.txt",
-                        links: {
-                            Spotify: "https://open.spotify.com/track/4OHlXoJFuPhfm4plY7Coop?si=86049caec0384f95",
-                            Apple: "https://music.apple.com/us/album/wellwolf-howl-lehluya-single/1894120765",
-                            YouTube: "https://youtu.be/bjecZnXbXBc?si=Llwj6s7pyO2fRMmY",
-                            "YouTube Music": "https://music.youtube.com/playlist?list=OLAK5uy_k3iThKSj0H5nDqf-dpU5EMM-ccRcglZaY&si=d2V3JFEBlqkSJi55",
-                            Amazon: "https://music.amazon.com/tracks/B0GXHSFW83?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_YaZDAKqp0vQwgwM7y8yENc9Zw"
-                        },
-                        lyrics: "Wellwolf no bloodlust no fame thirst\nRun on love not to be first\nBite with kindness not to hurt\nBeat with heart not for sport.",
-                        notes: "The kindness endpoint. The monster myth flips into care."
-                    }
-                ]
+            constructor(options = {}) {
+                this.basePath = options.basePath || this.constructor.basePath;
+                this.heroCover = options.heroCover || this.constructor.heroCover;
+                this.songs = options.songs || this.constructor.songs;
+                this.playlistOrder = options.playlistOrder || this.constructor.playlistOrder;
+                this.platforms = options.platforms || this.constructor.platforms;
+                this.platformIcons = options.platformIcons || this.constructor.platformIcons;
+                this.els = {
+                    app: document.querySelector(".ophf-app"),
+                    coverImg: document.querySelector("[data-ophf-cover-img]"),
+                    coverKicker: document.querySelector("[data-ophf-cover-kicker]"),
+                    coverName: document.querySelector("[data-ophf-cover-name]"),
+                    coverPill: document.querySelector("[data-ophf-cover-pill]"),
+                    songField: document.querySelector("[data-ophf-song-field]"),
+                    mapGrid: document.querySelector("[data-ophf-map-grid]"),
+                    spiralSvg: document.querySelector("[data-ophf-spiral-svg]"),
+                    spiralGradient: document.querySelector("[data-ophf-spiral-gradient]"),
+                    spiralGlow: document.querySelector("[data-ophf-spiral-glow]"),
+                    spiralLine: document.querySelector("[data-ophf-spiral-line]"),
+                    latest: document.querySelector("[data-ophf-latest]"),
+                    playAll: document.querySelector("[data-ophf-playall]"),
+                    trackCover: document.querySelector("[data-ophf-track-cover]"),
+                    shareSlot: document.querySelector("[data-ophf-share]"),
+                    trackTitle: document.querySelector("[data-ophf-track-title]"),
+                    versionMeta: document.querySelector("[data-ophf-version-meta]"),
+                    versionNav: document.querySelector("[data-ophf-version-nav]"),
+                    versionTitle: document.querySelector("[data-ophf-version-title]"),
+                    links: document.querySelector("[data-ophf-links]"),
+                    lyrics: document.querySelector("[data-ophf-lyrics]"),
+                    miniRail: document.querySelector("[data-ophf-mini-rail]"),
+                    navA: document.querySelector("[data-ophf-nav-a]"),
+                    navB: document.querySelector("[data-ophf-nav-b]"),
+                    navC: document.querySelector("[data-ophf-nav-c]")
+                };
+                this.state = {
+                    mode: "gallery",
+                    songId: "wellwolf",
+                    versionIndex: 0
+                };
+                this.lyricsCache = new Map();
+                this.lyricsRequestId = 0;
+                this.spiralFrame = 0;
+                this.mapResizeObserver = null;
+                this.scheduleSpiralUpdate = this.scheduleSpiralUpdate.bind(this);
             }
-        ];
 
-        const ophfPlaylistOrder = [
-            "opaparty",
-            "wellwolf",
-            "glittaa",
-            "truthfairy",
-            "fullmindness",
-            "hallucinating",
-            "splenda",
-            "oldlove",
-            "brunch"
-        ];
-
-        const ophfPlatforms = ["Spotify", "Apple", "YouTube", "YouTube Music", "Amazon"];
-        const ophfPlatformIcons = {
-            Spotify: "img/ico/spotify-white.svg",
-            Apple: "img/ico/apple-white.svg",
-            YouTube: "img/ico/youtube-white.svg",
-            "YouTube Music": "img/ico/youtubemusic-white.svg",
-            Amazon: "img/ico/amazon-white.svg"
-        };
-
-        const ophfEls = {
-            app: document.querySelector(".ophf-app"),
-            coverImg: document.querySelector("[data-ophf-cover-img]"),
-            coverKicker: document.querySelector("[data-ophf-cover-kicker]"),
-            coverName: document.querySelector("[data-ophf-cover-name]"),
-            coverPill: document.querySelector("[data-ophf-cover-pill]"),
-            songField: document.querySelector("[data-ophf-song-field]"),
-            mapGrid: document.querySelector("[data-ophf-map-grid]"),
-            spiralSvg: document.querySelector("[data-ophf-spiral-svg]"),
-            spiralGradient: document.querySelector("[data-ophf-spiral-gradient]"),
-            spiralGlow: document.querySelector("[data-ophf-spiral-glow]"),
-            spiralLine: document.querySelector("[data-ophf-spiral-line]"),
-            latest: document.querySelector("[data-ophf-latest]"),
-            playAll: document.querySelector("[data-ophf-playall]"),
-            trackCover: document.querySelector("[data-ophf-track-cover]"),
-            shareSlot: document.querySelector("[data-ophf-share]"),
-            trackTitle: document.querySelector("[data-ophf-track-title]"),
-            versionMeta: document.querySelector("[data-ophf-version-meta]"),
-            versionNav: document.querySelector("[data-ophf-version-nav]"),
-            versionTitle: document.querySelector("[data-ophf-version-title]"),
-            links: document.querySelector("[data-ophf-links]"),
-            lyrics: document.querySelector("[data-ophf-lyrics]"),
-            miniRail: document.querySelector("[data-ophf-mini-rail]"),
-            navA: document.querySelector("[data-ophf-nav-a]"),
-            navB: document.querySelector("[data-ophf-nav-b]"),
-            navC: document.querySelector("[data-ophf-nav-c]")
-        };
-
-        const ophfState = {
-            mode: "gallery",
-            songId: "wellwolf",
-            versionIndex: 0
-        };
-        const ophfLyricsCache = new Map();
-        let ophfLyricsRequestId = 0;
-        let ophfSpiralFrame = 0;
-        let ophfMapResizeObserver = null;
-
-        function ophfCoverUrl(song) {
-            return `${ophfBasePath}${song.file}`;
+            coverUrl(song) {
+            return `${this.basePath}${song.file}`;
         }
 
-        function ophfVersionImageUrl(song, version) {
-            return version.image || ophfCoverUrl(song);
+            versionImageUrl(song, version) {
+            return version.image || this.coverUrl(song);
         }
 
-        async function ophfLoadLyrics(version) {
+            async loadLyrics(version) {
             const fallback = version.lyrics || "";
             if (!version.lyricsPath) return fallback;
-            if (ophfLyricsCache.has(version.lyricsPath)) return ophfLyricsCache.get(version.lyricsPath);
+            if (this.lyricsCache.has(version.lyricsPath)) return this.lyricsCache.get(version.lyricsPath);
 
             const response = await fetch(version.lyricsPath, { cache: "force-cache" });
             if (!response.ok) throw new Error(`Lyrics request failed: ${response.status}`);
             const text = await response.text();
-            ophfLyricsCache.set(version.lyricsPath, text);
+            this.lyricsCache.set(version.lyricsPath, text);
             return text;
         }
 
-        function ophfGetSong(id) {
-            return ophfSongs.find((song) => song.id === id) || ophfSongs[0];
+            getSong(id) {
+            return this.songs.find((song) => song.id === id) || this.songs[0];
         }
 
-        function ophfGetLatestSong() {
-            return ophfSongs.find((song) => song.latest) || ophfSongs[ophfSongs.length - 1];
+            getLatestSong() {
+            return this.songs.find((song) => song.latest) || this.songs[this.songs.length - 1];
         }
 
-        function ophfSetImageFallback(img, song) {
+            setImageFallback(img, song) {
             img.onerror = () => {
                 img.onerror = null;
                 img.style.display = "none";
@@ -1448,21 +1455,21 @@
             };
         }
 
-        function ophfGetSongLabelLines(song) {
+            getSongLabelLines(song) {
             return song.labelLines && song.labelLines.length ? song.labelLines : [song.title];
         }
 
-        function ophfSetCoverTitle(lines) {
-            ophfEls.coverName.innerHTML = "";
+            setCoverTitle(lines) {
+            this.els.coverName.innerHTML = "";
             lines.forEach((line) => {
                 const lineEl = document.createElement("span");
                 lineEl.className = "ophf-coverNameLine";
                 lineEl.textContent = line;
-                ophfEls.coverName.appendChild(lineEl);
+                this.els.coverName.appendChild(lineEl);
             });
         }
 
-        function ophfCreateIconImg(src) {
+            createIconImg(src) {
             const icon = document.createElement("img");
             icon.className = "ophf-listenIcon";
             icon.src = src;
@@ -1470,7 +1477,7 @@
             return icon;
         }
 
-        function ophfCreateShareIcon() {
+            createShareIcon() {
             const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             icon.setAttribute("class", "ophf-listenIcon");
             icon.setAttribute("viewBox", "0 0 24 24");
@@ -1484,19 +1491,19 @@
             return icon;
         }
 
-        function ophfVersionMixBackground(version) {
+            versionMixBackground(version) {
             const colors = Array.isArray(version.mixColors) ? version.mixColors.filter(Boolean) : [];
             if (!colors.length) return "#ffffff";
             if (colors.length === 1) return colors[0];
             return `linear-gradient(135deg, ${colors.join(", ")})`;
         }
 
-        function ophfCreateVersionJump(direction, targetVersion, targetIndex) {
+            createVersionJump(direction, targetVersion, targetIndex) {
             const btn = document.createElement("button");
             btn.className = "ophf-versionJump";
             btn.type = "button";
             btn.setAttribute("aria-label", `${direction < 0 ? "Previous" : "Next"} version`);
-            btn.addEventListener("click", () => ophfOpenSong(ophfState.songId, targetIndex));
+            btn.addEventListener("click", () => this.openSong(this.state.songId, targetIndex));
 
             const glyph = document.createElement("span");
             glyph.className = "ophf-versionJumpGlyph";
@@ -1504,23 +1511,17 @@
 
             const swatch = document.createElement("span");
             swatch.className = "ophf-versionJumpSwatch";
-            swatch.style.background = ophfVersionMixBackground(targetVersion);
+            swatch.style.background = this.versionMixBackground(targetVersion);
+            swatch.appendChild(glyph);
 
-            if (direction < 0) {
-                btn.appendChild(glyph);
-                btn.appendChild(swatch);
-            } else {
-                btn.appendChild(swatch);
-                btn.appendChild(glyph);
-            }
-
+            btn.appendChild(swatch);
             return btn;
         }
 
-        function ophfRenderMap() {
-            ophfEls.mapGrid.innerHTML = "";
+            renderMap() {
+            this.els.mapGrid.innerHTML = "";
 
-            ophfSongs
+            this.songs
                 .slice()
                 .sort((a, b) => a.journey - b.journey)
                 .forEach((song) => {
@@ -1534,58 +1535,58 @@
                     node.className = "ophf-songNode";
                     node.type = "button";
                     node.setAttribute("aria-label", `Open ${song.title}`);
-                    node.addEventListener("click", () => ophfOpenSong(song.id));
+                    node.addEventListener("click", () => this.openSong(song.id));
 
                     const img = document.createElement("img");
                     img.className = "ophf-songNodeImg";
-                    img.src = ophfCoverUrl(song);
+                    img.src = this.coverUrl(song);
                     img.alt = "";
-                    ophfSetImageFallback(img, song);
+                    this.setImageFallback(img, song);
 
-                    const label = document.createElement("div");
-                    label.className = "ophf-songLabel";
+                    const title = document.createElement("span");
+                    title.className = "ophf-songNodeTitle";
                     (song.labelLines || [song.title]).forEach((line) => {
                         const lineEl = document.createElement("span");
-                        lineEl.className = "ophf-songLabelLine";
+                        lineEl.className = "ophf-songNodeTitleLine";
                         lineEl.textContent = line;
-                        label.appendChild(lineEl);
+                        title.appendChild(lineEl);
                     });
 
                     const crop = document.createElement("span");
                     crop.className = "ophf-nodeArtCrop";
                     crop.appendChild(img);
 
+                    node.appendChild(title);
                     node.appendChild(crop);
                     const unit = document.createElement("div");
                     unit.className = "ophf-songUnit";
 
                     unit.appendChild(node);
-                    unit.appendChild(label);
                     cell.appendChild(unit);
-                    ophfEls.mapGrid.appendChild(cell);
+                    this.els.mapGrid.appendChild(cell);
                 });
 
-            ophfScheduleSpiralUpdate();
+            this.scheduleSpiralUpdate();
         }
 
-        function ophfScheduleSpiralUpdate() {
-            if (ophfSpiralFrame) return;
-            ophfSpiralFrame = requestAnimationFrame(() => {
-                ophfSpiralFrame = 0;
-                ophfUpdateSpiral();
+            scheduleSpiralUpdate() {
+            if (this.spiralFrame) return;
+            this.spiralFrame = requestAnimationFrame(() => {
+                this.spiralFrame = 0;
+                this.updateSpiral();
             });
         }
 
-        function ophfUpdateSpiral() {
-            if (!ophfEls.songField || !ophfEls.spiralSvg || !ophfEls.spiralLine || !ophfEls.spiralGlow) return;
+            updateSpiral() {
+            if (!this.els.songField || !this.els.spiralSvg || !this.els.spiralLine || !this.els.spiralGlow) return;
 
-            const fieldRect = ophfEls.songField.getBoundingClientRect();
+            const fieldRect = this.els.songField.getBoundingClientRect();
             if (!fieldRect.width || !fieldRect.height) return;
 
-            const ordered = ophfSongs.slice().sort((a, b) => a.journey - b.journey);
+            const ordered = this.songs.slice().sort((a, b) => a.journey - b.journey);
             const points = ordered
                 .map((song) => {
-                    const cell = ophfEls.mapGrid.querySelector(`[data-ophf-song-id="${song.id}"]`);
+                    const cell = this.els.mapGrid.querySelector(`[data-ophf-song-id="${song.id}"]`);
                     const node = cell ? cell.querySelector(".ophf-songNode") : null;
                     if (!node) return null;
 
@@ -1607,22 +1608,22 @@
             const first = points[0];
             const last = points[points.length - 1];
 
-            ophfEls.spiralSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-            ophfEls.spiralGlow.setAttribute("d", d);
-            ophfEls.spiralLine.setAttribute("d", d);
+            this.els.spiralSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            this.els.spiralGlow.setAttribute("d", d);
+            this.els.spiralLine.setAttribute("d", d);
 
-            if (ophfEls.spiralGradient) {
-                ophfEls.spiralGradient.setAttribute("x1", first.x.toFixed(2));
-                ophfEls.spiralGradient.setAttribute("y1", first.y.toFixed(2));
-                ophfEls.spiralGradient.setAttribute("x2", last.x.toFixed(2));
-                ophfEls.spiralGradient.setAttribute("y2", last.y.toFixed(2));
+            if (this.els.spiralGradient) {
+                this.els.spiralGradient.setAttribute("x1", first.x.toFixed(2));
+                this.els.spiralGradient.setAttribute("y1", first.y.toFixed(2));
+                this.els.spiralGradient.setAttribute("x2", last.x.toFixed(2));
+                this.els.spiralGradient.setAttribute("y2", last.y.toFixed(2));
             }
         }
 
-        function ophfRenderRail() {
-            ophfEls.miniRail.innerHTML = "";
+            renderRail() {
+            this.els.miniRail.innerHTML = "";
 
-            ophfSongs
+            this.songs
                 .slice()
                 .sort((a, b) => a.journey - b.journey)
                 .forEach((song) => {
@@ -1630,159 +1631,159 @@
                     btn.className = "ophf-railBtn";
                     btn.type = "button";
                     btn.setAttribute("aria-label", song.title);
-                    btn.setAttribute("aria-current", song.id === ophfState.songId ? "true" : "false");
-                    btn.addEventListener("click", () => ophfOpenSong(song.id));
+                    btn.setAttribute("aria-current", song.id === this.state.songId ? "true" : "false");
+                    btn.addEventListener("click", () => this.openSong(song.id));
 
                     const img = document.createElement("img");
                     img.className = "ophf-railImg";
-                    img.src = ophfCoverUrl(song);
+                    img.src = this.coverUrl(song);
                     img.alt = "";
-                    ophfSetImageFallback(img, song);
+                    this.setImageFallback(img, song);
 
                     const crop = document.createElement("span");
                     crop.className = "ophf-nodeArtCrop";
                     crop.appendChild(img);
 
                     btn.appendChild(crop);
-                    ophfEls.miniRail.appendChild(btn);
+                    this.els.miniRail.appendChild(btn);
                 });
         }
 
-        function ophfRenderLinks(version) {
-            ophfEls.links.innerHTML = "";
+            renderLinks(version) {
+            this.els.links.innerHTML = "";
 
             const strip = document.createElement("div");
             strip.className = "ophf-listenStrip";
 
-            ophfPlatforms.forEach((name) => {
+            this.platforms.forEach((name) => {
                 const a = document.createElement("a");
                 a.className = "ophf-listenBtn";
                 a.href = version.links[name] || "#";
                 a.setAttribute("aria-label", `${name} link`);
-                a.appendChild(ophfCreateIconImg(ophfPlatformIcons[name]));
+                a.appendChild(this.createIconImg(this.platformIcons[name]));
                 strip.appendChild(a);
             });
 
-            ophfEls.links.appendChild(strip);
+            this.els.links.appendChild(strip);
         }
 
-        async function ophfRenderDetail() {
-            const song = ophfGetSong(ophfState.songId);
-            const version = song.versions[ophfState.versionIndex] || song.versions[0];
-            const requestId = ++ophfLyricsRequestId;
+            async renderDetail() {
+            const song = this.getSong(this.state.songId);
+            const version = song.versions[this.state.versionIndex] || song.versions[0];
+            const requestId = ++this.lyricsRequestId;
 
-            ophfEls.trackCover.src = ophfVersionImageUrl(song, version);
-            ophfEls.trackCover.alt = `${song.title} cover`;
-            ophfEls.trackTitle.textContent = "";
-            ophfEls.versionTitle.textContent = version.title;
-            ophfEls.lyrics.textContent = "Loading lyrics...";
+            this.els.trackCover.src = this.versionImageUrl(song, version);
+            this.els.trackCover.alt = `${song.title} cover`;
+            this.els.trackTitle.textContent = "";
+            this.els.versionTitle.textContent = version.title;
+            this.els.lyrics.textContent = "Loading lyrics...";
 
             if (song.versions.length <= 1) {
-                ophfEls.versionMeta.textContent = "Opa & Only version";
+                this.els.versionMeta.textContent = "Opa & Only version";
             } else {
-                ophfEls.versionMeta.textContent = `Version ${ophfState.versionIndex + 1}/${song.versions.length}`;
+                this.els.versionMeta.textContent = `Version ${this.state.versionIndex + 1}/${song.versions.length}`;
             }
 
-            ophfEls.versionNav.innerHTML = "";
+            this.els.versionNav.innerHTML = "";
             if (song.versions.length > 1) {
-                if (ophfState.versionIndex > 0) {
-                    ophfEls.versionNav.appendChild(
-                        ophfCreateVersionJump(-1, song.versions[ophfState.versionIndex - 1], ophfState.versionIndex - 1)
+                if (this.state.versionIndex > 0) {
+                    this.els.versionNav.appendChild(
+                        this.createVersionJump(-1, song.versions[this.state.versionIndex - 1], this.state.versionIndex - 1)
                     );
                 }
-                if (ophfState.versionIndex < song.versions.length - 1) {
-                    ophfEls.versionNav.appendChild(
-                        ophfCreateVersionJump(1, song.versions[ophfState.versionIndex + 1], ophfState.versionIndex + 1)
+                if (this.state.versionIndex < song.versions.length - 1) {
+                    this.els.versionNav.appendChild(
+                        this.createVersionJump(1, song.versions[this.state.versionIndex + 1], this.state.versionIndex + 1)
                     );
                 }
             }
 
-            ophfEls.shareSlot.innerHTML = "";
+            this.els.shareSlot.innerHTML = "";
             const share = document.createElement("button");
             share.className = "ophf-shareBtn";
             share.type = "button";
             share.setAttribute("aria-label", "Share");
-            share.appendChild(ophfCreateShareIcon());
-            share.addEventListener("click", ophfShareCurrent);
-            ophfEls.shareSlot.appendChild(share);
+            share.appendChild(this.createShareIcon());
+            share.addEventListener("click", this.shareCurrent);
+            this.els.shareSlot.appendChild(share);
 
-            ophfRenderLinks(version);
-            ophfRenderRail();
-            ophfRenderCover(song);
+            this.renderLinks(version);
+            this.renderRail();
+            this.renderCover(song);
 
             try {
-                const lyrics = await ophfLoadLyrics(version);
-                if (requestId === ophfLyricsRequestId) {
-                    ophfEls.lyrics.textContent = lyrics || version.lyrics || "";
+                const lyrics = await this.loadLyrics(version);
+                if (requestId === this.lyricsRequestId) {
+                    this.els.lyrics.textContent = lyrics || version.lyrics || "";
                 }
             } catch {
-                if (requestId === ophfLyricsRequestId) {
-                    ophfEls.lyrics.textContent = version.lyrics || "";
+                if (requestId === this.lyricsRequestId) {
+                    this.els.lyrics.textContent = version.lyrics || "";
                 }
             }
         }
 
-        function ophfRenderCover(song = null) {
-            if (ophfState.mode === "gallery") {
-                ophfEls.coverImg.src = ophfHeroCover;
-                ophfEls.coverImg.style.display = "block";
-                ophfEls.coverKicker.textContent = "Gallery Map";
-                ophfSetCoverTitle(["OPAHiFi Journey"]);
-                if (ophfEls.coverPill) ophfEls.coverPill.textContent = "3x3 Map";
+            renderCover(song = null) {
+            if (this.state.mode === "gallery") {
+                this.els.coverImg.src = this.heroCover;
+                this.els.coverImg.style.display = "block";
+                this.els.coverKicker.textContent = "Gallery Map";
+                this.setCoverTitle(["OPAHiFi Journey"]);
+                if (this.els.coverPill) this.els.coverPill.textContent = "3x3 Map";
                 return;
             }
 
-            const activeSong = song || ophfGetSong(ophfState.songId);
-            ophfEls.coverImg.src = ophfCoverUrl(activeSong);
-            ophfEls.coverImg.style.display = "block";
-            ophfEls.coverKicker.textContent = "Now Viewing";
-            ophfSetCoverTitle(ophfGetSongLabelLines(activeSong));
-            if (ophfEls.coverPill) ophfEls.coverPill.textContent = `Song ${activeSong.journey}`;
+            const activeSong = song || this.getSong(this.state.songId);
+            this.els.coverImg.src = this.coverUrl(activeSong);
+            this.els.coverImg.style.display = "block";
+            this.els.coverKicker.textContent = "Now Viewing";
+            this.setCoverTitle(this.getSongLabelLines(activeSong));
+            if (this.els.coverPill) this.els.coverPill.textContent = `Song ${activeSong.journey}`;
         }
 
-        function ophfSetBottomNav() {
-            const isGallery = ophfState.mode === "gallery";
-            ophfEls.navA.textContent = isGallery ? "Videos" : "Prev";
-            ophfEls.navB.textContent = isGallery ? "Gallery" : "Home";
-            ophfEls.navC.textContent = isGallery ? "About" : "Next";
-            ophfEls.navA.classList.remove("ophf-bottomBtnActive");
-            ophfEls.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
-            ophfEls.navC.classList.remove("ophf-bottomBtnActive");
-            ophfEls.navA.removeAttribute("aria-current");
+            setBottomNav() {
+            const isGallery = this.state.mode === "gallery";
+            this.els.navA.textContent = isGallery ? "Videos" : "Prev";
+            this.els.navB.textContent = isGallery ? "Gallery" : "Home";
+            this.els.navC.textContent = isGallery ? "About" : "Next";
+            this.els.navA.classList.remove("ophf-bottomBtnActive");
+            this.els.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
+            this.els.navC.classList.remove("ophf-bottomBtnActive");
+            this.els.navA.removeAttribute("aria-current");
             if (isGallery) {
-                ophfEls.navB.setAttribute("aria-current", "page");
+                this.els.navB.setAttribute("aria-current", "page");
             } else {
-                ophfEls.navB.removeAttribute("aria-current");
+                this.els.navB.removeAttribute("aria-current");
             }
-            ophfEls.navC.removeAttribute("aria-current");
+            this.els.navC.removeAttribute("aria-current");
         }
 
-        function ophfOpenGallery() {
-            ophfState.mode = "gallery";
-            ophfEls.app.dataset.ophfMode = "gallery";
-            ophfRenderCover();
-            ophfSetBottomNav();
-            ophfScheduleSpiralUpdate();
+            openGallery() {
+            this.state.mode = "gallery";
+            this.els.app.dataset.ophfMode = "gallery";
+            this.renderCover();
+            this.setBottomNav();
+            this.scheduleSpiralUpdate();
         }
 
-        function ophfOpenSong(songId, versionIndex = 0) {
-            ophfState.mode = "detail";
-            ophfState.songId = songId;
-            ophfState.versionIndex = versionIndex;
-            ophfEls.app.dataset.ophfMode = "detail";
-            ophfRenderDetail();
-            ophfSetBottomNav();
+            openSong(songId, versionIndex = 0) {
+            this.state.mode = "detail";
+            this.state.songId = songId;
+            this.state.versionIndex = versionIndex;
+            this.els.app.dataset.ophfMode = "detail";
+            this.renderDetail();
+            this.setBottomNav();
         }
 
-        function ophfMoveSong(direction) {
-            const ordered = ophfSongs.slice().sort((a, b) => a.journey - b.journey);
-            const currentIndex = ordered.findIndex((song) => song.id === ophfState.songId);
+            moveSong(direction) {
+            const ordered = this.songs.slice().sort((a, b) => a.journey - b.journey);
+            const currentIndex = ordered.findIndex((song) => song.id === this.state.songId);
             const nextIndex = (currentIndex + direction + ordered.length) % ordered.length;
-            ophfOpenSong(ordered[nextIndex].id);
+            this.openSong(ordered[nextIndex].id);
         }
 
-        function ophfShareCurrent() {
-            const song = ophfGetSong(ophfState.songId);
+            shareCurrent() {
+            const song = this.getSong(this.state.songId);
             const shareData = {
                 title: `OPAHiFi — ${song.title}`,
                 text: `Listen to ${song.title} on OPAHiFi`,
@@ -1796,44 +1797,47 @@
             }
         }
 
-        function ophfBindEvents() {
-            ophfEls.latest.addEventListener("click", () => ophfOpenSong(ophfGetLatestSong().id));
-            ophfEls.playAll.addEventListener("click", () => ophfOpenSong(ophfPlaylistOrder[0]));
+            bindEvents() {
+            this.els.latest.addEventListener("click", () => this.openSong(this.getLatestSong().id));
+            this.els.playAll.addEventListener("click", () => this.openSong(this.playlistOrder[0]));
 
-            ophfEls.navA.addEventListener("click", () => {
-                if (ophfState.mode === "detail") ophfMoveSong(-1);
+            this.els.navA.addEventListener("click", () => {
+                if (this.state.mode === "detail") this.moveSong(-1);
             });
 
-            ophfEls.navB.addEventListener("click", () => {
-                if (ophfState.mode === "detail") ophfOpenGallery();
+            this.els.navB.addEventListener("click", () => {
+                if (this.state.mode === "detail") this.openGallery();
             });
 
-            ophfEls.navC.addEventListener("click", () => {
-                if (ophfState.mode === "detail") ophfMoveSong(1);
+            this.els.navC.addEventListener("click", () => {
+                if (this.state.mode === "detail") this.moveSong(1);
             });
 
-            window.addEventListener("resize", ophfScheduleSpiralUpdate);
+            window.addEventListener("resize", this.scheduleSpiralUpdate);
 
-            if ("ResizeObserver" in window && ophfEls.songField) {
-                ophfMapResizeObserver = new ResizeObserver(ophfScheduleSpiralUpdate);
-                ophfMapResizeObserver.observe(ophfEls.songField);
+            if ("ResizeObserver" in window && this.els.songField) {
+                this.mapResizeObserver = new ResizeObserver(this.scheduleSpiralUpdate);
+                this.mapResizeObserver.observe(this.els.songField);
             }
         }
 
-        function ophfInit() {
-            ophfRenderMap();
-            ophfRenderRail();
-            ophfBindEvents();
-            ophfSetBottomNav();
-            ophfRenderCover();
+            init() {
+            this.renderMap();
+            this.renderRail();
+            this.bindEvents();
+            this.setBottomNav();
+            this.renderCover();
 
             const hashId = location.hash.replace("#", "");
-            if (hashId && ophfSongs.some((song) => song.id === hashId)) {
-                ophfOpenSong(hashId);
+            if (hashId && this.songs.some((song) => song.id === hashId)) {
+                this.openSong(hashId);
             }
         }
 
-        ophfInit();
+
+        }
+
+        new OpaHifiGalleryApp().init();
     </script>
 </body>
 
