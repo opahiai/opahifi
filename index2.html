@@ -14,11 +14,16 @@
         :root {
             --ophf-cover-area: 24dvh;
             --ophf-nav-button-h: 30px;
+            --ophf-nav-button-w: clamp(86px, 28vw, 138px);
+            --ophf-nav-gap: 8px;
             --ophf-nav-pad-top: 8px;
             --ophf-nav-pad-bottom: max(8px, env(safe-area-inset-bottom));
             --ophf-nav-h: calc(var(--ophf-nav-button-h) + var(--ophf-nav-pad-top) + var(--ophf-nav-pad-bottom));
             --ophf-topbar-h: 44px;
             --ophf-rail-h: 76px;
+            --ophf-promo-content-max: 900px;
+            --ophf-gallery-map-max-w: calc(var(--ophf-nav-button-w) + var(--ophf-nav-button-w) + var(--ophf-nav-button-w) + var(--ophf-nav-gap) + var(--ophf-nav-gap));
+            --ophf-gallery-map-max-h: 680px;
             --ophf-gallery-pad: clamp(8px, 2.5vw, 18px);
             --ophf-gallery-gap: clamp(8px, 2.4vw, 14px);
             --ophf-promo-band-h: clamp(68px, 13dvh, 92px);
@@ -426,16 +431,16 @@
         .ophf-spiralGlow {
             fill: none;
             stroke: rgba(195, 77, 172, 0.45);
-            stroke-width: 0.08;
+            stroke-width: clamp(10px, 1.3vw, 18px);
             stroke-linecap: round;
             stroke-linejoin: round;
-            filter: blur(0.04px);
+            filter: blur(3px);
         }
 
         .ophf-spiralLine {
             fill: none;
             stroke: url(#ophfSpiralGradient);
-            stroke-width: 0.036;
+            stroke-width: clamp(4px, 0.65vw, 8px);
             stroke-linecap: round;
             stroke-linejoin: round;
         }
@@ -890,11 +895,11 @@
             left: 0;
             z-index: 30;
             display: grid;
-            grid-template-columns: repeat(3, clamp(86px, 28vw, 138px));
+            grid-template-columns: repeat(3, var(--ophf-nav-button-w));
             justify-content: center;
             height: var(--ophf-nav-h);
             padding: var(--ophf-nav-pad-top) clamp(8px, 3vw, 18px) var(--ophf-nav-pad-bottom);
-            gap: 8px;
+            gap: var(--ophf-nav-gap);
             background: rgba(2, 2, 4, 0.94);
             border-top: 1px solid rgba(248, 248, 248, 0.1);
         }
@@ -926,10 +931,21 @@
                 --ophf-promo-band-h: 84px;
             }
 
+            .ophf-songField {
+                width: 100%;
+                height: min(100%, var(--ophf-gallery-map-max-h), var(--ophf-gallery-map-max-w));
+                max-width: none;
+                aspect-ratio: 1 / 1;
+            }
+
             .ophf-promoBand,
-            .ophf-fieldStage,
             .ophf-detailScroller {
-                width: min(900px, 100%);
+                width: min(var(--ophf-promo-content-max), 100%);
+                margin-inline: auto;
+            }
+
+            .ophf-fieldStage {
+                width: min(var(--ophf-gallery-map-max-w), 100%);
                 margin-inline: auto;
             }
         }
@@ -976,19 +992,20 @@
                     </div>
 
                     <div class="ophf-fieldStage">
-                        <div class="ophf-songField" aria-label="Journey song map">
-                            <svg class="ophf-spiralSvg" viewBox="0 0 3 3" aria-hidden="true">
+                        <div class="ophf-songField" aria-label="Journey song map" data-ophf-song-field>
+                            <svg class="ophf-spiralSvg" viewBox="0 0 3 3" aria-hidden="true"
+                                data-ophf-spiral-svg>
                                 <defs>
                                     <linearGradient id="ophfSpiralGradient" x1="0" y1="0" x2="3" y2="3"
-                                        gradientUnits="userSpaceOnUse">
+                                        gradientUnits="userSpaceOnUse" data-ophf-spiral-gradient>
                                         <stop offset="0" stop-color="#6B95DC" />
                                         <stop offset="0.46" stop-color="#C34DAC" />
                                         <stop offset="1" stop-color="#DC3612" />
                                     </linearGradient>
                                 </defs>
-                                <path class="ophf-spiralGlow"
+                                <path class="ophf-spiralGlow" data-ophf-spiral-glow
                                     d="M .5 .5 L 1.5 .5 L 2.5 .5 L 2.5 1.5 L 2.5 2.5 L 1.5 2.5 L .5 2.5 L .5 1.5 L 1.5 1.5" />
-                                <path class="ophf-spiralLine"
+                                <path class="ophf-spiralLine" data-ophf-spiral-line
                                     d="M .5 .5 L 1.5 .5 L 2.5 .5 L 2.5 1.5 L 2.5 2.5 L 1.5 2.5 L .5 2.5 L .5 1.5 L 1.5 1.5" />
                             </svg>
                             <div class="ophf-mapGrid" data-ophf-map-grid></div>
@@ -1357,7 +1374,12 @@
             coverKicker: document.querySelector("[data-ophf-cover-kicker]"),
             coverName: document.querySelector("[data-ophf-cover-name]"),
             coverPill: document.querySelector("[data-ophf-cover-pill]"),
+            songField: document.querySelector("[data-ophf-song-field]"),
             mapGrid: document.querySelector("[data-ophf-map-grid]"),
+            spiralSvg: document.querySelector("[data-ophf-spiral-svg]"),
+            spiralGradient: document.querySelector("[data-ophf-spiral-gradient]"),
+            spiralGlow: document.querySelector("[data-ophf-spiral-glow]"),
+            spiralLine: document.querySelector("[data-ophf-spiral-line]"),
             latest: document.querySelector("[data-ophf-latest]"),
             playAll: document.querySelector("[data-ophf-playall]"),
             trackCover: document.querySelector("[data-ophf-track-cover]"),
@@ -1381,6 +1403,8 @@
         };
         const ophfLyricsCache = new Map();
         let ophfLyricsRequestId = 0;
+        let ophfSpiralFrame = 0;
+        let ophfMapResizeObserver = null;
 
         function ophfCoverUrl(song) {
             return `${ophfBasePath}${song.file}`;
@@ -1500,6 +1524,7 @@
                 .forEach((song) => {
                     const cell = document.createElement("div");
                     cell.className = "ophf-mapCell";
+                    cell.dataset.ophfSongId = song.id;
                     cell.style.gridRow = song.grid[0];
                     cell.style.gridColumn = song.grid[1];
 
@@ -1537,6 +1562,59 @@
                     cell.appendChild(unit);
                     ophfEls.mapGrid.appendChild(cell);
                 });
+
+            ophfScheduleSpiralUpdate();
+        }
+
+        function ophfScheduleSpiralUpdate() {
+            if (ophfSpiralFrame) return;
+            ophfSpiralFrame = requestAnimationFrame(() => {
+                ophfSpiralFrame = 0;
+                ophfUpdateSpiral();
+            });
+        }
+
+        function ophfUpdateSpiral() {
+            if (!ophfEls.songField || !ophfEls.spiralSvg || !ophfEls.spiralLine || !ophfEls.spiralGlow) return;
+
+            const fieldRect = ophfEls.songField.getBoundingClientRect();
+            if (!fieldRect.width || !fieldRect.height) return;
+
+            const ordered = ophfSongs.slice().sort((a, b) => a.journey - b.journey);
+            const points = ordered
+                .map((song) => {
+                    const cell = ophfEls.mapGrid.querySelector(`[data-ophf-song-id="${song.id}"]`);
+                    const node = cell ? cell.querySelector(".ophf-songNode") : null;
+                    if (!node) return null;
+
+                    const nodeRect = node.getBoundingClientRect();
+                    return {
+                        x: nodeRect.left - fieldRect.left + nodeRect.width / 2,
+                        y: nodeRect.top - fieldRect.top + nodeRect.height / 2
+                    };
+                })
+                .filter(Boolean);
+
+            if (points.length < 2) return;
+
+            const d = points
+                .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
+                .join(" ");
+            const width = fieldRect.width.toFixed(2);
+            const height = fieldRect.height.toFixed(2);
+            const first = points[0];
+            const last = points[points.length - 1];
+
+            ophfEls.spiralSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            ophfEls.spiralGlow.setAttribute("d", d);
+            ophfEls.spiralLine.setAttribute("d", d);
+
+            if (ophfEls.spiralGradient) {
+                ophfEls.spiralGradient.setAttribute("x1", first.x.toFixed(2));
+                ophfEls.spiralGradient.setAttribute("y1", first.y.toFixed(2));
+                ophfEls.spiralGradient.setAttribute("x2", last.x.toFixed(2));
+                ophfEls.spiralGradient.setAttribute("y2", last.y.toFixed(2));
+            }
         }
 
         function ophfRenderRail() {
@@ -1673,6 +1751,7 @@
             ophfEls.app.dataset.ophfMode = "gallery";
             ophfRenderCover();
             ophfSetBottomNav();
+            ophfScheduleSpiralUpdate();
         }
 
         function ophfOpenSong(songId, versionIndex = 0) {
@@ -1722,6 +1801,12 @@
                 if (ophfState.mode === "detail") ophfMoveSong(1);
             });
 
+            window.addEventListener("resize", ophfScheduleSpiralUpdate);
+
+            if ("ResizeObserver" in window && ophfEls.songField) {
+                ophfMapResizeObserver = new ResizeObserver(ophfScheduleSpiralUpdate);
+                ophfMapResizeObserver.observe(ophfEls.songField);
+            }
         }
 
         function ophfInit() {
