@@ -646,12 +646,32 @@
             min-height: 0;
             display: flex;
             align-items: center;
+            justify-content: center;
         }
 
         .ophf-videoGrid {
             display: flex;
             width: 100%;
-            height: min(100%, clamp(280px, 48dvh, 420px));
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(14px, 2vw, 22px);
+        }
+
+        .ophf-videoGrid--active {
+            width: 100%;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: clamp(10px, 1.6vw, 16px);
+        }
+
+        .ophf-videoRail {
+            width: min(100%, clamp(220px, 28vw, 315px));
+            height: auto;
+            aspect-ratio: 9 / 16;
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
             border-radius: clamp(22px, 5vw, 34px);
             background:
@@ -662,26 +682,37 @@
                 0 24px 70px rgba(0, 0, 0, 0.26);
         }
 
+        .ophf-videoGrid--active .ophf-videoRail {
+            width: min(100%, clamp(168px, 22vw, 220px));
+        }
+
         .ophf-videoCard {
             --ophf-video-fg-width: clamp(110px, 34vw, 170px);
             --ophf-video-fg-offset-x: 0px;
             position: relative;
             flex: 1 1 0;
             display: block;
+            width: 100%;
+            padding: 0;
+            border: 0;
             overflow: hidden;
-            text-decoration: none;
+            background: transparent;
             color: var(--ophf-light);
             isolation: isolate;
             transition: transform 180ms ease, filter 180ms ease;
         }
 
         .ophf-videoCard + .ophf-videoCard {
-            border-left: 1px solid rgba(248, 248, 248, 0.08);
+            border-top: 1px solid rgba(248, 248, 248, 0.08);
         }
 
         .ophf-videoCard:hover,
         .ophf-videoCard:focus-visible {
             filter: brightness(1.08);
+        }
+
+        .ophf-videoCard[aria-pressed="true"] {
+            filter: brightness(1.1);
         }
 
         .ophf-videoCard--meet {
@@ -725,8 +756,8 @@
         .ophf-videoTitle {
             position: absolute;
             top: 12px;
-            left: 12px;
-            right: 12px;
+            left: 14px;
+            right: 46px;
             z-index: 2;
             color: var(--ophf-light);
             font-family: Oswald, sans-serif;
@@ -739,6 +770,10 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
+        .ophf-videoGrid--active .ophf-videoTitle {
+            font-size: clamp(14px, 1.85vw, 18px);
+        }
+
         .ophf-videoCard::after {
             content: "";
             position: absolute;
@@ -749,15 +784,15 @@
 
         .ophf-videoPlayBtn {
             position: absolute;
-            left: 50%;
+            right: 14px;
             top: 50%;
             z-index: 2;
             display: grid;
             place-items: center;
-            width: clamp(54px, 9vw, 72px);
-            height: clamp(54px, 9vw, 72px);
+            width: clamp(42px, 6vw, 58px);
+            height: clamp(42px, 6vw, 58px);
             border-radius: 999px;
-            transform: translate(-50%, -50%);
+            transform: translateY(-50%);
             background: rgba(248, 248, 248, 0.08);
             box-shadow:
                 inset 0 0 0 1px rgba(248, 248, 248, 0.26),
@@ -767,19 +802,74 @@
             transition: background 140ms ease, transform 140ms ease;
         }
 
+        .ophf-videoCloseBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 3;
+            width: 24px;
+            height: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.42);
+            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.22);
+            color: var(--ophf-light);
+            font-family: Oswald, sans-serif;
+            font-size: 14px;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .ophf-videoCard[aria-pressed="true"] .ophf-videoCloseBtn {
+            display: flex;
+        }
+
         .ophf-videoCard:hover .ophf-videoPlayBtn,
         .ophf-videoCard:focus-visible .ophf-videoPlayBtn {
             background: rgba(248, 248, 248, 0.14);
-            transform: translate(-50%, -50%) scale(1.04);
+            transform: translateY(-50%) scale(1.04);
         }
 
         .ophf-videoPlayIcon {
             width: 0;
             height: 0;
-            margin-left: 4px;
-            border-top: 9px solid transparent;
-            border-bottom: 9px solid transparent;
-            border-left: 14px solid currentColor;
+            margin-left: 3px;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+            border-left: 11px solid currentColor;
+        }
+
+        .ophf-videoStage {
+            display: none;
+            width: min(100%, clamp(200px, 28vw, 250px));
+            height: auto;
+            min-width: 0;
+            min-height: 0;
+            aspect-ratio: 9 / 16;
+            flex: 0 0 auto;
+            border-radius: clamp(22px, 5vw, 34px);
+            overflow: hidden;
+            background:
+                linear-gradient(180deg, rgba(248, 248, 248, 0.08), rgba(248, 248, 248, 0.03)),
+                rgba(8, 10, 18, 0.72);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.08),
+                0 24px 70px rgba(0, 0, 0, 0.26);
+        }
+
+        .ophf-videoGrid--active .ophf-videoStage {
+            display: block;
+            width: min(100%, clamp(190px, 24vw, 248px));
+        }
+
+        .ophf-videoStageFrame {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+            background: #000;
         }
 
         .ophf-videoCard:hover .ophf-videoThumb--bg,
@@ -793,11 +883,68 @@
         }
 
         @media (max-width: 700px) {
+            .ophf-videosPanel {
+                align-items: stretch;
+            }
+
+            .ophf-videoGrid {
+                flex-direction: column;
+                justify-content: flex-start;
+                height: 100%;
+            }
+
+            .ophf-videoRail,
+            .ophf-videoStage {
+                width: min(100%, 270px);
+                aspect-ratio: 9 / 16;
+            }
+
+            .ophf-videoGrid--active {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: flex-start;
+                width: 100%;
+                gap: 8px;
+            }
+
+            .ophf-videoGrid--active .ophf-videoRail,
+            .ophf-videoGrid--active .ophf-videoStage {
+                aspect-ratio: 9 / 16;
+            }
+
+            .ophf-videoGrid--active .ophf-videoRail {
+                width: min(34vw, 138px);
+            }
+
+            .ophf-videoGrid--active .ophf-videoStage {
+                width: min(44vw, 176px);
+                aspect-ratio: 9 / 16;
+            }
+
+            .ophf-videoThumb--fg {
+                inset: auto auto 10px 50%;
+                width: clamp(96px, 24vw, 132px);
+            }
+
+            .ophf-videoGrid--active .ophf-videoThumb--fg {
+                width: clamp(74px, 19vw, 104px);
+            }
+
+            .ophf-videoCard + .ophf-videoCard {
+                border-top: 1px solid rgba(248, 248, 248, 0.08);
+            }
+
             .ophf-videoTitle {
                 top: 10px;
                 left: 8px;
                 right: 8px;
                 font-size: clamp(13px, 4.1vw, 18px);
+            }
+
+            .ophf-videoPlayBtn {
+                right: 10px;
+                width: 42px;
+                height: 42px;
             }
         }
 
@@ -1334,13 +1481,37 @@
             constructor(root) {
                 this.root = root;
                 this.cleanup = [];
+                this.activeCardId = null;
+                this.cardsById = new Map();
+                this.rail = null;
+                this.stage = null;
+                this.iframe = null;
             }
 
             render() {
                 if (!this.root || this.root.childElementCount) return;
 
+                this.rail = document.createElement("div");
+                this.rail.className = "ophf-videoRail";
+
+                this.stage = document.createElement("div");
+                this.stage.className = "ophf-videoStage";
+
+                this.iframe = document.createElement("iframe");
+                this.iframe.className = "ophf-videoStageFrame";
+                this.iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+                this.iframe.setAttribute("allowfullscreen", "");
+                this.iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+                this.iframe.title = "OPAHiFi video player";
+
+                this.stage.appendChild(this.iframe);
+                this.root.appendChild(this.rail);
+                this.root.appendChild(this.stage);
+
                 OpaHifiVideosView.cards.forEach((card) => {
-                    this.root.appendChild(this.createCard(card));
+                    const node = this.createCard(card);
+                    this.cardsById.set(card.id, node);
+                    this.rail.appendChild(node);
                 });
             }
 
@@ -1351,15 +1522,23 @@
 
             deactivate() {
                 this.resetPointerMotion();
+                this.clearSelection();
             }
 
             createCard(card) {
-                const link = document.createElement("a");
-                link.className = card.className;
-                link.href = card.href;
-                link.target = "_blank";
-                link.rel = "noreferrer noopener";
-                link.setAttribute("aria-label", `Watch ${card.title}`);
+                const cardButton = document.createElement("button");
+                cardButton.className = card.className;
+                cardButton.type = "button";
+                cardButton.dataset.ophfVideoId = card.id;
+                cardButton.setAttribute("aria-label", `Open ${card.title}`);
+                cardButton.setAttribute("aria-pressed", "false");
+                cardButton.addEventListener("click", () => {
+                    if (this.activeCardId === card.id) {
+                        this.clearSelection();
+                        return;
+                    }
+                    this.selectCard(card.id);
+                });
 
                 const scene = document.createElement("span");
                 scene.className = "ophf-videoScene";
@@ -1381,28 +1560,68 @@
                 title.className = "ophf-videoTitle";
                 title.textContent = card.title;
 
-                const button = document.createElement("span");
-                button.className = "ophf-videoPlayBtn";
+                const close = document.createElement("span");
+                close.className = "ophf-videoCloseBtn";
+                close.textContent = "X";
+
+                const playButton = document.createElement("span");
+                playButton.className = "ophf-videoPlayBtn";
 
                 const play = document.createElement("span");
                 play.className = "ophf-videoPlayIcon";
 
-                button.appendChild(play);
+                playButton.appendChild(play);
                 scene.appendChild(title);
+                scene.appendChild(close);
                 scene.appendChild(bg);
                 scene.appendChild(fg);
-                scene.appendChild(button);
-                link.appendChild(scene);
-                return link;
+                scene.appendChild(playButton);
+                cardButton.appendChild(scene);
+                return cardButton;
+            }
+
+            selectCard(cardId) {
+                const card = OpaHifiVideosView.cards.find((item) => item.id === cardId);
+                if (!card || !this.root || !this.iframe) return;
+
+                this.activeCardId = card.id;
+                this.root.classList.add("ophf-videoGrid--active");
+                this.iframe.src = this.toEmbedSrc(card.href);
+
+                this.cardsById.forEach((node, id) => {
+                    node.setAttribute("aria-pressed", id === card.id ? "true" : "false");
+                });
+            }
+
+            clearSelection() {
+                this.activeCardId = null;
+                if (this.root) this.root.classList.remove("ophf-videoGrid--active");
+                if (this.iframe) this.iframe.src = "";
+                this.cardsById.forEach((node) => {
+                    node.setAttribute("aria-pressed", "false");
+                });
+            }
+
+            toEmbedSrc(href) {
+                try {
+                    const url = new URL(href);
+                    const playlistId = url.searchParams.get("list");
+                    if (playlistId) {
+                        return `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(playlistId)}&autoplay=1&playsinline=1&rel=0&controls=1&modestbranding=1`;
+                    }
+                } catch (_) {
+                    return "";
+                }
+                return "";
             }
 
             bindPointerMotion() {
-                if (!this.root || this.cleanup.length) return;
+                if (!this.rail || this.cleanup.length) return;
                 if (typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
                     return;
                 }
 
-                this.root.querySelectorAll(".ophf-videoCard").forEach((card, index) => {
+                this.rail.querySelectorAll(".ophf-videoCard").forEach((card, index) => {
                     const bg = card.querySelector(".ophf-videoThumb--bg");
                     const fg = card.querySelector(".ophf-videoThumb--fg");
                     if (!bg || !fg) return;
@@ -1436,8 +1655,8 @@
             resetPointerMotion() {
                 this.cleanup.forEach((cleanup) => cleanup());
                 this.cleanup = [];
-                if (!this.root) return;
-                this.root.querySelectorAll(".ophf-videoThumb--bg, .ophf-videoThumb--fg").forEach((node) => {
+                if (!this.rail) return;
+                this.rail.querySelectorAll(".ophf-videoThumb--bg, .ophf-videoThumb--fg").forEach((node) => {
                     node.style.transform = "";
                 });
             }
