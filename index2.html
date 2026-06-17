@@ -1778,6 +1778,78 @@
             }
         }
 
+        class OpaHifiGalleryRoute {
+            isActive(state) {
+                return state.mode === "gallery";
+            }
+
+            buildHash() {
+                return "#gallery";
+            }
+
+            matches(route) {
+                return !route || route === "gallery";
+            }
+
+            apply(app) {
+                app.openGallery({ skipRoute: true });
+            }
+        }
+
+        class OpaHifiVideosRoute {
+            isActive(state) {
+                return state.mode === "videos";
+            }
+
+            buildHash() {
+                return "#videos";
+            }
+
+            matches(route) {
+                return route === "videos";
+            }
+
+            apply(app) {
+                app.openVideos({ skipRoute: true });
+            }
+        }
+
+        class OpaHifiDetailRoute {
+            isActive(state) {
+                return state.mode === "detail";
+            }
+
+            buildHash(state) {
+                return state.versionIndex > 0
+                    ? `#${state.songId}/v${state.versionIndex + 1}`
+                    : `#${state.songId}`;
+            }
+
+            matches(route, app) {
+                const [songId] = route.split("/");
+                return app.songs.some((song) => song.id === songId);
+            }
+
+            apply(app, route) {
+                const [songId, versionToken] = route.split("/");
+                const song = app.songs.find((item) => item.id === songId);
+                if (!song) {
+                    app.openGallery({ skipRoute: true });
+                    return;
+                }
+
+                let versionIndex = 0;
+                if (versionToken) {
+                    const parsed = Number.parseInt(versionToken.replace(/^v/i, ""), 10);
+                    if (Number.isFinite(parsed) && parsed > 0) {
+                        versionIndex = Math.min(parsed - 1, song.versions.length - 1);
+                    }
+                }
+
+                app.openSong(songId, versionIndex, { skipRoute: true });
+            }
+        }
+
         class OpaHifiGalleryApp {
             static basePath = "/img/music/base/";
             static heroCover = "/img/opa/cover.png";
@@ -2102,8 +2174,15 @@
                 this.lyricsRequestId = 0;
                 this.spiralFrame = 0;
                 this.mapResizeObserver = null;
+                this.ignoreNextHashChange = false;
+                this.screenRoutes = [
+                    new OpaHifiGalleryRoute(),
+                    new OpaHifiVideosRoute(),
+                    new OpaHifiDetailRoute()
+                ];
                 this.videosView = new OpaHifiVideosView(this.els.videoGrid);
                 this.scheduleSpiralUpdate = this.scheduleSpiralUpdate.bind(this);
+                this.handleHashChange = this.handleHashChange.bind(this);
             }
 
             coverUrl(song) {
@@ -2482,26 +2561,66 @@
                 this.els.navB.removeAttribute("aria-current");
             }
             this.els.navC.removeAttribute("aria-current");
+            }
+
+            getActiveScreenRoute() {
+            return this.screenRoutes.find((route) => route.isActive(this.state)) || this.screenRoutes[0];
         }
 
-            openGallery() {
+            syncRoute(replace = false) {
+            const activeRoute = this.getActiveScreenRoute();
+            const nextHash = activeRoute.buildHash(this.state, this);
+            if (location.hash === nextHash) return;
+            if (replace) {
+                history.replaceState(null, "", nextHash);
+                return;
+            }
+            this.ignoreNextHashChange = true;
+            location.hash = nextHash;
+        }
+
+            applyRouteFromHash() {
+            const route = location.hash.replace(/^#/, "").trim();
+            for (const screenRoute of this.screenRoutes) {
+                if (screenRoute.matches(route, this)) {
+                    screenRoute.apply(this, route);
+                    return;
+                }
+            }
+            this.screenRoutes[0].apply(this, route);
+        }
+
+            handleHashChange() {
+            if (this.ignoreNextHashChange) {
+                this.ignoreNextHashChange = false;
+                return;
+            }
+            this.applyRouteFromHash();
+        }
+
+            openGallery(options = {}) {
+            const { skipRoute = false } = options;
             this.videosView.deactivate();
             this.state.mode = "gallery";
             this.els.app.dataset.ophfMode = "gallery";
             this.renderCover();
             this.setBottomNav();
             this.scheduleSpiralUpdate();
+            if (!skipRoute) this.syncRoute();
         }
 
-            openVideos() {
+            openVideos(options = {}) {
+            const { skipRoute = false } = options;
             this.state.mode = "videos";
             this.els.app.dataset.ophfMode = "videos";
             this.videosView.activate();
             this.renderCover();
             this.setBottomNav();
+            if (!skipRoute) this.syncRoute();
         }
 
-            openSong(songId, versionIndex = 0) {
+            openSong(songId, versionIndex = 0, options = {}) {
+            const { skipRoute = false } = options;
             this.videosView.deactivate();
             this.state.mode = "detail";
             this.state.songId = songId;
@@ -2509,6 +2628,7 @@
             this.els.app.dataset.ophfMode = "detail";
             this.renderDetail();
             this.setBottomNav();
+            if (!skipRoute) this.syncRoute();
         }
 
             moveSong(direction) {
@@ -2554,6 +2674,7 @@
             });
 
             window.addEventListener("resize", this.scheduleSpiralUpdate);
+            window.addEventListener("hashchange", this.handleHashChange);
 
             if ("ResizeObserver" in window && this.els.songField) {
                 this.mapResizeObserver = new ResizeObserver(this.scheduleSpiralUpdate);
@@ -2569,9 +2690,10 @@
             this.setBottomNav();
             this.renderCover();
 
-            const hashId = location.hash.replace("#", "");
-            if (hashId && this.songs.some((song) => song.id === hashId)) {
-                this.openSong(hashId);
+            if (location.hash) {
+                this.applyRouteFromHash();
+            } else {
+                this.syncRoute(true);
             }
         }
 
