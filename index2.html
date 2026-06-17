@@ -639,6 +639,9 @@
         .ophf-videosScreen {
             overflow: hidden;
             padding: var(--ophf-gallery-pad);
+            display: grid;
+            grid-template-rows: minmax(0, 1fr) auto;
+            gap: clamp(8px, 2.2vw, 12px);
         }
 
         .ophf-videosPanel {
@@ -647,6 +650,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         }
 
         .ophf-videoGrid {
@@ -698,7 +702,7 @@
             cursor: pointer;
         }
 
-        .ophf-videoCard + .ophf-videoCard {
+        .ophf-videoCard+.ophf-videoCard {
             margin-top: 0;
         }
 
@@ -825,72 +829,37 @@
             border-left: 8px solid currentColor;
         }
 
-        .ophf-videoActiveBar {
+        .ophf-videoActiveStack {
             position: absolute;
-            inset: 12px 12px auto 12px;
+            inset: 12px;
             z-index: 5;
-            display: none;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 10px 10px 10px 12px;
-            border-radius: 18px;
-            background: rgba(8, 10, 22, 0.58);
-            box-shadow:
-                inset 0 0 0 1px rgba(248, 248, 248, 0.12),
-                0 10px 24px rgba(0, 0, 0, 0.18);
-            backdrop-filter: blur(12px);
-        }
-
-        .ophf-videoCard[aria-pressed="true"] .ophf-videoActiveBar {
-            display: flex;
-        }
-
-        .ophf-videoActiveMeta {
-            min-width: 0;
-        }
-
-        .ophf-videoActiveEyebrow {
             display: block;
-            margin: 0 0 4px;
-            color: rgba(248, 248, 248, 0.72);
-            font-family: Oswald, sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            line-height: 1;
-            text-transform: uppercase;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 180ms ease;
         }
 
-        .ophf-videoActiveTitle {
-            display: block;
-            color: var(--ophf-light);
-            font-family: Oswald, sans-serif;
-            font-size: clamp(14px, 1.3vw, 18px);
-            font-weight: 700;
-            letter-spacing: 0.03em;
-            line-height: 0.92;
-            text-transform: uppercase;
+        .ophf-videoCard[aria-pressed="true"] .ophf-videoActiveStack {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .ophf-videoPlayer {
-            position: absolute;
-            inset: 76px 12px 12px 12px;
-            z-index: 3;
+            position: relative;
+            z-index: 1;
+            width: auto;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 9 / 16;
+            justify-self: center;
+            align-self: start;
             overflow: hidden;
             border-radius: 22px;
             background: #000;
             box-shadow:
                 inset 0 0 0 1px rgba(248, 248, 248, 0.08),
                 0 16px 34px rgba(0, 0, 0, 0.22);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 180ms ease;
-        }
-
-        .ophf-videoCard[aria-pressed="true"] .ophf-videoPlayer {
-            opacity: 1;
-            pointer-events: auto;
         }
 
         .ophf-videoCard[aria-pressed="true"] .ophf-videoScene {
@@ -908,14 +877,19 @@
         }
 
         .ophf-videoCloseBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 6;
             width: 32px;
             height: 32px;
-            flex: 0 0 auto;
-            display: grid;
+            display: none;
             place-items: center;
             border-radius: 999px;
-            background: rgba(248, 248, 248, 0.09);
-            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.16);
+            background: rgba(8, 10, 22, 0.62);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.16),
+                0 8px 18px rgba(0, 0, 0, 0.18);
             color: var(--ophf-light);
             font-family: Oswald, sans-serif;
             font-size: 16px;
@@ -923,10 +897,116 @@
             transition: background 140ms ease, transform 140ms ease;
         }
 
+        .ophf-videoCard[aria-pressed="true"] .ophf-videoCloseBtn {
+            display: grid;
+        }
+
         .ophf-videoCloseBtn:hover,
         .ophf-videoCloseBtn:focus-visible {
             background: rgba(248, 248, 248, 0.16);
             transform: scale(1.04);
+        }
+
+        .ophf-videoGuide {
+            min-height: clamp(42px, 7.2dvh, 54px);
+            display: grid;
+            grid-template-columns: clamp(34px, 8.8vw, 42px) minmax(0, 1fr) auto;
+            align-items: center;
+            gap: clamp(8px, 2.4vw, 12px);
+            padding: 7px clamp(9px, 2.8vw, 14px);
+            border-radius: 999px;
+            background:
+                linear-gradient(135deg, rgba(37, 78, 181, 0.18), rgba(195, 77, 172, 0.16)),
+                rgba(2, 2, 4, 0.72);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.12),
+                0 12px 22px rgba(0, 0, 0, 0.22);
+        }
+
+        .ophf-videoGuideThumb {
+            width: clamp(34px, 8.8vw, 42px);
+            height: clamp(34px, 8.8vw, 42px);
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #fff;
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.85),
+                0 0 14px rgba(195, 77, 172, 0.28);
+        }
+
+        .ophf-videoGuideThumb img {
+            width: 122%;
+            height: 122%;
+            object-fit: contain;
+            object-position: center bottom;
+            transform: translateY(7%);
+        }
+
+        .ophf-videoGuideCopy {
+            min-width: 0;
+        }
+
+        .ophf-videoGuideKicker {
+            display: block;
+            margin-bottom: 3px;
+            color: var(--ophf-lavender);
+            font-family: Oswald, sans-serif;
+            font-size: clamp(8px, 2.35vw, 10px);
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .ophf-videoGuideText {
+            display: block;
+            min-width: 0;
+            overflow: hidden;
+            color: var(--ophf-light);
+            font-family: Oswald, sans-serif;
+            font-size: clamp(13px, 3.6vw, 17px);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 0.045em;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .ophf-videoGuideTag {
+            justify-self: end;
+            max-width: 84px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: rgba(248, 248, 248, 0.075);
+            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.14);
+            color: rgba(248, 248, 248, 0.8);
+            font-family: Oswald, sans-serif;
+            font-size: clamp(10px, 2.8vw, 12px);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .ophf-videoGuide[data-ophf-video-guide="meet"] {
+            background:
+                linear-gradient(135deg, rgba(37, 78, 181, 0.24), rgba(107, 149, 220, 0.13)),
+                rgba(2, 2, 4, 0.72);
+        }
+
+        .ophf-videoGuide[data-ophf-video-guide="clips"] {
+            background:
+                linear-gradient(135deg, rgba(99, 81, 180, 0.22), rgba(195, 77, 172, 0.16)),
+                rgba(2, 2, 4, 0.72);
+        }
+
+        .ophf-videoGuide[data-ophf-video-guide="lyrics"] {
+            background:
+                linear-gradient(135deg, rgba(195, 77, 172, 0.2), rgba(228, 66, 97, 0.13)),
+                rgba(2, 2, 4, 0.72);
         }
 
         @media (max-width: 760px) {
@@ -946,14 +1026,8 @@
                 height: 34px;
             }
 
-            .ophf-videoActiveBar {
-                inset: 10px 10px auto 10px;
-                padding: 8px 8px 8px 10px;
-                border-radius: 16px;
-            }
-
-            .ophf-videoActiveTitle {
-                font-size: 13px;
+            .ophf-videoActiveStack {
+                inset: 10px;
             }
 
             .ophf-videoFrame {
@@ -968,7 +1042,6 @@
             }
 
             .ophf-videoPlayer {
-                inset: 68px 10px 10px 10px;
                 border-radius: 18px;
             }
         }
@@ -1417,8 +1490,7 @@
 
                     <div class="ophf-fieldStage">
                         <div class="ophf-songField" aria-label="Journey song map" data-ophf-song-field>
-                            <svg class="ophf-spiralSvg" viewBox="0 0 3 3" aria-hidden="true"
-                                data-ophf-spiral-svg>
+                            <svg class="ophf-spiralSvg" viewBox="0 0 3 3" aria-hidden="true" data-ophf-spiral-svg>
                                 <defs>
                                     <linearGradient id="ophfSpiralGradient" x1="0" y1="0" x2="3" y2="3"
                                         gradientUnits="userSpaceOnUse" data-ophf-spiral-gradient>
@@ -1441,7 +1513,19 @@
             <section class="ophf-screen ophf-videosScreen" aria-label="Videos">
                 <div class="ophf-videosPanel">
                     <div class="ophf-videoGrid" data-ophf-video-grid></div>
+
+                    <div class="ophf-videoGuide" data-ophf-video-guide="default" aria-live="polite">
+                        <span class="ophf-videoGuideThumb" aria-hidden="true">
+                            <img src="img/opa/videos/opa-meet.png" alt="">
+                        </span>
+                        <span class="ophf-videoGuideCopy">
+                            <span class="ophf-videoGuideKicker">Opa says</span>
+                            <span class="ophf-videoGuideText" data-ophf-video-guide-text>Choose your chaos.</span>
+                        </span>
+                        <span class="ophf-videoGuideTag" data-ophf-video-guide-tag>Vault</span>
+                    </div>
                 </div>
+
             </section>
 
             <section class="ophf-screen ophf-detailScreen" aria-label="Version detail">
@@ -1509,6 +1593,25 @@
                 }
             ];
 
+            static guideCopy = {
+                default: {
+                    tag: "VAULT",
+                    text: "Choose your chaos."
+                },
+                meet: {
+                    tag: "MEET",
+                    text: "Meet the little menace."
+                },
+                clips: {
+                    tag: "CLIPS",
+                    text: "Watch the songs come alive."
+                },
+                lyrics: {
+                    tag: "LYRICS",
+                    text: "Sing the chaos in shorts."
+                }
+            };
+
             constructor(root) {
                 this.root = root;
                 this.cleanup = [];
@@ -1518,6 +1621,9 @@
                 this.shell = null;
                 this.rail = null;
                 this.layoutObserver = null;
+                this.guide = document.querySelector("[data-ophf-video-guide]");
+                this.guideText = document.querySelector("[data-ophf-video-guide-text]");
+                this.guideTag = document.querySelector("[data-ophf-video-guide-tag]");
                 this.handleLayout = () => this.applyLayout();
             }
 
@@ -1543,6 +1649,7 @@
                 this.render();
                 this.bindPointerMotion();
                 this.bindLayout();
+                this.setGuide(this.activeCardId || "default");
                 this.applyLayout();
             }
 
@@ -1550,6 +1657,13 @@
                 this.resetPointerMotion();
                 this.unbindLayout();
                 this.clearSelection();
+            }
+
+            setGuide(cardId = "default") {
+                const copy = OpaHifiVideosView.guideCopy[cardId] || OpaHifiVideosView.guideCopy.default;
+                if (this.guide) this.guide.dataset.ophfVideoGuide = cardId;
+                if (this.guideText) this.guideText.textContent = copy.text;
+                if (this.guideTag) this.guideTag.textContent = copy.tag;
             }
 
             createCard(card) {
@@ -1591,19 +1705,8 @@
                 title.className = "ophf-videoTitle";
                 title.textContent = card.title;
 
-                const activeBar = document.createElement("div");
-                activeBar.className = "ophf-videoActiveBar";
-
-                const activeMeta = document.createElement("div");
-                activeMeta.className = "ophf-videoActiveMeta";
-
-                const activeEyebrow = document.createElement("span");
-                activeEyebrow.className = "ophf-videoActiveEyebrow";
-                activeEyebrow.textContent = "Now Viewing";
-
-                const activeTitle = document.createElement("span");
-                activeTitle.className = "ophf-videoActiveTitle";
-                activeTitle.textContent = card.title;
+                const activeStack = document.createElement("div");
+                activeStack.className = "ophf-videoActiveStack";
 
                 const player = document.createElement("div");
                 player.className = "ophf-videoPlayer";
@@ -1620,7 +1723,7 @@
                 const close = document.createElement("button");
                 close.className = "ophf-videoCloseBtn";
                 close.type = "button";
-                close.textContent = "×";
+                close.textContent = "X";
                 close.setAttribute("aria-label", `Close ${card.title}`);
                 close.addEventListener("click", (event) => {
                     event.stopPropagation();
@@ -1633,18 +1736,15 @@
                 const play = document.createElement("span");
                 play.className = "ophf-videoPlayIcon";
 
-                activeMeta.appendChild(activeEyebrow);
-                activeMeta.appendChild(activeTitle);
-                activeBar.appendChild(activeMeta);
-                activeBar.appendChild(close);
+                activeStack.appendChild(close);
+                activeStack.appendChild(player);
                 playButton.appendChild(play);
                 scene.appendChild(title);
                 scene.appendChild(bg);
                 scene.appendChild(fg);
                 scene.appendChild(playButton);
                 cardNode.appendChild(scene);
-                cardNode.appendChild(activeBar);
-                cardNode.appendChild(player);
+                cardNode.appendChild(activeStack);
                 return cardNode;
             }
 
@@ -1654,6 +1754,7 @@
 
                 this.activeCardId = card.id;
                 this.root.classList.add("ophf-videoGrid--active");
+                this.setGuide(card.id);
                 this.applyLayout();
 
                 this.cardsById.forEach((node, id) => {
@@ -1668,6 +1769,7 @@
             clearSelection() {
                 this.activeCardId = null;
                 if (this.root) this.root.classList.remove("ophf-videoGrid--active");
+                this.setGuide("default");
                 this.applyLayout();
                 this.cardsById.forEach((node) => {
                     node.setAttribute("aria-pressed", "false");
@@ -1854,7 +1956,7 @@
             static basePath = "/img/music/base/";
             static heroCover = "/img/opa/cover.png";
             static latestSongId = "wellwolf";
-    
+
             static songs = [
                 {
                     id: "fullmindness",
@@ -2106,7 +2208,7 @@
                     ]
                 }
             ];
-    
+
             static playlistOrder = [
                 "opaparty",
                 "wellwolf",
@@ -2118,7 +2220,7 @@
                 "oldlove",
                 "brunch"
             ];
-    
+
             static platforms = ["Spotify", "Apple", "YouTube", "YouTube Music", "Amazon"];
             static platformIcons = {
                 Spotify: "img/ico/spotify-white.svg",
@@ -2127,7 +2229,7 @@
                 "YouTube Music": "img/ico/youtubemusic-white.svg",
                 Amazon: "img/ico/amazon-white.svg"
             };
-    
+
 
             constructor(options = {}) {
                 this.basePath = options.basePath || this.constructor.basePath;
@@ -2186,516 +2288,516 @@
             }
 
             coverUrl(song) {
-            return `${this.basePath}${song.file}`;
-        }
+                return `${this.basePath}${song.file}`;
+            }
 
             versionImageUrl(song, version) {
-            return version.image || this.coverUrl(song);
-        }
+                return version.image || this.coverUrl(song);
+            }
 
             async loadLyrics(version) {
-            const fallback = version.lyrics || "";
-            if (!version.lyricsPath) return fallback;
-            if (this.lyricsCache.has(version.lyricsPath)) return this.lyricsCache.get(version.lyricsPath);
+                const fallback = version.lyrics || "";
+                if (!version.lyricsPath) return fallback;
+                if (this.lyricsCache.has(version.lyricsPath)) return this.lyricsCache.get(version.lyricsPath);
 
-            const response = await fetch(version.lyricsPath, { cache: "force-cache" });
-            if (!response.ok) throw new Error(`Lyrics request failed: ${response.status}`);
-            const text = await response.text();
-            this.lyricsCache.set(version.lyricsPath, text);
-            return text;
-        }
+                const response = await fetch(version.lyricsPath, { cache: "force-cache" });
+                if (!response.ok) throw new Error(`Lyrics request failed: ${response.status}`);
+                const text = await response.text();
+                this.lyricsCache.set(version.lyricsPath, text);
+                return text;
+            }
 
             getSong(id) {
-            return this.songs.find((song) => song.id === id) || this.songs[0];
-        }
+                return this.songs.find((song) => song.id === id) || this.songs[0];
+            }
 
             getLatestSong() {
-            return this.getSong(this.latestSongId);
-        }
+                return this.getSong(this.latestSongId);
+            }
 
             setImageFallback(img, song) {
-            img.onerror = () => {
-                img.onerror = null;
-                img.style.display = "none";
-                if (img.parentElement && !img.parentElement.querySelector(".ophf-songNodeFallback")) {
-                    const fallback = document.createElement("span");
-                    fallback.className = "ophf-songNodeFallback";
-                    img.parentElement.appendChild(fallback);
-                }
-            };
-        }
+                img.onerror = () => {
+                    img.onerror = null;
+                    img.style.display = "none";
+                    if (img.parentElement && !img.parentElement.querySelector(".ophf-songNodeFallback")) {
+                        const fallback = document.createElement("span");
+                        fallback.className = "ophf-songNodeFallback";
+                        img.parentElement.appendChild(fallback);
+                    }
+                };
+            }
 
             getSongLabelLines(song) {
-            return song.labelLines && song.labelLines.length ? song.labelLines : [song.title];
-        }
+                return song.labelLines && song.labelLines.length ? song.labelLines : [song.title];
+            }
 
             setCoverTitle(lines) {
-            this.els.coverName.innerHTML = "";
-            lines.forEach((line) => {
-                const lineEl = document.createElement("span");
-                lineEl.className = "ophf-coverNameLine";
-                lineEl.textContent = line;
-                this.els.coverName.appendChild(lineEl);
-            });
-        }
+                this.els.coverName.innerHTML = "";
+                lines.forEach((line) => {
+                    const lineEl = document.createElement("span");
+                    lineEl.className = "ophf-coverNameLine";
+                    lineEl.textContent = line;
+                    this.els.coverName.appendChild(lineEl);
+                });
+            }
 
             createIconImg(src) {
-            const icon = document.createElement("img");
-            icon.className = "ophf-listenIcon";
-            icon.src = src;
-            icon.alt = "";
-            return icon;
-        }
+                const icon = document.createElement("img");
+                icon.className = "ophf-listenIcon";
+                icon.src = src;
+                icon.alt = "";
+                return icon;
+            }
 
             createShareIcon() {
-            const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            icon.setAttribute("class", "ophf-listenIcon");
-            icon.setAttribute("viewBox", "0 0 24 24");
-            icon.setAttribute("aria-hidden", "true");
+                const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                icon.setAttribute("class", "ophf-listenIcon");
+                icon.setAttribute("viewBox", "0 0 24 24");
+                icon.setAttribute("aria-hidden", "true");
 
-            const lineA = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            lineA.setAttribute("d", "M8.7 10.7 15.3 7.2");
-            const lineB = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            lineB.setAttribute("d", "M8.7 13.3 15.3 16.8");
-            [lineA, lineB].forEach((line) => {
-                line.setAttribute("fill", "none");
-                line.setAttribute("stroke", "currentColor");
-                line.setAttribute("stroke-width", "2.3");
-                line.setAttribute("stroke-linecap", "round");
-                icon.appendChild(line);
-            });
+                const lineA = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                lineA.setAttribute("d", "M8.7 10.7 15.3 7.2");
+                const lineB = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                lineB.setAttribute("d", "M8.7 13.3 15.3 16.8");
+                [lineA, lineB].forEach((line) => {
+                    line.setAttribute("fill", "none");
+                    line.setAttribute("stroke", "currentColor");
+                    line.setAttribute("stroke-width", "2.3");
+                    line.setAttribute("stroke-linecap", "round");
+                    icon.appendChild(line);
+                });
 
-            [
-                [6.5, 12],
-                [17.5, 6],
-                [17.5, 18]
-            ].forEach(([cx, cy]) => {
-                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                dot.setAttribute("cx", cx);
-                dot.setAttribute("cy", cy);
-                dot.setAttribute("r", "2.8");
-                dot.setAttribute("fill", "currentColor");
-                icon.appendChild(dot);
-            });
+                [
+                    [6.5, 12],
+                    [17.5, 6],
+                    [17.5, 18]
+                ].forEach(([cx, cy]) => {
+                    const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    dot.setAttribute("cx", cx);
+                    dot.setAttribute("cy", cy);
+                    dot.setAttribute("r", "2.8");
+                    dot.setAttribute("fill", "currentColor");
+                    icon.appendChild(dot);
+                });
 
-            return icon;
-        }
+                return icon;
+            }
 
             versionMixBackground(version) {
-            const colors = Array.isArray(version.mixColors) ? version.mixColors.filter(Boolean) : [];
-            if (!colors.length) return "#ffffff";
-            if (colors.length === 1) return colors[0];
-            return `linear-gradient(135deg, ${colors.join(", ")})`;
-        }
+                const colors = Array.isArray(version.mixColors) ? version.mixColors.filter(Boolean) : [];
+                if (!colors.length) return "#ffffff";
+                if (colors.length === 1) return colors[0];
+                return `linear-gradient(135deg, ${colors.join(", ")})`;
+            }
 
             createVersionJump(direction, targetVersion, targetIndex) {
-            const btn = document.createElement("button");
-            btn.className = "ophf-versionJump";
-            btn.type = "button";
-            btn.setAttribute("aria-label", `${direction < 0 ? "Previous" : "Next"} version`);
-            btn.addEventListener("click", () => this.openSong(this.state.songId, targetIndex));
+                const btn = document.createElement("button");
+                btn.className = "ophf-versionJump";
+                btn.type = "button";
+                btn.setAttribute("aria-label", `${direction < 0 ? "Previous" : "Next"} version`);
+                btn.addEventListener("click", () => this.openSong(this.state.songId, targetIndex));
 
-            const glyph = document.createElement("span");
-            glyph.className = "ophf-versionJumpGlyph";
-            glyph.textContent = direction < 0 ? "<" : ">";
+                const glyph = document.createElement("span");
+                glyph.className = "ophf-versionJumpGlyph";
+                glyph.textContent = direction < 0 ? "<" : ">";
 
-            const swatch = document.createElement("span");
-            swatch.className = "ophf-versionJumpSwatch";
-            swatch.style.background = this.versionMixBackground(targetVersion);
-            swatch.appendChild(glyph);
+                const swatch = document.createElement("span");
+                swatch.className = "ophf-versionJumpSwatch";
+                swatch.style.background = this.versionMixBackground(targetVersion);
+                swatch.appendChild(glyph);
 
-            btn.appendChild(swatch);
-            return btn;
-        }
+                btn.appendChild(swatch);
+                return btn;
+            }
 
             renderMap() {
-            this.els.mapGrid.innerHTML = "";
+                this.els.mapGrid.innerHTML = "";
 
-            this.songs
-                .slice()
-                .sort((a, b) => a.journey - b.journey)
-                .forEach((song) => {
-                    const cell = document.createElement("div");
-                    cell.className = "ophf-mapCell";
-                    cell.dataset.ophfSongId = song.id;
-                    cell.style.gridRow = song.grid[0];
-                    cell.style.gridColumn = song.grid[1];
+                this.songs
+                    .slice()
+                    .sort((a, b) => a.journey - b.journey)
+                    .forEach((song) => {
+                        const cell = document.createElement("div");
+                        cell.className = "ophf-mapCell";
+                        cell.dataset.ophfSongId = song.id;
+                        cell.style.gridRow = song.grid[0];
+                        cell.style.gridColumn = song.grid[1];
 
-                    const node = document.createElement("button");
-                    node.className = "ophf-songNode";
-                    node.type = "button";
-                    node.setAttribute("aria-label", `Open ${song.title}`);
-                    node.addEventListener("click", () => this.openSong(song.id));
+                        const node = document.createElement("button");
+                        node.className = "ophf-songNode";
+                        node.type = "button";
+                        node.setAttribute("aria-label", `Open ${song.title}`);
+                        node.addEventListener("click", () => this.openSong(song.id));
 
-                    const img = document.createElement("img");
-                    img.className = "ophf-songNodeImg";
-                    img.src = this.coverUrl(song);
-                    img.alt = "";
-                    this.setImageFallback(img, song);
+                        const img = document.createElement("img");
+                        img.className = "ophf-songNodeImg";
+                        img.src = this.coverUrl(song);
+                        img.alt = "";
+                        this.setImageFallback(img, song);
 
-                    const title = document.createElement("span");
-                    title.className = "ophf-songNodeTitle";
-                    (song.labelLines || [song.title]).forEach((line) => {
-                        const lineEl = document.createElement("span");
-                        lineEl.className = "ophf-songNodeTitleLine";
-                        lineEl.textContent = line;
-                        title.appendChild(lineEl);
+                        const title = document.createElement("span");
+                        title.className = "ophf-songNodeTitle";
+                        (song.labelLines || [song.title]).forEach((line) => {
+                            const lineEl = document.createElement("span");
+                            lineEl.className = "ophf-songNodeTitleLine";
+                            lineEl.textContent = line;
+                            title.appendChild(lineEl);
+                        });
+
+                        const crop = document.createElement("span");
+                        crop.className = "ophf-nodeArtCrop";
+                        crop.appendChild(img);
+
+                        node.appendChild(title);
+                        node.appendChild(crop);
+                        const unit = document.createElement("div");
+                        unit.className = "ophf-songUnit";
+
+                        unit.appendChild(node);
+                        cell.appendChild(unit);
+                        this.els.mapGrid.appendChild(cell);
                     });
 
-                    const crop = document.createElement("span");
-                    crop.className = "ophf-nodeArtCrop";
-                    crop.appendChild(img);
-
-                    node.appendChild(title);
-                    node.appendChild(crop);
-                    const unit = document.createElement("div");
-                    unit.className = "ophf-songUnit";
-
-                    unit.appendChild(node);
-                    cell.appendChild(unit);
-                    this.els.mapGrid.appendChild(cell);
-                });
-
-            this.scheduleSpiralUpdate();
-        }
+                this.scheduleSpiralUpdate();
+            }
 
             scheduleSpiralUpdate() {
-            if (this.spiralFrame) return;
-            this.spiralFrame = requestAnimationFrame(() => {
-                this.spiralFrame = 0;
-                this.updateSpiral();
-            });
-        }
+                if (this.spiralFrame) return;
+                this.spiralFrame = requestAnimationFrame(() => {
+                    this.spiralFrame = 0;
+                    this.updateSpiral();
+                });
+            }
 
             updateSpiral() {
-            if (!this.els.songField || !this.els.spiralSvg || !this.els.spiralLine || !this.els.spiralGlow) return;
+                if (!this.els.songField || !this.els.spiralSvg || !this.els.spiralLine || !this.els.spiralGlow) return;
 
-            const fieldRect = this.els.songField.getBoundingClientRect();
-            if (!fieldRect.width || !fieldRect.height) return;
+                const fieldRect = this.els.songField.getBoundingClientRect();
+                if (!fieldRect.width || !fieldRect.height) return;
 
-            const ordered = this.songs.slice().sort((a, b) => a.journey - b.journey);
-            const points = ordered
-                .map((song) => {
-                    const cell = this.els.mapGrid.querySelector(`[data-ophf-song-id="${song.id}"]`);
-                    const node = cell ? cell.querySelector(".ophf-songNode") : null;
-                    if (!node) return null;
+                const ordered = this.songs.slice().sort((a, b) => a.journey - b.journey);
+                const points = ordered
+                    .map((song) => {
+                        const cell = this.els.mapGrid.querySelector(`[data-ophf-song-id="${song.id}"]`);
+                        const node = cell ? cell.querySelector(".ophf-songNode") : null;
+                        if (!node) return null;
 
-                    const nodeRect = node.getBoundingClientRect();
-                    return {
-                        x: nodeRect.left - fieldRect.left + nodeRect.width / 2,
-                        y: nodeRect.top - fieldRect.top + nodeRect.height / 2
-                    };
-                })
-                .filter(Boolean);
+                        const nodeRect = node.getBoundingClientRect();
+                        return {
+                            x: nodeRect.left - fieldRect.left + nodeRect.width / 2,
+                            y: nodeRect.top - fieldRect.top + nodeRect.height / 2
+                        };
+                    })
+                    .filter(Boolean);
 
-            if (points.length < 2) return;
+                if (points.length < 2) return;
 
-            const d = points
-                .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
-                .join(" ");
-            const width = fieldRect.width.toFixed(2);
-            const height = fieldRect.height.toFixed(2);
-            const first = points[0];
-            const last = points[points.length - 1];
+                const d = points
+                    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)
+                    .join(" ");
+                const width = fieldRect.width.toFixed(2);
+                const height = fieldRect.height.toFixed(2);
+                const first = points[0];
+                const last = points[points.length - 1];
 
-            this.els.spiralSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-            this.els.spiralGlow.setAttribute("d", d);
-            this.els.spiralLine.setAttribute("d", d);
+                this.els.spiralSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+                this.els.spiralGlow.setAttribute("d", d);
+                this.els.spiralLine.setAttribute("d", d);
 
-            if (this.els.spiralGradient) {
-                this.els.spiralGradient.setAttribute("x1", first.x.toFixed(2));
-                this.els.spiralGradient.setAttribute("y1", first.y.toFixed(2));
-                this.els.spiralGradient.setAttribute("x2", last.x.toFixed(2));
-                this.els.spiralGradient.setAttribute("y2", last.y.toFixed(2));
+                if (this.els.spiralGradient) {
+                    this.els.spiralGradient.setAttribute("x1", first.x.toFixed(2));
+                    this.els.spiralGradient.setAttribute("y1", first.y.toFixed(2));
+                    this.els.spiralGradient.setAttribute("x2", last.x.toFixed(2));
+                    this.els.spiralGradient.setAttribute("y2", last.y.toFixed(2));
+                }
             }
-        }
 
             renderRail() {
-            this.els.miniRail.innerHTML = "";
+                this.els.miniRail.innerHTML = "";
 
-            this.songs
-                .slice()
-                .sort((a, b) => a.journey - b.journey)
-                .forEach((song) => {
-                    const btn = document.createElement("button");
-                    btn.className = "ophf-railBtn";
-                    btn.type = "button";
-                    btn.setAttribute("aria-label", song.title);
-                    btn.setAttribute("aria-current", song.id === this.state.songId ? "true" : "false");
-                    btn.addEventListener("click", () => this.openSong(song.id));
+                this.songs
+                    .slice()
+                    .sort((a, b) => a.journey - b.journey)
+                    .forEach((song) => {
+                        const btn = document.createElement("button");
+                        btn.className = "ophf-railBtn";
+                        btn.type = "button";
+                        btn.setAttribute("aria-label", song.title);
+                        btn.setAttribute("aria-current", song.id === this.state.songId ? "true" : "false");
+                        btn.addEventListener("click", () => this.openSong(song.id));
 
-                    const img = document.createElement("img");
-                    img.className = "ophf-railImg";
-                    img.src = this.coverUrl(song);
-                    img.alt = "";
-                    this.setImageFallback(img, song);
+                        const img = document.createElement("img");
+                        img.className = "ophf-railImg";
+                        img.src = this.coverUrl(song);
+                        img.alt = "";
+                        this.setImageFallback(img, song);
 
-                    const crop = document.createElement("span");
-                    crop.className = "ophf-nodeArtCrop";
-                    crop.appendChild(img);
+                        const crop = document.createElement("span");
+                        crop.className = "ophf-nodeArtCrop";
+                        crop.appendChild(img);
 
-                    btn.appendChild(crop);
-                    this.els.miniRail.appendChild(btn);
-                });
-        }
+                        btn.appendChild(crop);
+                        this.els.miniRail.appendChild(btn);
+                    });
+            }
 
             renderLinks(version) {
-            this.els.links.innerHTML = "";
+                this.els.links.innerHTML = "";
 
-            const strip = document.createElement("div");
-            strip.className = "ophf-listenStrip";
+                const strip = document.createElement("div");
+                strip.className = "ophf-listenStrip";
 
-            this.platforms.forEach((name) => {
-                const a = document.createElement("a");
-                a.className = "ophf-listenBtn";
-                a.href = version.links[name] || "#";
-                a.setAttribute("aria-label", `${name} link`);
-                a.appendChild(this.createIconImg(this.platformIcons[name]));
-                strip.appendChild(a);
-            });
+                this.platforms.forEach((name) => {
+                    const a = document.createElement("a");
+                    a.className = "ophf-listenBtn";
+                    a.href = version.links[name] || "#";
+                    a.setAttribute("aria-label", `${name} link`);
+                    a.appendChild(this.createIconImg(this.platformIcons[name]));
+                    strip.appendChild(a);
+                });
 
-            this.els.links.appendChild(strip);
-        }
+                this.els.links.appendChild(strip);
+            }
 
             async renderDetail() {
-            const song = this.getSong(this.state.songId);
-            const version = song.versions[this.state.versionIndex] || song.versions[0];
-            const requestId = ++this.lyricsRequestId;
+                const song = this.getSong(this.state.songId);
+                const version = song.versions[this.state.versionIndex] || song.versions[0];
+                const requestId = ++this.lyricsRequestId;
 
-            this.els.trackCover.src = this.versionImageUrl(song, version);
-            this.els.trackCover.alt = `${song.title} cover`;
-            this.els.trackTitle.textContent = "";
-            this.els.versionTitle.textContent = version.title;
-            this.els.lyrics.textContent = "Loading lyrics...";
+                this.els.trackCover.src = this.versionImageUrl(song, version);
+                this.els.trackCover.alt = `${song.title} cover`;
+                this.els.trackTitle.textContent = "";
+                this.els.versionTitle.textContent = version.title;
+                this.els.lyrics.textContent = "Loading lyrics...";
 
-            if (song.versions.length <= 1) {
-                this.els.versionMeta.textContent = "Opa & Only version";
-            } else {
-                this.els.versionMeta.textContent = `Version ${this.state.versionIndex + 1}/${song.versions.length}`;
+                if (song.versions.length <= 1) {
+                    this.els.versionMeta.textContent = "Opa & Only version";
+                } else {
+                    this.els.versionMeta.textContent = `Version ${this.state.versionIndex + 1}/${song.versions.length}`;
+                }
+
+                this.els.versionNav.innerHTML = "";
+                if (song.versions.length > 1) {
+                    if (this.state.versionIndex > 0) {
+                        this.els.versionNav.appendChild(
+                            this.createVersionJump(-1, song.versions[this.state.versionIndex - 1], this.state.versionIndex - 1)
+                        );
+                    }
+                    if (this.state.versionIndex < song.versions.length - 1) {
+                        this.els.versionNav.appendChild(
+                            this.createVersionJump(1, song.versions[this.state.versionIndex + 1], this.state.versionIndex + 1)
+                        );
+                    }
+                }
+
+                this.els.shareSlot.innerHTML = "";
+                const share = document.createElement("button");
+                share.className = "ophf-shareBtn";
+                share.type = "button";
+                share.setAttribute("aria-label", "Share");
+                share.appendChild(this.createShareIcon());
+                share.addEventListener("click", () => this.shareCurrent());
+                this.els.shareSlot.appendChild(share);
+
+                this.renderLinks(version);
+                this.renderRail();
+                this.renderCover(song);
+
+                try {
+                    const lyrics = await this.loadLyrics(version);
+                    if (requestId === this.lyricsRequestId) {
+                        this.els.lyrics.textContent = lyrics || version.lyrics || "";
+                    }
+                } catch {
+                    if (requestId === this.lyricsRequestId) {
+                        this.els.lyrics.textContent = version.lyrics || "";
+                    }
+                }
             }
-
-            this.els.versionNav.innerHTML = "";
-            if (song.versions.length > 1) {
-                if (this.state.versionIndex > 0) {
-                    this.els.versionNav.appendChild(
-                        this.createVersionJump(-1, song.versions[this.state.versionIndex - 1], this.state.versionIndex - 1)
-                    );
-                }
-                if (this.state.versionIndex < song.versions.length - 1) {
-                    this.els.versionNav.appendChild(
-                        this.createVersionJump(1, song.versions[this.state.versionIndex + 1], this.state.versionIndex + 1)
-                    );
-                }
-            }
-
-            this.els.shareSlot.innerHTML = "";
-            const share = document.createElement("button");
-            share.className = "ophf-shareBtn";
-            share.type = "button";
-            share.setAttribute("aria-label", "Share");
-            share.appendChild(this.createShareIcon());
-            share.addEventListener("click", () => this.shareCurrent());
-            this.els.shareSlot.appendChild(share);
-
-            this.renderLinks(version);
-            this.renderRail();
-            this.renderCover(song);
-
-            try {
-                const lyrics = await this.loadLyrics(version);
-                if (requestId === this.lyricsRequestId) {
-                    this.els.lyrics.textContent = lyrics || version.lyrics || "";
-                }
-            } catch {
-                if (requestId === this.lyricsRequestId) {
-                    this.els.lyrics.textContent = version.lyrics || "";
-                }
-            }
-        }
 
             renderCover(song = null) {
-            if (this.state.mode === "gallery") {
-                this.els.coverImg.src = this.heroCover;
-                this.els.coverImg.style.display = "block";
-                this.els.coverKicker.textContent = "Gallery Map";
-                this.setCoverTitle(["OPAHiFi Journey"]);
-                if (this.els.coverPill) this.els.coverPill.textContent = "3x3 Map";
-                return;
-            }
+                if (this.state.mode === "gallery") {
+                    this.els.coverImg.src = this.heroCover;
+                    this.els.coverImg.style.display = "block";
+                    this.els.coverKicker.textContent = "Gallery Map";
+                    this.setCoverTitle(["OPAHiFi Journey"]);
+                    if (this.els.coverPill) this.els.coverPill.textContent = "3x3 Map";
+                    return;
+                }
 
-            if (this.state.mode === "videos") {
-                this.els.coverImg.src = this.heroCover;
-                this.els.coverImg.style.display = "block";
-                this.els.coverKicker.textContent = "Video Vault";
-                this.setCoverTitle(["Three Opa", "Channels"]);
-                if (this.els.coverPill) this.els.coverPill.textContent = "Playlists";
-                return;
-            }
+                if (this.state.mode === "videos") {
+                    this.els.coverImg.src = this.heroCover;
+                    this.els.coverImg.style.display = "block";
+                    this.els.coverKicker.textContent = "Video Vault";
+                    this.setCoverTitle(["ClipOpa"]);
+                    if (this.els.coverPill) this.els.coverPill.textContent = "Playlists";
+                    return;
+                }
 
-            const activeSong = song || this.getSong(this.state.songId);
-            this.els.coverImg.src = this.coverUrl(activeSong);
-            this.els.coverImg.style.display = "block";
-            this.els.coverKicker.textContent = "Now Viewing";
-            this.setCoverTitle(this.getSongLabelLines(activeSong));
-            if (this.els.coverPill) this.els.coverPill.textContent = `Song ${activeSong.journey}`;
-        }
+                const activeSong = song || this.getSong(this.state.songId);
+                this.els.coverImg.src = this.coverUrl(activeSong);
+                this.els.coverImg.style.display = "block";
+                this.els.coverKicker.textContent = "Now Viewing";
+                this.setCoverTitle(this.getSongLabelLines(activeSong));
+                if (this.els.coverPill) this.els.coverPill.textContent = `Song ${activeSong.journey}`;
+            }
 
             setBottomNav() {
-            const isGallery = this.state.mode === "gallery";
-            const isVideos = this.state.mode === "videos";
-            const isDetail = this.state.mode === "detail";
-            this.els.navA.textContent = isDetail ? "Prev" : "Videos";
-            this.els.navB.textContent = isDetail ? "Home" : "Gallery";
-            this.els.navC.textContent = isDetail ? "Next" : "About";
-            this.els.navA.classList.toggle("ophf-bottomBtnActive", isVideos);
-            this.els.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
-            this.els.navC.classList.remove("ophf-bottomBtnActive");
-            if (isVideos) {
-                this.els.navA.setAttribute("aria-current", "page");
-            } else {
-                this.els.navA.removeAttribute("aria-current");
-            }
-            if (isGallery) {
-                this.els.navB.setAttribute("aria-current", "page");
-            } else {
-                this.els.navB.removeAttribute("aria-current");
-            }
-            this.els.navC.removeAttribute("aria-current");
+                const isGallery = this.state.mode === "gallery";
+                const isVideos = this.state.mode === "videos";
+                const isDetail = this.state.mode === "detail";
+                this.els.navA.textContent = isDetail ? "Prev" : "Videos";
+                this.els.navB.textContent = isDetail ? "Home" : "Gallery";
+                this.els.navC.textContent = isDetail ? "Next" : "About";
+                this.els.navA.classList.toggle("ophf-bottomBtnActive", isVideos);
+                this.els.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
+                this.els.navC.classList.remove("ophf-bottomBtnActive");
+                if (isVideos) {
+                    this.els.navA.setAttribute("aria-current", "page");
+                } else {
+                    this.els.navA.removeAttribute("aria-current");
+                }
+                if (isGallery) {
+                    this.els.navB.setAttribute("aria-current", "page");
+                } else {
+                    this.els.navB.removeAttribute("aria-current");
+                }
+                this.els.navC.removeAttribute("aria-current");
             }
 
             getActiveScreenRoute() {
-            return this.screenRoutes.find((route) => route.isActive(this.state)) || this.screenRoutes[0];
-        }
+                return this.screenRoutes.find((route) => route.isActive(this.state)) || this.screenRoutes[0];
+            }
 
             syncRoute(replace = false) {
-            const activeRoute = this.getActiveScreenRoute();
-            const nextHash = activeRoute.buildHash(this.state, this);
-            if (location.hash === nextHash) return;
-            if (replace) {
-                history.replaceState(null, "", nextHash);
-                return;
+                const activeRoute = this.getActiveScreenRoute();
+                const nextHash = activeRoute.buildHash(this.state, this);
+                if (location.hash === nextHash) return;
+                if (replace) {
+                    history.replaceState(null, "", nextHash);
+                    return;
+                }
+                this.ignoreNextHashChange = true;
+                location.hash = nextHash;
             }
-            this.ignoreNextHashChange = true;
-            location.hash = nextHash;
-        }
 
             applyRouteFromHash() {
-            const route = location.hash.replace(/^#/, "").trim();
-            for (const screenRoute of this.screenRoutes) {
-                if (screenRoute.matches(route, this)) {
-                    screenRoute.apply(this, route);
-                    return;
+                const route = location.hash.replace(/^#/, "").trim();
+                for (const screenRoute of this.screenRoutes) {
+                    if (screenRoute.matches(route, this)) {
+                        screenRoute.apply(this, route);
+                        return;
+                    }
                 }
+                this.screenRoutes[0].apply(this, route);
             }
-            this.screenRoutes[0].apply(this, route);
-        }
 
             handleHashChange() {
-            if (this.ignoreNextHashChange) {
-                this.ignoreNextHashChange = false;
-                return;
-            }
-            this.applyRouteFromHash();
-        }
-
-            openGallery(options = {}) {
-            const { skipRoute = false } = options;
-            this.videosView.deactivate();
-            this.state.mode = "gallery";
-            this.els.app.dataset.ophfMode = "gallery";
-            this.renderCover();
-            this.setBottomNav();
-            this.scheduleSpiralUpdate();
-            if (!skipRoute) this.syncRoute();
-        }
-
-            openVideos(options = {}) {
-            const { skipRoute = false } = options;
-            this.state.mode = "videos";
-            this.els.app.dataset.ophfMode = "videos";
-            this.videosView.activate();
-            this.renderCover();
-            this.setBottomNav();
-            if (!skipRoute) this.syncRoute();
-        }
-
-            openSong(songId, versionIndex = 0, options = {}) {
-            const { skipRoute = false } = options;
-            this.videosView.deactivate();
-            this.state.mode = "detail";
-            this.state.songId = songId;
-            this.state.versionIndex = versionIndex;
-            this.els.app.dataset.ophfMode = "detail";
-            this.renderDetail();
-            this.setBottomNav();
-            if (!skipRoute) this.syncRoute();
-        }
-
-            moveSong(direction) {
-            const ordered = this.songs.slice().sort((a, b) => a.journey - b.journey);
-            const currentIndex = ordered.findIndex((song) => song.id === this.state.songId);
-            const nextIndex = (currentIndex + direction + ordered.length) % ordered.length;
-            this.openSong(ordered[nextIndex].id);
-        }
-
-            shareCurrent() {
-            const song = this.getSong(this.state.songId);
-            const shareData = {
-                title: `OPAHiFi — ${song.title}`,
-                text: `Listen to ${song.title} on OPAHiFi`,
-                url: `${location.origin}${location.pathname}#${song.id}`
-            };
-
-            if (navigator.share) {
-                navigator.share(shareData).catch(() => { });
-            } else if (navigator.clipboard) {
-                navigator.clipboard.writeText(shareData.url);
-            }
-        }
-
-            bindEvents() {
-            this.els.latest.addEventListener("click", () => this.openSong(this.getLatestSong().id));
-            this.els.playAll.addEventListener("click", () => this.openSong(this.playlistOrder[0]));
-
-            this.els.navA.addEventListener("click", () => {
-                if (this.state.mode === "detail") {
-                    this.moveSong(-1);
+                if (this.ignoreNextHashChange) {
+                    this.ignoreNextHashChange = false;
                     return;
                 }
-                if (this.state.mode === "gallery") this.openVideos();
-            });
-
-            this.els.navB.addEventListener("click", () => {
-                if (this.state.mode === "detail" || this.state.mode === "videos") this.openGallery();
-            });
-
-            this.els.navC.addEventListener("click", () => {
-                if (this.state.mode === "detail") this.moveSong(1);
-            });
-
-            window.addEventListener("resize", this.scheduleSpiralUpdate);
-            window.addEventListener("hashchange", this.handleHashChange);
-
-            if ("ResizeObserver" in window && this.els.songField) {
-                this.mapResizeObserver = new ResizeObserver(this.scheduleSpiralUpdate);
-                this.mapResizeObserver.observe(this.els.songField);
+                this.applyRouteFromHash();
             }
-        }
+
+            openGallery(options = {}) {
+                const { skipRoute = false } = options;
+                this.videosView.deactivate();
+                this.state.mode = "gallery";
+                this.els.app.dataset.ophfMode = "gallery";
+                this.renderCover();
+                this.setBottomNav();
+                this.scheduleSpiralUpdate();
+                if (!skipRoute) this.syncRoute();
+            }
+
+            openVideos(options = {}) {
+                const { skipRoute = false } = options;
+                this.state.mode = "videos";
+                this.els.app.dataset.ophfMode = "videos";
+                this.videosView.activate();
+                this.renderCover();
+                this.setBottomNav();
+                if (!skipRoute) this.syncRoute();
+            }
+
+            openSong(songId, versionIndex = 0, options = {}) {
+                const { skipRoute = false } = options;
+                this.videosView.deactivate();
+                this.state.mode = "detail";
+                this.state.songId = songId;
+                this.state.versionIndex = versionIndex;
+                this.els.app.dataset.ophfMode = "detail";
+                this.renderDetail();
+                this.setBottomNav();
+                if (!skipRoute) this.syncRoute();
+            }
+
+            moveSong(direction) {
+                const ordered = this.songs.slice().sort((a, b) => a.journey - b.journey);
+                const currentIndex = ordered.findIndex((song) => song.id === this.state.songId);
+                const nextIndex = (currentIndex + direction + ordered.length) % ordered.length;
+                this.openSong(ordered[nextIndex].id);
+            }
+
+            shareCurrent() {
+                const song = this.getSong(this.state.songId);
+                const shareData = {
+                    title: `OPAHiFi — ${song.title}`,
+                    text: `Listen to ${song.title} on OPAHiFi`,
+                    url: `${location.origin}${location.pathname}#${song.id}`
+                };
+
+                if (navigator.share) {
+                    navigator.share(shareData).catch(() => { });
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareData.url);
+                }
+            }
+
+            bindEvents() {
+                this.els.latest.addEventListener("click", () => this.openSong(this.getLatestSong().id));
+                this.els.playAll.addEventListener("click", () => this.openSong(this.playlistOrder[0]));
+
+                this.els.navA.addEventListener("click", () => {
+                    if (this.state.mode === "detail") {
+                        this.moveSong(-1);
+                        return;
+                    }
+                    if (this.state.mode === "gallery") this.openVideos();
+                });
+
+                this.els.navB.addEventListener("click", () => {
+                    if (this.state.mode === "detail" || this.state.mode === "videos") this.openGallery();
+                });
+
+                this.els.navC.addEventListener("click", () => {
+                    if (this.state.mode === "detail") this.moveSong(1);
+                });
+
+                window.addEventListener("resize", this.scheduleSpiralUpdate);
+                window.addEventListener("hashchange", this.handleHashChange);
+
+                if ("ResizeObserver" in window && this.els.songField) {
+                    this.mapResizeObserver = new ResizeObserver(this.scheduleSpiralUpdate);
+                    this.mapResizeObserver.observe(this.els.songField);
+                }
+            }
 
             init() {
-            this.renderMap();
-            this.videosView.render();
-            this.renderRail();
-            this.bindEvents();
-            this.setBottomNav();
-            this.renderCover();
+                this.renderMap();
+                this.videosView.render();
+                this.renderRail();
+                this.bindEvents();
+                this.setBottomNav();
+                this.renderCover();
 
-            if (location.hash) {
-                this.applyRouteFromHash();
-            } else {
-                this.syncRoute(true);
+                if (location.hash) {
+                    this.applyRouteFromHash();
+                } else {
+                    this.syncRoute(true);
+                }
             }
-        }
 
 
         }
