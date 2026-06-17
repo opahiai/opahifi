@@ -650,69 +650,68 @@
         }
 
         .ophf-videoGrid {
-            display: flex;
-            width: 100%;
+            --ophf-video-gap: 14px;
+            --ophf-video-shell-w: 920px;
+            --ophf-video-shell-h: 460px;
+            width: min(100%, 1080px);
             height: 100%;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(14px, 2vw, 22px);
+            display: grid;
+            place-items: center;
         }
 
-        .ophf-videoGrid--active {
-            width: 100%;
-            justify-content: flex-start;
-            align-items: flex-start;
-            gap: clamp(10px, 1.6vw, 16px);
+        .ophf-videoShell {
+            width: min(100%, var(--ophf-video-shell-w));
+            height: min(100%, var(--ophf-video-shell-h));
+            min-height: 0;
+            display: block;
         }
 
         .ophf-videoRail {
-            width: min(100%, clamp(220px, 28vw, 315px));
-            height: auto;
-            aspect-ratio: 9 / 16;
-            flex: 0 0 auto;
+            width: 100%;
+            height: 100%;
             display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border-radius: clamp(22px, 5vw, 34px);
-            background:
-                linear-gradient(180deg, rgba(248, 248, 248, 0.08), rgba(248, 248, 248, 0.03)),
-                rgba(8, 10, 18, 0.72);
-            box-shadow:
-                inset 0 0 0 1px rgba(248, 248, 248, 0.08),
-                0 24px 70px rgba(0, 0, 0, 0.26);
-        }
-
-        .ophf-videoGrid--active .ophf-videoRail {
-            width: min(100%, clamp(168px, 22vw, 220px));
+            gap: var(--ophf-video-gap);
+            align-items: stretch;
         }
 
         .ophf-videoCard {
-            --ophf-video-fg-width: clamp(110px, 34vw, 170px);
+            --ophf-video-flex: 1;
+            --ophf-video-fg-width: clamp(126px, 19vw, 196px);
             --ophf-video-fg-offset-x: 0px;
             position: relative;
-            flex: 1 1 0;
+            flex: var(--ophf-video-flex) 1 0;
             display: block;
-            width: 100%;
+            min-height: 0;
             padding: 0;
             border: 0;
+            border-radius: 28px;
             overflow: hidden;
-            background: transparent;
+            background:
+                linear-gradient(180deg, rgba(248, 248, 248, 0.06), rgba(248, 248, 248, 0.02)),
+                rgba(17, 18, 35, 0.72);
             color: var(--ophf-light);
             isolation: isolate;
-            transition: transform 180ms ease, filter 180ms ease;
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.08),
+                0 18px 34px rgba(0, 0, 0, 0.18);
+            transition: flex 220ms ease, transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+            cursor: pointer;
         }
 
         .ophf-videoCard + .ophf-videoCard {
-            border-top: 1px solid rgba(248, 248, 248, 0.08);
+            margin-top: 0;
         }
 
         .ophf-videoCard:hover,
         .ophf-videoCard:focus-visible {
-            filter: brightness(1.08);
+            filter: brightness(1.04);
+            transform: translateY(-1px);
         }
 
         .ophf-videoCard[aria-pressed="true"] {
-            filter: brightness(1.1);
+            box-shadow:
+                inset 0 0 0 1px rgba(166, 188, 255, 0.46),
+                0 20px 44px rgba(72, 100, 202, 0.18);
         }
 
         .ophf-videoCard--meet {
@@ -738,133 +737,169 @@
         .ophf-videoThumb--bg {
             object-fit: cover;
             object-position: center center;
-            transform: scale(1.06);
-            filter: saturate(0.96) contrast(1.02);
+            transform: scale(1.04);
+            filter: saturate(0.98) contrast(1.03);
         }
 
         .ophf-videoThumb--fg {
-            inset: auto auto 18px 50%;
+            inset: auto auto 10px 50%;
             width: var(--ophf-video-fg-width);
             height: auto;
             margin-left: calc((var(--ophf-video-fg-width) * -0.5) + var(--ophf-video-fg-offset-x));
             aspect-ratio: 1 / 1;
             object-fit: contain;
             object-position: center bottom;
-            transform: scale(1.02);
+            transform: scale(1);
         }
 
         .ophf-videoTitle {
             position: absolute;
-            top: 12px;
+            top: 14px;
             left: 14px;
-            right: 46px;
+            right: 18px;
             z-index: 2;
             color: var(--ophf-light);
             font-family: Oswald, sans-serif;
-            font-size: clamp(16px, 2.4vw, 24px);
+            font-size: clamp(18px, 1.8vw, 24px);
             font-weight: 700;
-            letter-spacing: 0.06em;
-            line-height: 0.92;
-            text-align: center;
+            letter-spacing: 0.04em;
+            line-height: 0.9;
+            text-align: left;
             text-transform: uppercase;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .ophf-videoGrid--active .ophf-videoTitle {
-            font-size: clamp(14px, 1.85vw, 18px);
+        .ophf-videoCard[aria-pressed="true"] .ophf-videoTitle {
+            opacity: 0;
         }
 
         .ophf-videoCard::after {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(6, 9, 28, 0.8) 0%, rgba(6, 9, 28, 0.08) 48%, rgba(6, 9, 28, 0.72) 100%);
+            background:
+                linear-gradient(180deg, rgba(7, 10, 28, 0.6) 0%, rgba(7, 10, 28, 0.16) 46%, rgba(7, 10, 28, 0.76) 100%),
+                linear-gradient(90deg, rgba(7, 10, 28, 0.26), transparent 45%);
             pointer-events: none;
         }
 
         .ophf-videoPlayBtn {
             position: absolute;
-            right: 14px;
+            left: 50%;
             top: 50%;
             z-index: 2;
             display: grid;
             place-items: center;
-            width: clamp(42px, 6vw, 58px);
-            height: clamp(42px, 6vw, 58px);
+            width: 38px;
+            height: 38px;
             border-radius: 999px;
-            transform: translateY(-50%);
-            background: rgba(248, 248, 248, 0.08);
+            transform: translate(-50%, -50%);
+            background: rgba(248, 248, 248, 0.12);
             box-shadow:
-                inset 0 0 0 1px rgba(248, 248, 248, 0.26),
-                0 10px 24px rgba(0, 0, 0, 0.22);
+                inset 0 0 0 1px rgba(248, 248, 248, 0.24),
+                0 8px 18px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(8px);
             color: var(--ophf-light);
+            opacity: 0.84;
             transition: background 140ms ease, transform 140ms ease;
-        }
-
-        .ophf-videoCloseBtn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 3;
-            width: 24px;
-            height: 24px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            border-radius: 999px;
-            background: rgba(0, 0, 0, 0.42);
-            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.22);
-            color: var(--ophf-light);
-            font-family: Oswald, sans-serif;
-            font-size: 14px;
-            line-height: 1;
-            pointer-events: none;
-        }
-
-        .ophf-videoCard[aria-pressed="true"] .ophf-videoCloseBtn {
-            display: flex;
         }
 
         .ophf-videoCard:hover .ophf-videoPlayBtn,
         .ophf-videoCard:focus-visible .ophf-videoPlayBtn {
-            background: rgba(248, 248, 248, 0.14);
-            transform: translateY(-50%) scale(1.04);
+            background: rgba(248, 248, 248, 0.18);
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.04);
+        }
+
+        .ophf-videoCard[aria-pressed="true"] .ophf-videoPlayBtn {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.82);
         }
 
         .ophf-videoPlayIcon {
             width: 0;
             height: 0;
-            margin-left: 3px;
-            border-top: 7px solid transparent;
-            border-bottom: 7px solid transparent;
-            border-left: 11px solid currentColor;
+            margin-left: 2px;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid currentColor;
         }
 
-        .ophf-videoStage {
+        .ophf-videoActiveBar {
+            position: absolute;
+            inset: 12px 12px auto 12px;
+            z-index: 5;
             display: none;
-            width: min(100%, clamp(200px, 28vw, 250px));
-            height: auto;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 10px 10px 12px;
+            border-radius: 18px;
+            background: rgba(8, 10, 22, 0.58);
+            box-shadow:
+                inset 0 0 0 1px rgba(248, 248, 248, 0.12),
+                0 10px 24px rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(12px);
+        }
+
+        .ophf-videoCard[aria-pressed="true"] .ophf-videoActiveBar {
+            display: flex;
+        }
+
+        .ophf-videoActiveMeta {
             min-width: 0;
-            min-height: 0;
-            aspect-ratio: 9 / 16;
-            flex: 0 0 auto;
-            border-radius: clamp(22px, 5vw, 34px);
+        }
+
+        .ophf-videoActiveEyebrow {
+            display: block;
+            margin: 0 0 4px;
+            color: rgba(248, 248, 248, 0.72);
+            font-family: Oswald, sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .ophf-videoActiveTitle {
+            display: block;
+            color: var(--ophf-light);
+            font-family: Oswald, sans-serif;
+            font-size: clamp(14px, 1.3vw, 18px);
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            line-height: 0.92;
+            text-transform: uppercase;
+        }
+
+        .ophf-videoPlayer {
+            position: absolute;
+            inset: 76px 12px 12px 12px;
+            z-index: 3;
             overflow: hidden;
-            background:
-                linear-gradient(180deg, rgba(248, 248, 248, 0.08), rgba(248, 248, 248, 0.03)),
-                rgba(8, 10, 18, 0.72);
+            border-radius: 22px;
+            background: #000;
             box-shadow:
                 inset 0 0 0 1px rgba(248, 248, 248, 0.08),
-                0 24px 70px rgba(0, 0, 0, 0.26);
+                0 16px 34px rgba(0, 0, 0, 0.22);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 180ms ease;
         }
 
-        .ophf-videoGrid--active .ophf-videoStage {
-            display: block;
-            width: min(100%, clamp(190px, 24vw, 248px));
+        .ophf-videoCard[aria-pressed="true"] .ophf-videoPlayer {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .ophf-videoStageFrame {
+        .ophf-videoCard[aria-pressed="true"] .ophf-videoScene {
+            opacity: 0.22;
+        }
+
+        .ophf-videoFrame {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             border: 0;
@@ -872,79 +907,75 @@
             background: #000;
         }
 
-        .ophf-videoCard:hover .ophf-videoThumb--bg,
-        .ophf-videoCard:focus-visible .ophf-videoThumb--bg {
-            transform: scale(1.1);
+        .ophf-videoCloseBtn {
+            width: 32px;
+            height: 32px;
+            flex: 0 0 auto;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: rgba(248, 248, 248, 0.09);
+            box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.16);
+            color: var(--ophf-light);
+            font-family: Oswald, sans-serif;
+            font-size: 16px;
+            line-height: 1;
+            transition: background 140ms ease, transform 140ms ease;
         }
 
-        .ophf-videoCard:hover .ophf-videoThumb--fg,
-        .ophf-videoCard:focus-visible .ophf-videoThumb--fg {
+        .ophf-videoCloseBtn:hover,
+        .ophf-videoCloseBtn:focus-visible {
+            background: rgba(248, 248, 248, 0.16);
             transform: scale(1.04);
         }
 
-        @media (max-width: 700px) {
-            .ophf-videosPanel {
-                align-items: stretch;
-            }
-
-            .ophf-videoGrid {
-                flex-direction: column;
-                justify-content: flex-start;
-                height: 100%;
-            }
-
-            .ophf-videoRail,
-            .ophf-videoStage {
-                width: min(100%, 270px);
-                aspect-ratio: 9 / 16;
-            }
-
-            .ophf-videoGrid--active {
-                flex-direction: row;
-                align-items: flex-start;
-                justify-content: flex-start;
-                width: 100%;
-                gap: 8px;
-            }
-
-            .ophf-videoGrid--active .ophf-videoRail,
-            .ophf-videoGrid--active .ophf-videoStage {
-                aspect-ratio: 9 / 16;
-            }
-
-            .ophf-videoGrid--active .ophf-videoRail {
-                width: min(34vw, 138px);
-            }
-
-            .ophf-videoGrid--active .ophf-videoStage {
-                width: min(44vw, 176px);
-                aspect-ratio: 9 / 16;
-            }
-
-            .ophf-videoThumb--fg {
-                inset: auto auto 10px 50%;
-                width: clamp(96px, 24vw, 132px);
-            }
-
-            .ophf-videoGrid--active .ophf-videoThumb--fg {
-                width: clamp(74px, 19vw, 104px);
-            }
-
-            .ophf-videoCard + .ophf-videoCard {
-                border-top: 1px solid rgba(248, 248, 248, 0.08);
+        @media (max-width: 760px) {
+            .ophf-videoCard {
+                --ophf-video-fg-width: clamp(104px, 28vw, 154px);
             }
 
             .ophf-videoTitle {
-                top: 10px;
-                left: 8px;
-                right: 8px;
-                font-size: clamp(13px, 4.1vw, 18px);
+                top: 12px;
+                left: 12px;
+                right: 48px;
+                font-size: clamp(13px, 3.8vw, 18px);
             }
 
             .ophf-videoPlayBtn {
-                right: 10px;
-                width: 42px;
-                height: 42px;
+                width: 34px;
+                height: 34px;
+            }
+
+            .ophf-videoActiveBar {
+                inset: 10px 10px auto 10px;
+                padding: 8px 8px 8px 10px;
+                border-radius: 16px;
+            }
+
+            .ophf-videoActiveTitle {
+                font-size: 13px;
+            }
+
+            .ophf-videoFrame {
+                inset: 0;
+                height: 100%;
+            }
+
+            .ophf-videoCloseBtn {
+                width: 30px;
+                height: 30px;
+                font-size: 15px;
+            }
+
+            .ophf-videoPlayer {
+                inset: 68px 10px 10px 10px;
+                border-radius: 18px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .ophf-videoTitle {
+                font-size: 12px;
             }
         }
 
@@ -1483,30 +1514,23 @@
                 this.cleanup = [];
                 this.activeCardId = null;
                 this.cardsById = new Map();
+                this.playersById = new Map();
+                this.shell = null;
                 this.rail = null;
-                this.stage = null;
-                this.iframe = null;
+                this.layoutObserver = null;
+                this.handleLayout = () => this.applyLayout();
             }
 
             render() {
                 if (!this.root || this.root.childElementCount) return;
 
+                this.shell = document.createElement("div");
+                this.shell.className = "ophf-videoShell";
+
                 this.rail = document.createElement("div");
                 this.rail.className = "ophf-videoRail";
-
-                this.stage = document.createElement("div");
-                this.stage.className = "ophf-videoStage";
-
-                this.iframe = document.createElement("iframe");
-                this.iframe.className = "ophf-videoStageFrame";
-                this.iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-                this.iframe.setAttribute("allowfullscreen", "");
-                this.iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
-                this.iframe.title = "OPAHiFi video player";
-
-                this.stage.appendChild(this.iframe);
-                this.root.appendChild(this.rail);
-                this.root.appendChild(this.stage);
+                this.shell.appendChild(this.rail);
+                this.root.appendChild(this.shell);
 
                 OpaHifiVideosView.cards.forEach((card) => {
                     const node = this.createCard(card);
@@ -1518,25 +1542,32 @@
             activate() {
                 this.render();
                 this.bindPointerMotion();
+                this.bindLayout();
+                this.applyLayout();
             }
 
             deactivate() {
                 this.resetPointerMotion();
+                this.unbindLayout();
                 this.clearSelection();
             }
 
             createCard(card) {
-                const cardButton = document.createElement("button");
-                cardButton.className = card.className;
-                cardButton.type = "button";
-                cardButton.dataset.ophfVideoId = card.id;
-                cardButton.setAttribute("aria-label", `Open ${card.title}`);
-                cardButton.setAttribute("aria-pressed", "false");
-                cardButton.addEventListener("click", () => {
-                    if (this.activeCardId === card.id) {
-                        this.clearSelection();
-                        return;
-                    }
+                const cardNode = document.createElement("article");
+                cardNode.className = card.className;
+                cardNode.dataset.ophfVideoId = card.id;
+                cardNode.setAttribute("aria-label", `Open ${card.title}`);
+                cardNode.setAttribute("aria-pressed", "false");
+                cardNode.setAttribute("role", "button");
+                cardNode.tabIndex = 0;
+                cardNode.addEventListener("click", () => {
+                    if (this.activeCardId === card.id) return;
+                    this.selectCard(card.id);
+                });
+                cardNode.addEventListener("keydown", (event) => {
+                    if (event.key !== "Enter" && event.key !== " ") return;
+                    event.preventDefault();
+                    if (this.activeCardId === card.id) return;
                     this.selectCard(card.id);
                 });
 
@@ -1560,9 +1591,41 @@
                 title.className = "ophf-videoTitle";
                 title.textContent = card.title;
 
-                const close = document.createElement("span");
+                const activeBar = document.createElement("div");
+                activeBar.className = "ophf-videoActiveBar";
+
+                const activeMeta = document.createElement("div");
+                activeMeta.className = "ophf-videoActiveMeta";
+
+                const activeEyebrow = document.createElement("span");
+                activeEyebrow.className = "ophf-videoActiveEyebrow";
+                activeEyebrow.textContent = "Now Viewing";
+
+                const activeTitle = document.createElement("span");
+                activeTitle.className = "ophf-videoActiveTitle";
+                activeTitle.textContent = card.title;
+
+                const player = document.createElement("div");
+                player.className = "ophf-videoPlayer";
+
+                const iframe = document.createElement("iframe");
+                iframe.className = "ophf-videoFrame";
+                iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+                iframe.setAttribute("allowfullscreen", "");
+                iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+                iframe.title = `${card.title} player`;
+                player.appendChild(iframe);
+                this.playersById.set(card.id, iframe);
+
+                const close = document.createElement("button");
                 close.className = "ophf-videoCloseBtn";
-                close.textContent = "X";
+                close.type = "button";
+                close.textContent = "×";
+                close.setAttribute("aria-label", `Close ${card.title}`);
+                close.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    this.clearSelection();
+                });
 
                 const playButton = document.createElement("span");
                 playButton.className = "ophf-videoPlayBtn";
@@ -1570,35 +1633,47 @@
                 const play = document.createElement("span");
                 play.className = "ophf-videoPlayIcon";
 
+                activeMeta.appendChild(activeEyebrow);
+                activeMeta.appendChild(activeTitle);
+                activeBar.appendChild(activeMeta);
+                activeBar.appendChild(close);
                 playButton.appendChild(play);
                 scene.appendChild(title);
-                scene.appendChild(close);
                 scene.appendChild(bg);
                 scene.appendChild(fg);
                 scene.appendChild(playButton);
-                cardButton.appendChild(scene);
-                return cardButton;
+                cardNode.appendChild(scene);
+                cardNode.appendChild(activeBar);
+                cardNode.appendChild(player);
+                return cardNode;
             }
 
             selectCard(cardId) {
                 const card = OpaHifiVideosView.cards.find((item) => item.id === cardId);
-                if (!card || !this.root || !this.iframe) return;
+                if (!card || !this.root) return;
 
                 this.activeCardId = card.id;
                 this.root.classList.add("ophf-videoGrid--active");
-                this.iframe.src = this.toEmbedSrc(card.href);
+                this.applyLayout();
 
                 this.cardsById.forEach((node, id) => {
                     node.setAttribute("aria-pressed", id === card.id ? "true" : "false");
+                });
+
+                this.playersById.forEach((frame, id) => {
+                    frame.src = id === card.id ? this.toEmbedSrc(card.href) : "";
                 });
             }
 
             clearSelection() {
                 this.activeCardId = null;
                 if (this.root) this.root.classList.remove("ophf-videoGrid--active");
-                if (this.iframe) this.iframe.src = "";
+                this.applyLayout();
                 this.cardsById.forEach((node) => {
                     node.setAttribute("aria-pressed", "false");
+                });
+                this.playersById.forEach((frame) => {
+                    frame.src = "";
                 });
             }
 
@@ -1649,6 +1724,47 @@
                         card.removeEventListener("pointerleave", leaveCard);
                         card.removeEventListener("blur", leaveCard, true);
                     });
+                });
+            }
+
+            bindLayout() {
+                if (!this.root) return;
+                if (!this.layoutObserver && "ResizeObserver" in window) {
+                    this.layoutObserver = new ResizeObserver(this.handleLayout);
+                    this.layoutObserver.observe(this.root);
+                }
+                window.addEventListener("resize", this.handleLayout);
+            }
+
+            unbindLayout() {
+                if (this.layoutObserver) {
+                    this.layoutObserver.disconnect();
+                    this.layoutObserver = null;
+                }
+                window.removeEventListener("resize", this.handleLayout);
+            }
+
+            applyLayout() {
+                if (!this.root) return;
+
+                const width = this.root.clientWidth;
+                const height = this.root.clientHeight;
+                if (!width || !height) return;
+
+                const isNarrow = width < 760;
+                const gap = isNarrow ? 10 : 14;
+                const shellW = Math.min(width, isNarrow ? 940 : 1020);
+                const shellH = Math.min(height, Math.max(isNarrow ? 310 : 360, Math.min(isNarrow ? 430 : 540, Math.floor(shellW * (isNarrow ? 0.8 : 0.56)))));
+                const activeFlex = isNarrow ? 1.78 : 2.1;
+                const idleFlex = isNarrow ? 0.61 : 0.78;
+
+                this.root.style.setProperty("--ophf-video-gap", `${gap}px`);
+                this.root.style.setProperty("--ophf-video-shell-w", `${shellW}px`);
+                this.root.style.setProperty("--ophf-video-shell-h", `${shellH}px`);
+
+                this.cardsById.forEach((node, id) => {
+                    const flex = this.activeCardId ? (id === this.activeCardId ? activeFlex : idleFlex) : 1;
+                    node.style.setProperty("--ophf-video-flex", String(flex));
                 });
             }
 
@@ -2350,7 +2466,7 @@
             const isVideos = this.state.mode === "videos";
             const isDetail = this.state.mode === "detail";
             this.els.navA.textContent = isDetail ? "Prev" : "Videos";
-            this.els.navB.textContent = isDetail ? "Home" : isVideos ? "Home" : "Gallery";
+            this.els.navB.textContent = isDetail ? "Home" : "Gallery";
             this.els.navC.textContent = isDetail ? "Next" : "About";
             this.els.navA.classList.toggle("ophf-bottomBtnActive", isVideos);
             this.els.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
