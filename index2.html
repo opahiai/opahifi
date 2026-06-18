@@ -416,13 +416,32 @@
                                 <img class="ophf-promoBadgeImg" src="img/music/base/base-wellwolfhowllehluya.png" alt="">
                             </span>
                         </button>
-                        <button class="ophf-promoTile ophf-promoTilePlay" type="button" data-ophf-playall>
-                            <span class="ophf-promoEyebrow">Playlist Order</span>
-                            <span class="ophf-promoTitle">Play All</span>
-                            <span class="ophf-promoBadge" aria-hidden="true">
-                                <img class="ophf-promoBadgeImg ophf-promoBadgeImgPlaylist" src="img/btns/playlist.png" alt="">
-                            </span>
-                        </button>
+                        <div class="ophf-promoTile ophf-promoTilePlay" data-ophf-playall-panel data-ophf-expanded="false">
+                            <button class="ophf-promoPlaylistFace" type="button" data-ophf-playall aria-expanded="false" aria-label="Open playlists">
+                                <span class="ophf-promoEyebrow">Playlist Order</span>
+                                <span class="ophf-promoTitle">Play All</span>
+                                <span class="ophf-promoBadge" aria-hidden="true">
+                                    <img class="ophf-promoBadgeImg ophf-promoBadgeImgPlaylist" src="img/btns/playlist.png" alt="">
+                                </span>
+                            </button>
+                            <div class="ophf-promoPlaylistBack" data-ophf-playall-links aria-hidden="true" aria-label="Playlist links">
+                                <div class="ophf-promoPlaylistBackHead">
+                                    <span class="ophf-promoPlaylistBackTitle">Playlists</span>
+                                    <button class="ophf-promoPlaylistClose" type="button" data-ophf-playall-close aria-label="Close playlists">×</button>
+                                </div>
+                                <div class="ophf-promoPlaylistBackRow">
+                                    <a class="ophf-promoPlaylistLink" href="https://open.spotify.com/playlist/5rAMYPsUmFoq3yoBnIGYQR?si=qw3P1s6eT7OLxatM2zUb3w" target="_blank" rel="noopener" aria-label="Spotify playlist">
+                                        <img class="ophf-promoPlaylistIcon" src="img/ico/spotify-white.svg" alt="Spotify">
+                                    </a>
+                                    <a class="ophf-promoPlaylistLink" href="https://music.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF&si=S9qhguENixnuD3Ps" target="_blank" rel="noopener" aria-label="YouTube Music playlist">
+                                        <img class="ophf-promoPlaylistIcon" src="img/ico/youtubemusic-white.svg" alt="YouTube Music">
+                                    </a>
+                                    <a class="ophf-promoPlaylistLink" href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF" target="_blank" rel="noopener" aria-label="YouTube playlist">
+                                        <img class="ophf-promoPlaylistIcon" src="img/ico/youtube-white.svg" alt="YouTube">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="ophf-fieldStage">
@@ -815,6 +834,9 @@
                     videoGrid: document.querySelector("[data-ophf-video-grid]"),
                     latest: document.querySelector("[data-ophf-latest]"),
                     playAll: document.querySelector("[data-ophf-playall]"),
+                    playAllPanel: document.querySelector("[data-ophf-playall-panel]"),
+                    playAllLinks: document.querySelector("[data-ophf-playall-links]"),
+                    playAllClose: document.querySelector("[data-ophf-playall-close]"),
                     trackCover: document.querySelector("[data-ophf-track-cover]"),
                     shareSlot: document.querySelector("[data-ophf-share]"),
                     trackTitle: document.querySelector("[data-ophf-track-title]"),
@@ -848,8 +870,7 @@
                     coverUrl: (song) => this.coverUrl(song),
                     setImageFallback: (img, song) => this.setImageFallback(img, song),
                     onOpenSong: (songId) => this.openSong(songId),
-                    onOpenLatest: () => this.openSong(this.getLatestSong().id),
-                    onPlayAll: () => this.openVideos()
+                    onOpenLatest: () => this.openSong(this.getLatestSong().id)
                 });
                 this.videosView = new OpaHifiVideosView(this.els.videoGrid);
                 this.aboutPage = new OpaHifiAboutPage(this.els.aboutRoot);

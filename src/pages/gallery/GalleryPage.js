@@ -6,22 +6,27 @@ class OpaHifiGalleryPage {
         this.setImageFallback = options.setImageFallback;
         this.onOpenSong = options.onOpenSong;
         this.onOpenLatest = options.onOpenLatest;
-        this.onPlayAll = options.onPlayAll;
         this.spiralFrame = 0;
         this.mapResizeObserver = null;
+        this.playlistOpen = false;
         this.bound = false;
         this.handleResize = this.scheduleSpiralUpdate.bind(this);
         this.handleLatest = () => this.onOpenLatest();
-        this.handlePlayAll = () => this.onPlayAll();
+        this.handlePlaylistToggle = this.togglePlaylist.bind(this);
+        this.handlePlaylistClose = this.closePlaylist.bind(this);
+        this.handleOutsidePointer = this.handleDocumentPointer.bind(this);
+        this.handleEscape = this.handleDocumentKeydown.bind(this);
     }
 
     activate() {
         this.render();
+        this.syncPlaylistState();
         this.bindEvents();
         this.scheduleSpiralUpdate();
     }
 
     deactivate() {
+        this.closePlaylist();
         this.unbindEvents();
         if (this.spiralFrame) {
             cancelAnimationFrame(this.spiralFrame);
@@ -87,10 +92,15 @@ class OpaHifiGalleryPage {
             this.els.latest.addEventListener("click", this.handleLatest);
         }
         if (this.els?.playAll) {
-            this.els.playAll.addEventListener("click", this.handlePlayAll);
+            this.els.playAll.addEventListener("click", this.handlePlaylistToggle);
+        }
+        if (this.els?.playAllClose) {
+            this.els.playAllClose.addEventListener("click", this.handlePlaylistClose);
         }
 
         window.addEventListener("resize", this.handleResize);
+        document.addEventListener("pointerdown", this.handleOutsidePointer);
+        document.addEventListener("keydown", this.handleEscape);
 
         if ("ResizeObserver" in window && this.els?.songField) {
             this.mapResizeObserver = new ResizeObserver(this.handleResize);
@@ -106,15 +116,52 @@ class OpaHifiGalleryPage {
             this.els.latest.removeEventListener("click", this.handleLatest);
         }
         if (this.els?.playAll) {
-            this.els.playAll.removeEventListener("click", this.handlePlayAll);
+            this.els.playAll.removeEventListener("click", this.handlePlaylistToggle);
+        }
+        if (this.els?.playAllClose) {
+            this.els.playAllClose.removeEventListener("click", this.handlePlaylistClose);
         }
 
         window.removeEventListener("resize", this.handleResize);
+        document.removeEventListener("pointerdown", this.handleOutsidePointer);
+        document.removeEventListener("keydown", this.handleEscape);
 
         if (this.mapResizeObserver) {
             this.mapResizeObserver.disconnect();
             this.mapResizeObserver = null;
         }
+    }
+
+    syncPlaylistState() {
+        if (!this.els?.playAllPanel || !this.els?.playAll || !this.els?.playAllLinks) return;
+
+        this.els.playAllPanel.dataset.ophfExpanded = this.playlistOpen ? "true" : "false";
+        this.els.playAll.setAttribute("aria-expanded", this.playlistOpen ? "true" : "false");
+        this.els.playAllLinks.setAttribute("aria-hidden", this.playlistOpen ? "false" : "true");
+    }
+
+    togglePlaylist(event) {
+        if (event) event.stopPropagation();
+        this.playlistOpen = !this.playlistOpen;
+        this.syncPlaylistState();
+    }
+
+    closePlaylist(event) {
+        if (event) event.stopPropagation();
+        if (!this.playlistOpen) return;
+        this.playlistOpen = false;
+        this.syncPlaylistState();
+    }
+
+    handleDocumentPointer(event) {
+        if (!this.playlistOpen || !this.els?.playAllPanel) return;
+        if (this.els.playAllPanel.contains(event.target)) return;
+        this.closePlaylist();
+    }
+
+    handleDocumentKeydown(event) {
+        if (event.key !== "Escape") return;
+        this.closePlaylist();
     }
 
     scheduleSpiralUpdate() {

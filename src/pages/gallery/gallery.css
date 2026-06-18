@@ -111,8 +111,30 @@
         rgba(24, 36, 117, 0.55);
 }
 
-.ophf-promoTilePlay .ophf-promoEyebrow,
-.ophf-promoTilePlay .ophf-promoTitle {
+.ophf-promoPlaylistFace,
+.ophf-promoPlaylistBack {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    margin: 0;
+    border-radius: inherit;
+}
+
+.ophf-promoPlaylistFace {
+    padding: clamp(10px, 3vw, 16px);
+    background: transparent;
+    text-align: left;
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.ophf-promoTilePlay[data-ophf-expanded="true"] .ophf-promoPlaylistFace {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.97);
+}
+
+.ophf-promoPlaylistFace .ophf-promoEyebrow,
+.ophf-promoPlaylistFace .ophf-promoTitle {
     position: relative;
     z-index: 2;
 }
@@ -122,6 +144,92 @@
     transform: scale(var(--ophf-promo-badge-image-scale));
     transform-origin: center;
     filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
+}
+
+.ophf-promoPlaylistBack {
+    display: grid;
+    align-content: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background:
+        linear-gradient(160deg, rgba(248, 248, 248, 0.12), rgba(248, 248, 248, 0.04)),
+        radial-gradient(circle at 86% 12%, rgba(107, 149, 220, 0.24), transparent 34%),
+        rgba(17, 18, 35, 0.92);
+    box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.12);
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.97);
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.ophf-promoTilePlay[data-ophf-expanded="true"] .ophf-promoPlaylistBack {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+.ophf-promoPlaylistBackHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.ophf-promoPlaylistBackTitle {
+    color: var(--ophf-light);
+    font-family: Oswald, sans-serif;
+    font-size: clamp(16px, 4vw, 20px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ophf-promoPlaylistClose {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border-radius: 999px;
+    background: rgba(248, 248, 248, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(248, 248, 248, 0.14);
+    color: rgba(248, 248, 248, 0.88);
+    font-size: 18px;
+    line-height: 1;
+}
+
+.ophf-promoPlaylistBackRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ophf-promoPlaylistLink {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(248, 248, 248, 0.1);
+    box-shadow:
+        inset 0 0 0 1px rgba(248, 248, 248, 0.14),
+        0 8px 18px rgba(0, 0, 0, 0.18);
+    transition: transform var(--ophf-ease), background var(--ophf-ease), box-shadow var(--ophf-ease);
+}
+
+.ophf-promoPlaylistLink:hover,
+.ophf-promoPlaylistLink:focus-visible {
+    background: rgba(248, 248, 248, 0.16);
+    transform: translateY(-1px);
+    box-shadow:
+        inset 0 0 0 1px rgba(248, 248, 248, 0.2),
+        0 10px 20px rgba(0, 0, 0, 0.22);
+}
+
+.ophf-promoPlaylistIcon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    display: block;
 }
 
 .ophf-promoEyebrow {
