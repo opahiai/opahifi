@@ -410,14 +410,16 @@
                         <button class="ophf-promoTile ophf-promoTileLatest" type="button" data-ophf-latest>
                             <span class="ophf-promoEyebrow">Latest Release</span>
                             <span class="ophf-promoTitle">Wellwolf</span>
-                            <span class="ophf-promoLatestArt" aria-hidden="true">
-                                <img src="img/music/base/base-wellwolfhowllehluya.png" alt="">
+                            <span class="ophf-promoBadge ophf-promoBadgeCrop" aria-hidden="true">
+                                <img class="ophf-promoBadgeImg" src="img/music/base/base-wellwolfhowllehluya.png" alt="">
                             </span>
                         </button>
                         <button class="ophf-promoTile ophf-promoTilePlay" type="button" data-ophf-playall>
                             <span class="ophf-promoEyebrow">Playlist Order</span>
                             <span class="ophf-promoTitle">Play All</span>
-                            <img class="ophf-promoPlaylistBtn" src="img/btns/playlist.png" alt="" aria-hidden="true">
+                            <span class="ophf-promoBadge" aria-hidden="true">
+                                <img class="ophf-promoBadgeImg ophf-promoBadgeImgPlaylist" src="img/btns/playlist.png" alt="">
+                            </span>
                         </button>
                     </div>
 
@@ -836,7 +838,7 @@
                     setImageFallback: (img, song) => this.setImageFallback(img, song),
                     onOpenSong: (songId) => this.openSong(songId),
                     onOpenLatest: () => this.openSong(this.getLatestSong().id),
-                    onPlayAll: () => this.openSong(this.playlistOrder[0])
+                    onPlayAll: () => this.openVideos()
                 });
                 this.videosView = new OpaHifiVideosView(this.els.videoGrid);
                 this.detailPage = new OpaHifiDetailPage({
