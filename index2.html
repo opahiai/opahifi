@@ -1029,21 +1029,6 @@
                 this.openSong(ordered[nextIndex].id);
             }
 
-            shareCurrent() {
-                const song = this.getSong(this.state.songId);
-                const shareData = {
-                    title: `OPAHiFi — ${song.title}`,
-                    text: `Listen to ${song.title} on OPAHiFi`,
-                    url: `${location.origin}${location.pathname}#${song.id}`
-                };
-
-                if (navigator.share) {
-                    navigator.share(shareData).catch(() => { });
-                } else if (navigator.clipboard) {
-                    navigator.clipboard.writeText(shareData.url);
-                }
-            }
-
             bindEvents() {
             this.els.navA.addEventListener("click", () => {
                 if (this.state.mode === "detail") {
@@ -1086,3 +1071,4 @@
 </body>
 
 </html>
+
