@@ -1,0 +1,18 @@
+.ophf-aboutScreen {
+    overflow: hidden;
+    padding: var(--ophf-gallery-pad);
+}
+
+.ophf-aboutPanel {
+    width: min(100%, 900px);
+    height: var(--ophf-gallery-panel-h);
+    min-height: 0;
+    margin: 0 auto;
+    border-radius: clamp(20px, 4vw, 30px);
+    background:
+        linear-gradient(180deg, rgba(248, 248, 248, 0.03), rgba(248, 248, 248, 0.01)),
+        rgba(10, 10, 19, 0.32);
+    box-shadow:
+        inset 0 0 0 1px rgba(248, 248, 248, 0.05),
+        0 18px 42px rgba(0, 0, 0, 0.16);
+}

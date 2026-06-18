@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="src/pages/gallery/gallery.css">
     <link rel="stylesheet" href="src/pages/videos/videos.css">
     <link rel="stylesheet" href="src/pages/song-detail/detail.css">
+    <link rel="stylesheet" href="src/pages/about/about.css">
     <style>
         :root {
             --ophf-cover-area: 24dvh;
@@ -316,6 +317,7 @@
 
         .ophf-app[data-ophf-mode="gallery"] .ophf-galleryScreen,
         .ophf-app[data-ophf-mode="videos"] .ophf-videosScreen,
+        .ophf-app[data-ophf-mode="about"] .ophf-aboutScreen,
         .ophf-app[data-ophf-mode="detail"] .ophf-detailScreen {
             display: block;
         }
@@ -327,25 +329,13 @@
             left: 0;
             z-index: 30;
             display: grid;
-            grid-template-columns: repeat(2, var(--ophf-nav-button-w));
+            grid-template-columns: repeat(3, var(--ophf-nav-button-w));
             justify-content: center;
             height: var(--ophf-nav-h);
             padding: var(--ophf-nav-pad-top) clamp(8px, 3vw, 18px) var(--ophf-nav-pad-bottom);
             gap: var(--ophf-nav-gap);
             background: rgba(2, 2, 4, 0.94);
             border-top: 1px solid rgba(248, 248, 248, 0.1);
-        }
-
-        .ophf-app[data-ophf-mode="detail"] .ophf-bottomNav {
-            grid-template-columns: repeat(3, var(--ophf-nav-button-w));
-        }
-
-        .ophf-bottomBtn[data-ophf-nav-c] {
-            display: none;
-        }
-
-        .ophf-app[data-ophf-mode="detail"] .ophf-bottomBtn[data-ophf-nav-c] {
-            display: grid;
         }
 
         .ophf-bottomBtn {
@@ -519,6 +509,10 @@
 
                 </div>
             </section>
+
+            <section class="ophf-screen ophf-aboutScreen" aria-label="About">
+                <div data-ophf-about-root></div>
+            </section>
         </main>
 
         <aside class="ophf-miniRail" data-ophf-mini-rail aria-label="Mini song rail"></aside>
@@ -533,6 +527,8 @@
     <script src="src/pages/gallery/GalleryRoute.js"></script>
     <script src="src/pages/gallery/GalleryPage.js"></script>
     <script src="src/pages/videos/VideosPage.js"></script>
+    <script src="src/pages/about/AboutPage.js"></script>
+    <script src="src/pages/about/AboutRoute.js"></script>
     <script src="src/pages/song-detail/DetailPage.js"></script>
     <script src="src/pages/song-detail/DetailRoute.js"></script>
     <script>
@@ -849,6 +845,7 @@
                     versionTitle: document.querySelector("[data-ophf-version-title]"),
                     links: document.querySelector("[data-ophf-links]"),
                     lyrics: document.querySelector("[data-ophf-lyrics]"),
+                    aboutRoot: document.querySelector("[data-ophf-about-root]"),
                     miniRail: document.querySelector("[data-ophf-mini-rail]"),
                     bottomNav: document.querySelector(".ophf-bottomNav"),
                     navA: document.querySelector("[data-ophf-nav-a]"),
@@ -864,6 +861,7 @@
                 this.screenRoutes = [
                     new OpaHifiGalleryRoute(),
                     new OpaHifiVideosRoute(),
+                    new OpaHifiAboutRoute(),
                     new OpaHifiDetailRoute()
                 ];
                 this.galleryPage = new OpaHifiGalleryPage({
@@ -875,6 +873,7 @@
                     onOpenLatest: () => this.openSong(this.getLatestSong().id)
                 });
                 this.videosView = new OpaHifiVideosView(this.els.videoGrid);
+                this.aboutPage = new OpaHifiAboutPage(this.els.aboutRoot);
                 this.detailPage = new OpaHifiDetailPage({
                     els: {
                         trackCover: this.els.trackCover,
@@ -954,6 +953,15 @@
                     return;
                 }
 
+                if (this.state.mode === "about") {
+                    this.els.coverImg.src = this.heroCover;
+                    this.els.coverImg.style.display = "block";
+                    this.els.coverKicker.textContent = "About";
+                    this.setCoverTitle(["OPAHiFi"]);
+                    if (this.els.coverPill) this.els.coverPill.textContent = "Blank";
+                    return;
+                }
+
                 const activeSong = song || this.getSong(this.state.songId);
                 this.els.coverImg.src = this.coverUrl(activeSong);
                 this.els.coverImg.style.display = "block";
@@ -965,14 +973,15 @@
             setBottomNav() {
                 const isGallery = this.state.mode === "gallery";
                 const isVideos = this.state.mode === "videos";
+                const isAbout = this.state.mode === "about";
                 const isDetail = this.state.mode === "detail";
                 const isMainTabs = !isDetail;
                 this.els.navA.textContent = isDetail ? "Prev" : "Videos";
                 this.els.navB.textContent = "Gallery";
-                this.els.navC.textContent = "Next";
+                this.els.navC.textContent = isDetail ? "Next" : "About";
                 this.els.navA.classList.toggle("ophf-bottomBtnActive", isVideos);
                 this.els.navB.classList.toggle("ophf-bottomBtnActive", isGallery);
-                this.els.navC.classList.remove("ophf-bottomBtnActive");
+                this.els.navC.classList.toggle("ophf-bottomBtnActive", isAbout);
                 if (this.els.bottomNav) {
                     this.els.bottomNav.setAttribute("role", isMainTabs ? "tablist" : "navigation");
                 }
@@ -997,7 +1006,7 @@
 
                 syncNavButton(this.els.navA, isVideos, isMainTabs);
                 syncNavButton(this.els.navB, isGallery, isMainTabs);
-                syncNavButton(this.els.navC, false, false);
+                syncNavButton(this.els.navC, isAbout, isMainTabs);
             }
 
             getActiveScreenRoute() {
@@ -1039,6 +1048,7 @@
             const { skipRoute = false } = options;
             this.galleryPage.activate();
             this.videosView.deactivate();
+            this.aboutPage.deactivate();
             this.detailPage.deactivate();
             this.state.mode = "gallery";
             this.els.app.dataset.ophfMode = "gallery";
@@ -1050,6 +1060,7 @@
             openVideos(options = {}) {
             const { skipRoute = false } = options;
             this.galleryPage.deactivate();
+            this.aboutPage.deactivate();
             this.detailPage.deactivate();
             this.state.mode = "videos";
             this.els.app.dataset.ophfMode = "videos";
@@ -1059,10 +1070,24 @@
                 if (!skipRoute) this.syncRoute();
             }
 
+            openAbout(options = {}) {
+            const { skipRoute = false } = options;
+            this.galleryPage.deactivate();
+            this.videosView.deactivate();
+            this.detailPage.deactivate();
+            this.state.mode = "about";
+            this.els.app.dataset.ophfMode = "about";
+            this.aboutPage.activate();
+            this.renderCover();
+            this.setBottomNav();
+                if (!skipRoute) this.syncRoute();
+            }
+
             openSong(songId, versionIndex = 0, options = {}) {
             const { skipRoute = false } = options;
             this.galleryPage.deactivate();
             this.videosView.deactivate();
+            this.aboutPage.deactivate();
             this.state.mode = "detail";
             this.state.songId = songId;
             this.state.versionIndex = versionIndex;
@@ -1086,25 +1111,27 @@
                     this.moveSong(-1);
                     return;
                     }
-                    if (this.state.mode === "gallery") this.openVideos();
+                    if (this.state.mode === "gallery" || this.state.mode === "about") this.openVideos();
                 });
 
                 this.els.navB.addEventListener("click", () => {
-                    if (this.state.mode === "detail" || this.state.mode === "videos") this.openGallery();
+                    if (this.state.mode === "detail" || this.state.mode === "videos" || this.state.mode === "about") this.openGallery();
                 });
 
                 this.els.navC.addEventListener("click", () => {
                 if (this.state.mode === "detail") {
                     this.moveSong(1);
+                    return;
                 }
+                this.openAbout();
             });
-
             window.addEventListener("hashchange", this.handleHashChange);
         }
 
             init() {
                 this.galleryPage.activate();
                 this.videosView.render();
+                this.aboutPage.render();
                 this.bindEvents();
                 this.setBottomNav();
                 this.renderCover();

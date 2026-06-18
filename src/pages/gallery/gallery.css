@@ -329,11 +329,6 @@
             var(--ophf-node-max));
 }
 
-@media (min-width: 760px) {
-    .ophf-mapCell {
-        --ophf-node-max: 106px;
-    }
-}
 
 .ophf-songUnit {
     position: absolute;
@@ -455,5 +450,9 @@
     .ophf-fieldStage {
         width: min(var(--ophf-gallery-map-max-w), 100%);
         margin-inline: auto;
+    }
+
+    .ophf-mapCell {
+        --ophf-node-max: 5rem;
     }
 }
