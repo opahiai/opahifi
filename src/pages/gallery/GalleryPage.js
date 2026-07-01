@@ -52,7 +52,11 @@ class OpaHifiGalleryPage {
                 node.className = "ophf-songNode";
                 node.type = "button";
                 node.setAttribute("aria-label", `Open ${song.title}`);
-                node.addEventListener("click", () => this.onOpenSong(song.id));
+                node.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.onOpenSong(song.id);
+                });
 
                 const img = document.createElement("img");
                 img.className = "ophf-songNodeImg";
