@@ -13,6 +13,8 @@ class OpaHifiDetailPage {
         };
         this.lyricsCache = new Map();
         this.lyricsRequestId = 0;
+        this.railSpan = 0;
+        this.handleRailScroll = this.syncInfiniteRail.bind(this);
     }
 
     activate(songId, versionIndex = 0) {
@@ -23,6 +25,9 @@ class OpaHifiDetailPage {
 
     deactivate() {
         this.lyricsRequestId += 1;
+        if (this.els?.miniRail) {
+            this.els.miniRail.removeEventListener("scroll", this.handleRailScroll);
+        }
     }
 
     getSong(id) {
@@ -113,16 +118,21 @@ class OpaHifiDetailPage {
     renderRail() {
         if (!this.els.miniRail) return;
         this.els.miniRail.innerHTML = "";
+        this.els.miniRail.removeEventListener("scroll", this.handleRailScroll);
 
-        this.songs
+        const orderedSongs = this.songs
             .slice()
-            .sort((a, b) => a.journey - b.journey)
-            .forEach((song) => {
+            .sort((a, b) => a.journey - b.journey);
+
+        for (let loop = 0; loop < 3; loop += 1) {
+            orderedSongs.forEach((song) => {
                 const btn = document.createElement("button");
                 btn.className = "ophf-railBtn";
                 btn.type = "button";
                 btn.setAttribute("aria-label", song.title);
-                btn.setAttribute("aria-current", song.id === this.state.songId ? "true" : "false");
+                btn.dataset.ophfSongId = song.id;
+                btn.dataset.ophfRailLoop = String(loop);
+                btn.setAttribute("aria-current", loop === 1 && song.id === this.state.songId ? "true" : "false");
                 btn.addEventListener("click", () => this.onOpenSong(song.id));
 
                 const img = document.createElement("img");
@@ -137,6 +147,45 @@ class OpaHifiDetailPage {
                 btn.appendChild(crop);
                 this.els.miniRail.appendChild(btn);
             });
+        }
+
+        this.els.miniRail.addEventListener("scroll", this.handleRailScroll, { passive: true });
+
+        requestAnimationFrame(() => {
+            this.measureRailSpan();
+            this.centerActiveRail();
+        });
+    }
+
+    measureRailSpan() {
+        if (!this.els?.miniRail) return;
+        const firstLoopNode = this.els.miniRail.querySelector('.ophf-railBtn[data-ophf-rail-loop="0"]');
+        const secondLoopNode = this.els.miniRail.querySelector('.ophf-railBtn[data-ophf-rail-loop="1"]');
+        if (!firstLoopNode || !secondLoopNode) return;
+        this.railSpan = secondLoopNode.offsetLeft - firstLoopNode.offsetLeft;
+    }
+
+    centerActiveRail() {
+        if (!this.els?.miniRail) return;
+        const active = this.els.miniRail.querySelector('.ophf-railBtn[data-ophf-rail-loop="1"][aria-current="true"]');
+        if (!active) return;
+
+        const targetLeft = active.offsetLeft - ((this.els.miniRail.clientWidth - active.offsetWidth) / 2);
+        this.els.miniRail.scrollLeft = Math.max(0, targetLeft);
+    }
+
+    syncInfiniteRail() {
+        if (!this.els?.miniRail || !this.railSpan) return;
+
+        const scrollLeft = this.els.miniRail.scrollLeft;
+        if (scrollLeft < this.railSpan * 0.5) {
+            this.els.miniRail.scrollLeft = scrollLeft + this.railSpan;
+            return;
+        }
+
+        if (scrollLeft > this.railSpan * 1.5) {
+            this.els.miniRail.scrollLeft = scrollLeft - this.railSpan;
+        }
     }
 
     renderLinks(version) {

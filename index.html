@@ -1,227 +1,731 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>OpaHiFi - The Organic Journey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpaHiFi - The Ride</title>
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600;800&family=Oswald:wght@400;700&display=swap"
+    rel="stylesheet">
 
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/journey.css">
-  <link rel="stylesheet" href="css/universe.css">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP & Lenis Setup -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Oswald', 'sans-serif'],
+            heavy: ['Anton', 'sans-serif'],
+          },
+          colors: {
+            opa: {
+              navy: '#050510',
+              cobalt: '#1d2b53',
+              violet: '#4d2279',
+              cyan: '#00f0ff',
+              orange: '#ff3c00',
+              gold: '#ffb800',
+            }
+          },
+          backgroundImage: {
+            'cinematic-gradient': 'radial-gradient(circle at center, #1d2b53 0%, #050510 100%)',
+            'glass-gradient': 'linear-gradient(135deg, rgba(29, 43, 83, 0.6) 0%, rgba(77, 34, 121, 0.2) 100%)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --glow-cyan: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 30px rgba(0, 240, 255, 0.3);
+      --glow-orange: 0 0 15px rgba(255, 60, 0, 0.6), 0 0 30px rgba(255, 60, 0, 0.3);
+    }
+
+    body {
+      background-color: #050510;
+      color: #ffffff;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    html.lenis {
+      height: auto;
+    }
+
+    .lenis.lenis-smooth {
+      scroll-behavior: auto;
+    }
+
+    .lenis.lenis-smooth [data-lenis-prevent] {
+      overscroll-behavior: contain;
+    }
+
+    .lenis.lenis-stopped {
+      overflow: hidden;
+    }
+
+    .lenis.lenis-scrolling iframe {
+      pointer-events: none;
+    }
+
+    .text-glow-cyan {
+      text-shadow: var(--glow-cyan);
+    }
+
+    .text-glow-orange {
+      text-shadow: var(--glow-orange);
+    }
+
+    .box-glow-cyan {
+      box-shadow: var(--glow-cyan);
+    }
+
+    .glass-panel {
+      background: var(--glass-gradient);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 1.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #00f0ff, #1d2b53);
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff3c00, #ffb800);
+      transition: all 0.4s ease;
+      z-index: -1;
+    }
+
+    .btn-primary:hover::before {
+      left: 0;
+    }
+
+    .btn-primary:hover {
+      box-shadow: var(--glow-orange);
+      border-color: transparent;
+    }
+
+    /* Left-Aligned Scroll Map */
+    .map-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #050510;
+      border: 2px solid var(--dot-color, #1d2b53);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .map-dot.active {
+      background: var(--dot-light, #00f0ff);
+      color: #050510;
+      border-color: var(--dot-light, #00f0ff);
+      box-shadow: 0 0 15px var(--dot-light, #00f0ff);
+      transform: scale(1.15);
+    }
+
+    .map-label {
+      opacity: 0;
+      transform: translateX(-10px) scale(0.9);
+      transition: all 0.3s ease;
+      pointer-events: none;
+      position: absolute;
+      left: 56px;
+    }
+
+    .map-item:hover .map-label,
+    .map-dot.active+.map-label {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+
+    /* Custom Keyframes for Verse 8 (Text Pops) */
+    @keyframes textPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+
+      10% {
+        opacity: 1;
+        transform: scale(1.1);
+        text-shadow: var(--glow-cyan);
+      }
+
+      20% {
+        opacity: 0;
+        transform: scale(1.3);
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    .pop-1 {
+      animation: textPop 4s infinite 0s;
+    }
+
+    .pop-2 {
+      animation: textPop 5s infinite 1.5s;
+    }
+
+    .pop-3 {
+      animation: textPop 3.5s infinite 2.5s;
+    }
+
+    .pop-4 {
+      animation: textPop 4.5s infinite 0.8s;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #050510;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #4d2279;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00f0ff;
+    }
+  </style>
 </head>
 
-<body>
-  <div class="layout-wrapper" id="layout-wrapper">
+<body class="antialiased selection:bg-opa-cyan selection:text-opa-navy">
 
-    <!-- ── NAV ── -->
-    <nav class="nav-area">
-      OPAHIFI
-
-      <button class="settings-btn" id="settings-btn" aria-label="Settings" aria-expanded="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61
-            l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81
-            c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29
-            L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58
-            C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61
-            l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54
-            c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94
-            l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z
-            M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
-        </svg>
-      </button>
-
-      <div class="settings-panel" id="settings-panel" role="dialog" aria-label="Orb size settings">
-        <div class="settings-title">Orb Size</div>
-        <div class="slider-container">
-          <span class="slider-label">MIN</span>
-          <input type="range" id="size-slider" min="0.5" max="1.5" step="0.1" value="1" aria-label="Orb size">
-          <span class="slider-label">MAX</span>
-        </div>
-      </div>
-    </nav>
-
-    <!-- ── COVER ── -->
-    <div class="cover-area" role="img" aria-label="OpaHiFi cover art"></div>
-
-    <!-- ── JOURNEY MAP ── -->
-    <main class="journey-container">
-      <div id="highlights-section" class="highlights-section">
-        <div class="highlight-item latest-release">
-          Latest Release
-        </div>
-        <div class="highlight-item play-all">
-          PlayAll List
-        </div>
-      </div>
-      <div id="gallery-section" class="gallery-section">
-        <svg class="journey-svg" id="svg-layer" aria-hidden="true">
-        <defs>
-          <linearGradient id="spectrum-grad" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%"   stop-color="#ff3b30"/>
-            <stop offset="50%"  stop-color="#af52de"/>
-            <stop offset="100%" stop-color="#007aff"/>
-          </linearGradient>
-        </defs>
-        <path class="glow-line" id="glow-line" d=""/>
-      </svg>
-        <div class="nodes-wrapper" id="nodes-wrapper">
-
-        <div class="journey-orb node-1" data-index="0" data-group-key="full-mindness" data-title="Full-Mindness">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-fullmindness.png" alt="Full Mindness">
-          </div></div>
-          <div class="orb-pill">Full-<br>Mindness</div>
-        </div>
-
-        <div class="journey-orb node-2" data-index="1" data-group-key="yeah-lets-do-brunch" data-title="Yeah Let's Do Brunch">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-yeahletsdobrunch.png" alt="Brunch">
-          </div></div>
-          <div class="orb-pill">Yeah, Let's<br>Do Brunch</div>
-        </div>
-
-        <div class="journey-orb node-3" data-index="2" data-group-key="hallucinating" data-title="Hallucinating Dum Dum">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-hallucinatingdumdum.png" alt="Dum Dum">
-          </div></div>
-          <div class="orb-pill">Hallucinating<br>Dum Dum</div>
-        </div>
-
-        <div class="journey-orb node-4" data-index="3" data-group-key="splenda-love-rabbit-hell" data-title="Splenda Love Rabbit Hell">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-splendaloverabbithell.png" alt="Splenda Love">
-          </div></div>
-          <div class="orb-pill">Splenda Love<br>Rabbit Hell</div>
-        </div>
-
-        <div class="journey-orb node-5" data-index="4" data-group-key="believe-the-truth-fairy" data-title="The Truth Fairy's">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-believethetruthfairy.png" alt="Truth Fairy">
-          </div></div>
-          <div class="orb-pill">The Truth<br>Fairy's</div>
-        </div>
-
-        <div class="journey-orb node-6" data-index="5" data-group-key="old-love-story" data-title="Old Love Story">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-oldlovestory.png" alt="Old Love Story">
-          </div></div>
-          <div class="orb-pill">Old Love<br>Story</div>
-        </div>
-
-        <div class="journey-orb node-7" data-index="6" data-group-key="glittaa-phoenix" data-title="Glittaa Phoenix">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-glittaaphoenix.png" alt="Glittaa Phoenix">
-          </div></div>
-          <div class="orb-pill">Glittaa<br>Phoenix</div>
-        </div>
-
-        <div class="journey-orb node-8" data-index="7" data-group-key="wellwolf-howl-lehluya" data-title="Wellwolf Howl-lehluya">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-wellwolfhowllehluya.png" alt="Wellwolf">
-          </div></div>
-          <div class="orb-pill">Wellwolf<br>Howl-lehluya</div>
-        </div>
-
-        <div class="journey-orb node-9" data-index="8" data-group-key="opa-pa-pa-party" data-title="Opa Pa Pa Party">
-          <div class="orb-img-crop"><div class="orb-img-wrapper">
-            <img src="https://raw.githubusercontent.com/opahiai/opahifi/main/img/music/base/base-opapapaparty.png" alt="Opa Party">
-          </div></div>
-          <div class="orb-pill">Opa Pa<br>Pa Party</div>
-        </div>
-
-      </div>
-      </div>
-
-      <!-- Song thumbnail nav strip -->
-      <div class="song-view-footer" id="song-view-footer">
-        <div class="song-node-row" id="song-node-row" aria-label="Song navigation"></div>
-      </div>
-
-    </main>
-
-    <!-- ── BOTTOM BAR ── -->
-    <footer class="bottom-bar-container">
-
-      <div class="map-tabs">
-        <button class="menu-btn" id="map-left-btn">Videos</button>
-        <button class="menu-btn active" id="map-center-btn">Gallery</button>
-        <button class="menu-btn" id="map-right-btn">About</button>
-      </div>
-
-      <div class="carousel-indicator" id="carousel-indicator">
-        <div class="carousel-dot active"></div>
-        <div class="carousel-dot"></div>
-        <div class="carousel-dot"></div>
-      </div>
-
-      <div class="universe-tabs">
-        <button class="nav-arrow-btn" id="nav-back">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
-          <span id="nav-back-text">HUB</span>
-        </button>
-        <button class="nav-arrow-btn" id="nav-home">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-          <span>HOME</span>
-        </button>
-        <button class="nav-arrow-btn" id="nav-next">
-          <span id="nav-next-text">NEXT</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-        </button>
-      </div>
-
-    </footer>
-
-    <!-- ── UNIVERSE OVERLAY ── -->
-    <div class="universe-underlay" id="universe-underlay">
-      <div class="universe-underlay-img" id="universe-underlay-img"></div>
-      <div class="universe-underlay-overlay"></div>
+  <!-- Navbar -->
+  <nav
+    class="fixed top-0 w-full z-50 glass-panel !rounded-none !border-t-0 !border-l-0 !border-r-0 !border-b border-white/10 h-[80px] flex items-center justify-between px-6 md:px-12">
+    <a href="#hero" class="text-3xl md:text-4xl font-heavy tracking-wider text-white flex items-center gap-2 group">
+      <span class="text-opa-cyan group-hover:text-opa-orange transition-colors">OPA</span>HIFI
+    </a>
+    <div class="hidden md:flex gap-8 font-display text-lg tracking-widest">
+      <a href="#ride" class="hover:text-opa-cyan hover:text-glow-cyan transition-all">THE RIDE</a>
+      <a href="#gallery" class="hover:text-opa-orange hover:text-glow-orange transition-all">GALLERY</a>
+      <a href="#about" class="hover:text-opa-gold transition-all">ABOUT</a>
     </div>
+    <button class="md:hidden text-opa-cyan text-2xl font-display" id="mobile-menu-btn">MENU</button>
+  </nav>
 
-    <div class="universe-slider-viewport">
-      <div class="universe-slider" id="universe-slider">
+  <!-- Opaverses Map (Left Fixed) -->
+  <aside
+    class="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3 max-md:hidden mix-blend-difference"
+    id="line-map"></aside>
 
-        <!-- Slide 0: Welcome -->
-        <div class="universe-slide">
-          <div class="slide-1-content">
-            <div class="universe-intro">
-              <div class="intro-welcome">WELCOME</div>
-              <div class="intro-sub">TO THE UNIVERSE OF:</div>
+  <!-- Mobile Mini-Map -->
+  <aside
+    class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 glass-panel px-4 py-2 flex gap-2 overflow-x-auto w-[90vw] max-w-sm justify-center items-center rounded-full"
+    id="mobile-map"></aside>
+
+  <main id="smooth-wrapper">
+    <div id="smooth-content">
+
+      <!-- Hero Section: Ride Entrance (Not an Opaverse) -->
+      <section id="hero"
+        class="h-[100dvh] pt-[80px] flex items-center justify-center relative overflow-hidden bg-cinematic-gradient">
+
+        <!-- Magical Portal Background (Flashy Entrance) -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-60">
+          <div
+            class="w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] border-[1px] border-opa-cyan/30 rounded-full absolute animate-[spin_20s_linear_infinite] mix-blend-screen box-glow-cyan">
+          </div>
+          <div
+            class="w-[50vw] h-[50vw] max-w-[650px] max-h-[650px] border-[3px] border-dashed border-opa-violet/50 rounded-full absolute animate-[spin_15s_linear_infinite_reverse] mix-blend-screen">
+          </div>
+          <div
+            class="w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-opa-cobalt/20 rounded-full absolute animate-pulse filter blur-3xl">
+          </div>
+          <div
+            class="w-[20vw] h-[20vw] max-w-[250px] max-h-[250px] bg-opa-cyan/20 rounded-full absolute animate-[ping_4s_cubic-bezier(0,0,0.2,1)_infinite] mix-blend-screen">
+          </div>
+        </div>
+
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
+          <h2 class="font-display text-opa-cyan tracking-[0.3em] uppercase text-sm md:text-xl mb-4 font-bold">00 // RIDE
+            ENTRANCE</h2>
+          <h1 class="font-heavy text-6xl md:text-8xl lg:text-[10rem] leading-none mb-6 text-glow-cyan uppercase">
+            PRESSURE BECOMES<br><span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-opa-orange to-opa-gold text-glow-orange">RHYTHM</span>
+          </h1>
+          <p class="font-sans text-lg md:text-2xl text-gray-300 max-w-2xl mb-12 leading-relaxed">
+            Anxiety becomes the beat, and Opa becomes the DJ. The world outside is heavy, but here, the weight converts
+            directly into kinetic energy. Step into the airlock.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-6">
+            <a href="#ride"
+              class="btn-primary px-10 py-4 rounded-full text-xl font-bold flex items-center justify-center gap-2">
+              START THE RIDE
+              <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3">
+                </path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- THE RIDE CONTAINER -->
+      <div id="ride" class="relative bg-opa-navy">
+
+        <!-- Verse 1: Full-Mindness (Red) -->
+        <section id="v1"
+          class="opaverse min-h-[150vh] relative flex flex-col justify-center px-4 md:px-20 py-32 overflow-hidden"
+          data-title="Full-Mindness" style="--verse-main: #FF2A2A; --verse-light: #FF8080;">
+          <div
+            class="verse-bg absolute inset-0 z-0 opacity-15 text-opa-gold font-display text-[10px] md:text-xs leading-none uppercase flex flex-wrap content-start break-all overflow-hidden"
+            id="v1-text-bg">
+            <!-- Populated by JS -->
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel border-[var(--verse-main)] p-8 md:p-16 max-w-3xl ml-auto md:mr-[10%] bg-gradient-to-br from-opa-navy/90 to-black/90">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">01 //
+              SURVIVE FABULOUSLY</div>
+            <h2 class="font-heavy text-5xl md:text-7xl mb-6 uppercase text-white drop-shadow-lg">Full-Mindness</h2>
+            <p class="font-sans text-xl text-gray-300 leading-relaxed">
+              Everyday chaos takes over. Calm is not the goal anymore—surviving fabulously is. A high-contrast barrage
+              of thoughts woven into an undeniable groove.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 2: Hallucinating Dum Dum (Red) -->
+        <section id="v2" class="opaverse min-h-[180vh] relative flex flex-col justify-center px-4 md:px-20 py-32"
+          data-title="Hallucinating Dum Dum" style="--verse-main: #FF2A2A; --verse-light: #FF8080;">
+          <div
+            class="verse-bg absolute inset-0 z-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--verse-main)_0%,_transparent_60%)] animate-pulse">
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel border-[var(--verse-main)] p-8 md:p-16 max-w-3xl ml-auto md:mr-[15%] text-center bg-black/60">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">02 // THE
+              BRAIN FILLS BLANKS WITH FAKE CERTAINTY</div>
+            <h2 class="font-heavy text-5xl md:text-7xl mb-6 uppercase tracking-wider text-white drop-shadow-lg">
+              Hallucinating Dum Dum</h2>
+            <p class="font-sans text-xl text-gray-300 leading-relaxed">
+              Human confusion mirrors AI hallucination. A surreal 3D playground where logic melts into violet and cyan
+              haze.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 3: Yeah, Let's Do Brunch (Red) -->
+        <section id="v3"
+          class="opaverse min-h-[150vh] relative flex flex-col items-center px-4 md:px-20 py-32 pt-40 overflow-hidden"
+          data-title="Yeah, Let's Do Brunch" style="--verse-main: #FF2A2A; --verse-light: #FF8080;">
+          <div
+            class="verse-bg absolute top-10 left-0 w-full z-0 text-center opacity-80 flex flex-col items-center justify-start pointer-events-none">
+            <h1
+              class="font-heavy text-[10vw] md:text-[8vw] leading-[0.85] text-transparent bg-clip-text bg-gradient-to-b from-[var(--verse-main)] to-opa-navy/10 uppercase tracking-tighter">
+              GHOSTING<br>COLLAPSE
+            </h1>
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel p-8 md:p-16 max-w-3xl mx-auto border-[var(--verse-main)] mt-[25vh] bg-opa-navy/80 backdrop-blur-xl">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">03 // FAKE
+              WARMTH COLLAPSES INTO EXCUSES & GHOSTING</div>
+            <h2 class="font-heavy text-4xl md:text-6xl mb-6 uppercase text-white drop-shadow-lg">Yeah, Let's Do Brunch
+            </h2>
+            <p class="font-sans text-xl text-gray-300 leading-relaxed">
+              "I miss you" with no follow-through. Bright morning mimosas fade into cold read receipts and deep cobalt
+              emptiness.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 4: Splenda Love Rabbit Hell (85% Red, 15% Purple) -->
+        <section id="v4" class="opaverse min-h-[180vh] relative flex flex-col justify-center px-4 md:px-20 py-32"
+          data-title="Splenda Love Rabbit Hell" style="--verse-main: #F3244A; --verse-light: #F992A5;">
+          <div
+            class="verse-bg absolute inset-0 z-0 opacity-30 bg-[linear-gradient(45deg,_var(--verse-main)_0%,_transparent_70%)]">
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel border-[var(--verse-main)] p-8 md:p-16 max-w-3xl ml-auto md:mr-[5%] bg-black/80">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">04 //
+              ARTIFICIAL SWEETNESS BECOMES EMOTIONAL SELF-SABOTAGE</div>
+            <h2 class="font-heavy text-5xl md:text-7xl mb-6 uppercase text-white drop-shadow-lg">Splenda Love Rabbit
+              Hell</h2>
+            <p class="font-sans text-xl text-gray-300 leading-relaxed">
+              Fake love tastes good for one second and terrible after. A descent into a glossy, sticky, molten
+              nightmare.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 5: Believe the Truth Fairy (Purple) -->
+        <section id="v5" class="opaverse min-h-[150vh] relative flex flex-col justify-center px-4 md:px-20 py-32"
+          data-title="Believe the Truth Fairy" style="--verse-main: #B200FF; --verse-light: #D980FF;">
+          <div
+            class="verse-bg absolute inset-0 z-0 opacity-20 bg-[radial-gradient(circle_at_bottom,_var(--verse-main)_0%,_transparent_60%)]">
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel border-[var(--verse-main)] p-8 md:p-16 max-w-4xl mx-auto text-center bg-opa-cobalt/60">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">05 //
+              BRINGING THE RECEIPTS</div>
+            <h2 class="font-heavy text-5xl md:text-7xl mb-6 uppercase text-white drop-shadow-lg">Believe the Truth Fairy
+            </h2>
+            <p class="font-sans text-xl text-gray-200 leading-relaxed">
+              Misinformation, lazy certainty, and online hate are challenged by a tired truth fairy. The blur fades into
+              stark, undeniable contrast.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 6: Old Love Story (95% Purple, 5% Blue) -->
+        <section id="v6" class="opaverse min-h-[200vh] relative flex flex-col justify-center px-4 md:px-20 py-32"
+          data-title="Old Love Story" style="--verse-main: #A907FF; --verse-light: #D484FF;">
+          <div
+            class="verse-bg absolute inset-0 z-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--verse-main)_0%,_transparent_70%)]">
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel p-8 md:p-16 max-w-3xl ml-auto md:mr-[15%] border-[var(--verse-main)] bg-black/50">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">06 //
+              SLOWER, MESSIER, MORE HUMAN ROMANCE BEFORE THE SWIPE</div>
+            <h2 class="font-heavy text-5xl md:text-7xl mb-6 uppercase text-white drop-shadow-lg">Old Love Story</h2>
+            <p class="font-sans text-xl text-gray-300 leading-relaxed">
+              The ride looks back at a time before disposable fast culture. Warm tones, soft glowing edges, and real
+              connection.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 7: Glittaa Phoenix (80% Purple, 20% Blue) -->
+        <section id="v7" class="opaverse min-h-[180vh] relative flex flex-col justify-center px-4 md:px-20 py-32"
+          data-title="Glittaa Phoenix" style="--verse-main: #8E1BFF; --verse-light: #C78DFF;">
+          <div
+            class="verse-bg absolute inset-0 z-0 opacity-20 bg-[conic-gradient(at_center,_var(--verse-main),_#B200FF,_var(--verse-main))] animate-[spin_10s_linear_infinite]">
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel p-8 md:p-16 max-w-3xl ml-auto md:ml-[15%] border-[var(--verse-main)] border-2 bg-black/60">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">07 //
+              DESTRUCTION TURNS INTO REBIRTH, FIRE, AND DANCE</div>
+            <h2 class="font-heavy text-6xl md:text-8xl mb-6 uppercase text-white drop-shadow-lg">Glittaa Phoenix</h2>
+            <p class="font-sans text-xl text-white leading-relaxed font-semibold">
+              Pain becomes glitter, rhythm, fire, and kinetic momentum. The energy spikes as we rise from the ashes.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 8: Not Your Bot (20% Purple, 80% Blue) -->
+        <section id="v8"
+          class="opaverse min-h-[150vh] relative flex flex-col justify-center px-4 md:px-20 py-32 overflow-hidden"
+          data-title="Not Your Bot" style="--verse-main: #246DFF; --verse-light: #92B6FF;">
+          <div
+            class="verse-bg absolute inset-0 z-0 pointer-events-none font-heavy text-[var(--verse-main)] opacity-60 uppercase tracking-widest">
+            <div class="absolute top-[15%] left-[20%] text-4xl md:text-6xl pop-1">NOT YOUR BOT</div>
+            <div class="absolute top-[60%] right-[10%] text-5xl md:text-7xl pop-2">FREEDOM</div>
+            <div class="absolute top-[80%] left-[30%] text-4xl md:text-5xl pop-3">RELEASE</div>
+            <div class="absolute top-[35%] right-[25%] text-6xl md:text-8xl pop-4">NO STRINGS</div>
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel border-[var(--verse-main)] p-8 md:p-16 max-w-3xl mx-auto text-center bg-opa-cobalt/80">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">08 //
+              ABSOLUTE FREEDOM</div>
+            <h2 class="font-heavy text-5xl md:text-7xl mb-6 uppercase text-white drop-shadow-lg">Not Your Bot</h2>
+            <p class="font-sans text-xl text-cyan-100 leading-relaxed">
+              Bot/toy accusations flip into freedom, sass, and "you don't own me" release. Sharp geometric cuts, stark
+              contrast, and electric energy.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 9: Wellwolf Howl-Lehluya (Blue) -->
+        <section id="v9" class="opaverse min-h-[160vh] relative flex flex-col justify-center px-4 md:px-20 py-32"
+          data-title="Wellwolf Howl-Lehluya" style="--verse-main: #0088FF; --verse-light: #80C4FF;">
+          <div
+            class="verse-bg absolute inset-0 z-0 opacity-40 bg-[radial-gradient(circle_at_top_left,_var(--verse-main)_0%,_transparent_70%)]">
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel border-[var(--verse-main)] p-8 md:p-16 max-w-3xl ml-auto md:mr-[10%] bg-black/60">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">09 // THE
+              MONSTER REDEFINED</div>
+            <h2 class="font-heavy text-5xl md:text-7xl mb-6 uppercase text-white drop-shadow-lg">Wellwolf Howl-Lehluya
+            </h2>
+            <p class="font-sans text-xl text-gray-400 leading-relaxed">
+              Real power is kindness, restraint, and not becoming the predator. Deep navy shadows pierced by soft violet
+              moon glows. The howl is a release.
+            </p>
+          </div>
+        </section>
+
+        <!-- Verse 10: Opa Pa Pa Party (Blue) -->
+        <section id="v10" class="opaverse min-h-[150vh] relative flex flex-col justify-center px-4 md:px-20 py-32"
+          data-title="Opa Pa Pa Party" style="--verse-main: #0088FF; --verse-light: #80C4FF;">
+          <div class="verse-bg absolute inset-0 z-0 opacity-60">
+            <div
+              class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_var(--verse-light),_transparent_60%)] opacity-40 animate-pulse">
             </div>
-            <div class="universe-crisp-art" id="universe-crisp-art"></div>
+            <div
+              class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,_var(--verse-main),_transparent_50%)] animate-pulse"
+              style="animation-delay: 0.5s"></div>
+          </div>
+          <div
+            class="verse-content relative z-10 glass-panel border-[var(--verse-main)] p-8 md:p-16 max-w-4xl mx-auto text-center bg-black/50">
+            <div class="text-[var(--verse-light)] font-display text-xl mb-2 tracking-widest drop-shadow-md">10 // THE
+              RELEASE</div>
+            <h2 class="font-heavy text-6xl md:text-9xl mb-6 uppercase text-white drop-shadow-lg">Opa Pa Pa Party</h2>
+            <p class="font-sans text-xl md:text-3xl text-white font-bold leading-relaxed mb-8">
+              The meltdown becomes celebration. Same chaos, better rhythm. We survived the ride.
+            </p>
+            <a href="#gallery" class="btn-primary px-12 py-5 rounded-full text-2xl inline-block mt-4">ENTER GALLERY</a>
+          </div>
+        </section>
+
+      </div> <!-- End Ride -->
+
+      <!-- Gallery Section -->
+      <section id="gallery"
+        class="min-h-[100dvh] bg-opa-navy py-32 px-4 md:px-12 relative z-20 border-t border-white/10">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center mb-20">
+            <h2 class="font-display text-opa-cyan tracking-widest text-lg mb-4">THE COLLECTION</h2>
+            <h1 class="font-heavy text-5xl md:text-7xl uppercase">Opaverses Gallery</h1>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="gallery-grid">
+            <!-- Populated via JS -->
           </div>
         </div>
+      </section>
 
-        <!-- Slide 1: Lyrics -->
-        <div class="universe-slide">
-          <div class="glass-panel" id="universe-lyrics">
-            <!-- Populated dynamically by script.js / musicData -->
+      <!-- About Section -->
+      <section id="about" class="py-32 px-4 md:px-12 bg-cinematic-gradient relative z-20 border-t border-white/10">
+        <div class="max-w-4xl mx-auto glass-panel p-8 md:p-16">
+          <h2 class="font-heavy text-4xl md:text-6xl mb-8 uppercase text-glow-cyan text-opa-cyan">About OpaHiFi</h2>
+          <div class="font-sans text-lg text-gray-300 space-y-6">
+            <p>OpaHiFi is more than music; it's a ride world. A carefully constructed emotional arc translating the
+              pressures of modern digital life into kinetic visual and sonic energy.</p>
+            <p>Built on the foundation of glossy cobalt UI, electric cyan glows, and heavy beats, each "Opaverse" serves
+              as an isolated module of reality—tackling themes from AI hallucination to toxic positivity and the
+              struggle for authentic connection.</p>
+            <p>Enjoy the ride. Don't let the bots win.</p>
           </div>
         </div>
+      </section>
 
-        <!-- Slide 2: Stats -->
-        <div class="universe-slide">
-          <div class="glass-panel infographic" id="universe-stats">
-            <!-- Populated dynamically by script.js / musicData -->
+      <!-- Terms Section -->
+      <footer id="terms" class="bg-black py-12 px-4 text-center border-t border-white/5 relative z-20">
+        <div class="max-w-3xl mx-auto text-sm text-gray-500 font-sans space-y-4">
+          <div class="flex justify-center gap-6 font-display tracking-widest mb-6">
+            <a href="#" class="hover:text-opa-cyan transition-colors">TERMS & CONDITIONS</a>
+            <a href="#" class="hover:text-opa-cyan transition-colors">PRIVACY POLICY</a>
+            <a href="#" class="hover:text-opa-cyan transition-colors">CONTACT</a>
           </div>
+          <p>&copy; 2026 OpaHiFi. All rights reserved. Enter the world at your own risk.</p>
         </div>
+      </footer>
 
-      </div>
-    </div>
+    </div> <!-- End Smooth Content -->
+  </main> <!-- End Smooth Wrapper -->
 
-  </div><!-- /layout-wrapper -->
+  <script>
+    // Updated Data with specific color gradient hexes and strict 2-line formatting
+    const versesData = [
+      { id: 'v1', title: 'Full-Mindness', mapTitle: 'Full-<br>Mindness', color: '#FF2A2A', lightColor: '#FF8080' },
+      { id: 'v2', title: 'Hallucinating Dum Dum', mapTitle: 'Hallucinating<br>Dum Dum', color: '#FF2A2A', lightColor: '#FF8080' },
+      { id: 'v3', title: 'Yeah, Let\'s Do Brunch', mapTitle: 'Yeah, Let\'s<br>Do Brunch', color: '#FF2A2A', lightColor: '#FF8080' },
+      { id: 'v4', title: 'Splenda Love Rabbit Hell', mapTitle: 'Splenda Love<br>Rabbit Hell', color: '#F3244A', lightColor: '#F992A5' },
+      { id: 'v5', title: 'Believe the Truth Fairy', mapTitle: 'Believe the<br>Truth Fairy', color: '#B200FF', lightColor: '#D980FF' },
+      { id: 'v6', title: 'Old Love Story', mapTitle: 'Old Love<br>Story', color: '#A907FF', lightColor: '#D484FF' },
+      { id: 'v7', title: 'Glittaa Phoenix', mapTitle: 'Glittaa<br>Phoenix', color: '#8E1BFF', lightColor: '#C78DFF' },
+      { id: 'v8', title: 'Not Your Bot', mapTitle: 'Not Your<br>Bot', color: '#246DFF', lightColor: '#92B6FF' },
+      { id: 'v9', title: 'Wellwolf Howl-Lehluya', mapTitle: 'Wellwolf<br>Howl-Lehluya', color: '#0088FF', lightColor: '#80C4FF' },
+      { id: 'v10', title: 'Opa Pa Pa Party', mapTitle: 'Opa Pa<br>Pa Party', color: '#0088FF', lightColor: '#80C4FF' }
+    ];
 
-  <!-- Data layer (populated by your CMS / build step) -->
-  <script src="js/script.js"></script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      // 1. Populate Verse 1 Background Text (Overload effect representing Chaos)
+      const v1Bg = document.getElementById('v1-text-bg');
+      if (v1Bg) {
+        const phrase = "SURVIVING FABULOUSLY CHAOS ";
+        v1Bg.innerText = phrase.repeat(350);
+      }
 
-  <!-- App (use type="module" if not bundling) -->
-  <script type="module" src="js/main.js"></script>
+      // 2. Initialize Lenis Smooth Scroll
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        smooth: true
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      gsap.registerPlugin(ScrollTrigger);
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+
+      // 3. Generate Map UI & Gallery UI
+      const desktopMap = document.getElementById('line-map');
+      const mobileMap = document.getElementById('mobile-map');
+      const galleryGrid = document.getElementById('gallery-grid');
+
+      versesData.forEach((verse, index) => {
+        const num = String(index + 1).padStart(2, '0');
+
+        // Desktop Map Item
+        const mapItem = document.createElement('a');
+        mapItem.href = `#${verse.id}`;
+        mapItem.className = 'map-item group flex items-center justify-start gap-3 cursor-pointer relative h-10';
+        mapItem.innerHTML = `
+                    <div class="map-dot" data-target="${verse.id}" style="--dot-color: ${verse.color}; --dot-light: ${verse.lightColor}">${num}</div>
+                    <span class="map-label font-display tracking-widest bg-black/60 border border-white/10 px-3 py-2 rounded backdrop-blur-md flex flex-col justify-center min-w-max">
+                        <span class="text-sm text-white leading-tight">${verse.mapTitle}</span>
+                    </span>
+                `;
+        desktopMap.appendChild(mapItem);
+
+        // Mobile Map Item
+        const mobileItem = document.createElement('a');
+        mobileItem.href = `#${verse.id}`;
+        mobileItem.className = 'p-2 flex-shrink-0';
+        mobileItem.innerHTML = `<div class="map-dot !w-10 !h-10 text-[14px]" data-target="${verse.id}" style="--dot-color: ${verse.color}; --dot-light: ${verse.lightColor}">${num}</div>`;
+        mobileMap.appendChild(mobileItem);
+
+        // Gallery Item
+        const galleryCard = document.createElement('div');
+        galleryCard.className = 'glass-panel overflow-hidden group cursor-pointer hover:border-opa-cyan transition-colors duration-500 flex flex-col h-[300px]';
+
+        let gradientClass = 'bg-cinematic-gradient';
+        if (verse.id === 'v3') gradientClass = 'bg-gradient-to-br from-opa-cobalt to-black';
+        if (verse.id === 'v7') gradientClass = 'bg-gradient-to-br from-opa-orange to-black';
+
+        galleryCard.innerHTML = `
+                    <div class="h-2/3 overflow-hidden relative ${gradientClass}">
+                        <div class="absolute inset-0 bg-opa-navy/50 group-hover:bg-transparent transition-colors z-10 duration-500"></div>
+                        <div class="w-full h-full flex items-center justify-center font-heavy text-4xl text-white/20 group-hover:scale-110 transition-transform duration-700">${num}</div>
+                    </div>
+                    <div class="p-4 h-1/3 flex flex-col justify-center">
+                        <div class="text-opa-cyan font-display text-xs mb-1 tracking-widest">${num}</div>
+                        <h3 class="font-heavy text-xl uppercase group-hover:text-glow-cyan transition-all">${verse.title}</h3>
+                    </div>
+                `;
+        galleryCard.addEventListener('click', () => {
+          lenis.scrollTo(`#${verse.id}`, { offset: 0 });
+        });
+        galleryGrid.appendChild(galleryCard);
+      });
+
+      // Smooth anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          lenis.scrollTo(this.getAttribute('href'), { offset: 0 });
+        });
+      });
+
+      // 4. GSAP Scroll Animations
+      const verses = gsap.utils.toArray('.opaverse');
+      const dots = document.querySelectorAll('.map-dot');
+
+      verses.forEach((verse, i) => {
+        const content = verse.querySelector('.verse-content');
+        const verseId = verse.id;
+
+        ScrollTrigger.create({
+          trigger: verse,
+          start: "top 50%",
+          end: "bottom 50%",
+          onToggle: self => {
+            if (self.isActive) {
+              dots.forEach(d => d.classList.remove('active', 'scale-150', 'bg-opa-cyan'));
+              document.querySelectorAll(`.map-dot[data-target="${verseId}"]`).forEach(activeDot => {
+                activeDot.classList.add('active');
+              });
+            }
+          }
+        });
+
+        if (content) {
+          gsap.fromTo(content,
+            { opacity: 0, y: 100, scale: 0.95 },
+            {
+              opacity: 1, y: 0, scale: 1, duration: 1, ease: "power3.out",
+              scrollTrigger: { trigger: verse, start: "top 75%", toggleActions: "play reverse play reverse" }
+            }
+          );
+        }
+      });
+
+      // Parallax huge text in V3 (Brunch)
+      const v3Text = document.querySelector('#v3 .verse-bg');
+      if (v3Text) {
+        gsap.to(v3Text, {
+          yPercent: 30,
+          ease: "none",
+          scrollTrigger: { trigger: '#v3', start: "top bottom", end: "bottom top", scrub: true }
+        });
+      }
+
+      // Hero Entrance Animations
+      const tl = gsap.timeline();
+      tl.from("#hero h2", { y: 20, opacity: 0, duration: 0.8, ease: "power2.out", delay: 0.2 })
+        .from("#hero h1", { y: 30, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.4")
+        .from("#hero p", { y: 20, opacity: 0, duration: 0.8, ease: "power2.out" }, "-=0.6")
+        .from("#hero .btn-primary", { y: 20, opacity: 0, duration: 0.8, ease: "back.out(1.7)" }, "-=0.4");
+
+      // Mobile Menu
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      mobileMenuBtn.addEventListener('click', () => {
+        const navLinks = document.querySelector('nav div');
+        navLinks.classList.toggle('hidden');
+        navLinks.classList.toggle('flex');
+        navLinks.classList.toggle('absolute');
+        navLinks.classList.toggle('top-[80px]');
+        navLinks.classList.toggle('left-0');
+        navLinks.classList.toggle('w-full');
+        navLinks.classList.toggle('bg-opa-navy/95');
+        navLinks.classList.toggle('flex-col');
+        navLinks.classList.toggle('py-8');
+        mobileMenuBtn.innerText = navLinks.classList.contains('hidden') ? 'MENU' : 'CLOSE';
+      });
+    });
+  </script>
 </body>
-</html>
 
+</html>
