@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // --- Base Properties ---
             this.key = verseData.key;
-            this.line1 = verseData.titleLines[0] || ''; // The ID is now used for the anchor link
+            this.line1 = verseData.titleLines[0] || '';
             this.line2 = verseData.titleLines[1] || '';
             this.img = verseData.cover;
             this.subtitle = `${num} // ${verseData.ride?.subtitle || ''}`;
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // --- Derived UI Properties ---
             this.color = `hsl(${currentHue}, 100%, 50%)`;
             this.lightColor = `hsl(${currentHue}, 100%, 75%)`;
-            this.id = `v${index + 1}`;
+            this.id = verseData.key;
             this.theme = this._getThemeConfig();
         }
 
@@ -314,7 +314,9 @@ document.addEventListener("DOMContentLoaded", () => {
             this.scrollManager.init();
             this.pageUI.init();
             this.setupOpaverses();
+            this.setupUrlTracking();
             new Gallery('gallery-grid', this.versesData, this.scrollManager);
+            this.scrollToInitialHash();
         }
 
         setupOpaverses() {
@@ -325,6 +327,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 const element = this.createVerseElement(viewModel);
                 rideContainer.appendChild(element);
                 this.opaverses.push(new Opaverse(viewModel, element));
+            });
+        }
+
+        setupUrlTracking() {
+            this.opaverses.forEach(opaverse => {
+                const updateUrl = () => {
+                    const nextHash = `#${opaverse.element.id}`;
+                    if (window.location.hash !== nextHash) {
+                        history.replaceState(null, '', nextHash);
+                    }
+                };
+
+                ScrollTrigger.create({
+                    trigger: opaverse.element,
+                    start: "top center",
+                    end: "bottom center",
+                    onEnter: updateUrl,
+                    onEnterBack: updateUrl
+                });
+            });
+        }
+
+        scrollToInitialHash() {
+            if (!window.location.hash) return;
+
+            const target = document.querySelector(window.location.hash);
+            const lenis = this.scrollManager.getLenis();
+            if (!target || !lenis) return;
+
+            requestAnimationFrame(() => {
+                lenis.scrollTo(window.location.hash, { immediate: true });
             });
         }
 
