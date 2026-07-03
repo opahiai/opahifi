@@ -1,18 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
     /**
-     * Manages a single "verse" section in the ride.
+     * Manages a single "Opaverse" section in the ride.
      * Handles its own styling, content, and animations.
      */
-    class Verse {
+    class Opaverse {
         constructor(data, element) {
             this.data = data;
             this.element = element;
             this.content = this.element.querySelector('.verse-content');
             this.bgWrapper = this.element.querySelector('.verse-bg-wrapper');
+            this.init();
         }
 
         /**
-         * Initializes the verse by setting styles, title, and animations.
+         * Initializes the verse by setting styles, content, and animations.
          */
         init() {
             this.setStyles();
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         /**
-         * Populates the title of the verse.
+         * Populates the content of the verse.
          */
         setTitle() {
             const titleEl = this.element.querySelector('.verse-title');
@@ -94,14 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * Main controller for the entire "Ride" page experience.
-     * Manages verses, gallery, and global animations.
+     * Manages all data for the ride.
      */
-    class RideController {
-        constructor() {
-            this.versesData = this.getVersesData();
-            this.lenis = null;
-            this.init();
+    class DataManager {
+        constructor(database) {
+            this.rideVerses = this._getRideData(database);
+            this.processedVerses = this._processVersesData();
         }
 
         /**
@@ -109,82 +108,32 @@ document.addEventListener("DOMContentLoaded", () => {
          * This mirrors the structure from `script.js` for consistency and maintainability.
          * @returns {Array} An array of verse data objects.
          */
-        getRideData() {
-            // This is the single source of truth for the ride page content.
-            const rideVerses = [
-                {
-                    key: 'full-mindness',
-                    titleLines: ['Full-', 'Mindness'],
-                    subtitle: 'SURVIVE FABULOUSLY',
-                    description: 'Everyday chaos takes over. Calm is not the goal anymore—surviving fabulously is. A high-contrast barrage of thoughts woven into an undeniable groove.'
-                },
-                {
-                    key: 'hallucinatingdumdum',
-                    titleLines: ['Hallucinating', 'Dum Dum'],
-                    subtitle: 'THE BRAIN FILLS BLANKS',
-                    description: 'Human confusion mirrors AI hallucination. A surreal 3D playground where logic melts into violet and cyan haze.'
-                },
-                {
-                    key: 'yeahletsdobrunch',
-                    titleLines: ['Yeah, Let\'s', 'Do Brunch'],
-                    subtitle: 'FAKE WARMTH',
-                    description: '"I miss you" with no follow-through. Bright morning mimosas fade into cold read receipts and deep cobalt emptiness.'
-                },
-                {
-                    key: 'splendaloverabbithell',
-                    titleLines: ['Splenda Love', 'Rabbit Hell'],
-                    subtitle: 'ARTIFICIAL SWEETNESS',
-                    description: 'Fake love tastes good for one second and terrible after. A descent into a glossy, sticky, molten nightmare.'
-                },
-                {
-                    key: 'believethetruthfairy',
-                    titleLines: ['Believe the', 'Truth Fairy'],
-                    subtitle: 'BRINGING THE RECEIPTS',
-                    description: 'Misinformation, lazy certainty, and online hate are challenged by a tired truth fairy. The blur fades into stark contrast.'
-                },
-                {
-                    key: 'oldlovestory',
-                    titleLines: ['Old Love', 'Story'],
-                    subtitle: 'SLOWER, MESSIER ROMANCE',
-                    description: 'The ride looks back at a time before disposable fast culture. Warm tones, soft glowing edges, and real connection.'
-                },
-                {
-                    key: 'glittaaphoenix',
-                    titleLines: ['Glittaa', 'Phoenix'],
-                    subtitle: 'FIRE AND DANCE',
-                    description: 'Pain becomes glitter, rhythm, fire, and kinetic momentum. The energy spikes as we rise from the ashes.'
-                },
-                {
-                    key: 'notyourbot-beepsleep',
-                    titleLines: ['Not Your Bot', 'Beep Sleep'],
-                    subtitle: 'ABSOLUTE FREEDOM',
-                    description: 'Bot/toy accusations flip into freedom, sass, and release. Sharp geometric cuts, stark contrast, and electric energy.'
-                },
-                { key: 'wellwolfhowllehluya', titleLines: ['Wellwolf', 'Howl-Lehluya'], subtitle: 'THE MONSTER REDEFINED', description: 'Real power is kindness, restraint, and not becoming the predator. Deep navy shadows pierced by soft violet moon glows.' },
-                { key: 'opapapaparty', titleLines: ['Opa Pa', 'Pa Party'], subtitle: 'RIDE EXIT', description: 'The meltdown becomes celebration. Same chaos, better rhythm. We survived the ride.' }
-            ];
-
-            return rideVerses;
+        _getRideData(database) {
+            // Use the ride-specific verses from the global database
+            const rideOrder = ['full-mindness', 'hallucinatingdumdum', 'yeahletsdobrunch', 'splendaloverabbithell', 'believethetruthfairy', 'oldlovestory', 'glittaaphoenix', 'notyourbot-beepsleep', 'wellwolfhowllehluya', 'opapapaparty'];
+            const allGroups = database?.groups || [];
+            const groupsByKey = Object.fromEntries(allGroups.map(g => [g.key, g]));
+            return rideOrder.map(key => groupsByKey[key]).filter(Boolean);
         }
 
         /**
-         * Defines the raw data for all verses and calculates their colors.
+         * Processes the raw verse data, adding dynamic properties like colors.
          * @returns {Array} The processed array of verse data.
          */
-        getVersesData() {
-            const rideVerses = this.getRideData();
+        _processVersesData() {
+            const rideVerses = this.rideVerses;
 
             // Map the structured verse data to the format required by the Verse class.
-            const verses = rideVerses.map((verse, index) => {
+            let verses = rideVerses.map((verse, index) => {
                 const num = String(index + 1).padStart(2, '0');
-                const fullSubtitle = `${num} // ${verse.subtitle}`;
+                const fullSubtitle = `${num} // ${verse.ride?.subtitle || ''}`;
                 return {
                     id: `v${index + 1}`,
                     line1: verse.titleLines[0] || '',
                     line2: verse.titleLines[1] || '',
-                    img: `https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-${verse.key}.png`,
+                    img: `https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-${verse.key}.png`, // Keep remote URLs for the ride
                     subtitle: fullSubtitle,
-                    description: verse.description
+                    description: verse.ride?.description || ''
                 };
             });
 
@@ -192,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const endHue = 210;   // Blue
             const hueStep = (startHue - endHue) / (verses.length - 1);
 
-            return verses.map((song, index) => {
+            verses = verses.map((song, index) => {
                 const currentHue = startHue - (index * hueStep);
                 return {
                     ...song,
@@ -200,23 +149,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     lightColor: `hsl(${currentHue}, 100%, 75%)`
                 };
             });
+            return verses;
         }
 
-        /**
-         * Initializes all components of the page.
-         */
+        getData() {
+            return this.processedVerses;
+        }
+    }
+
+    /**
+     * Manages smooth scrolling using Lenis.
+     */
+    class ScrollManager {
+        constructor() {
+            this.lenis = null;
+        }
+
         init() {
-            this.setupSmoothScroll();
-            this.setupVerses();
-            this.populateGallery();
-            this.setupMobileMenu();
-            this.setupHeroAnimation();
-        }
-
-        /**
-         * Sets up Lenis for smooth scrolling and connects it to GSAP's ScrollTrigger.
-         */
-        setupSmoothScroll() {
             this.lenis = new Lenis({
                 duration: 1.2,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
