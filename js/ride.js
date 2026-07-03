@@ -257,10 +257,10 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = 'gallery-card';
             card.innerHTML = `
                     <div class="card-img">
-                        <img src="${verse.img}" alt="${verse.line1} ${verse.line2}">
                         <div class="card-info">
                            <div class="card-info-title font-heavy">${verse.line1}<br>${verse.line2}</div>
                         </div>
+                        <div class="img-crop-bottom"><img src="${verse.img}" alt=""></div>
                     </div>`;
             card.addEventListener('click', () => lenis.scrollTo(`#${verse.id}`, { offset: 0 }));
             this.container.appendChild(card);

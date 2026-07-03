@@ -40,6 +40,7 @@
 
     :root {
       --navbar-height: 45px;
+      --gallery-gaps: 0.7rem;
     }
 
     * {
@@ -143,7 +144,7 @@
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0 var(--gallery-gaps);
     }
 
     .glass-panel {
@@ -520,7 +521,7 @@
     }
 
     .gallery-section {
-      padding: 8rem 1.5rem;
+      padding: 8rem 0rem;
       background-color: var(--opa-navy);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       position: relative;
@@ -546,8 +547,8 @@
 
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gallery-gaps);
     }
 
     .gallery-card {
@@ -573,6 +574,7 @@
       background: var(--cinematic-gradient);
       display: flex;
       align-items: center;
+      flex-direction: column;
       justify-content: center;
     }
 
@@ -595,38 +597,40 @@
       object-fit: cover;
     }
 
-    .card-info {
+    /*
+     * Reusable image cropping utility.
+     * --img-crop-visible-area: The percentage (as a decimal) of the bottom of the image to keep.
+     */
+    .card-img .img-crop-bottom {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      --img-crop-visible-area: 0.625; /* Shows the bottom 62.5% */
+    }
+
+    .card-img .img-crop-bottom img {
       position: absolute;
-      inset: 0;
-      padding: 0.5rem;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100% / var(--img-crop-visible-area)); /* Makes the image taller to allow cropping */
+    }
+
+    .card-info {
       display: flex;
       flex-direction: column;
       justify-content: center;
       text-align: center;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      opacity: 1;
-      transition: background 0.3s ease;
+      background: #ffffff;
       color: black;
-      line-height: 1.1;
-    }
-
-    .card-info-num {
-      font-family: var(--font-display);
-      color: var(--opa-cyan);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.25rem;
+      padding: 0.25rem;
     }
 
     .card-info-title {
-      font-size: clamp(0.7rem, 2.5vw, 1.25rem);
+      font-size: clamp(0.6rem, 2.5vw, 1.1rem);
       line-height: 1.2;
       transition: all 0.3s;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
     .gallery-card:hover .card-info-title {
@@ -806,7 +810,7 @@
       }
 
       .gallery-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
       }
 
       .about-content {
@@ -820,7 +824,7 @@
 
     @media(min-width: 1024px) {
       .gallery-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
       }
 
       .hero-title {
