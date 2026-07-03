@@ -38,6 +38,10 @@
       --glow-orange: 0 0 15px rgba(255, 60, 0, 0.6), 0 0 30px rgba(255, 60, 0, 0.3);
     }
 
+    :root {
+      --navbar-height: 45px;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -198,7 +202,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 80px;
+      height: var(--navbar-height);
       z-index: 50;
       display: flex;
       align-items: center;
@@ -352,6 +356,30 @@
       display: none;
     }
 
+    .map-mobile a {
+      position: relative;
+      left: 0;
+      opacity: 0.3;
+      /* Dim non-active circles */
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: block;
+    }
+
+    .map-mobile a.active {
+      opacity: 1;
+      /* Light active */
+      left: 15px;
+      /* Pop out */
+    }
+
+    .map-mobile a.active .map-dot {
+      background: var(--dot-light);
+      color: var(--opa-navy);
+      border-color: var(--dot-light);
+      box-shadow: 0 0 15px var(--dot-light);
+      transform: scale(1.15);
+    }
+
     .map-mobile .map-dot {
       width: 32px;
       height: 32px;
@@ -362,7 +390,7 @@
       height: 100vh;
       /* Fallback */
       height: 100dvh;
-      padding-top: 80px;
+      padding-top: var(--navbar-height);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -641,20 +669,23 @@
 
     .gallery-card {
       display: flex;
-      flex-direction: column;
-      height: 300px;
+      flex-direction: row;
+      align-items: center;
+      gap: 1.5rem;
       overflow: hidden;
       cursor: pointer;
-      transition: border-color 0.5s;
+      transition: all 0.3s ease;
+      padding: 1rem;
     }
 
     .gallery-card:hover {
-      border-color: var(--opa-cyan);
+      background: var(--glass-gradient);
     }
 
     .card-img {
-      height: 66.66%;
-      position: relative;
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
       overflow: hidden;
       background: var(--cinematic-gradient);
       display: flex;
@@ -662,29 +693,12 @@
       justify-content: center;
     }
 
-    .card-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(5, 5, 16, 0.5);
-      transition: background 0.5s;
-      z-index: 10;
+    .card-img {
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
     }
 
-    .gallery-card:hover .card-overlay {
-      background: transparent;
-    }
-
-    .card-number {
-      font-family: var(--font-heavy);
-      font-size: 2.25rem;
-      color: rgba(255, 255, 255, 0.2);
-      transition: transform 0.7s;
-      z-index: 5;
-    }
-
-    .gallery-card:hover .card-number {
-      transform: scale(1.1);
-    }
 
     .card-info {
       padding: 1rem;
@@ -911,7 +925,7 @@
     .nav-links.open {
       display: flex;
       position: absolute;
-      top: 80px;
+      top: var(--navbar-height);
       left: 0;
       width: 100%;
       background: rgba(5, 5, 16, 0.95);
@@ -1085,7 +1099,7 @@
         <section id="v10" class="opaverse" style="align-items: center; text-align: center;">
           <div class="verse-bg-wrapper glow-radial" style="animation: pulse 2s infinite;"></div>
           <div class="verse-content glass-panel" style="margin: 0;">
-            <div class="verse-subtitle font-display">10 // THE RELEASE</div>
+            <div class="verse-subtitle font-display">10 // RIDE EXIT</div>
             <h2 class="verse-title font-heavy" style="font-size: clamp(4rem, 8vw, 8rem);">Title</h2>
             <p class="verse-desc font-sans" style="font-weight: bold; color: white;">The meltdown becomes celebration.
               Same chaos, better rhythm. We survived the ride.</p>
@@ -1137,18 +1151,18 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
 
-      // Raw song titles
+      // Raw song titles and cover images
       const rawTitles = [
-        { id: 'v1', line1: 'Full-', line2: 'Mindness' },
-        { id: 'v2', line1: 'Hallucinating', line2: 'Dum Dum' },
-        { id: 'v3', line1: 'Yeah, Let\'s', line2: 'Do Brunch' },
-        { id: 'v4', line1: 'Splenda Love', line2: 'Rabbit Hell' },
-        { id: 'v5', line1: 'Believe the', line2: 'Truth Fairy' },
-        { id: 'v6', line1: 'Old Love', line2: 'Story' },
-        { id: 'v7', line1: 'Glittaa', line2: 'Phoenix' },
-        { id: 'v8', line1: 'Not Your', line2: 'Bot' },
-        { id: 'v9', line1: 'Wellwolf', line2: 'Howl-Lehluya' },
-        { id: 'v10', line1: 'Opa Pa', line2: 'Pa Party' }
+        { id: 'v1', line1: 'Full-', line2: 'Mindness', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-fullmindness.png' },
+        { id: 'v2', line1: 'Hallucinating', line2: 'Dum Dum', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-hallucinatingdumdum.png' },
+        { id: 'v3', line1: 'Yeah, Let\'s', line2: 'Do Brunch', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-yeahletsdobrunch.png' },
+        { id: 'v4', line1: 'Splenda Love', line2: 'Rabbit Hell', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-splendaloverabbithell.png' },
+        { id: 'v5', line1: 'Believe the', line2: 'Truth Fairy', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-believethetruthfairy.png' },
+        { id: 'v6', line1: 'Old Love', line2: 'Story', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-oldlovestory.png' },
+        { id: 'v7', line1: 'Glittaa', line2: 'Phoenix', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-glittaaphoenix.png' },
+        { id: 'v8', line1: 'Not Your Bot /', line2: 'Beep Sleep', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-notyourbot-beepsleep.png' },
+        { id: 'v9', line1: 'Wellwolf', line2: 'Howl-Lehluya', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-wellwolfhowllehluya.png' },
+        { id: 'v10', line1: 'Opa Pa', line2: 'Pa Party', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-opapapaparty.png' }
       ];
 
       // Calculate exact Red-to-Blue transition
@@ -1175,6 +1189,34 @@
       const desktopMap = document.getElementById('line-map');
       const mobileMap = document.getElementById('mobile-map');
       const galleryGrid = document.getElementById('gallery-grid');
+
+      // Add static Hero item to maps
+      if (desktopMap) {
+        const heroMapItem = document.createElement('a');
+        heroMapItem.href = '#hero';
+        heroMapItem.className = 'map-item active'; // Start with active
+        heroMapItem.innerHTML = `
+          <div class="map-dot" data-target="hero" style="--dot-color: var(--opa-cyan); --dot-light: var(--opa-cyan)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
+          </div>
+          <div class="map-label font-display">
+              <span style="color: white; font-size: 0.875rem;">Ride<br>Entrance</span>
+          </div>
+        `;
+        desktopMap.appendChild(heroMapItem);
+        desktopMap.prepend(heroMapItem);
+      }
+      if (mobileMap) {
+        const mobileHeroItem = document.createElement('a');
+        mobileHeroItem.href = '#hero';
+        mobileHeroItem.className = 'active';
+        mobileHeroItem.style.textDecoration = 'none';
+        mobileHeroItem.innerHTML = `
+          <div class="map-dot" data-target="hero" style="--dot-color: var(--opa-cyan); --dot-light: var(--opa-cyan)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></div>
+        `;
+        mobileMap.appendChild(mobileHeroItem);
+        mobileMap.prepend(mobileHeroItem);
+      }
 
       versesData.forEach((verse, index) => {
         const num = String(index + 1).padStart(2, '0');
@@ -1217,8 +1259,9 @@
           galleryCard.className = 'gallery-card glass-panel';
           galleryCard.innerHTML = `
                         <div class="card-img">
-                            <div class="card-overlay"></div>
-                            <div class="card-number">${num}</div>
+                            <div class="img-crop-bottom">
+                                <div class="img-crop-bottom-wrapper"><img src="${verse.img}" alt="${verse.line1} ${verse.line2}"></div>
+                            </div>
                         </div>
                         <div class="card-info">
                             <div class="card-info-num">${num}</div>
@@ -1277,7 +1320,38 @@
 
       // GSAP Animations
       const verses = gsap.utils.toArray('.opaverse');
-      const mapItems = document.querySelectorAll('.map-item, .map-mobile a');
+
+      // Hero Map Active State
+      ScrollTrigger.create({
+        trigger: "#hero",
+        start: "top 70%",
+        end: "bottom 30%",
+        onToggle: self => {
+          if (self.isActive) {
+            document.querySelectorAll('.map-item, .map-mobile > a').forEach(item => item.classList.remove('active'));
+            desktopMap.querySelector('.map-item:first-child')?.classList.add('active');
+            mobileMap.querySelector('a:first-child')?.classList.add('active');
+          }
+        }
+      });
+
+      // Hide maps when entering gallery/footer
+      ScrollTrigger.create({
+        trigger: "#gallery",
+        start: "top 80%",
+        onEnter: () => {
+          const dMap = document.getElementById('line-map');
+          const mMap = document.getElementById('mobile-map');
+          if (dMap) dMap.classList.add('hidden-map');
+          if (mMap) mMap.classList.add('hidden-map');
+        },
+        onLeaveBack: () => {
+          const dMap = document.getElementById('line-map');
+          const mMap = document.getElementById('mobile-map');
+          if (dMap) dMap.classList.remove('hidden-map');
+          if (mMap) mMap.classList.remove('hidden-map');
+        }
+      });
 
       verses.forEach((verse) => {
         const content = verse.querySelector('.verse-content');
@@ -1286,11 +1360,11 @@
         // Active State for Map
         ScrollTrigger.create({
           trigger: verse,
-          start: "top 50%",
-          end: "bottom 50%",
+          start: "top 80%",
+          end: "bottom 20%",
           onToggle: self => {
             if (self.isActive) {
-              mapItems.forEach(item => item.classList.remove('active'));
+              document.querySelectorAll('.map-item, .map-mobile > a').forEach(item => item.classList.remove('active'));
               document.querySelectorAll(`.map-item:has([data-target="${verseId}"])`).forEach(item => item.classList.add('active'));
               document.querySelectorAll(`.map-mobile a:has([data-target="${verseId}"])`).forEach(item => item.classList.add('active'));
             }
@@ -1307,6 +1381,15 @@
             }
           );
         }
+      });
+
+      // Pin the side navigation
+      ScrollTrigger.create({
+        trigger: ".ride-container",
+        start: "top top",
+        end: "bottom bottom", // Unpin at the end of the ride
+        pin: "#line-map, #mobile-map",
+        pinSpacing: false
       });
 
       // V3 (Brunch) Huge Text Parallax
