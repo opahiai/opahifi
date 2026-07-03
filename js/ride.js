@@ -71,85 +71,90 @@ document.addEventListener("DOMContentLoaded", () => {
          * Sets up special background effects for specific verses.
          */
         setupBackground() {
-            if (!this.bgWrapper) return;
+            if (!this.bgWrapper || !this.data.background) return;
 
-            // Verse 1: Repeating text background
-            if (this.data.id === 'v1') {
-                this.bgWrapper.innerText = "SURVIVING FABULOUSLY CHAOS ".repeat(300);
-            }
-
-            // Verse 3: Parallax huge text
-            if (this.data.id === 'v3') {
-                gsap.to(this.bgWrapper, {
-                    yPercent: 30,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: this.element,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
+            // The ViewModel (this.data) now dictates the background type.
+            switch (this.data.background.type) {
+                case 'repeating-text':
+                    this.bgWrapper.innerText = this.data.background.text.repeat(300);
+                    break;
+                case 'parallax-text':
+                    gsap.to(this.bgWrapper, {
+                        yPercent: 30,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: this.element,
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
+                    break;
             }
         }
     }
+
+    /**
+     * A true model for a single verse. It contains all data and derived
+     * properties required for rendering, including UI-specific logic.
+     */
+    class VerseViewModel {
+        constructor(verseData, index, totalVerses) {
+            const num = String(index + 1).padStart(2, '0');
+            const hueStep = totalVerses > 1 ? (360 - 210) / (totalVerses - 1) : 0;
+            const currentHue = 360 - (index * hueStep);
+
+            // --- Base Properties ---
+            this.key = verseData.key;
+            this.id = `v${index + 1}`;
+            this.line1 = verseData.titleLines[0] || '';
+            this.line2 = verseData.titleLines[1] || '';
+            this.img = verseData.cover;
+            this.subtitle = `${num} // ${verseData.ride?.subtitle || ''}`;
+            this.description = verseData.ride?.description || '';
+
+            // --- Derived UI Properties ---
+            this.color = `hsl(${currentHue}, 100%, 50%)`;
+            this.lightColor = `hsl(${currentHue}, 100%, 75%)`;
+            this.background = this._getBackgroundConfig();
+        }
+
+        /**
+         * Encapsulates the logic for special backgrounds.
+         * @returns {Object|null} Configuration for the background effect.
+         */
+        _getBackgroundConfig() {
+            switch (this.key) {
+                case 'full-mindness':
+                    return {
+                        type: 'repeating-text',
+                        text: 'SURVIVING FABULOUSLY CHAOS '
+                    };
+                case 'yeahletsdobrunch':
+                    return {
+                        type: 'parallax-text'
+                    };
+                default:
+                    return null;
+            }
+        }
+    }
+
 
     /**
      * Manages all data for the ride.
      */
     class DataManager {
         constructor(database) {
-            this.rideVerses = this._getRideData(database);
-            this.processedVerses = this._processVersesData();
-        }
-
-        /**
-         * Defines the structured data for all verses in the ride.
-         * This mirrors the structure from `script.js` for consistency and maintainability.
-         * @returns {Array} An array of verse data objects.
-         */
-        _getRideData(database) {
-            // Use the ride-specific verses from the global database
-            const rideOrder = ['full-mindness', 'hallucinatingdumdum', 'yeahletsdobrunch', 'splendaloverabbithell', 'believethetruthfairy', 'oldlovestory', 'glittaaphoenix', 'notyourbot-beepsleep', 'wellwolfhowllehluya', 'opapapaparty'];
+            const rideOrder = database?.rideOrder || [];
             const allGroups = database?.groups || [];
             const groupsByKey = Object.fromEntries(allGroups.map(g => [g.key, g]));
-            return rideOrder.map(key => groupsByKey[key]).filter(Boolean);
-        }
+            const rideVerses = rideOrder.map(key => groupsByKey[key]).filter(Boolean);
 
-        /**
-         * Processes the raw verse data, adding dynamic properties like colors.
-         * @returns {Array} The processed array of verse data.
-         */
-        _processVersesData() {
-            const rideVerses = this.rideVerses;
-
-            // Map the structured verse data to the format required by the Verse class.
-            let verses = rideVerses.map((verse, index) => {
-                const num = String(index + 1).padStart(2, '0');
-                const fullSubtitle = `${num} // ${verse.ride?.subtitle || ''}`;
-                return {
-                    id: `v${index + 1}`,
-                    line1: verse.titleLines[0] || '',
-                    line2: verse.titleLines[1] || '',
-                    img: `https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-${verse.key}.png`, // Keep remote URLs for the ride
-                    subtitle: fullSubtitle,
-                    description: verse.ride?.description || ''
-                };
-            });
-
-            const startHue = 360; // Red
-            const endHue = 210;   // Blue
-            const hueStep = (startHue - endHue) / (verses.length - 1);
-
-            verses = verses.map((song, index) => {
-                const currentHue = startHue - (index * hueStep);
-                return {
-                    ...song,
-                    color: `hsl(${currentHue}, 100%, 50%)`,
-                    lightColor: `hsl(${currentHue}, 100%, 75%)`
-                };
-            });
-            return verses;
+            // The DataManager's sole responsibility is to create the ViewModels.
+            this.processedVerses = rideVerses.map((verseData, index) =>
+                new VerseViewModel(verseData, index, rideVerses.length)
+            );
         }
 
         getData() {
@@ -163,6 +168,10 @@ document.addEventListener("DOMContentLoaded", () => {
     class ScrollManager {
         constructor() {
             this.lenis = null;
+        }
+
+        getLenis() {
+            return this.lenis;
         }
 
         init() {
@@ -189,45 +198,53 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             });
         }
+    }
 
-        /**
-         * Finds all verse elements and initializes a Verse instance for each.
-         */
-        setupVerses() {
-            this.versesData.forEach(data => {
-                const element = document.getElementById(data.id);
-                if (element) {
-                    const verse = new Verse(data, element);
-                    verse.init();
-                }
-            });
+    /**
+     * Manages the gallery section.
+     */
+    class Gallery {
+        constructor(containerId, versesData, scrollManager) {
+            this.container = document.getElementById(containerId);
+            this.versesData = versesData;
+            this.scrollManager = scrollManager;
+
+            if (this.container) {
+                this.versesData.forEach((verse, index) => {
+                    this.createCard(verse, index);
+                });
+            }
         }
 
-        /**
-         * Populates the gallery section with cards for each verse.
-         */
-        populateGallery() {
-            const galleryGrid = document.getElementById('gallery-grid');
-            if (!galleryGrid) return;
+        createCard(verse, index) {
+            const lenis = this.scrollManager.getLenis();
+            if (!lenis) return;
 
-            this.versesData.forEach((verse, index) => {
-                const num = String(index + 1).padStart(2, '0');
-                const card = document.createElement('div');
-                card.className = 'gallery-card glass-panel';
-                card.innerHTML = `
-                    <div class="card-img"><img src="${verse.img}" alt="${verse.line1} ${verse.line2}"></div>
-                    <div class="card-info">
-                        <div class="card-info-num">${num}</div>
-                        <div class="card-info-title font-heavy">${verse.line1}<br>${verse.line2}</div>
+            const num = String(index + 1).padStart(2, '0');
+            const card = document.createElement('div');
+            card.className = 'gallery-card';
+            card.innerHTML = `
+                    <div class="card-img">
+                        <img src="${verse.img}" alt="${verse.line1} ${verse.line2}">
+                        <div class="card-info">
+                           <div class="card-info-num">${num}</div>
+                            <div class="card-info-title font-heavy">${verse.line1}<br>${verse.line2}</div>
+                        </div>
                     </div>`;
-                card.addEventListener('click', () => this.lenis.scrollTo(`#${verse.id}`));
-                galleryGrid.appendChild(card);
-            });
+            card.addEventListener('click', () => lenis.scrollTo(`#${verse.id}`));
+            this.container.appendChild(card);
+        }
+    }
+
+    /**
+     * Manages general page UI elements like menus and hero animations.
+     */
+    class PageUI {
+        init() {
+            this.setupMobileMenu();
+            this.setupHeroAnimation();
         }
 
-        /**
-         * Sets up the toggle functionality for the mobile navigation menu.
-         */
         setupMobileMenu() {
             const menuBtn = document.getElementById('mobile-menu-btn');
             const navMenu = document.getElementById('nav-menu');
@@ -239,15 +256,43 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        /**
-         * Creates and plays the entrance animation for the hero section.
-         */
         setupHeroAnimation() {
             const tl = gsap.timeline();
             tl.from(".hero-subtitle", { y: 20, opacity: 0, duration: 0.8, ease: "power2.out", delay: 0.2 })
                 .from(".hero-title", { y: 30, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.4")
                 .from(".hero-desc", { y: 20, opacity: 0, duration: 0.8, ease: "power2.out" }, "-=0.6")
                 .from(".hero .btn-primary", { y: 20, opacity: 0, duration: 0.8, ease: "back.out(1.7)" }, "-=0.4");
+        }
+    }
+
+    /**
+     * Main controller for the entire "Ride" page experience.
+     * Manages verses, gallery, and global animations.
+     */
+    class RideController {
+        constructor() {
+            this.dataManager = new DataManager(window.opaHifiDatabase);
+            this.scrollManager = new ScrollManager();
+            this.pageUI = new PageUI();
+            this.versesData = this.dataManager.getData();
+            this.opaverses = [];
+            this.init();
+        }
+
+        init() {
+            this.scrollManager.init();
+            this.pageUI.init();
+            this.setupOpaverses();
+            new Gallery('gallery-grid', this.versesData, this.scrollManager);
+        }
+
+        setupOpaverses() {
+            this.versesData.forEach(data => {
+                const element = document.getElementById(data.id);
+                if (element) {
+                    this.opaverses.push(new Opaverse(data, element));
+                }
+            });
         }
     }
 

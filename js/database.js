@@ -328,6 +328,7 @@
     window.opaHifiDatabase = {
         platformOrder,
         platformIcons,
+        rideOrder: ['full-mindness', 'hallucinatingdumdum', 'yeahletsdobrunch', 'splendaloverabbithell', 'believethetruthfairy', 'oldlovestory', 'glittaaphoenix', 'notyourbot-beepsleep', 'wellwolfhowllehluya', 'opapapaparty'],
         groups: Object.values(groupsByKey),
         singlesById
     };

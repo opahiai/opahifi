@@ -547,28 +547,28 @@
 
     .gallery-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
     }
 
     .gallery-card {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       align-items: center;
-      gap: 1.5rem;
+      gap: 0;
       overflow: hidden;
       cursor: pointer;
       transition: all 0.3s ease;
-      padding: 1rem;
+      padding: 0;
     }
 
     .gallery-card:hover {
-      background: var(--glass-gradient);
+      /* No background on hover for the whole item */
     }
 
     .card-img {
-      width: 100px;
-      height: 100px;
+      width: 100%;
+      aspect-ratio: 1 / 1;
       flex-shrink: 0;
       overflow: hidden;
       background: var(--cinematic-gradient);
@@ -581,15 +581,33 @@
       border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.7);
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+      transition: all 0.3s ease;
+      position: relative; /* Needed for absolute positioning of the image */
     }
 
+    .card-img img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 166.67%; /* 100% / 0.6 = 166.67% */
+      object-fit: cover;
+    }
 
     .card-info {
-      padding: 1rem;
-      height: 33.33%;
+      position: absolute;
+      inset: 0;
+      padding: 0.5rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      text-align: center;
+      background: rgba(5, 5, 16, 0.6);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      color: white;
+      line-height: 1.1;
     }
 
     .card-info-num {
@@ -606,8 +624,18 @@
       transition: all 0.3s;
     }
 
+    .gallery-card:hover .card-info {
+      opacity: 1;
+    }
+
     .gallery-card:hover .card-info-title {
       text-shadow: var(--glow-cyan);
+    }
+
+    .gallery-card:hover .card-img {
+      transform: scale(1.05);
+      box-shadow: var(--glow-orange);
+      border-color: var(--opa-orange);
     }
 
     .about-section {
@@ -777,7 +805,7 @@
       }
 
       .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
       }
 
       .about-content {
@@ -791,7 +819,7 @@
 
     @media(min-width: 1024px) {
       .gallery-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(5, 1fr);
       }
 
       .hero-title {
@@ -801,7 +829,7 @@
 
     @media(min-width: 1280px) {
       .gallery-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
       }
 
       .verse-title {
@@ -965,7 +993,6 @@
             <div class="verse-subtitle font-display"></div>
             <h2 class="verse-title font-heavy" style="font-size: clamp(4rem, 8vw, 8rem);"></h2>
             <p class="verse-desc font-sans"></p>
-            <a href="#gallery" class="btn-primary" style="margin-top: 2rem;">ENTER GALLERY</a>
           </div>
         </section>
 
