@@ -270,122 +270,6 @@
       cursor: pointer;
     }
 
-    .map-desktop {
-      position: fixed;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 40;
-      display: none;
-      flex-direction: column;
-      gap: 0.75rem;
-      mix-blend-mode: difference;
-    }
-
-    .map-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-      position: relative;
-      height: 2.5rem;
-      cursor: pointer;
-    }
-
-    .map-dot {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--opa-navy);
-      border: 2px solid var(--dot-color);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-size: 16px;
-      font-weight: 700;
-      color: #ffffff;
-      flex-shrink: 0;
-    }
-
-    .map-item.active .map-dot,
-    .map-item:hover .map-dot {
-      background: var(--dot-light);
-      color: var(--opa-navy);
-      border-color: var(--dot-light);
-      box-shadow: 0 0 15px var(--dot-light);
-      transform: scale(1.15);
-    }
-
-    .map-label {
-      opacity: 0;
-      transform: translateX(-10px) scale(0.9);
-      transition: all 0.3s ease;
-      pointer-events: none;
-      position: absolute;
-      left: 60px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.25rem;
-      white-space: nowrap;
-      line-height: 1.2;
-    }
-
-    .map-item:hover .map-label,
-    .map-item.active .map-label {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-    }
-
-    .map-mobile {
-      position: fixed;
-      top: 50%;
-      left: -10px;
-      transform: translateY(-50%);
-      z-index: 40;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      overflow-y: visible;
-      max-height: 90vh;
-    }
-
-    .map-mobile::-webkit-scrollbar {
-      display: none;
-    }
-
-    .map-mobile a {
-      position: relative;
-      left: 0;
-      opacity: 0.3;
-      /* Dim non-active circles */
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: block;
-    }
-
-    .map-mobile a.active {
-      opacity: 1;
-      /* Light active */
-      left: 15px;
-      /* Pop out */
-    }
-
-    .map-mobile a.active .map-dot {
-      background: var(--dot-light);
-      color: var(--opa-navy);
-      border-color: var(--dot-light);
-      box-shadow: 0 0 15px var(--dot-light);
-      transform: scale(1.15);
-    }
-
-    .map-mobile .map-dot {
-      width: 32px;
-      height: 32px;
-      font-size: 12px;
-    }
-
     .hero {
       height: 100vh;
       /* Fallback */
@@ -783,6 +667,19 @@
       color: var(--opa-cyan);
     }
 
+    /* Utility for mobile menu open state */
+    .nav-links.open {
+      display: flex;
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      width: 100%;
+      background: rgba(5, 5, 16, 0.95);
+      flex-direction: column;
+      padding: 2rem 0;
+      text-align: center;
+    }
+
     @keyframes spin {
       100% {
         transform: rotate(360deg);
@@ -850,15 +747,6 @@
         display: none;
       }
 
-      .map-desktop {
-        display: flex;
-        left: 2rem;
-      }
-
-      .map-mobile {
-        display: none;
-      }
-
       .hero-subtitle {
         font-size: 1.25rem;
       }
@@ -920,19 +808,6 @@
         font-size: 5rem;
       }
     }
-
-    /* Utility for mobile menu open state */
-    .nav-links.open {
-      display: flex;
-      position: absolute;
-      top: var(--navbar-height);
-      left: 0;
-      width: 100%;
-      background: rgba(5, 5, 16, 0.95);
-      flex-direction: column;
-      padding: 2rem 0;
-      text-align: center;
-    }
   </style>
 </head>
 
@@ -950,9 +825,6 @@
     <button class="mobile-menu-btn font-display" id="mobile-menu-btn">MENU</button>
   </nav>
 
-  <aside class="map-desktop" id="line-map"></aside>
-  <aside class="map-mobile" id="mobile-map"></aside>
-
   <main id="smooth-wrapper">
     <div id="smooth-content">
 
@@ -965,7 +837,7 @@
         </div>
 
         <div class="hero-content">
-          <div class="hero-subtitle font-display">00 // RIDE ENTRANCE</div>
+          <div class="hero-subtitle font-display">// ENTRANCE</div>
           <h1 class="hero-title font-heavy glow-cyan">
             PRESSURE BECOMES<br><span class="text-gradient glow-orange">RHYTHM</span>
           </h1>
@@ -1186,37 +1058,7 @@
         v1Bg.innerText = "SURVIVING FABULOUSLY CHAOS ".repeat(300);
       }
 
-      const desktopMap = document.getElementById('line-map');
-      const mobileMap = document.getElementById('mobile-map');
       const galleryGrid = document.getElementById('gallery-grid');
-
-      // Add static Hero item to maps
-      if (desktopMap) {
-        const heroMapItem = document.createElement('a');
-        heroMapItem.href = '#hero';
-        heroMapItem.className = 'map-item active'; // Start with active
-        heroMapItem.innerHTML = `
-          <div class="map-dot" data-target="hero" style="--dot-color: var(--opa-cyan); --dot-light: var(--opa-cyan)">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
-          </div>
-          <div class="map-label font-display">
-              <span style="color: white; font-size: 0.875rem;">Ride<br>Entrance</span>
-          </div>
-        `;
-        desktopMap.appendChild(heroMapItem);
-        desktopMap.prepend(heroMapItem);
-      }
-      if (mobileMap) {
-        const mobileHeroItem = document.createElement('a');
-        mobileHeroItem.href = '#hero';
-        mobileHeroItem.className = 'active';
-        mobileHeroItem.style.textDecoration = 'none';
-        mobileHeroItem.innerHTML = `
-          <div class="map-dot" data-target="hero" style="--dot-color: var(--opa-cyan); --dot-light: var(--opa-cyan)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg></div>
-        `;
-        mobileMap.appendChild(mobileHeroItem);
-        mobileMap.prepend(mobileHeroItem);
-      }
 
       versesData.forEach((verse, index) => {
         const num = String(index + 1).padStart(2, '0');
@@ -1230,30 +1072,7 @@
           if (titleEl) titleEl.innerHTML = `${verse.line1}<br>${verse.line2}`;
         }
 
-        // 2. Desktop Map Item
-        if (desktopMap) {
-          const mapItem = document.createElement('a');
-          mapItem.href = `#${verse.id}`;
-          mapItem.className = 'map-item';
-          mapItem.innerHTML = `
-                        <div class="map-dot" data-target="${verse.id}" style="--dot-color: ${verse.color}; --dot-light: ${verse.lightColor}">${num}</div>
-                        <div class="map-label font-display">
-                            <span style="color: white; font-size: 0.875rem;">${verse.line1}<br>${verse.line2}</span>
-                        </div>
-                    `;
-          desktopMap.appendChild(mapItem);
-        }
-
-        // 3. Mobile Map Item
-        if (mobileMap) {
-          const mobileItem = document.createElement('a');
-          mobileItem.href = `#${verse.id}`;
-          mobileItem.style.textDecoration = 'none';
-          mobileItem.innerHTML = `<div class="map-dot" data-target="${verse.id}" style="--dot-color: ${verse.color}; --dot-light: ${verse.lightColor}">${num}</div>`;
-          mobileMap.appendChild(mobileItem);
-        }
-
-        // 4. Gallery Item
+        // 2. Gallery Item
         if (galleryGrid) {
           const galleryCard = document.createElement('div');
           galleryCard.className = 'gallery-card glass-panel';
@@ -1321,55 +1140,8 @@
       // GSAP Animations
       const verses = gsap.utils.toArray('.opaverse');
 
-      // Hero Map Active State
-      ScrollTrigger.create({
-        trigger: "#hero",
-        start: "top 70%",
-        end: "bottom 30%",
-        onToggle: self => {
-          if (self.isActive) {
-            document.querySelectorAll('.map-item, .map-mobile > a').forEach(item => item.classList.remove('active'));
-            desktopMap.querySelector('.map-item:first-child')?.classList.add('active');
-            mobileMap.querySelector('a:first-child')?.classList.add('active');
-          }
-        }
-      });
-
-      // Hide maps when entering gallery/footer
-      ScrollTrigger.create({
-        trigger: "#gallery",
-        start: "top 80%",
-        onEnter: () => {
-          const dMap = document.getElementById('line-map');
-          const mMap = document.getElementById('mobile-map');
-          if (dMap) dMap.classList.add('hidden-map');
-          if (mMap) mMap.classList.add('hidden-map');
-        },
-        onLeaveBack: () => {
-          const dMap = document.getElementById('line-map');
-          const mMap = document.getElementById('mobile-map');
-          if (dMap) dMap.classList.remove('hidden-map');
-          if (mMap) mMap.classList.remove('hidden-map');
-        }
-      });
-
       verses.forEach((verse) => {
         const content = verse.querySelector('.verse-content');
-        const verseId = verse.id;
-
-        // Active State for Map
-        ScrollTrigger.create({
-          trigger: verse,
-          start: "top 80%",
-          end: "bottom 20%",
-          onToggle: self => {
-            if (self.isActive) {
-              document.querySelectorAll('.map-item, .map-mobile > a').forEach(item => item.classList.remove('active'));
-              document.querySelectorAll(`.map-item:has([data-target="${verseId}"])`).forEach(item => item.classList.add('active'));
-              document.querySelectorAll(`.map-mobile a:has([data-target="${verseId}"])`).forEach(item => item.classList.add('active'));
-            }
-          }
-        });
 
         // Fade/Slide up verse content
         if (content) {
@@ -1381,15 +1153,6 @@
             }
           );
         }
-      });
-
-      // Pin the side navigation
-      ScrollTrigger.create({
-        trigger: ".ride-container",
-        start: "top top",
-        end: "bottom bottom", // Unpin at the end of the ride
-        pin: "#line-map, #mobile-map",
-        pinSpacing: false
       });
 
       // V3 (Brunch) Huge Text Parallax
