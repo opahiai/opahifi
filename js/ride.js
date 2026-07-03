@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // The ViewModel (this.data) now dictates the background type.
             switch (this.data.theme.background.type) {
                 case 'repeating-text':
-                    this.bgWrapper.innerText = this.data.background.text.repeat(300);
+                    this.bgWrapper.innerText = this.data.theme.background.text.repeat(300);
                     break;
                 case 'parallax-text':
                     gsap.to(this.bgWrapper, {
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // --- Base Properties ---
             this.key = verseData.key;
-            this.line1 = verseData.titleLines[0] || '';
+            this.line1 = verseData.titleLines[0] || ''; // The ID is now used for the anchor link
             this.line2 = verseData.titleLines[1] || '';
             this.img = verseData.cover;
             this.subtitle = `${num} // ${verseData.ride?.subtitle || ''}`;
@@ -125,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // --- Derived UI Properties ---
             this.color = `hsl(${currentHue}, 100%, 50%)`;
             this.lightColor = `hsl(${currentHue}, 100%, 75%)`;
+            this.id = `v${index + 1}`;
             this.theme = this._getThemeConfig();
         }
 
@@ -261,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
                            <div class="card-info-title font-heavy">${verse.line1}<br>${verse.line2}</div>
                         </div>
                     </div>`;
-            card.addEventListener('click', () => lenis.scrollTo(`#${verse.id}`));
+            card.addEventListener('click', () => lenis.scrollTo(`#${verse.id}`, { offset: 0 }));
             this.container.appendChild(card);
         }
     }
@@ -317,14 +318,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         setupOpaverses() {
-            const verseElements = document.querySelectorAll('.opaverse');
-            this.versesData.forEach((viewModel, index) => {
-                // Pair the ViewModel with its corresponding DOM element by order.
-                // This is more robust than relying on hardcoded IDs.
-                const element = verseElements[index];
-                if (!element) return;
+            const rideContainer = document.getElementById('ride');
+            if (!rideContainer) return;
+
+            this.versesData.forEach(viewModel => {
+                const element = this.createVerseElement(viewModel);
+                rideContainer.appendChild(element);
                 this.opaverses.push(new Opaverse(viewModel, element));
             });
+        }
+
+        /**
+         * Creates the DOM element for a single verse based on its ViewModel.
+         * @param {VerseViewModel} viewModel - The data model for the verse.
+         * @returns {HTMLElement} The constructed <section> element for the verse.
+         */
+        createVerseElement(viewModel) {
+            const section = document.createElement('section');
+            section.className = 'opaverse';
+            section.id = viewModel.id;
+
+            // This template defines the universal inner structure for all verses.
+            // Special content (like the huge text for 'brunch') is added conditionally.
+            let specialContent = '';
+            if (viewModel.key === 'yeahletsdobrunch') {
+                specialContent = '<div class="huge-text">GHOSTING<br>COLLAPSE</div>';
+            } else if (viewModel.key === 'notyourbot-beepsleep') {
+                specialContent = `<div class="pop-text pop-1">NOT YOUR BOT</div><div class="pop-text pop-2">FREEDOM</div><div class="pop-text pop-3">RELEASE</div><div class="pop-text pop-4">NO STRINGS</div>`;
+            }
+
+            section.innerHTML = `
+                <div class="verse-bg-wrapper">${specialContent}</div>
+                <div class="verse-content glass-panel">
+                    <div class="verse-subtitle font-display"></div>
+                    <h2 class="verse-title font-heavy"></h2>
+                    <p class="verse-desc font-sans"></p>
+                </div>`;
+
+            return section;
         }
     }
 
