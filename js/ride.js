@@ -116,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // --- Base Properties ---
             this.key = verseData.key;
-            this.id = `v${index + 1}`;
             this.line1 = verseData.titleLines[0] || '';
             this.line2 = verseData.titleLines[1] || '';
             this.img = verseData.cover;
@@ -318,11 +317,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         setupOpaverses() {
-            this.versesData.forEach(data => {
-                const element = document.getElementById(data.id);
-                if (element) {
-                    this.opaverses.push(new Opaverse(data, element));
-                }
+            const verseElements = document.querySelectorAll('.opaverse');
+            this.versesData.forEach((viewModel, index) => {
+                // Pair the ViewModel with its corresponding DOM element by order.
+                // This is more robust than relying on hardcoded IDs.
+                const element = verseElements[index];
+                if (!element) return;
+                this.opaverses.push(new Opaverse(viewModel, element));
             });
         }
     }
