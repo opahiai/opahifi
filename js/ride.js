@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         init() {
             this.setStyles();
             this.setTitle();
+            this.setThemeClasses();
             this.setupAnimation();
             this.setupBackground();
         }
@@ -28,6 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
         setStyles() {
             this.element.style.setProperty('--verse-main', this.data.color);
             this.element.style.setProperty('--verse-light', this.data.lightColor);
+        }
+
+        /**
+         * Applies theme-based classes to the verse element for styling.
+         */
+        setThemeClasses() {
+            if (this.data.theme?.classes) {
+                this.data.theme.classes.forEach(cls => this.element.classList.add(cls));
+            }
         }
 
         /**
@@ -71,10 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
          * Sets up special background effects for specific verses.
          */
         setupBackground() {
-            if (!this.bgWrapper || !this.data.background) return;
+            if (!this.bgWrapper || !this.data.theme?.background) return;
 
             // The ViewModel (this.data) now dictates the background type.
-            switch (this.data.background.type) {
+            switch (this.data.theme.background.type) {
                 case 'repeating-text':
                     this.bgWrapper.innerText = this.data.background.text.repeat(300);
                     break;
@@ -116,27 +126,49 @@ document.addEventListener("DOMContentLoaded", () => {
             // --- Derived UI Properties ---
             this.color = `hsl(${currentHue}, 100%, 50%)`;
             this.lightColor = `hsl(${currentHue}, 100%, 75%)`;
-            this.background = this._getBackgroundConfig();
+            this.theme = this._getThemeConfig();
         }
 
         /**
-         * Encapsulates the logic for special backgrounds.
-         * @returns {Object|null} Configuration for the background effect.
+         * Encapsulates the logic for verse-specific themes, including
+         * layout classes and special background effects.
+         * @returns {Object} Configuration for the verse's theme.
          */
-        _getBackgroundConfig() {
+        _getThemeConfig() {
+            const config = {
+                classes: [],
+                background: null
+            };
+
             switch (this.key) {
                 case 'full-mindness':
-                    return {
-                        type: 'repeating-text',
-                        text: 'SURVIVING FABULOUSLY CHAOS '
+                    config.classes.push('theme--repeating-text');
+                    config.background = {
+                        type: 'repeating-text', text: 'SURVIVING FABULOUSLY CHAOS '
                     };
+                    break;
+                case 'hallucinatingdumdum':
+                case 'believethetruthfairy':
+                case 'notyourbot-beepsleep':
+                case 'opapapaparty':
+                    config.classes.push('layout--center-content');
+                    break;
                 case 'yeahletsdobrunch':
-                    return {
-                        type: 'parallax-text'
+                    config.classes.push('layout--brunch', 'theme--parallax-text');
+                    config.background = { type: 'parallax-text' };
+                    break;
+                case 'glittaaphoenix':
+                    config.classes.push('layout--glittaa');
+                    config.background = {
+                        type: 'conic-gradient-spin'
                     };
-                default:
-                    return null;
+                    break;
             }
+
+            // Add theme classes for specific background effects that need them
+            if (this.key === 'notyourbot-beepsleep') config.classes.push('theme--text-pop');
+
+            return config;
         }
     }
 
@@ -227,8 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="card-img">
                         <img src="${verse.img}" alt="${verse.line1} ${verse.line2}">
                         <div class="card-info">
-                           <div class="card-info-num">${num}</div>
-                            <div class="card-info-title font-heavy">${verse.line1}<br>${verse.line2}</div>
+                           <div class="card-info-title font-heavy">${verse.line1}<br>${verse.line2}</div>
                         </div>
                     </div>`;
             card.addEventListener('click', () => lenis.scrollTo(`#${verse.id}`));

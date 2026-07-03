@@ -410,7 +410,7 @@
     }
 
     .verse-title {
-      font-size: 3.5rem;
+      font-size: clamp(2.5rem, 12vw, 3.5rem);
       margin-bottom: 1.5rem;
       line-height: 1.1;
       color: white;
@@ -547,7 +547,7 @@
 
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 1.5rem;
     }
 
@@ -602,11 +602,11 @@
       flex-direction: column;
       justify-content: center;
       text-align: center;
-      background: rgba(5, 5, 16, 0.6);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 50%;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      color: white;
+      opacity: 1;
+      transition: background 0.3s ease;
+      color: black;
       line-height: 1.1;
     }
 
@@ -619,17 +619,17 @@
     }
 
     .card-info-title {
-      font-size: 1.25rem;
+      font-size: clamp(0.7rem, 2.5vw, 1.25rem);
       line-height: 1.2;
       transition: all 0.3s;
-    }
-
-    .gallery-card:hover .card-info {
-      opacity: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .gallery-card:hover .card-info-title {
-      text-shadow: var(--glow-cyan);
+      text-shadow: none;
     }
 
     .gallery-card:hover .card-img {
@@ -797,7 +797,7 @@
       }
 
       .verse-title {
-        font-size: 4.5rem;
+        font-size: clamp(3.5rem, 7vw, 4.5rem);
       }
 
       .section-title {
@@ -805,7 +805,7 @@
       }
 
       .gallery-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
       }
 
       .about-content {
@@ -819,7 +819,7 @@
 
     @media(min-width: 1024px) {
       .gallery-grid {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
       }
 
       .hero-title {
@@ -896,7 +896,7 @@
         </section>
 
         <!-- Verse 2: Hallucinating Dum Dum -->
-        <section id="v2" class="opaverse" style="align-items: center; text-align: center;">
+        <section id="v2" class="opaverse">
           <div class="verse-bg-wrapper glow-radial"></div>
           <div class="verse-content glass-panel" style="margin: 0;">
             <div class="verse-subtitle font-display"></div>
@@ -910,7 +910,7 @@
           <div class="verse-bg-wrapper">
             <div class="huge-text">GHOSTING<br>COLLAPSE</div>
           </div>
-          <div class="verse-content glass-panel" style="background: rgba(5,5,16,0.9);">
+          <div class="verse-content glass-panel">
             <div class="verse-subtitle font-display"></div>
             <h2 class="verse-title font-heavy"></h2>
             <p class="verse-desc font-sans"></p>
@@ -928,10 +928,9 @@
         </section>
 
         <!-- Verse 5: Believe the Truth Fairy -->
-        <section id="v5" class="opaverse" style="align-items: center; text-align: center;">
-          <div class="verse-bg-wrapper glow-radial"
-            style="background: radial-gradient(circle at bottom, var(--verse-main) 0%, transparent 60%);"></div>
-          <div class="verse-content glass-panel" style="margin: 0; background: rgba(29, 43, 83, 0.8);">
+        <section id="v5" class="opaverse">
+          <div class="verse-bg-wrapper glow-radial"></div>
+          <div class="verse-content glass-panel" style="margin: 0;">
             <div class="verse-subtitle font-display"></div>
             <h2 class="verse-title font-heavy"></h2>
             <p class="verse-desc font-sans"></p>
@@ -949,11 +948,10 @@
         </section>
 
         <!-- Verse 7: Glittaa Phoenix -->
-        <section id="v7" class="opaverse" style="align-items: flex-start;">
-          <div class="verse-bg-wrapper"
-            style="background: conic-gradient(at center, var(--verse-main), transparent, var(--verse-main)); opacity: 0.15; animation: spin 15s linear infinite;">
+        <section id="v7" class="opaverse">
+          <div class="verse-bg-wrapper">
           </div>
-          <div class="verse-content glass-panel" style="margin-left: 10%; margin-right: auto;">
+          <div class="verse-content glass-panel">
             <div class="verse-subtitle font-display"></div>
             <h2 class="verse-title font-heavy"></h2>
             <p class="verse-desc font-sans"></p>
@@ -961,14 +959,14 @@
         </section>
 
         <!-- Verse 8: Not Your Bot / Beep Sleep -->
-        <section id="v8" class="opaverse" style="align-items: center; text-align: center;">
+        <section id="v8" class="opaverse">
           <div class="verse-bg-wrapper">
             <div class="pop-text pop-1">NOT YOUR BOT</div>
             <div class="pop-text pop-2">FREEDOM</div>
             <div class="pop-text pop-3">RELEASE</div>
             <div class="pop-text pop-4">NO STRINGS</div>
           </div>
-          <div class="verse-content glass-panel" style="margin: 0; background: rgba(29, 43, 83, 0.9);">
+          <div class="verse-content glass-panel" style="margin: 0;">
             <div class="verse-subtitle font-display"></div>
             <h2 class="verse-title font-heavy"></h2>
             <p class="verse-desc font-sans"></p>
@@ -977,8 +975,7 @@
 
         <!-- Verse 9: Wellwolf Howl-Lehluya -->
         <section id="v9" class="opaverse">
-          <div class="verse-bg-wrapper glow-radial"
-            style="background: radial-gradient(circle at top left, var(--verse-main) 0%, transparent 70%);"></div>
+          <div class="verse-bg-wrapper glow-radial"></div>
           <div class="verse-content glass-panel">
             <div class="verse-subtitle font-display"></div>
             <h2 class="verse-title font-heavy"></h2>
@@ -987,7 +984,7 @@
         </section>
 
         <!-- Verse 10: Opa Pa Pa Party -->
-        <section id="v10" class="opaverse" style="align-items: center; text-align: center;">
+        <section id="v10" class="opaverse">
           <div class="verse-bg-wrapper glow-radial" style="animation: pulse 2s infinite;"></div>
           <div class="verse-content glass-panel" style="margin: 0;">
             <div class="verse-subtitle font-display"></div>
