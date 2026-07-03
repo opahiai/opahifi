@@ -34,8 +34,16 @@ document.addEventListener("DOMContentLoaded", () => {
          */
         setTitle() {
             const titleEl = this.element.querySelector('.verse-title');
+            const subtitleEl = this.element.querySelector('.verse-subtitle');
+            const descEl = this.element.querySelector('.verse-desc');
             if (titleEl) {
                 titleEl.innerHTML = `${this.data.line1}<br>${this.data.line2}`;
+            }
+            if (subtitleEl && this.data.subtitle) {
+                subtitleEl.textContent = this.data.subtitle;
+            }
+            if (descEl && this.data.description) {
+                descEl.textContent = this.data.description;
             }
         }
 
@@ -97,26 +105,66 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         /**
-         * Defines the structured data for all chapters in the ride.
+         * Defines the structured data for all verses in the ride.
          * This mirrors the structure from `script.js` for consistency and maintainability.
-         * @returns {Array} An array of chapter data objects.
+         * @returns {Array} An array of verse data objects.
          */
         getRideData() {
             // This is the single source of truth for the ride page content.
-            const rideChapters = [
-                { key: 'full-mindness', titleLines: ['Full-', 'Mindness'] },
-                { key: 'hallucinatingdumdum', titleLines: ['Hallucinating', 'Dum Dum'] },
-                { key: 'yeahletsdobrunch', titleLines: ['Yeah, Let\'s', 'Do Brunch'] },
-                { key: 'splendaloverabbithell', titleLines: ['Splenda Love', 'Rabbit Hell'] },
-                { key: 'believethetruthfairy', titleLines: ['Believe the', 'Truth Fairy'] },
-                { key: 'oldlovestory', titleLines: ['Old Love', 'Story'] },
-                { key: 'glittaaphoenix', titleLines: ['Glittaa', 'Phoenix'] },
-                { key: 'notyourbot-beepsleep', titleLines: ['Not Your Bot /', 'Beep Sleep'] },
-                { key: 'wellwolfhowllehluya', titleLines: ['Wellwolf', 'Howl-Lehluya'] },
-                { key: 'opapapaparty', titleLines: ['Opa Pa', 'Pa Party'] }
+            const rideVerses = [
+                {
+                    key: 'full-mindness',
+                    titleLines: ['Full-', 'Mindness'],
+                    subtitle: 'SURVIVE FABULOUSLY',
+                    description: 'Everyday chaos takes over. Calm is not the goal anymore—surviving fabulously is. A high-contrast barrage of thoughts woven into an undeniable groove.'
+                },
+                {
+                    key: 'hallucinatingdumdum',
+                    titleLines: ['Hallucinating', 'Dum Dum'],
+                    subtitle: 'THE BRAIN FILLS BLANKS',
+                    description: 'Human confusion mirrors AI hallucination. A surreal 3D playground where logic melts into violet and cyan haze.'
+                },
+                {
+                    key: 'yeahletsdobrunch',
+                    titleLines: ['Yeah, Let\'s', 'Do Brunch'],
+                    subtitle: 'FAKE WARMTH',
+                    description: '"I miss you" with no follow-through. Bright morning mimosas fade into cold read receipts and deep cobalt emptiness.'
+                },
+                {
+                    key: 'splendaloverabbithell',
+                    titleLines: ['Splenda Love', 'Rabbit Hell'],
+                    subtitle: 'ARTIFICIAL SWEETNESS',
+                    description: 'Fake love tastes good for one second and terrible after. A descent into a glossy, sticky, molten nightmare.'
+                },
+                {
+                    key: 'believethetruthfairy',
+                    titleLines: ['Believe the', 'Truth Fairy'],
+                    subtitle: 'BRINGING THE RECEIPTS',
+                    description: 'Misinformation, lazy certainty, and online hate are challenged by a tired truth fairy. The blur fades into stark contrast.'
+                },
+                {
+                    key: 'oldlovestory',
+                    titleLines: ['Old Love', 'Story'],
+                    subtitle: 'SLOWER, MESSIER ROMANCE',
+                    description: 'The ride looks back at a time before disposable fast culture. Warm tones, soft glowing edges, and real connection.'
+                },
+                {
+                    key: 'glittaaphoenix',
+                    titleLines: ['Glittaa', 'Phoenix'],
+                    subtitle: 'FIRE AND DANCE',
+                    description: 'Pain becomes glitter, rhythm, fire, and kinetic momentum. The energy spikes as we rise from the ashes.'
+                },
+                {
+                    key: 'notyourbot-beepsleep',
+                    titleLines: ['Not Your Bot', 'Beep Sleep'],
+                    subtitle: 'ABSOLUTE FREEDOM',
+                    description: 'Bot/toy accusations flip into freedom, sass, and release. Sharp geometric cuts, stark contrast, and electric energy.'
+                },
+                { key: 'wellwolfhowllehluya', titleLines: ['Wellwolf', 'Howl-Lehluya'], subtitle: 'THE MONSTER REDEFINED', description: 'Real power is kindness, restraint, and not becoming the predator. Deep navy shadows pierced by soft violet moon glows.' },
+                { key: 'opapapaparty', titleLines: ['Opa Pa', 'Pa Party'], subtitle: 'RIDE EXIT', description: 'The meltdown becomes celebration. Same chaos, better rhythm. We survived the ride.' }
             ];
 
-            return rideChapters;
+            return rideVerses;
         }
 
         /**
@@ -124,37 +172,26 @@ document.addEventListener("DOMContentLoaded", () => {
          * @returns {Array} The processed array of verse data.
          */
         getVersesData() {
-            // Restore the original, self-contained data source to ensure the ride page works independently.
-            const rawTitles = [
-                { id: 'v1', line1: 'Full-', line2: 'Mindness', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-fullmindness.png' },
-                { id: 'v2', line1: 'Hallucinating', line2: 'Dum Dum', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-hallucinatingdumdum.png' },
-                { id: 'v3', line1: 'Yeah, Let\'s', line2: 'Do Brunch', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-yeahletsdobrunch.png' },
-                { id: 'v4', line1: 'Splenda Love', line2: 'Rabbit Hell', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-splendaloverabbithell.png' },
-                { id: 'v5', line1: 'Believe the', line2: 'Truth Fairy', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-believethetruthfairy.png' },
-                { id: 'v6', line1: 'Old Love', line2: 'Story', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-oldlovestory.png' },
-                { id: 'v7', line1: 'Glittaa', line2: 'Phoenix', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-glittaaphoenix.png' },
-                { id: 'v8', line1: 'Not Your Bot /', line2: 'Beep Sleep', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-notyourbot-beepsleep.png' },
-                { id: 'v9', line1: 'Wellwolf', line2: 'Howl-Lehluya', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-wellwolfhowllehluya.png' },
-                { id: 'v10', line1: 'Opa Pa', line2: 'Pa Party', img: 'https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-opapapaparty.png' }
-            ];
-            const rideChapters = this.getRideData();
+            const rideVerses = this.getRideData();
 
-            // Map the structured chapter data to the format required by the Verse class.
-            const verses = rideChapters.map((chapter, index) => {
+            // Map the structured verse data to the format required by the Verse class.
+            const verses = rideVerses.map((verse, index) => {
+                const num = String(index + 1).padStart(2, '0');
+                const fullSubtitle = `${num} // ${verse.subtitle}`;
                 return {
                     id: `v${index + 1}`,
-                    line1: chapter.titleLines[0] || '',
-                    line2: chapter.titleLines[1] || '',
-                    img: `https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-${chapter.key}.png`
+                    line1: verse.titleLines[0] || '',
+                    line2: verse.titleLines[1] || '',
+                    img: `https://raw.githubusercontent.com/eliran-t/opa-assets/main/opahifi/base-${verse.key}.png`,
+                    subtitle: fullSubtitle,
+                    description: verse.description
                 };
             });
 
             const startHue = 360; // Red
             const endHue = 210;   // Blue
-            const hueStep = (startHue - endHue) / (rawTitles.length - 1);
             const hueStep = (startHue - endHue) / (verses.length - 1);
 
-            return rawTitles.map((song, index) => {
             return verses.map((song, index) => {
                 const currentHue = startHue - (index * hueStep);
                 return {
