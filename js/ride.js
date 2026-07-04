@@ -234,19 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     class PageUI {
         init() {
-            this.setupMobileMenu();
             this.setupHeroAnimation();
-        }
-
-        setupMobileMenu() {
-            const menuBtn = document.getElementById('mobile-menu-btn');
-            const navMenu = document.getElementById('nav-menu');
-            if (menuBtn && navMenu) {
-                menuBtn.addEventListener('click', () => {
-                    navMenu.classList.toggle('open');
-                    menuBtn.innerText = navMenu.classList.contains('open') ? 'CLOSE' : 'MENU';
-                });
-            }
         }
 
         setupHeroAnimation() {
