@@ -4,7 +4,7 @@ import { Opaverse } from './Opaverse.js';
 import { PageUI } from './PageUI.js';
 import { ScrollManager } from './ScrollManager.js';
 
-export class RideController {
+export class OpaverseController {
     constructor(database) {
         this.dataManager = new DataManager(database);
         this.scrollManager = new ScrollManager();
@@ -24,12 +24,12 @@ export class RideController {
     }
 
     setupOpaverses() {
-        const rideContainer = document.getElementById('ride');
-        if (!rideContainer) return;
+        const opaverseContainer = document.getElementById('ride');
+        if (!opaverseContainer) return;
 
         this.versesData.forEach(viewModel => {
             const element = this.createVerseElement(viewModel);
-            rideContainer.appendChild(element);
+            opaverseContainer.appendChild(element);
             this.opaverses.push(new Opaverse(viewModel, element));
         });
     }
