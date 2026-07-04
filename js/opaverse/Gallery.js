@@ -1,26 +1,26 @@
 export class Gallery {
-    constructor(containerId, versesData, scrollManager) {
+    constructor(containerId, opaverseViewModels, scrollManager) {
         this.container = document.getElementById(containerId);
-        this.versesData = versesData;
+        this.opaverseViewModels = opaverseViewModels;
         this.scrollManager = scrollManager;
 
         if (this.container) {
-            this.versesData.forEach(verse => {
-                this.createCard(verse);
+            this.opaverseViewModels.forEach(opaverse => {
+                this.createCard(opaverse);
             });
         }
     }
 
-    createCard(verse) {
+    createCard(opaverse) {
         const card = document.createElement('a');
         card.className = 'gallery-card';
-        card.href = `#${verse.id}`;
+        card.href = `#${opaverse.id}`;
         card.innerHTML = `
                 <div class="card-img">
                     <div class="card-info">
-                       <div class="card-info-title font-heavy">${verse.line1}<br>${verse.line2}</div>
+                       <div class="card-info-title font-heavy">${opaverse.line1}<br>${opaverse.line2}</div>
                     </div>
-                    <div class="img-crop-bottom"><img src="${verse.img}" alt=""></div>
+                    <div class="img-crop-bottom"><img src="${opaverse.img}" alt=""></div>
                 </div>`;
 
         this.container.appendChild(card);

@@ -9,7 +9,7 @@ export class OpaverseController {
         this.dataManager = new DataManager(database);
         this.scrollManager = new ScrollManager();
         this.pageUI = new PageUI();
-        this.versesData = this.dataManager.getData();
+        this.opaverseViewModels = this.dataManager.getData();
         this.opaverses = [];
         this.init();
     }
@@ -19,7 +19,7 @@ export class OpaverseController {
         this.pageUI.init();
         this.setupOpaverses();
         this.setupUrlTracking();
-        new Gallery('gallery-grid', this.versesData, this.scrollManager);
+        new Gallery('gallery-grid', this.opaverseViewModels, this.scrollManager);
         this.scrollToInitialHash();
     }
 
@@ -27,7 +27,7 @@ export class OpaverseController {
         const opaverseContainer = document.getElementById('ride');
         if (!opaverseContainer) return;
 
-        this.versesData.forEach(viewModel => {
+        this.opaverseViewModels.forEach(viewModel => {
             const element = this.createVerseElement(viewModel);
             opaverseContainer.appendChild(element);
             this.opaverses.push(new Opaverse(viewModel, element));

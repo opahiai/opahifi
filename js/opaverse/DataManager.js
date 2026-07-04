@@ -1,4 +1,4 @@
-import { VerseViewModel } from './VerseViewModel.js';
+import { OpaverseViewModel } from './OpaverseViewModel.js';
 
 export class DataManager {
     constructor(database) {
@@ -8,12 +8,12 @@ export class DataManager {
         const themes = database?.themes || {};
         const opaverses = opaverseOrder.map(key => groupsByKey[key]).filter(Boolean);
 
-        this.processedVerses = opaverses.map((verseData, index) =>
-            new VerseViewModel(verseData, index, opaverses.length, themes)
+        this.opaverseViewModels = opaverses.map((verseData, index) =>
+            new OpaverseViewModel(verseData, index, opaverses.length, themes)
         );
     }
 
     getData() {
-        return this.processedVerses;
+        return this.opaverseViewModels;
     }
 }

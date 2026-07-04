@@ -5,8 +5,10 @@
  * This file contains all the data for the OpaHiFi experience,
  * including song groups, single versions, and Opaverse content.
  *
- * To add or update a song, edit the `groups` and `singles`
- * arrays below.
+ * To add or update a song:
+ * 1. Add or edit its entry in `groups`.
+ * 2. Add its `key` to `opaverseOrder` where it should appear.
+ * 3. Add one or more releases to `singles`.
  */
 
 (function () {
@@ -21,6 +23,21 @@
         'Amazon Music': 'img/ico/amazon-white.svg',
         'Other': 'img/ico/youtube-white.svg'
     };
+
+    // Rearrange this list to change the interactive Opaverse and playlist order.
+    // The keys must match entries in `groups`.
+    const opaverseOrder = [
+        'full-mindness',
+        'hallucinatingdumdum',
+        'yeahletsdobrunch',
+        'splendaloverabbithell',
+        'believethetruthfairy',
+        'oldlovestory',
+        'glittaaphoenix',
+        'notyourbot-beepsleep',
+        'wellwolfhowllehluya',
+        'opapapaparty'
+    ];
 
     const groups = [
         {
@@ -337,6 +354,18 @@
 
     const singlesById = Object.fromEntries(singles.map(s => [s.id, s]));
 
+    const groupKeys = groups.map(g => g.key);
+    const missingOrderedKeys = opaverseOrder.filter(key => !groupKeys.includes(key));
+    const unorderedGroupKeys = groupKeys.filter(key => !opaverseOrder.includes(key));
+
+    if (missingOrderedKeys.length) {
+        console.warn('opaverseOrder contains keys missing from groups:', missingOrderedKeys);
+    }
+
+    if (unorderedGroupKeys.length) {
+        console.warn('groups contains Opaverses missing from opaverseOrder:', unorderedGroupKeys);
+    }
+
     const groupsByKey = Object.fromEntries(groups.map(g => {
         const opaverse = g.opaverse || g.ride || {};
 
@@ -356,8 +385,6 @@
             group.singlesById[single.id] = single;
         }
     }
-
-    const opaverseOrder = ['full-mindness', 'hallucinatingdumdum', 'yeahletsdobrunch', 'splendaloverabbithell', 'believethetruthfairy', 'oldlovestory', 'glittaaphoenix', 'notyourbot-beepsleep', 'wellwolfhowllehluya', 'opapapaparty'];
 
     window.opaHifiDatabase = {
         platformOrder,

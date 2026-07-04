@@ -1,4 +1,4 @@
-export class VerseViewModel {
+export class OpaverseViewModel {
     constructor(verseData, index, totalVerses, themes) {
         const num = String(index + 1).padStart(2, '0');
         const hueStep = totalVerses > 1 ? (360 - 210) / (totalVerses - 1) : 0;
