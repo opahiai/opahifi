@@ -60,6 +60,26 @@
   }
 }
 
+@media(max-width: 767px) {
+  .gallery-detail-panel {
+    padding-top: calc(var(--navbar-height) + 1rem);
+  }
+
+  .gallery-detail-main {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .gallery-hero-slot {
+    max-width: 11rem;
+  }
+
+  .gallery-detail-desc {
+    max-width: 24rem;
+  }
+}
+
 @media(min-width: 1024px) {
   .gallery-grid {
     grid-template-columns: repeat(5, 1fr);
