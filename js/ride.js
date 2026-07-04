@@ -174,12 +174,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             });
 
-            const raf = (time) => {
-                this.lenis.raf(time);
-                requestAnimationFrame(raf);
-            }
-            requestAnimationFrame(raf);
-
             gsap.registerPlugin(ScrollTrigger);
             this.lenis.on('scroll', ScrollTrigger.update);
             gsap.ticker.add((time) => this.lenis.raf(time * 1000));
@@ -204,19 +198,19 @@ document.addEventListener("DOMContentLoaded", () => {
             this.scrollManager = scrollManager;
 
             if (this.container) {
-                this.versesData.forEach((verse, index) => {
-                    this.createCard(verse, index);
+                this.versesData.forEach(verse => {
+                    this.createCard(verse);
                 });
             }
         }
 
-        createCard(verse, index) {
+        createCard(verse) {
             const lenis = this.scrollManager.getLenis();
             if (!lenis) return;
 
-            const num = String(index + 1).padStart(2, '0');
-            const card = document.createElement('div');
+            const card = document.createElement('a');
             card.className = 'gallery-card';
+            card.href = `#${verse.id}`;
             card.innerHTML = `
                     <div class="card-img">
                         <div class="card-info">
@@ -224,7 +218,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                         <div class="img-crop-bottom"><img src="${verse.img}" alt=""></div>
                     </div>`;
-            card.addEventListener('click', () => lenis.scrollTo(`#${verse.id}`, { offset: 0 }));
+            card.addEventListener('click', (e) => {
+                if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                e.preventDefault();
+                lenis.scrollTo(card.hash, { offset: 0 });
+            });
             this.container.appendChild(card);
         }
     }
