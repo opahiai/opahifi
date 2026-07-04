@@ -27,6 +27,7 @@
             key: 'full-mindness',
             title: 'Full-Mindness',
             titleLines: ['Full-', 'Mindness'],
+            themeKey: 'repeating-text',
             cover: 'img/music/base/base-fullmindness.png',
             ride: {
                 subtitle: 'SURVIVE FABULOUSLY',
@@ -37,6 +38,7 @@
             key: 'hallucinatingdumdum',
             title: 'Hallucinating Dum Dum',
             titleLines: ['Hallucinating', 'Dum Dum'],
+            themeKey: 'center-content',
             cover: 'img/music/base/base-hallucinatingdumdum.png',
             ride: {
                 subtitle: 'THE BRAIN FILLS BLANKS',
@@ -47,6 +49,7 @@
             key: 'yeahletsdobrunch',
             title: 'Yeah, Let\'s Do Brunch',
             titleLines: ['Yeah, Let\'s', 'Do Brunch'],
+            themeKey: 'brunch-parallax',
             cover: 'img/music/base/base-yeahletsdobrunch.png',
             ride: {
                 subtitle: 'FAKE WARMTH',
@@ -67,6 +70,7 @@
             key: 'believethetruthfairy',
             title: 'Believe the Truth fairy',
             titleLines: ['Believe the', 'Truth Fairy'],
+            themeKey: 'center-content',
             cover: 'img/music/base/base-believethetruthfairy.png',
             ride: {
                 subtitle: 'BRINGING THE RECEIPTS',
@@ -87,6 +91,7 @@
             key: 'glittaaphoenix',
             title: 'Glittaa Phoenix',
             titleLines: ['Glittaa', 'Phoenix'],
+            themeKey: 'glittaa-spin',
             cover: 'img/music/base/base-glittaaphoenix.png',
             ride: {
                 subtitle: 'FIRE AND DANCE',
@@ -97,6 +102,7 @@
             key: 'notyourbot-beepsleep',
             title: 'Not Your Bot / Beep Sleep',
             titleLines: ['Not Your Bot', 'Beep Sleep'],
+            themeKey: 'text-pop',
             cover: 'img/music/base/base-notyourbot-beepsleep.png',
             ride: {
                 subtitle: 'ABSOLUTE FREEDOM',
@@ -117,6 +123,7 @@
             key: 'opapapaparty',
             title: 'Opa pa pa party',
             titleLines: ['Opa Pa', 'Pa Party'],
+            themeKey: 'center-content',
             cover: 'img/music/base/base-opapapaparty.png',
             ride: {
                 subtitle: 'RIDE EXIT',
@@ -127,6 +134,7 @@
             key: 'ai-hallucinations-vs-humans',
             title: 'AI Hallucinations vs Humans',
             titleLines: ['AI HALLUCINATIONS', 'VS HUMANS'],
+            themeKey: 'center-content',
             cover: 'img/music/base/base-hallucinatingdumdum.png',
             ride: {
                 subtitle: 'AI vs HUMAN',
@@ -310,6 +318,37 @@
         }
     ];
 
+    const themes = {
+        'default-verse': {
+            classes: [],
+            background: null,
+            specialContent: ''
+        },
+        'repeating-text': {
+            classes: ['theme--repeating-text'],
+            background: {
+                type: 'repeating-text',
+                text: 'SURVIVING FABULOUSLY CHAOS '
+            }
+        },
+        'center-content': {
+            classes: ['layout--center-content']
+        },
+        'brunch-parallax': {
+            classes: ['layout--brunch', 'theme--parallax-text'],
+            background: { type: 'parallax-text' },
+            specialContent: '<div class="huge-text">GHOSTING<br>COLLAPSE</div>'
+        },
+        'glittaa-spin': {
+            classes: ['layout--glittaa'],
+            background: { type: 'conic-gradient-spin' }
+        },
+        'text-pop': {
+            classes: ['layout--center-content', 'theme--text-pop'],
+            specialContent: `<div class="pop-text pop-1">NOT YOUR BOT</div><div class="pop-text pop-2">FREEDOM</div><div class="pop-text pop-3">RELEASE</div><div class="pop-text pop-4">NO STRINGS</div>`
+        }
+    };
+
     // --- Data Processing ---
     // The rest of the application consumes this processed object.
 
@@ -329,6 +368,7 @@
         platformOrder,
         platformIcons,
         rideOrder: ['full-mindness', 'hallucinatingdumdum', 'yeahletsdobrunch', 'splendaloverabbithell', 'believethetruthfairy', 'oldlovestory', 'glittaaphoenix', 'notyourbot-beepsleep', 'wellwolfhowllehluya', 'opapapaparty'],
+        themes,
         groups: Object.values(groupsByKey),
         singlesById
     };

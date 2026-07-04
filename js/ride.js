@@ -109,12 +109,13 @@ document.addEventListener("DOMContentLoaded", () => {
      * properties required for rendering, including UI-specific logic.
      */
     class VerseViewModel {
-        constructor(verseData, index, totalVerses) {
+        constructor(verseData, index, totalVerses, themes) {
             const num = String(index + 1).padStart(2, '0');
             const hueStep = totalVerses > 1 ? (360 - 210) / (totalVerses - 1) : 0;
             const currentHue = 360 - (index * hueStep);
 
             // --- Base Properties ---
+            this.themeKey = verseData.themeKey || 'default-verse';
             this.key = verseData.key;
             this.line1 = verseData.titleLines[0] || '';
             this.line2 = verseData.titleLines[1] || '';
@@ -126,52 +127,9 @@ document.addEventListener("DOMContentLoaded", () => {
             this.color = `hsl(${currentHue}, 100%, 50%)`;
             this.lightColor = `hsl(${currentHue}, 100%, 75%)`;
             this.id = verseData.key;
-            this.theme = this._getThemeConfig();
-        }
-
-        /**
-         * Encapsulates the logic for verse-specific themes, including
-         * layout classes and special background effects.
-         * @returns {Object} Configuration for the verse's theme.
-         */
-        _getThemeConfig() {
-            const config = {
-                classes: [],
-                background: null
-            };
-
-            switch (this.key) {
-                case 'full-mindness':
-                    config.classes.push('theme--repeating-text');
-                    config.background = {
-                        type: 'repeating-text', text: 'SURVIVING FABULOUSLY CHAOS '
-                    };
-                    break;
-                case 'hallucinatingdumdum':
-                case 'believethetruthfairy':
-                case 'notyourbot-beepsleep':
-                case 'opapapaparty':
-                    config.classes.push('layout--center-content');
-                    break;
-                case 'yeahletsdobrunch':
-                    config.classes.push('layout--brunch', 'theme--parallax-text');
-                    config.background = { type: 'parallax-text' };
-                    break;
-                case 'glittaaphoenix':
-                    config.classes.push('layout--glittaa');
-                    config.background = {
-                        type: 'conic-gradient-spin'
-                    };
-                    break;
-            }
-
-            // Add theme classes for specific background effects that need them
-            if (this.key === 'notyourbot-beepsleep') config.classes.push('theme--text-pop');
-
-            return config;
+            this.theme = { ...themes['default-verse'], ...themes[this.themeKey] };
         }
     }
-
 
     /**
      * Manages all data for the ride.
@@ -181,11 +139,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const rideOrder = database?.rideOrder || [];
             const allGroups = database?.groups || [];
             const groupsByKey = Object.fromEntries(allGroups.map(g => [g.key, g]));
+            const themes = database?.themes || {};
             const rideVerses = rideOrder.map(key => groupsByKey[key]).filter(Boolean);
 
             // The DataManager's sole responsibility is to create the ViewModels.
             this.processedVerses = rideVerses.map((verseData, index) =>
-                new VerseViewModel(verseData, index, rideVerses.length)
+                new VerseViewModel(verseData, index, rideVerses.length, themes)
             );
         }
 
@@ -373,15 +332,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // This template defines the universal inner structure for all verses.
             // Special content (like the huge text for 'brunch') is added conditionally.
-            let specialContent = '';
-            if (viewModel.key === 'yeahletsdobrunch') {
-                specialContent = '<div class="huge-text">GHOSTING<br>COLLAPSE</div>';
-            } else if (viewModel.key === 'notyourbot-beepsleep') {
-                specialContent = `<div class="pop-text pop-1">NOT YOUR BOT</div><div class="pop-text pop-2">FREEDOM</div><div class="pop-text pop-3">RELEASE</div><div class="pop-text pop-4">NO STRINGS</div>`;
-            }
-
             section.innerHTML = `
-                <div class="verse-bg-wrapper">${specialContent}</div>
+                <div class="verse-bg-wrapper">${viewModel.theme.specialContent || ''}</div>
                 <div class="verse-content glass-panel">
                     <div class="verse-subtitle font-display"></div>
                     <h2 class="verse-title font-heavy"></h2>
