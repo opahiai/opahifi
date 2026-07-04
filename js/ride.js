@@ -281,16 +281,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         setupUrlTracking() {
-            this.opaverses.forEach(opaverse => {
+            const trackableSections = this.opaverses.map(o => o.element);
+            document.querySelectorAll('#hero, #gallery, #about').forEach(el => trackableSections.push(el));
+
+            trackableSections.forEach(section => {
                 const updateUrl = () => {
-                    const nextHash = `#${opaverse.element.id}`;
+                    const nextHash = `#${section.id}`;
                     if (window.location.hash !== nextHash) {
                         history.replaceState(null, '', nextHash);
                     }
                 };
 
                 ScrollTrigger.create({
-                    trigger: opaverse.element,
+                    trigger: section,
                     start: "top center",
                     end: "bottom center",
                     onEnter: updateUrl,
