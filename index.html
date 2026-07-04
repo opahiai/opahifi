@@ -423,7 +423,7 @@
       line-height: 1.6;
     }
 
-    /* Repeating text theme */
+    /* Theme: Repeating Text (Full-Mindness) */
     .theme--repeating-text .verse-bg-wrapper {
       font-family: var(--font-display);
       font-size: 12px;
@@ -431,41 +431,34 @@
       color: var(--verse-main);
       opacity: 0.2;
       text-transform: uppercase;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
       word-break: break-all;
     }
 
-    /* Brunch layout: huge top text */
-    .layout--brunch {
+    /* Theme: Brunch Parallax (Yeah, Let's Do Brunch) */
+    .theme--brunch-parallax {
       justify-content: flex-start;
       padding-top: 15vh;
     }
 
-    .layout--brunch .verse-bg-wrapper {
+    .theme--brunch-parallax .verse-bg-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
       opacity: 0.8;
     }
 
-    .layout--brunch .huge-text {
+    .theme--brunch-parallax .huge-text {
       font-family: var(--font-heavy);
       font-size: 12vw;
       line-height: 0.85;
       text-align: center;
       background: linear-gradient(to bottom, var(--verse-main), transparent);
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
     }
 
-    .layout--brunch .verse-content {
-      margin: 15vh auto 0;
-      backdrop-filter: blur(20px);
-    }
-
-    /* Verse 8: Text Pops */
+    /* Theme: Text Pop (Not Your Bot) */
     .pop-text {
       position: absolute;
       font-family: var(--font-heavy);
@@ -501,23 +494,6 @@
       right: 25%;
       font-size: 4.5rem;
       animation: textPop 4.5s infinite 0.8s;
-    }
-
-    /* Clean gradient backgrounds for other verses */
-    .glow-radial {
-      background: radial-gradient(circle at center, var(--verse-main) 0%, transparent 60%);
-      opacity: 0.2;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-    }
-
-    .glow-linear {
-      background: linear-gradient(45deg, var(--verse-main) 0%, transparent 70%);
-      opacity: 0.3;
-      width: 100%;
-      height: 100%;
-      position: absolute;
     }
 
     .gallery-section {
@@ -562,30 +538,29 @@
       padding: 0;
     }
 
-
+    .gallery-card:hover {
+      /* No background on hover for the whole item */
+    }
 
     .card-img {
-      --gallery-title-top: 10%;
-      --gallery-title-left: 0;
-      --gallery-title-width: 100%;
-      --gallery-title-height: 30%;
-      --gallery-title-padding: 0.25rem;
-      --gallery-title-font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-      --gallery-title-line-height: 1;
-      --gallery-art-height: 70%;
-      --img-crop-visible-area: 0.625;
-      /* Shows the bottom 62.5% */
-
       width: 100%;
       aspect-ratio: 1 / 1;
       flex-shrink: 0;
       overflow: hidden;
-      background: white;
+      background: var(--cinematic-gradient);
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card-img {
       border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.7);
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
       transition: all 0.3s ease;
       position: relative;
+      /* Needed for absolute positioning of the image */
     }
 
     .card-img img {
@@ -598,17 +573,11 @@
       object-fit: cover;
     }
 
-    /*
-     * Reusable image cropping utility.
-     * --img-crop-visible-area: The percentage (as a decimal) of the bottom of the image to keep.
-     */
     .card-img .img-crop-bottom {
       width: 100%;
-      height: var(--gallery-art-height);
+      height: 70%;
       overflow: hidden;
-      position: absolute;
-      left: 0;
-      bottom: 0;
+      position: relative;
     }
 
     .card-img .img-crop-bottom img {
@@ -616,30 +585,24 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: calc(100% / var(--img-crop-visible-area));
-      /* Makes the image taller to allow cropping */
-      object-fit: cover;
+      height: auto;
     }
 
     .card-info {
+      width: 100%;
+      height: 30%;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
       text-align: center;
-      position: absolute;
-      top: var(--gallery-title-top);
-      left: var(--gallery-title-left);
-      z-index: 2;
-      width: var(--gallery-title-width);
-      height: var(--gallery-title-height);
+      background: #ffffff;
       color: black;
-      padding: var(--gallery-title-padding);
+      padding: 0.25rem;
     }
 
     .card-info-title {
-      font-size: var(--gallery-title-font-size);
-      line-height: var(--gallery-title-line-height);
+      font-size: clamp(0.8rem, 3.5vw, 1.5rem);
+      line-height: 1.2;
       transition: all 0.3s;
     }
 

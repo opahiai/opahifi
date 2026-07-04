@@ -129,17 +129,6 @@
                 subtitle: 'RIDE EXIT',
                 description: 'The meltdown becomes celebration. Same chaos, better rhythm. We survived the ride.'
             }
-        },
-        {
-            key: 'ai-hallucinations-vs-humans',
-            title: 'AI Hallucinations vs Humans',
-            titleLines: ['AI HALLUCINATIONS', 'VS HUMANS'],
-            themeKey: 'center-content',
-            cover: 'img/music/base/base-hallucinatingdumdum.png',
-            ride: {
-                subtitle: 'AI vs HUMAN',
-                description: 'A deeper dive into the nature of hallucination, both artificial and organic.'
-            }
         }
     ];
 
@@ -307,14 +296,6 @@
                 'Apple Music': 'https://music.apple.com/us/song/hallucinating-dum-dum/6776020941',
                 'Other': 'https://youtu.be/d5x0I9ffxwI?si=3ehe5ANC_b68E693'
             }
-        },
-        {
-            id: 'ai-hallucinations-vs-humans',
-            groupKey: 'ai-hallucinations-vs-humans',
-            title: 'AI Hallucinations vs Humans',
-            image: 'img/music/base/base-hallucinatingdumdum.png',
-            lyricsPath: 'lyrics/hallucinating-dum-dum.txt',
-            links: {}
         }
     ];
 
@@ -335,7 +316,7 @@
             classes: ['layout--center-content']
         },
         'brunch-parallax': {
-            classes: ['layout--brunch', 'theme--parallax-text'],
+            classes: ['theme--brunch-parallax'],
             background: { type: 'parallax-text' },
             specialContent: '<div class="huge-text">GHOSTING<br>COLLAPSE</div>'
         },

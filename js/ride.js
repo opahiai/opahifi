@@ -100,6 +100,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
                     break;
+                case 'conic-gradient-spin':
+                    // The animation is handled purely by CSS via the .layout--glittaa class.
+                    break;
             }
         }
     }
