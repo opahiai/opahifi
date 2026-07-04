@@ -3,7 +3,7 @@
  * OPAHIFI - SINGLE SOURCE OF TRUTH DATABASE
  * ============================================================
  * This file contains all the data for the OpaHiFi experience,
- * including song groups, single versions, and ride content.
+ * including song groups, single versions, and Opaverse content.
  *
  * To add or update a song, edit the `groups` and `singles`
  * arrays below.
@@ -29,9 +29,9 @@
             titleLines: ['Full-', 'Mindness'],
             themeKey: 'repeating-text',
             cover: 'img/music/base/base-fullmindness.png',
-            ride: {
+            opaverse: {
                 subtitle: 'SURVIVE FABULOUSLY',
-                description: 'Everyday chaos takes over. Calm is not the goal anymore—surviving fabulously is. A high-contrast barrage of thoughts woven into an undeniable groove.'
+                description: 'Everyday chaos takes over. Calm is not the goal anymore - surviving fabulously is. A high-contrast barrage of thoughts woven into an undeniable groove.'
             }
         },
         {
@@ -40,7 +40,7 @@
             titleLines: ['Hallucinating', 'Dum Dum'],
             themeKey: 'center-content',
             cover: 'img/music/base/base-hallucinatingdumdum.png',
-            ride: {
+            opaverse: {
                 subtitle: 'THE BRAIN FILLS BLANKS',
                 description: 'Human confusion mirrors AI hallucination. A surreal 3D playground where logic melts into violet and cyan haze.'
             }
@@ -51,7 +51,7 @@
             titleLines: ['Yeah, Let\'s', 'Do Brunch'],
             themeKey: 'brunch-parallax',
             cover: 'img/music/base/base-yeahletsdobrunch.png',
-            ride: {
+            opaverse: {
                 subtitle: 'FAKE WARMTH',
                 description: '"I miss you" with no follow-through. Bright morning mimosas fade into cold read receipts and deep cobalt emptiness.'
             }
@@ -61,7 +61,7 @@
             title: 'Splenda Love Rabbit Hell',
             titleLines: ['Splenda Love', 'Rabbit Hell'],
             cover: 'img/music/base/base-splendaloverabbithell.png',
-            ride: {
+            opaverse: {
                 subtitle: 'ARTIFICIAL SWEETNESS',
                 description: 'Fake love tastes good for one second and terrible after. A descent into a glossy, sticky, molten nightmare.'
             }
@@ -72,7 +72,7 @@
             titleLines: ['Believe the', 'Truth Fairy'],
             themeKey: 'center-content',
             cover: 'img/music/base/base-believethetruthfairy.png',
-            ride: {
+            opaverse: {
                 subtitle: 'BRINGING THE RECEIPTS',
                 description: 'Misinformation, lazy certainty, and online hate are challenged by a tired truth fairy. The blur fades into stark contrast.'
             }
@@ -82,7 +82,7 @@
             title: 'Old Love Story',
             titleLines: ['Old Love', 'Story'],
             cover: 'img/music/base/base-oldlovestory.png',
-            ride: {
+            opaverse: {
                 subtitle: 'SLOWER, MESSIER ROMANCE',
                 description: 'The ride looks back at a time before disposable fast culture. Warm tones, soft glowing edges, and real connection.'
             }
@@ -93,7 +93,7 @@
             titleLines: ['Glittaa', 'Phoenix'],
             themeKey: 'glittaa-spin',
             cover: 'img/music/base/base-glittaaphoenix.png',
-            ride: {
+            opaverse: {
                 subtitle: 'FIRE AND DANCE',
                 description: 'Pain becomes glitter, rhythm, fire, and kinetic momentum. The energy spikes as we rise from the ashes.'
             }
@@ -104,7 +104,7 @@
             titleLines: ['Not Your Bot', 'Beep Sleep'],
             themeKey: 'text-pop',
             cover: 'img/music/base/base-notyourbot-beepsleep.png',
-            ride: {
+            opaverse: {
                 subtitle: 'ABSOLUTE FREEDOM',
                 description: 'Bot/toy accusations flip into freedom, sass, and release. Sharp geometric cuts, stark contrast, and electric energy.'
             }
@@ -114,7 +114,7 @@
             title: 'Wellwolf Howl-Lehluya',
             titleLines: ['Wellwolf', 'Howl-Lehluya'],
             cover: 'img/music/base/base-wellwolfhowllehluya.png',
-            ride: {
+            opaverse: {
                 subtitle: 'THE MONSTER REDEFINED',
                 description: 'Real power is kindness, restraint, and not becoming the predator. Deep navy shadows pierced by soft violet moon glows.'
             }
@@ -125,7 +125,7 @@
             titleLines: ['Opa Pa', 'Pa Party'],
             themeKey: 'center-content',
             cover: 'img/music/base/base-opapapaparty.png',
-            ride: {
+            opaverse: {
                 subtitle: 'RIDE EXIT',
                 description: 'The meltdown becomes celebration. Same chaos, better rhythm. We survived the ride.'
             }
@@ -337,7 +337,17 @@
 
     const singlesById = Object.fromEntries(singles.map(s => [s.id, s]));
 
-    const groupsByKey = Object.fromEntries(groups.map(g => [g.key, { ...g, songIds: [], singlesById: {} }]));
+    const groupsByKey = Object.fromEntries(groups.map(g => {
+        const opaverse = g.opaverse || g.ride || {};
+
+        return [g.key, {
+            ...g,
+            opaverse,
+            ride: opaverse,
+            songIds: [],
+            singlesById: {}
+        }];
+    }));
 
     for (const single of singles) {
         const group = groupsByKey[single.groupKey];
@@ -347,10 +357,13 @@
         }
     }
 
+    const opaverseOrder = ['full-mindness', 'hallucinatingdumdum', 'yeahletsdobrunch', 'splendaloverabbithell', 'believethetruthfairy', 'oldlovestory', 'glittaaphoenix', 'notyourbot-beepsleep', 'wellwolfhowllehluya', 'opapapaparty'];
+
     window.opaHifiDatabase = {
         platformOrder,
         platformIcons,
-        rideOrder: ['full-mindness', 'hallucinatingdumdum', 'yeahletsdobrunch', 'splendaloverabbithell', 'believethetruthfairy', 'oldlovestory', 'glittaaphoenix', 'notyourbot-beepsleep', 'wellwolfhowllehluya', 'opapapaparty'],
+        opaverseOrder,
+        rideOrder: opaverseOrder,
         themes,
         groups: Object.values(groupsByKey),
         singlesById

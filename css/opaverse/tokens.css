@@ -1,0 +1,26 @@
+:root {
+  /* Brand Colors */
+  --opa-navy: #050510;
+  --opa-cobalt: #1d2b53;
+  --opa-violet: #4d2279;
+  --opa-cyan: #4e19ba;
+  --opa-orange: #ff3c00;
+  --opa-gold: #ffb800;
+
+  /* Typography */
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Oswald', sans-serif;
+  --font-heavy: 'Anton', sans-serif;
+
+  /* Gradients & Glows */
+  --cinematic-gradient: radial-gradient(circle at center, #1d2b53 0%, #050510 100%);
+  --glass-gradient: linear-gradient(135deg, rgba(29, 43, 83, 0.6) 0%, rgba(77, 34, 121, 0.2) 100%);
+  --glow-cyan: 0 0 15px rgba(73, 4, 82, 0.6), 0 0 30px rgba(200, 38, 206, 0.736);
+  --glow-orange: 0 0 15px rgba(255, 60, 0, 0.6), 0 0 30px rgba(255, 60, 0, 0.3);
+}
+
+:root {
+  --navbar-height: 45px;
+  --gallery-gaps: 0.7rem;
+}
+
