@@ -136,7 +136,6 @@
         {
             id: 'old-love-story',
             groupKey: 'oldlovestory',
-            title: 'Old Love Story',
             version: 'Desert Disco Duet',
             image: 'img/music/versions/version-oldlovestory-desertdiscoduet.png',
             mixColors: ['#fff0f5', '#5c14b5'],
@@ -152,7 +151,6 @@
         {
             id: 'old-love-story-opa-max-mix',
             groupKey: 'oldlovestory',
-            title: 'Old Love Story',
             version: 'Opa Max Mix',
             image: 'img/music/versions/version-oldlovestory-maxmix.png',
             mixColors: ['#60c6e6', '#5c14b5'],
@@ -168,7 +166,6 @@
         {
             id: 'opa-pa-pa-party',
             groupKey: 'opapapaparty',
-            title: 'Opa pa pa party',
             image: 'img/music/base/base-opapapaparty.png',
             lyricsPath: 'lyrics/opa-pa-pa-party.txt',
             links: {
@@ -182,7 +179,6 @@
         {
             id: 'glittaa',
             groupKey: 'glittaaphoenix',
-            title: 'Glittaa Phoenix',
             image: 'img/music/base/base-glittaaphoenix.png',
             lyricsPath: 'lyrics/glittaa-pheonix.txt',
             links: {
@@ -196,7 +192,6 @@
         {
             id: 'splenda-love-rabbit-hell',
             groupKey: 'splendaloverabbithell',
-            title: 'Splenda Love Rabbit Hell',
             version: 'Opa Max Mix',
             image: 'img/music/versions/version-splendaloverabbithell-maxmix.png',
             mixColors: ['#60c6e6', '#5c14b5'],
@@ -212,7 +207,6 @@
         {
             id: 'glittaa-phoenix-sunrize-max-mix',
             groupKey: 'glittaaphoenix',
-            title: 'GLITTAA Phoenix',
             version: 'Opa Sunrize Max Mix',
             image: 'img/music/versions/version-glittaaphoenix-sunrisemaxmix.png',
             mixColors: ['#e8d36b', '#f4c97a', '#f4af86'],
@@ -228,7 +222,6 @@
         {
             id: 'believe-the-truth-fairy',
             groupKey: 'believethetruthfairy',
-            title: 'Believe the Truth Fairy',
             image: 'img/music/base/base-believethetruthfairy.png',
             lyricsPath: 'lyrics/believe-the-truth-fairy.txt',
             links: {
@@ -242,7 +235,6 @@
         {
             id: 'full-mindness',
             groupKey: 'full-mindness',
-            title: 'Full-Mindness',
             version: 'Opa Mayhem Mix',
             image: 'img/music/versions/version-fullmindness-mayhemmix.png',
             mixColors: ['#60c6e6', '#5c14b5'],
@@ -258,7 +250,6 @@
         {
             id: 'yeah-lets-do-brunch',
             groupKey: 'yeahletsdobrunch',
-            title: 'Yeah, Let\'s Do Brunch',
             image: 'img/music/base/base-yeahletsdobrunch.png',
             lyricsPath: 'lyrics/yeah-lets-do-brunch.txt',
             links: {
@@ -272,7 +263,6 @@
         {
             id: 'wellwolf-howl-lehluya',
             groupKey: 'wellwolfhowllehluya',
-            title: 'Wellwolf Howl-Lehluya',
             image: 'img/music/base/base-wellwolfhowllehluya.png',
             lyricsPath: 'lyrics/wellwolf-hoawlehluya.txt',
             links: {
@@ -286,7 +276,6 @@
         {
             id: 'hallucinating',
             groupKey: 'hallucinatingdumdum',
-            title: 'Hallucinating Dum Dum',
             image: 'img/music/base/base-hallucinatingdumdum.png',
             lyricsPath: 'lyrics/hallucinating-dum-dum.txt',
             links: {
@@ -295,6 +284,19 @@
                 'Spotify': 'https://open.spotify.com/track/74dIXy89cJ5oPrG9MFGd3X?si=91d0eec0dfd54961',
                 'Apple Music': 'https://music.apple.com/us/song/hallucinating-dum-dum/6776020941',
                 'Other': 'https://youtu.be/d5x0I9ffxwI?si=3ehe5ANC_b68E693'
+            }
+        },
+        {
+            id: 'not-your-bot-beep-sleep',
+            groupKey: 'notyourbot-beepsleep',
+            image: 'img/music/base/base-notyourbot-beepsleep.png',
+            lyricsPath: 'lyrics/not-your-bot-beep-sleep.txt',
+            links: {
+                'Spotify': 'https://open.spotify.com/track/4tLlgRbaw4AgpGjEJx96CO',
+                'YouTube Music': 'https://music.youtube.com/watch?v=8Z90e2Zl-bw',
+                'Apple Music': 'https://music.apple.com/us/song/not-your-bot-beep-sleep/6786322596',
+                'Amazon Music': 'https://music.amazon.com/albums/B0H729SL3F?trackAsin=B0H72LRQ16',
+                'Other': 'https://youtu.be/8Z90e2Zl-bw'
             }
         }
     ];
