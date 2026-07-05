@@ -1,2 +1,4 @@
-/s/
-/_redirects
+.DS_Store
+Thumbs.db
+.vscode/
+temp/
