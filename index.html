@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05060d">
+  <title>OpaHiFi — Opaverses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/styles/base.css">
+  <link rel="stylesheet" href="./src/styles/layout.css">
+  <link rel="stylesheet" href="./src/styles/opaverse.css">
+</head>
+<body>
+  <nav class="oh-navbar" id="oh-navbar" aria-label="Main navigation">
+    <a class="oh-navbar__brand" href="#oh-hero" data-oh-scroll>OpaHiFi</a>
+    <div class="oh-navbar__links">
+      <a class="oh-navbar__link" href="#oh-journey" data-oh-scroll>Journey</a>
+      <a class="oh-navbar__link" href="#oh-home" data-oh-scroll>Home</a>
+      <a class="oh-navbar__link" href="#oh-gallery" data-oh-scroll>Gallery</a>
+    </div>
+  </nav>
+
+  <main class="oh-main" id="oh-main">
+    <section class="oh-screen oh-hero" id="oh-hero">
+      <div class="oh-hero__glow" aria-hidden="true"></div>
+      <div class="oh-shell oh-hero__content">
+        <div class="oh-opa" aria-label="Opa">
+          <span class="oh-opa__face">OPA!</span>
+        </div>
+        <p class="oh-eyebrow">One guide · many universes</p>
+        <h1 class="oh-hero__title">Enter the Opaverses</h1>
+        <p class="oh-hero__copy">A continuous music ride through three worlds.</p>
+        <div class="oh-actions">
+          <a class="oh-button oh-button--secondary" href="#oh-home" data-oh-scroll>Go to Home</a>
+          <a class="oh-button oh-button--primary" href="#oh-journey" data-oh-scroll>Scroll for the full experience</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="oh-journey" id="oh-journey">
+      <div class="oh-screen oh-journey-entrance">
+        <div class="oh-shell oh-split">
+          <div class="oh-opa oh-opa--small" aria-hidden="true">
+            <span class="oh-opa__face">OPA!</span>
+          </div>
+          <div>
+            <p class="oh-eyebrow">The ride begins</p>
+            <h2 class="oh-section-title">Opa becomes your guide</h2>
+            <p class="oh-section-copy">Keep scrolling. Each song opens its own world, then hands you directly to the next one.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="oh-opaverses" id="oh-opaverses" aria-label="Opaverse experience"></div>
+
+      <div class="oh-screen oh-journey-exit" id="oh-journey-exit">
+        <div class="oh-shell oh-journey-exit__content">
+          <p class="oh-eyebrow">Three worlds later</p>
+          <h2 class="oh-section-title">The ride ends. OpaHiFi opens.</h2>
+          <p class="oh-section-copy">Explore every section without leaving the continuous page.</p>
+          <a class="oh-button oh-button--primary" href="#oh-home" data-oh-scroll>Enter Home</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-home" id="oh-home">
+      <div class="oh-shell">
+        <p class="oh-eyebrow">OpaHiFi</p>
+        <h2 class="oh-section-title">Choose where to go next</h2>
+        <nav class="oh-sitemap" aria-label="OpaHiFi sitemap">
+          <a href="#oh-journey" data-oh-scroll>Journey</a>
+          <a href="#oh-gallery" data-oh-scroll>Gallery</a>
+          <a href="#oh-connect" data-oh-scroll>Connect</a>
+          <a href="#oh-videos" data-oh-scroll>Videos</a>
+          <a href="#oh-about" data-oh-scroll>About</a>
+          <a href="#oh-shop">Shop</a>
+          <a href="#oh-terms">Terms &amp; conditions</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-gallery" id="oh-gallery">
+      <div class="oh-shell">
+        <div class="oh-section-heading">
+          <div>
+            <p class="oh-eyebrow">Gallery</p>
+            <h2 class="oh-section-title">The first three songs</h2>
+          </div>
+          <a class="oh-text-link" href="#oh-journey" data-oh-scroll>Replay the journey</a>
+        </div>
+        <div class="oh-gallery__grid" id="oh-gallery-grid"></div>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-connect" id="oh-connect">
+      <div class="oh-shell oh-center-copy">
+        <p class="oh-eyebrow">Connect</p>
+        <h2 class="oh-section-title">Follow Opa. Stream the noise.</h2>
+        <div class="oh-link-row">
+          <a href="#">Instagram</a>
+          <a href="#">TikTok</a>
+          <a href="#">YouTube</a>
+          <a href="#">Spotify</a>
+          <a href="#">Apple Music</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-videos" id="oh-videos">
+      <div class="oh-shell">
+        <p class="oh-eyebrow">Videos</p>
+        <h2 class="oh-section-title">Featured now</h2>
+        <div class="oh-video-card">
+          <div class="oh-video-card__media">Video</div>
+          <div>
+            <h3>Meet the first Opaverses</h3>
+            <p>Featured video and recent releases live here.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-about" id="oh-about">
+      <div class="oh-shell oh-center-copy">
+        <p class="oh-eyebrow">About</p>
+        <h2 class="oh-section-title">Music worlds guided by Opa</h2>
+        <p class="oh-section-copy">OpaHiFi turns songs into visual, scroll-driven experiences built for mobile first.</p>
+        <a class="oh-button oh-button--secondary" href="#oh-connect" data-oh-scroll>Connect with Opa</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="oh-footer" id="oh-footer">
+    <a href="#oh-terms">Terms</a>
+    <span>© OpaHiFi</span>
+    <a href="mailto:hello@example.com">Contact</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>

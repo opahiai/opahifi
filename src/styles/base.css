@@ -1,0 +1,90 @@
+:root {
+  --oh-nav-height: 50px;
+  --oh-viewport-height: 100dvh;
+  --oh-main-height: calc(var(--oh-viewport-height) - var(--oh-nav-height));
+  --oh-bg: #05060d;
+  --oh-panel: #0b1024;
+  --oh-text: #f7f8ff;
+  --oh-muted: #aab3d6;
+  --oh-cyan: #22d9dd;
+  --oh-blue: #155bff;
+  --oh-violet: #5b2cff;
+  --oh-orange: #ff6a00;
+  --oh-gold: #ffd166;
+  --oh-border: rgb(255 255 255 / 0.14);
+  --oh-shell: min(100% - 2rem, 72rem);
+  color-scheme: dark;
+  font-family: "Inter", sans-serif;
+  background: var(--oh-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: auto;
+  background: var(--oh-bg);
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--oh-bg);
+  color: var(--oh-text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+p,
+blockquote {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Poppins", sans-serif;
+  text-wrap: balance;
+}
+
+p,
+blockquote {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 2px solid var(--oh-cyan);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
