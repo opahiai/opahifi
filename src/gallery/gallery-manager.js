@@ -420,6 +420,7 @@ class OhGalleryManager {
   }
 
   renderVersions(song, activeIndex) {
+    this.versionPills.classList.toggle("is-collapsed", !this.versionPillsExpanded);
     const activeVersion = this.getVersion(song, activeIndex) ?? this.getVersion(song, 0);
     const secondaryVersions = song.versions
       .map((version, index) => ({ version, index }))
@@ -469,6 +470,7 @@ class OhGalleryManager {
 
   setVersionPillsExpanded(isExpanded) {
     this.versionPillsExpanded = isExpanded;
+    this.versionPills?.classList.toggle("is-collapsed", !isExpanded);
     const gsap = window.gsap;
     const pills = this.getVersionPillElements();
     if (!gsap || pills.length === 0) return;
@@ -484,6 +486,7 @@ class OhGalleryManager {
     const gsap = window.gsap;
     const pills = this.getVersionPillElements();
     this.versionPillsExpanded = true;
+    this.versionPills?.classList.remove("is-collapsed");
     if (!gsap || pills.length === 0) {
       onComplete?.();
       return;
@@ -520,6 +523,8 @@ class OhGalleryManager {
       stagger: -0.035,
       transformOrigin: "left center",
       onComplete: () => {
+        this.versionPills?.classList.add("is-collapsed");
+        gsap.set(pills, { scaleX: 0, transformOrigin: "left center" });
         gsap.delayedCall(0.08, () => onComplete?.());
       }
     });
@@ -733,13 +738,15 @@ class OhGalleryManager {
       this.versionPillsExpanded = false;
       if (options.updateUrl !== false) this.setLocationHash(this.getSongHash(songId, versionIndex));
 
-      gsap.to(".ohg-detail__changing", {
+      const changingContent = ["#ohg-detail-info", "#ohg-platforms", "#ohg-lyrics"];
+
+      gsap.to(changingContent, {
         opacity: 0,
         y: 8,
         duration: 0.18,
         onComplete: () => {
           this.updateDetail(newSong, versionIndex, false);
-          gsap.to(".ohg-detail__changing", { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
+          gsap.to(changingContent, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
         }
       });
 

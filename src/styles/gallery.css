@@ -84,7 +84,7 @@
 
 .ohg-cover--circle {
   border: 0;
-  border-radius: 50%;
+  border-radius: 40%;
   background: #fefefe;
   box-shadow: none;
 }
@@ -151,7 +151,7 @@
 .ohg-cover__title {
   position: absolute;
   z-index: 2;
-  top: 13%;
+  top: 10%;
   inset-inline: 0;
   display: flex;
   flex-direction: column;
@@ -163,10 +163,10 @@
   box-sizing: border-box;
   color: #15151a;
   font-family: "Oswald", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 500;
   line-height: 0.96;
-  letter-spacing: -0.03rem;
+  letter-spacing: -0.02rem;
   text-align: center;
   text-transform: uppercase;
 }
@@ -179,11 +179,11 @@
 }
 
 .ohg-rail__slot .ohg-cover__title {
-  font-size: 0.5rem;
+  font-size: 0.4rem;
 }
 
 .ohg-cover--detail .ohg-cover__title {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 .ohg-detail {
@@ -409,6 +409,11 @@
   gap: 0;
   scroll-snap-type: none;
   scrollbar-width: none;
+}
+
+.ohg-version-pills.is-collapsed .ohg-version-pill {
+  transform: scaleX(0);
+  transform-origin: left center;
 }
 
 .ohg-version-pill:only-child {
