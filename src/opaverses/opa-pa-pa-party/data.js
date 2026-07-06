@@ -16,21 +16,24 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "source-with-alternate-draft",
   assets: ohAssets,
-  versions: Object.freeze([]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf",
-    appleMusic: "https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737",
-    youtube: "https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw",
-    amazonMusic: "https://music.amazon.com/albums/B0FYVMVZS4",
-    other: "https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "original",
+      slug: "original",
+      name: "Original",
+      duration: "3:55",
+      default: true,
+      cover: ohAssets.cover,
+      art: ohAssets.art,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf",
+        appleMusic: "https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737",
+        youtube: "https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw",
+        amazonMusic: "https://music.amazon.com/albums/B0FYVMVZS4",
+        other: "https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8"
+      })
+    })
+  ]),
   theme: Object.freeze({
     background: "#07152f",
     primary: "#155bff",

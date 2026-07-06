@@ -35,25 +35,10 @@ export const ohSongData = Object.freeze({
         appleMusic: "https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886",
         youtube: "https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z",
         amazonMusic: "https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653",
-        other: "https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh",
-        soundCloud: null
+        other: "https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh"
       })
     })
   ]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960",
-    appleMusic: "https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886",
-    youtube: "https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z",
-    amazonMusic: "https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653",
-    other: "https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
   theme: Object.freeze({
     background: "#07152f",
     primary: "#22d9dd",

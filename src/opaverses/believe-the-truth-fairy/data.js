@@ -16,21 +16,24 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "source-provided",
   assets: ohAssets,
-  versions: Object.freeze([]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg",
-    appleMusic: "https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683",
-    youtube: "https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj",
-    amazonMusic: "https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P",
-    other: "https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "original",
+      slug: "original",
+      name: "Original",
+      duration: "3:55",
+      default: true,
+      cover: ohAssets.cover,
+      art: ohAssets.art,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg",
+        appleMusic: "https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683",
+        youtube: "https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj",
+        amazonMusic: "https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P",
+        other: "https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC"
+      })
+    })
+  ]),
   theme: Object.freeze({
     background: "#071b26",
     primary: "#22d9dd",

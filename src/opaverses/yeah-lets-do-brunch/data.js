@@ -16,21 +16,24 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "source-provided",
   assets: ohAssets,
-  versions: Object.freeze([]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/10pJOBA2Krl8QiAi7XUGE7?si=66f1ed7937454034",
-    appleMusic: "https://music.apple.com/us/album/lets-do-brunch-single/1883970912",
-    youtube: "https://music.youtube.com/watch?v=nlRw2m9_Qh4&si=G1BKK_61Wf_EIast",
-    amazonMusic: "https://music.amazon.com/albums/B0GS2JC8QD?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_CGFq3eGi1CLBa46vBJBJNB3oc&trackAsin=B0GS23XMP6",
-    other: "https://youtu.be/nlRw2m9_Qh4?si=Xe-ZF1Ogg2ynabpj",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "original",
+      slug: "original",
+      name: "Original",
+      duration: "3:18",
+      default: true,
+      cover: ohAssets.cover,
+      art: ohAssets.art,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/10pJOBA2Krl8QiAi7XUGE7?si=66f1ed7937454034",
+        appleMusic: "https://music.apple.com/us/album/lets-do-brunch-single/1883970912",
+        youtube: "https://music.youtube.com/watch?v=nlRw2m9_Qh4&si=G1BKK_61Wf_EIast",
+        amazonMusic: "https://music.amazon.com/albums/B0GS2JC8QD?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_CGFq3eGi1CLBa46vBJBJNB3oc&trackAsin=B0GS23XMP6",
+        other: "https://youtu.be/nlRw2m9_Qh4?si=Xe-ZF1Ogg2ynabpj"
+      })
+    })
+  ]),
   theme: Object.freeze({
     background: "#241018",
     primary: "#ff6a00",

@@ -18,7 +18,7 @@
   display: grid;
   grid-template-rows: var(--ohg-title-height) minmax(0, 1fr);
   row-gap: var(--ohg-title-gap);
-  width: min(100% - 1rem, 26rem);
+  width: min(100% - 1rem, 31.25rem);
   height: 100%;
   margin-inline: auto;
   padding-block: var(--ohg-shell-pad-y);
@@ -306,8 +306,8 @@
 }
 
 .ohg-detail__body {
-  --ohg-selected-cover-size: 6rem;
-  --ohg-selected-stack-width: min(100% - 1rem, 26rem);
+  --ohg-selected-cover-size: 7rem;
+  --ohg-selected-stack-width: min(100% - 1rem, 31.25rem);
   --ohg-version-row-count: 3;
   --ohg-version-stack-pad-y: 10px;
   --ohg-version-cover-overlap-ratio: 0.58;
@@ -496,26 +496,32 @@
 }
 
 .ohg-platforms {
-  display: none;
-  justify-content: center;
-  gap: 0.65rem;
-  margin-bottom: 1rem;
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--ohg-stage-padding) + var(--ohg-selected-cover-size) + 0.75rem);
+  left: var(--ohg-stage-padding);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.52rem;
+  width: calc(100% - (var(--ohg-stage-padding) * 2));
 }
 
 .ohg-platform {
   display: grid;
-  width: 2.55rem;
-  height: 2.55rem;
+  width: 2rem;
+  height: 2rem;
   place-items: center;
-  border: 1px solid rgb(255 255 255 / 0.14);
+  border: 0;
   border-radius: 50%;
-  background: #0c121d;
+  background: transparent;
   color: #ffffff;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
+  text-decoration: none;
 }
 
 .ohg-platform.is-disabled {
-  opacity: 0.23;
+  opacity: 0.28;
 }
 
 .ohg-lyrics {
@@ -634,7 +640,7 @@
 
 @media (min-width: 40rem) {
   .ohg-shell {
-    width: min(100% - 2rem, 32rem);
+    width: min(100% - 2rem, 31.25rem);
     --ohg-shell-pad-y: 0.75rem;
   }
 
@@ -652,8 +658,8 @@
 
   .ohg-detail__body {
     width: 100%;
-    --ohg-selected-cover-size: 7rem;
-    --ohg-selected-stack-width: min(100% - 2rem, 32rem);
+    --ohg-selected-cover-size: 8rem;
+    --ohg-selected-stack-width: min(100% - 2rem, 31.25rem);
   }
 
   .ohg-detail__hero {

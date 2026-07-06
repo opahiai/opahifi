@@ -16,21 +16,24 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "partial-draft",
   assets: ohAssets,
-  versions: Object.freeze([]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/4tLlgRbaw4AgpGjEJx96CO",
-    appleMusic: "https://music.apple.com/us/song/not-your-bot-beep-sleep/6786322596",
-    youtube: "https://music.youtube.com/watch?v=8Z90e2Zl-bw",
-    amazonMusic: "https://music.amazon.com/albums/B0H729SL3F?trackAsin=B0H72LRQ16",
-    other: "https://youtu.be/8Z90e2Zl-bw",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "original",
+      slug: "original",
+      name: "Original",
+      duration: "3:25",
+      default: true,
+      cover: ohAssets.cover,
+      art: ohAssets.art,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/4tLlgRbaw4AgpGjEJx96CO",
+        appleMusic: "https://music.apple.com/us/song/not-your-bot-beep-sleep/6786322596",
+        youtube: "https://music.youtube.com/watch?v=8Z90e2Zl-bw",
+        amazonMusic: "https://music.amazon.com/albums/B0H729SL3F?trackAsin=B0H72LRQ16",
+        other: "https://youtu.be/8Z90e2Zl-bw"
+      })
+    })
+  ]),
   theme: Object.freeze({
     background: "#07132b",
     primary: "#155bff",

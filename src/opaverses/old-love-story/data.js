@@ -36,8 +36,7 @@ export const ohSongData = Object.freeze({
         appleMusic: "https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028",
         youtube: "https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE",
         amazonMusic: "https://music.amazon.com/albums/B0FXB4X48G",
-        other: "https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq",
-        soundCloud: null
+        other: "https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq"
       })
     }),
     Object.freeze({
@@ -53,25 +52,10 @@ export const ohSongData = Object.freeze({
         appleMusic: "https://music.apple.com/ng/song/old-love-story-opa-max-mix/1869842718",
         youtube: "https://music.youtube.com/watch?v=m7wP4U97FC8",
         amazonMusic: "https://music.amazon.com/albums/B0GHC1X6R3",
-        other: "https://youtu.be/m7wP4U97FC8",
-        soundCloud: null
+        other: "https://youtu.be/m7wP4U97FC8"
       })
     })
   ]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII",
-    appleMusic: "https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028",
-    youtube: "https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE",
-    amazonMusic: "https://music.amazon.com/albums/B0FXB4X48G",
-    other: "https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
   theme: Object.freeze({
     background: "#201014",
     primary: "#ff6a00",

@@ -16,21 +16,24 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "source-provided",
   assets: ohAssets,
-  versions: Object.freeze([]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/4OHlXoJFuPhfm4plY7Coop?si=86049caec0384f95",
-    appleMusic: "https://music.apple.com/us/album/wellwolf-howl-lehluya-single/1894120765",
-    youtube: "https://music.youtube.com/playlist?list=OLAK5uy_k3iThKSj0H5nDqf-dpU5EMM-ccRcglZaY&si=d2V3JFEBlqkSJi55",
-    amazonMusic: "https://music.amazon.com/tracks/B0GXHSFW83?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_YaZDAKqp0vQwgwM7y8yENc9Zw",
-    other: "https://youtu.be/bjecZnXbXBc?si=Llwj6s7pyO2fRMmY",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "original",
+      slug: "original",
+      name: "Original",
+      duration: "3:34",
+      default: true,
+      cover: ohAssets.cover,
+      art: ohAssets.art,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/4OHlXoJFuPhfm4plY7Coop?si=86049caec0384f95",
+        appleMusic: "https://music.apple.com/us/album/wellwolf-howl-lehluya-single/1894120765",
+        youtube: "https://music.youtube.com/playlist?list=OLAK5uy_k3iThKSj0H5nDqf-dpU5EMM-ccRcglZaY&si=d2V3JFEBlqkSJi55",
+        amazonMusic: "https://music.amazon.com/tracks/B0GXHSFW83?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_YaZDAKqp0vQwgwM7y8yENc9Zw",
+        other: "https://youtu.be/bjecZnXbXBc?si=Llwj6s7pyO2fRMmY"
+      })
+    })
+  ]),
   theme: Object.freeze({
     background: "#081a18",
     primary: "#22d9dd",

@@ -35,25 +35,10 @@ export const ohSongData = Object.freeze({
         appleMusic: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",
         youtube: "https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE",
         amazonMusic: "https://music.amazon.com/albums/B0GJQZXHNL",
-        other: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F",
-        soundCloud: null
+        other: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F"
       })
     })
   ]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842",
-    appleMusic: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",
-    youtube: "https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE",
-    amazonMusic: "https://music.amazon.com/albums/B0GJQZXHNL",
-    other: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
   theme: Object.freeze({
     background: "#200b22",
     primary: "#ff3b2f",

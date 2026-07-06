@@ -32,8 +32,7 @@ export const ohSongData = Object.freeze({
         appleMusic: "https://music.apple.com/us/album/glittaa-phoenix-single/1853214791",
         youtube: "https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17",
         amazonMusic: "https://music.amazon.com/albums/B0G1N1Y83C",
-        other: "https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX",
-        soundCloud: null
+        other: "https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX"
       })
     }),
     Object.freeze({
@@ -49,25 +48,10 @@ export const ohSongData = Object.freeze({
         appleMusic: "https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659",
         youtube: "https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP",
         amazonMusic: "https://music.amazon.com/tracks/B0GGHZ6L2F",
-        other: "https://www.youtube.com/watch?v=LOywm64SGCY",
-        soundCloud: null
+        other: "https://www.youtube.com/watch?v=LOywm64SGCY"
       })
     })
   ]),
-  platforms: Object.freeze({
-    spotify: "https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6",
-    appleMusic: "https://music.apple.com/us/album/glittaa-phoenix-single/1853214791",
-    youtube: "https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17",
-    amazonMusic: "https://music.amazon.com/albums/B0G1N1Y83C",
-    other: "https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX",
-    soundCloud: null
-  }),
-  credits: Object.freeze({
-    artist: "OpaHiFi",
-    writers: Object.freeze([]),
-    producers: Object.freeze([]),
-    vocalists: Object.freeze([])
-  }),
   theme: Object.freeze({
     background: "#210b17",
     primary: "#ff3b2f",

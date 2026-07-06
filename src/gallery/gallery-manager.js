@@ -77,20 +77,15 @@ function ohgNormalizeVersion(song, version, index) {
     cover: version?.cover ?? versionAssets.cover ?? song.assets.cover,
     art: version?.art ?? versionAssets.art ?? song.assets.art ?? version?.cover ?? versionAssets.cover ?? song.assets.cover,
     stripeColors: Object.freeze(ohgNormalizeStripeColors(version?.stripeColors ?? version?.mixColors)),
-    duration: ohgFormatDuration(version?.duration ?? version?.length ?? song.duration),
+    duration: ohgFormatDuration(version?.duration ?? version?.length),
     lyrics: version?.lyrics || song.lyrics || "Lyrics pending",
-    platforms: Object.freeze({
-      ...ohgNormalizePlatforms(song.platforms),
-      ...ohgNormalizePlatforms(version?.platforms)
-    })
+    platforms: Object.freeze(ohgNormalizePlatforms(version?.platforms))
   });
 }
 
 function ohgNormalizeSong(module, index) {
   const { data } = module;
-  const sourceVersions = Array.isArray(data.versions) && data.versions.length > 0
-    ? data.versions
-    : [null];
+  const sourceVersions = Array.isArray(data.versions) ? data.versions : [];
   const versions = Object.freeze(sourceVersions.map((version, versionIndex) => (
     ohgNormalizeVersion(data, version, versionIndex)
   )));
