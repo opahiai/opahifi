@@ -4,6 +4,10 @@ const ohAssets = Object.freeze({
   master: new URL("./assets/master.png", import.meta.url).href
 });
 
+const ohVersionAssets = Object.freeze({
+  maxMix: new URL("../../../img/music/versions/version-splendaloverabbithell-maxmix.png", import.meta.url).href
+});
+
 export const ohSongData = Object.freeze({
   id: "splenda-love-rabbit-hell",
   slug: "splenda-love-rabbit-hell",
@@ -16,11 +20,30 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "source-provided",
   assets: ohAssets,
-  versions: Object.freeze([]),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "opa-max-mix",
+      slug: "opa-max-mix",
+      name: "Opa Max Mix",
+      default: true,
+      cover: ohVersionAssets.maxMix,
+      art: ohVersionAssets.maxMix,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842",
+        appleMusic: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",
+        youtube: "https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE",
+        amazonMusic: "https://music.amazon.com/albums/B0GJQZXHNL",
+        other: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F",
+        soundCloud: null
+      })
+    })
+  ]),
   platforms: Object.freeze({
-    spotify: null,
-    appleMusic: null,
-    youtube: null,
+    spotify: "https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842",
+    appleMusic: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",
+    youtube: "https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE",
+    amazonMusic: "https://music.amazon.com/albums/B0GJQZXHNL",
+    other: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F",
     soundCloud: null
   }),
   credits: Object.freeze({

@@ -4,6 +4,10 @@ const ohAssets = Object.freeze({
   master: new URL("./assets/master.png", import.meta.url).href
 });
 
+const ohVersionAssets = Object.freeze({
+  sunriseMaxMix: new URL("../../../img/music/versions/version-glittaaphoenix-sunrisemaxmix.png", import.meta.url).href
+});
+
 export const ohSongData = Object.freeze({
   id: "glittaa-phoenix",
   slug: "glittaa-phoenix",
@@ -16,11 +20,43 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "source-provided",
   assets: ohAssets,
-  versions: Object.freeze([]),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "original",
+      slug: "original",
+      name: "Original",
+      default: true,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6",
+        appleMusic: "https://music.apple.com/us/album/glittaa-phoenix-single/1853214791",
+        youtube: "https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17",
+        amazonMusic: "https://music.amazon.com/albums/B0G1N1Y83C",
+        other: "https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX",
+        soundCloud: null
+      })
+    }),
+    Object.freeze({
+      id: "opa-sunrize-max-mix",
+      slug: "opa-sunrize-max-mix",
+      name: "Opa Sunrize Max Mix",
+      cover: ohVersionAssets.sunriseMaxMix,
+      art: ohVersionAssets.sunriseMaxMix,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP",
+        appleMusic: "https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659",
+        youtube: "https://music.youtube.com/watch?v=LOywm64SGCY&si=iWf3mTJqF7wzVBwP",
+        amazonMusic: "https://music.amazon.com/tracks/B0GGHZ6L2F",
+        other: "https://www.youtube.com/watch?v=LOywm64SGCY",
+        soundCloud: null
+      })
+    })
+  ]),
   platforms: Object.freeze({
-    spotify: null,
-    appleMusic: null,
-    youtube: null,
+    spotify: "https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6",
+    appleMusic: "https://music.apple.com/us/album/glittaa-phoenix-single/1853214791",
+    youtube: "https://music.youtube.com/watch?v=4Enfe7y6RVo&si=gjMhajy0cR3VPQ17",
+    amazonMusic: "https://music.amazon.com/albums/B0G1N1Y83C",
+    other: "https://youtu.be/4Enfe7y6RVo?si=s1UpWS4WCZy6XujX",
     soundCloud: null
   }),
   credits: Object.freeze({

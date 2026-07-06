@@ -18,9 +18,11 @@ export const ohSongData = Object.freeze({
   assets: ohAssets,
   versions: Object.freeze([]),
   platforms: Object.freeze({
-    spotify: null,
-    appleMusic: null,
-    youtube: null,
+    spotify: "https://open.spotify.com/track/4tLlgRbaw4AgpGjEJx96CO",
+    appleMusic: "https://music.apple.com/us/song/not-your-bot-beep-sleep/6786322596",
+    youtube: "https://music.youtube.com/watch?v=8Z90e2Zl-bw",
+    amazonMusic: "https://music.amazon.com/albums/B0H729SL3F?trackAsin=B0H72LRQ16",
+    other: "https://youtu.be/8Z90e2Zl-bw",
     soundCloud: null
   }),
   credits: Object.freeze({

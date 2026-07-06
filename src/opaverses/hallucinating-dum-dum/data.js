@@ -18,9 +18,11 @@ export const ohSongData = Object.freeze({
   assets: ohAssets,
   versions: Object.freeze([]),
   platforms: Object.freeze({
-    spotify: null,
-    appleMusic: null,
-    youtube: null,
+    spotify: "https://open.spotify.com/track/74dIXy89cJ5oPrG9MFGd3X?si=91d0eec0dfd54961",
+    appleMusic: "https://music.apple.com/us/song/hallucinating-dum-dum/6776020941",
+    youtube: "https://music.youtube.com/watch?v=d5x0I9ffxwI&si=XE-Yl4gqJkmqfsJk",
+    amazonMusic: "https://music.amazon.com/albums/B0H3PX4NXX?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_zWfHrxwuQbquYWxem0QHrLJzx&trackAsin=B0H3PZ7XM1",
+    other: "https://youtu.be/d5x0I9ffxwI?si=3ehe5ANC_b68E693",
     soundCloud: null
   }),
   credits: Object.freeze({

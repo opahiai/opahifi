@@ -4,6 +4,8 @@ const OHG_PLATFORM_CONFIG = Object.freeze({
   spotify: Object.freeze({ label: "Spotify", icon: "fa-brands fa-spotify" }),
   appleMusic: Object.freeze({ label: "Apple Music", icon: "fa-brands fa-apple" }),
   youtube: Object.freeze({ label: "YouTube", icon: "fa-brands fa-youtube" }),
+  amazonMusic: Object.freeze({ label: "Amazon Music", icon: "fa-brands fa-amazon" }),
+  other: Object.freeze({ label: "YouTube", icon: "fa-brands fa-youtube" }),
   soundCloud: Object.freeze({ label: "SoundCloud", icon: "fa-brands fa-soundcloud" })
 });
 
@@ -83,6 +85,8 @@ function ohgNormalizeSong(module, index) {
     titleLines: Object.freeze(Array.isArray(data.titleLines) && data.titleLines.length > 0
       ? data.titleLines.slice(0, 2)
       : [data.title]),
+    art: data.assets?.art ?? data.assets?.cover ?? "",
+    cover: data.assets?.cover ?? data.assets?.art ?? "",
     subtitle: data.subtitle ?? data.opaverse?.subtitle ?? "",
     share: data.share ?? {},
     theme: data.theme,
@@ -148,7 +152,6 @@ class OhGalleryManager {
 
   renderGallery() {
     this.grid.innerHTML = this.songs.map((song) => {
-      const version = this.getVersion(song, this.getDefaultVersionIndex(song));
       const titleLines = song.titleLines.map((line) => (
         `<span>${ohgEscapeHtml(line)}</span>`
       )).join("");
@@ -165,7 +168,7 @@ class OhGalleryManager {
             <img
               class="ohg-cover__image"
               id="ohg-cover-image-${song.id}"
-              src="${ohgEscapeHtml(version.art)}"
+              src="${ohgEscapeHtml(song.art)}"
               alt="${ohgEscapeHtml(song.title)} art"
               width="900"
               height="900"
@@ -357,7 +360,7 @@ class OhGalleryManager {
     subtitle.hidden = !song.subtitle;
     duration.textContent = version.duration;
 
-    if (updateCover && coverImage) coverImage.src = version.art;
+    if (updateCover && coverImage) coverImage.src = song.art;
 
     this.renderVersions(song, versionIndex);
     this.renderPlatforms(version.platforms);
@@ -520,7 +523,7 @@ class OhGalleryManager {
       gridSlot.append(cover);
       cover.classList.remove("ohg-cover--detail");
       cover.classList.add("ohg-cover--circle");
-      cover.querySelector(".ohg-cover__image").src = this.getVersion(song, this.getDefaultVersionIndex(song)).art;
+      cover.querySelector(".ohg-cover__image").src = song.art;
       railSlot.hidden = false;
     });
 
@@ -570,7 +573,7 @@ class OhGalleryManager {
     oldRailSlot.append(oldCover);
     oldCover.classList.remove("ohg-cover--detail");
     oldCover.classList.add("ohg-cover--circle");
-    oldCover.querySelector(".ohg-cover__image").src = this.getVersion(oldSong, this.getDefaultVersionIndex(oldSong)).art;
+    oldCover.querySelector(".ohg-cover__image").src = oldSong.art;
 
     this.heroSlot.append(newCover);
     newCover.classList.remove("ohg-cover--circle");
@@ -611,7 +614,6 @@ class OhGalleryManager {
 
     const song = this.getSong();
     const nextVersion = this.getVersion(song, index);
-    const activeCoverImage = document.querySelector(`#ohg-cover-image-${song.id}`);
     const changingContent = ["#ohg-detail-info", "#ohg-platforms", "#ohg-lyrics"];
     const gsap = window.gsap;
 
@@ -627,17 +629,8 @@ class OhGalleryManager {
       }
     })
       .to(changingContent, { opacity: 0, y: 6, duration: 0.16 }, 0)
-      .to(activeCoverImage, {
-        opacity: 0.2,
-        scale: 0.96,
-        duration: 0.16,
-        onComplete: () => {
-          this.updateDetail(song, index, false);
-          activeCoverImage.src = nextVersion.art;
-        }
-      }, 0)
+      .call(() => this.updateDetail(song, index, false), null, 0.16)
       .to(changingContent, { opacity: 1, y: 0, duration: 0.28, ease: "power2.out" }, 0.18)
-      .to(activeCoverImage, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }, 0.18);
   }
 
   toggleLyrics() {

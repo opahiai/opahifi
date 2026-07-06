@@ -18,9 +18,11 @@ export const ohSongData = Object.freeze({
   assets: ohAssets,
   versions: Object.freeze([]),
   platforms: Object.freeze({
-    spotify: null,
-    appleMusic: null,
-    youtube: null,
+    spotify: "https://open.spotify.com/track/5dPbCqmOBoPSDe4UfQURDf",
+    appleMusic: "https://music.apple.com/us/album/opa-pa-pa-party/1850813736?i=1850813737",
+    youtube: "https://music.youtube.com/playlist?list=OLAK5uy_kyaEMBBaI0luWjB6ch9XqEbp4_dWNu3Mw",
+    amazonMusic: "https://music.amazon.com/albums/B0FYVMVZS4",
+    other: "https://youtu.be/B9lX6d-AIf8?si=fseyUMFxJJVAh2C8",
     soundCloud: null
   }),
   credits: Object.freeze({

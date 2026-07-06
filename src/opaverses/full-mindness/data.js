@@ -4,6 +4,10 @@ const ohAssets = Object.freeze({
   master: new URL("./assets/master.png", import.meta.url).href
 });
 
+const ohVersionAssets = Object.freeze({
+  mayhemMix: new URL("../../../img/music/versions/version-fullmindness-mayhemmix.png", import.meta.url).href
+});
+
 export const ohSongData = Object.freeze({
   id: "full-mindness",
   slug: "full-mindness",
@@ -16,11 +20,30 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "source-provided",
   assets: ohAssets,
-  versions: Object.freeze([]),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "opa-mayhem-mix",
+      slug: "opa-mayhem-mix",
+      name: "Opa Mayhem Mix",
+      default: true,
+      cover: ohVersionAssets.mayhemMix,
+      art: ohVersionAssets.mayhemMix,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960",
+        appleMusic: "https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886",
+        youtube: "https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z",
+        amazonMusic: "https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653",
+        other: "https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh",
+        soundCloud: null
+      })
+    })
+  ]),
   platforms: Object.freeze({
-    spotify: null,
-    appleMusic: null,
-    youtube: null,
+    spotify: "https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960",
+    appleMusic: "https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886",
+    youtube: "https://music.youtube.com/watch?v=lE193jDewd4&si=D9lyKQ-KrLwWuZ0Z",
+    amazonMusic: "https://music.amazon.com/albums/B0GPL4Q4R5?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_sac7n1RtCHUgR8GuzWLD1fZ7D&trackAsin=B0GPLBB653",
+    other: "https://youtu.be/lE193jDewd4?si=YywLQUMDj7DPgCwh",
     soundCloud: null
   }),
   credits: Object.freeze({

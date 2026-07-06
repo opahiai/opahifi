@@ -154,7 +154,7 @@
 
 .ohg-rail__slot .ohg-cover__title {
   top: 13%;
-  font-size: 0.32rem;
+  font-size: 0.5rem;
 }
 
 .ohg-cover--detail .ohg-cover__title {
@@ -403,6 +403,14 @@
 }
 
 .ohg-platform--youtube {
+  color: #ff0000;
+}
+
+.ohg-platform--amazonMusic {
+  color: #ff9900;
+}
+
+.ohg-platform--other {
   color: #ff0000;
 }
 

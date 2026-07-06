@@ -4,6 +4,11 @@ const ohAssets = Object.freeze({
   master: new URL("./assets/master.png", import.meta.url).href
 });
 
+const ohVersionAssets = Object.freeze({
+  desertDiscoDuet: new URL("../../../img/music/versions/version-oldlovestory-desertdiscoduet.png", import.meta.url).href,
+  maxMix: new URL("../../../img/music/versions/version-oldlovestory-maxmix.png", import.meta.url).href
+});
+
 export const ohSongData = Object.freeze({
   id: "old-love-story",
   slug: "old-love-story",
@@ -16,11 +21,45 @@ export const ohSongData = Object.freeze({
   status: "development",
   lyricsStatus: "source-provided",
   assets: ohAssets,
-  versions: Object.freeze([]),
+  versions: Object.freeze([
+    Object.freeze({
+      id: "desert-disco-duet",
+      slug: "desert-disco-duet",
+      name: "Desert Disco Duet",
+      default: true,
+      cover: ohVersionAssets.desertDiscoDuet,
+      art: ohVersionAssets.desertDiscoDuet,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII",
+        appleMusic: "https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028",
+        youtube: "https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE",
+        amazonMusic: "https://music.amazon.com/albums/B0FXB4X48G",
+        other: "https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq",
+        soundCloud: null
+      })
+    }),
+    Object.freeze({
+      id: "opa-max-mix",
+      slug: "opa-max-mix",
+      name: "Opa Max Mix",
+      cover: ohVersionAssets.maxMix,
+      art: ohVersionAssets.maxMix,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/3GZsz52AKg9ml2mMtC6EEw",
+        appleMusic: "https://music.apple.com/ng/song/old-love-story-opa-max-mix/1869842718",
+        youtube: "https://music.youtube.com/watch?v=m7wP4U97FC8",
+        amazonMusic: "https://music.amazon.com/albums/B0GHC1X6R3",
+        other: "https://youtu.be/m7wP4U97FC8",
+        soundCloud: null
+      })
+    })
+  ]),
   platforms: Object.freeze({
-    spotify: null,
-    appleMusic: null,
-    youtube: null,
+    spotify: "https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII",
+    appleMusic: "https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028",
+    youtube: "https://music.youtube.com/watch?v=iBtEe-Ch8Qo&list=OLAK5uy_mtnikKbgC0QYek2mnPWKJy-Ewr7E1e0zE",
+    amazonMusic: "https://music.amazon.com/albums/B0FXB4X48G",
+    other: "https://youtu.be/iBtEe-Ch8Qo?si=15gHOW9HM6DAGmjq",
     soundCloud: null
   }),
   credits: Object.freeze({
