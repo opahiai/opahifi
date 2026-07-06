@@ -28,6 +28,7 @@ export const ohSongData = Object.freeze({
       default: true,
       cover: ohVersionAssets.maxMix,
       art: ohVersionAssets.maxMix,
+      stripeColors: Object.freeze(["#60c6e6", "#5c14b5"]),
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842",
         appleMusic: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",

@@ -28,6 +28,7 @@ export const ohSongData = Object.freeze({
       default: true,
       cover: ohVersionAssets.mayhemMix,
       art: ohVersionAssets.mayhemMix,
+      stripeColors: Object.freeze(["#60c6e6", "#5c14b5"]),
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/6lp1u1WV8q0Aqfej1YeF8v?si=35f35519ca434960",
         appleMusic: "https://music.apple.com/ng/song/full-mindness-opa-mayhem-mix/1879704886",

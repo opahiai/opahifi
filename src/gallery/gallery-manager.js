@@ -26,6 +26,10 @@ function ohgNormalizePlatforms(platforms) {
   return platforms && typeof platforms === "object" ? platforms : {};
 }
 
+function ohgNormalizeStripeColors(colors) {
+  return Array.isArray(colors) ? colors.filter(Boolean).map(String) : [];
+}
+
 function ohgSlugify(value = "") {
   return String(value)
     .trim()
@@ -33,6 +37,20 @@ function ohgSlugify(value = "") {
     .replace(/&/g, " and ")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function ohgIsOriginalVersion(version) {
+  return ohgSlugify(version?.name ?? version?.id ?? version?.slug) === "original";
+}
+
+function ohgGetStripeBackground(version) {
+  if (!version || ohgIsOriginalVersion(version)) return "#ffffff";
+
+  const colors = version.stripeColors ?? [];
+  if (colors.length === 0) return "#ffffff";
+  if (colors.length === 1) return colors[0];
+
+  return `linear-gradient(90deg, ${colors.join(", ")})`;
 }
 
 function ohgNormalizeVersion(song, version, index) {
@@ -53,6 +71,7 @@ function ohgNormalizeVersion(song, version, index) {
     isDefault: Boolean(version?.default ?? version?.isDefault ?? version?.defaultVersion),
     cover: version?.cover ?? versionAssets.cover ?? song.assets.cover,
     art: version?.art ?? versionAssets.art ?? song.assets.art ?? version?.cover ?? versionAssets.cover ?? song.assets.cover,
+    stripeColors: Object.freeze(ohgNormalizeStripeColors(version?.stripeColors ?? version?.mixColors)),
     duration: version?.duration ?? version?.length ?? song.duration ?? "Duration pending",
     lyrics: version?.lyrics || song.lyrics || "Lyrics pending",
     platforms: Object.freeze({
@@ -152,6 +171,8 @@ class OhGalleryManager {
 
   renderGallery() {
     this.grid.innerHTML = this.songs.map((song) => {
+      const version = this.getVersion(song, this.getDefaultVersionIndex(song));
+      const stripeBackground = ohgGetStripeBackground(version);
       const titleLines = song.titleLines.map((line) => (
         `<span>${ohgEscapeHtml(line)}</span>`
       )).join("");
@@ -174,6 +195,11 @@ class OhGalleryManager {
               height="900"
               loading="lazy"
             >
+            <span
+              class="ohg-cover__stripe"
+              style="--ohg-cover-stripe: ${ohgEscapeHtml(stripeBackground)}"
+              aria-hidden="true"
+            ></span>
             <span class="ohg-cover__title">${titleLines}</span>
           </button>
         </div>
@@ -354,6 +380,7 @@ class OhGalleryManager {
     const subtitle = document.querySelector("#ohg-detail-subtitle");
     const duration = document.querySelector("#ohg-detail-duration");
     const coverImage = document.querySelector(`#ohg-cover-image-${song.id}`);
+    const coverStripe = document.querySelector(`#ohg-cover-${song.id} .ohg-cover__stripe`);
 
     title.textContent = song.title;
     subtitle.textContent = song.subtitle;
@@ -361,6 +388,7 @@ class OhGalleryManager {
     duration.textContent = version.duration;
 
     if (updateCover && coverImage) coverImage.src = song.art;
+    if (coverStripe) coverStripe.style.setProperty("--ohg-cover-stripe", ohgGetStripeBackground(version));
 
     this.renderVersions(song, versionIndex);
     this.renderPlatforms(version.platforms);
@@ -524,6 +552,10 @@ class OhGalleryManager {
       cover.classList.remove("ohg-cover--detail");
       cover.classList.add("ohg-cover--circle");
       cover.querySelector(".ohg-cover__image").src = song.art;
+      cover.querySelector(".ohg-cover__stripe")?.style.setProperty(
+        "--ohg-cover-stripe",
+        ohgGetStripeBackground(this.getVersion(song, this.getDefaultVersionIndex(song)))
+      );
       railSlot.hidden = false;
     });
 
@@ -574,6 +606,10 @@ class OhGalleryManager {
     oldCover.classList.remove("ohg-cover--detail");
     oldCover.classList.add("ohg-cover--circle");
     oldCover.querySelector(".ohg-cover__image").src = oldSong.art;
+    oldCover.querySelector(".ohg-cover__stripe")?.style.setProperty(
+      "--ohg-cover-stripe",
+      ohgGetStripeBackground(this.getVersion(oldSong, this.getDefaultVersionIndex(oldSong)))
+    );
 
     this.heroSlot.append(newCover);
     newCover.classList.remove("ohg-cover--circle");

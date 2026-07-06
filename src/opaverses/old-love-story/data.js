@@ -29,6 +29,7 @@ export const ohSongData = Object.freeze({
       default: true,
       cover: ohVersionAssets.desertDiscoDuet,
       art: ohVersionAssets.desertDiscoDuet,
+      stripeColors: Object.freeze(["#fff0f5", "#5c14b5"]),
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/5jvOt03Y3cQdBqocYmbUII",
         appleMusic: "https://music.apple.com/us/album/old-love-story-desert-disco-duet-single/1848551028",
@@ -44,6 +45,7 @@ export const ohSongData = Object.freeze({
       name: "Opa Max Mix",
       cover: ohVersionAssets.maxMix,
       art: ohVersionAssets.maxMix,
+      stripeColors: Object.freeze(["#60c6e6", "#5c14b5"]),
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/3GZsz52AKg9ml2mMtC6EEw",
         appleMusic: "https://music.apple.com/ng/song/old-love-story-opa-max-mix/1869842718",

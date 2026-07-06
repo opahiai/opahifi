@@ -41,6 +41,7 @@ export const ohSongData = Object.freeze({
       name: "Opa Sunrize Max Mix",
       cover: ohVersionAssets.sunriseMaxMix,
       art: ohVersionAssets.sunriseMaxMix,
+      stripeColors: Object.freeze(["#e8d36b", "#f4c97a", "#f4af86"]),
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP",
         appleMusic: "https://music.apple.com/us/album/glittaa-phoenix-opa-sunrise-max-mix-single/1868781659",
