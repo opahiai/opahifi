@@ -2,11 +2,6 @@ import { ohSongData } from "./data.js";
 
 export function ohRenderSong({ position }) {
   const number = String(position).padStart(2, "0");
-  const duration = ohSongData.duration ?? "Duration pending";
-  const versionCount = ohSongData.versions.length;
-  const versions = versionCount === 0
-    ? "Versions pending"
-    : `${versionCount} ${versionCount === 1 ? "version" : "versions"}`;
 
   return `
     <section
@@ -35,10 +30,6 @@ export function ohRenderSong({ position }) {
           <div class="oh-opaverse__accent" data-oh-scene-accent></div>
           <p class="oh-opaverse__copy" data-oh-scene-copy>${ohSongData.opaverse.summary}</p>
           <blockquote class="oh-opaverse__quote" data-oh-scene-quote>${ohSongData.opaverse.featuredLine}</blockquote>
-          <div class="oh-opaverse__meta">
-            <span>${duration}</span>
-            <span>${versions}</span>
-          </div>
         </div>
       </div>
     </section>
