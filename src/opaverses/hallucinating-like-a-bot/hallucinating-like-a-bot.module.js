@@ -43,7 +43,6 @@ export const ohHallucinatingLikeABotModule = Object.freeze({
             <div class="oh-opaverse__accent" data-oh-scene-accent></div>
             <p class="oh-opaverse__copy" data-oh-scene-copy>${this.data.summary}</p>
             <blockquote class="oh-opaverse__quote" data-oh-scene-quote>${this.data.featuredLine}</blockquote>
-            <div class="oh-opaverse__meta"><span>${this.data.duration}</span><span>${this.data.versions.length} version</span></div>
           </div>
         </div>
       </section>

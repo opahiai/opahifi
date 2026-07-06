@@ -262,8 +262,12 @@ class OhGalleryManager {
     if (!song) return "#gallery";
 
     const resolvedVersionIndex = versionIndex ?? this.getDefaultVersionIndex(song);
-    const version = this.getVersion(song, resolvedVersionIndex) ?? this.getVersion(song, 0);
     const songSlug = song.slug ?? ohgSlugify(song.title) ?? song.id;
+    if (resolvedVersionIndex === this.getDefaultVersionIndex(song)) {
+      return `#${encodeURIComponent(songSlug)}`;
+    }
+
+    const version = this.getVersion(song, resolvedVersionIndex) ?? this.getVersion(song, 0);
     const versionSlug = version?.slug ?? ohgSlugify(version?.name) ?? "original";
 
     return `#${encodeURIComponent(songSlug)}/${encodeURIComponent(versionSlug)}`;

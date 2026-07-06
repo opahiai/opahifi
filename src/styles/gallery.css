@@ -61,7 +61,7 @@
   padding: 0;
   overflow: hidden;
   border: 0;
-  background: transparent;
+  background: #fefefe;
   color: white;
   cursor: pointer;
   isolation: isolate;
@@ -118,11 +118,11 @@
   justify-content: flex-end;
   width: 76%;
   margin-inline: auto;
-  margin-bottom: 0.08rem;
+  margin-bottom: -0.9rem;
   overflow: hidden;
   color: #15151a;
-  font: 900 clamp(0.38rem, 1.7vw, 0.68rem)/0.9 "Poppins", sans-serif;
-  letter-spacing: 0;
+  font: 900 clamp(0.4rem, 1.7vw, 0.68rem)/0.9 "Oswald", sans-serif;
+  letter-spacing: -0.03em;
   text-align: center;
   text-transform: uppercase;
 }

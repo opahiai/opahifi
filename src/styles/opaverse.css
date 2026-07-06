@@ -119,20 +119,6 @@
   line-height: 1.28;
 }
 
-.oh-opaverse__meta {
-  display: flex;
-  gap: 0.7rem;
-  color: rgb(247 248 255 / 0.56);
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.oh-opaverse__meta span + span::before {
-  content: "·";
-  margin-right: 0.7rem;
-}
-
 @media (min-width: 48rem) {
   .oh-opaverse {
     min-height: calc(var(--oh-main-height) * 2.1);
