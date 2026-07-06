@@ -50,6 +50,7 @@ function ohgNormalizeVersion(song, version, index) {
     name,
     isDefault: Boolean(version?.default ?? version?.isDefault ?? version?.defaultVersion),
     cover: version?.cover ?? versionAssets.cover ?? song.assets.cover,
+    art: version?.art ?? versionAssets.art ?? song.assets.art ?? version?.cover ?? versionAssets.cover ?? song.assets.cover,
     duration: version?.duration ?? version?.length ?? song.duration ?? "Duration pending",
     lyrics: version?.lyrics || song.lyrics || "Lyrics pending",
     platforms: Object.freeze({
@@ -155,12 +156,13 @@ class OhGalleryManager {
             <img
               class="ohg-cover__image"
               id="ohg-cover-image-${song.id}"
-              src="${ohgEscapeHtml(version.cover)}"
-              alt="${ohgEscapeHtml(song.title)} cover"
+              src="${ohgEscapeHtml(version.art)}"
+              alt="${ohgEscapeHtml(song.title)} art"
               width="900"
               height="900"
               loading="lazy"
             >
+            <span class="ohg-cover__title">${ohgEscapeHtml(song.title)}</span>
           </button>
         </div>
       `;
@@ -342,7 +344,7 @@ class OhGalleryManager {
     subtitle.hidden = !song.subtitle;
     duration.textContent = version.duration;
 
-    if (updateCover && coverImage) coverImage.src = version.cover;
+    if (updateCover && coverImage) coverImage.src = version.art;
 
     this.renderVersions(song, versionIndex);
     this.renderPlatforms(version.platforms);
@@ -506,7 +508,7 @@ class OhGalleryManager {
       gridSlot.append(cover);
       cover.classList.remove("ohg-cover--detail");
       cover.classList.add("ohg-cover--circle");
-      cover.querySelector(".ohg-cover__image").src = this.getVersion(song, this.getDefaultVersionIndex(song)).cover;
+      cover.querySelector(".ohg-cover__image").src = this.getVersion(song, this.getDefaultVersionIndex(song)).art;
       railSlot.hidden = false;
     });
 
@@ -557,7 +559,7 @@ class OhGalleryManager {
     oldRailSlot.append(oldCover);
     oldCover.classList.remove("ohg-cover--detail");
     oldCover.classList.add("ohg-cover--circle");
-    oldCover.querySelector(".ohg-cover__image").src = this.getVersion(oldSong, this.getDefaultVersionIndex(oldSong)).cover;
+    oldCover.querySelector(".ohg-cover__image").src = this.getVersion(oldSong, this.getDefaultVersionIndex(oldSong)).art;
 
     this.heroSlot.append(newCover);
     newCover.classList.remove("ohg-cover--circle");
@@ -620,7 +622,7 @@ class OhGalleryManager {
         duration: 0.16,
         onComplete: () => {
           this.updateDetail(song, index, false);
-          activeCoverImage.src = nextVersion.cover;
+          activeCoverImage.src = nextVersion.art;
         }
       }, 0)
       .to(changingContent, { opacity: 1, y: 0, duration: 0.28, ease: "power2.out" }, 0.18)
