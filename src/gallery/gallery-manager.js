@@ -44,13 +44,19 @@ function ohgIsOriginalVersion(version) {
 }
 
 function ohgGetStripeBackground(version) {
-  if (!version || ohgIsOriginalVersion(version)) return "#ffffff";
+  if (!version || ohgIsOriginalVersion(version)) {
+    return "linear-gradient(90deg, #ffffff 0%, #f8fafc 52%, #ffffff 100%)";
+  }
 
   const colors = version.stripeColors ?? [];
   if (colors.length === 0) return "#ffffff";
   if (colors.length === 1) return colors[0];
 
   return `linear-gradient(90deg, ${colors.join(", ")})`;
+}
+
+function ohgFormatDuration(duration) {
+  return duration && duration !== "Duration pending" ? duration : "0:00";
 }
 
 function ohgNormalizeVersion(song, version, index) {
@@ -72,7 +78,7 @@ function ohgNormalizeVersion(song, version, index) {
     cover: version?.cover ?? versionAssets.cover ?? song.assets.cover,
     art: version?.art ?? versionAssets.art ?? song.assets.art ?? version?.cover ?? versionAssets.cover ?? song.assets.cover,
     stripeColors: Object.freeze(ohgNormalizeStripeColors(version?.stripeColors ?? version?.mixColors)),
-    duration: version?.duration ?? version?.length ?? song.duration ?? "Duration pending",
+    duration: ohgFormatDuration(version?.duration ?? version?.length ?? song.duration),
     lyrics: version?.lyrics || song.lyrics || "Lyrics pending",
     platforms: Object.freeze({
       ...ohgNormalizePlatforms(song.platforms),
@@ -123,6 +129,7 @@ class OhGalleryManager {
     this.activeVersionIndex = 0;
     this.isAnimating = false;
     this.isLyricsExpanded = false;
+    this.versionPillsExpanded = false;
     this.lastFocusedElement = null;
     this.grid = null;
     this.detail = null;
@@ -269,6 +276,26 @@ class OhGalleryManager {
     return song?.versions[index] ?? null;
   }
 
+  setCoverImage(song, imageUrl) {
+    const coverImage = document.querySelector(`#ohg-cover-image-${song?.id}`);
+    if (coverImage && imageUrl) coverImage.src = imageUrl;
+  }
+
+  setCoverStripe(song, version) {
+    const coverStripe = document.querySelector(`#ohg-cover-${song?.id} .ohg-cover__stripe`);
+    if (coverStripe) coverStripe.style.setProperty("--ohg-cover-stripe", ohgGetStripeBackground(version));
+  }
+
+  setCoverToSongArt(song) {
+    this.setCoverImage(song, song?.art);
+    this.setCoverStripe(song, this.getVersion(song, this.getDefaultVersionIndex(song)));
+  }
+
+  setCoverToVersionArt(song, version) {
+    this.setCoverImage(song, version?.cover ?? version?.art ?? song?.cover ?? song?.art);
+    this.setCoverStripe(song, version);
+  }
+
   getDefaultVersionIndex(song) {
     return song?.defaultVersionIndex ?? 0;
   }
@@ -379,16 +406,13 @@ class OhGalleryManager {
     const title = document.querySelector("#ohg-detail-title");
     const subtitle = document.querySelector("#ohg-detail-subtitle");
     const duration = document.querySelector("#ohg-detail-duration");
-    const coverImage = document.querySelector(`#ohg-cover-image-${song.id}`);
-    const coverStripe = document.querySelector(`#ohg-cover-${song.id} .ohg-cover__stripe`);
 
     title.textContent = song.title;
     subtitle.textContent = song.subtitle;
     subtitle.hidden = !song.subtitle;
     duration.textContent = version.duration;
 
-    if (updateCover && coverImage) coverImage.src = song.art;
-    if (coverStripe) coverStripe.style.setProperty("--ohg-cover-stripe", ohgGetStripeBackground(version));
+    if (updateCover) this.setCoverToVersionArt(song, version);
 
     this.renderVersions(song, versionIndex);
     this.renderPlatforms(version.platforms);
@@ -396,21 +420,109 @@ class OhGalleryManager {
   }
 
   renderVersions(song, activeIndex) {
-    this.versionPills.innerHTML = song.versions.map((version, index) => `
+    const activeVersion = this.getVersion(song, activeIndex) ?? this.getVersion(song, 0);
+    const secondaryVersions = song.versions
+      .map((version, index) => ({ version, index }))
+      .filter((entry) => entry.index !== activeIndex)
+      .slice(0, 2);
+    const activeButton = activeVersion ? `
       <button
-        class="ohg-version-pill${index === activeIndex ? " is-active" : ""}"
+        class="ohg-version-pill is-active"
+        type="button"
+        data-ohg-version-index="${activeIndex}"
+        aria-pressed="true"
+        style="--ohg-version-stripe: ${ohgEscapeHtml(ohgGetStripeBackground(activeVersion))}"
+      >
+        <span class="ohg-version-pill__name">${ohgEscapeHtml(activeVersion.name)}</span>
+        <span class="ohg-version-pill__duration">${ohgEscapeHtml(activeVersion.duration)}</span>
+      </button>
+    ` : "";
+    const secondaryButtons = secondaryVersions.map(({ version, index }) => `
+      <button
+        class="ohg-version-pill"
         type="button"
         data-ohg-version-index="${index}"
-        aria-pressed="${index === activeIndex}"
+        aria-pressed="false"
+        style="--ohg-version-stripe: ${ohgEscapeHtml(ohgGetStripeBackground(version))}"
       >
-        ${ohgEscapeHtml(version.name)}
+        <span class="ohg-version-pill__name">${ohgEscapeHtml(version.name)}</span>
+        <span class="ohg-version-pill__duration">${ohgEscapeHtml(version.duration)}</span>
       </button>
     `).join("");
+    const ghostCount = Math.max(0, 3 - 1 - secondaryVersions.length);
+    const ghostRibbons = Array.from({ length: ghostCount }, () => (
+      `<span class="ohg-version-pill ohg-version-pill--ghost" aria-hidden="true"></span>`
+    )).join("");
+
+    this.versionPills.innerHTML = `${activeButton}${secondaryButtons}${ghostRibbons}`;
+    this.setVersionPillsExpanded(this.versionPillsExpanded);
 
     const previousButton = document.querySelector('[data-ohg-action="previousVersion"]');
     const nextButton = document.querySelector('[data-ohg-action="nextVersion"]');
     previousButton.disabled = activeIndex === 0;
     nextButton.disabled = activeIndex === song.versions.length - 1;
+  }
+
+  getVersionPillElements() {
+    return Array.from(this.versionPills?.querySelectorAll(".ohg-version-pill") ?? []);
+  }
+
+  setVersionPillsExpanded(isExpanded) {
+    this.versionPillsExpanded = isExpanded;
+    const gsap = window.gsap;
+    const pills = this.getVersionPillElements();
+    if (!gsap || pills.length === 0) return;
+
+    gsap.set(pills, {
+      scaleX: isExpanded ? 1 : 0,
+      transformOrigin: "left center"
+    });
+    if (isExpanded) gsap.set(pills, { clearProps: "transform,transformOrigin" });
+  }
+
+  animateVersionPillsIn(onComplete = null) {
+    const gsap = window.gsap;
+    const pills = this.getVersionPillElements();
+    this.versionPillsExpanded = true;
+    if (!gsap || pills.length === 0) {
+      onComplete?.();
+      return;
+    }
+
+    gsap.fromTo(pills, {
+      scaleX: 0,
+      transformOrigin: "left center"
+    }, {
+      scaleX: 1,
+      duration: 0.34,
+      ease: "power3.out",
+      stagger: 0.045,
+      onComplete: () => {
+        gsap.set(pills, { clearProps: "transform,transformOrigin" });
+        onComplete?.();
+      }
+    });
+  }
+
+  animateVersionPillsOut(onComplete = null) {
+    const gsap = window.gsap;
+    const pills = this.getVersionPillElements();
+    this.versionPillsExpanded = false;
+    if (!gsap || pills.length === 0) {
+      onComplete?.();
+      return;
+    }
+
+    gsap.to(pills, {
+      scaleX: 0,
+      duration: 0.28,
+      ease: "power3.inOut",
+      stagger: -0.035,
+      transformOrigin: "left center",
+      onComplete: () => {
+        gsap.delayedCall(0.08, () => onComplete?.());
+      }
+    });
   }
 
   renderPlatforms(platforms) {
@@ -468,15 +580,15 @@ class OhGalleryManager {
     this.lastFocusedElement = document.activeElement;
     this.activeSongId = songId;
     this.activeVersionIndex = versionIndex;
+    this.versionPillsExpanded = false;
     if (options.updateUrl !== false) this.setLocationHash(this.getSongHash(songId, versionIndex));
-    this.updateDetail(song, versionIndex);
-
     this.disableRailClipping();
     const state = Flip.getState(".ohg-cover");
     this.detail.classList.add("is-open");
     this.detail.setAttribute("aria-hidden", "false");
     this.rail.classList.add("is-open");
-    this.moveCoversToDetail(songId);
+    this.moveCoversToDetail(songId, versionIndex);
+    this.updateDetail(song, versionIndex);
 
     const travellingCovers = document.querySelectorAll(".ohg-cover");
     travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
@@ -491,7 +603,9 @@ class OhGalleryManager {
       onComplete: () => {
         travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
         this.enableRailClipping();
-        this.isAnimating = false;
+        this.animateVersionPillsIn(() => {
+          this.isAnimating = false;
+        });
       }
     });
   }
@@ -506,7 +620,7 @@ class OhGalleryManager {
     this.railTrack?.classList.add("ohg-rail__track--clip");
   }
 
-  moveCoversToDetail(activeSongId) {
+  moveCoversToDetail(activeSongId, activeVersionIndex = null) {
     this.songs.forEach((song) => {
       const cover = document.querySelector(`#ohg-cover-${song.id}`);
       const railSlot = document.querySelector(`#ohg-rail-slot-${song.id}`);
@@ -520,8 +634,10 @@ class OhGalleryManager {
         this.heroSlot.append(cover);
         cover.classList.remove("ohg-cover--circle");
         cover.classList.add("ohg-cover--detail");
+        this.setCoverToVersionArt(song, this.getVersion(song, activeVersionIndex ?? this.getDefaultVersionIndex(song)));
         railSlot.hidden = true;
       } else {
+        this.setCoverToSongArt(song);
         railSlot.append(cover);
       }
     });
@@ -537,46 +653,44 @@ class OhGalleryManager {
     this.isAnimating = true;
     if (options.updateUrl !== false) this.setLocationHash("#gallery", "replace");
     this.detail.classList.add("is-leaving");
-    this.disableRailClipping();
-    const travellingCovers = document.querySelectorAll(".ohg-cover");
-    travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
-    const state = Flip.getState(".ohg-cover");
+    this.animateVersionPillsOut(() => {
+      this.disableRailClipping();
+      const travellingCovers = document.querySelectorAll(".ohg-cover");
+      travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
+      const state = Flip.getState(".ohg-cover");
 
-    this.songs.forEach((song) => {
-      const cover = document.querySelector(`#ohg-cover-${song.id}`);
-      const gridSlot = document.querySelector(`#ohg-grid-slot-${song.id}`);
-      const railSlot = document.querySelector(`#ohg-rail-slot-${song.id}`);
-      if (!cover || !gridSlot || !railSlot) return;
+      this.songs.forEach((song) => {
+        const cover = document.querySelector(`#ohg-cover-${song.id}`);
+        const gridSlot = document.querySelector(`#ohg-grid-slot-${song.id}`);
+        const railSlot = document.querySelector(`#ohg-rail-slot-${song.id}`);
+        if (!cover || !gridSlot || !railSlot) return;
 
-      gridSlot.append(cover);
-      cover.classList.remove("ohg-cover--detail");
-      cover.classList.add("ohg-cover--circle");
-      cover.querySelector(".ohg-cover__image").src = song.art;
-      cover.querySelector(".ohg-cover__stripe")?.style.setProperty(
-        "--ohg-cover-stripe",
-        ohgGetStripeBackground(this.getVersion(song, this.getDefaultVersionIndex(song)))
-      );
-      railSlot.hidden = false;
-    });
+        gridSlot.append(cover);
+        cover.classList.remove("ohg-cover--detail");
+        cover.classList.add("ohg-cover--circle");
+        this.setCoverToSongArt(song);
+        railSlot.hidden = false;
+      });
 
-    Flip.from(state, {
-      duration: 0.68,
-      ease: "power3.inOut",
-      absolute: true,
-      nested: true,
-      zIndex: 9999,
-      stagger: -0.012,
-      onComplete: () => {
-        travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
-        this.enableRailClipping();
-        this.detail.classList.remove("is-open", "is-leaving");
-        this.detail.setAttribute("aria-hidden", "true");
-        this.rail.classList.remove("is-open");
-        this.activeSongId = null;
-        this.activeVersionIndex = 0;
-        this.isAnimating = false;
-        this.lastFocusedElement?.focus?.({ preventScroll: true });
-      }
+      Flip.from(state, {
+        duration: 0.68,
+        ease: "power3.inOut",
+        absolute: true,
+        nested: true,
+        zIndex: 9999,
+        stagger: -0.012,
+        onComplete: () => {
+          travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
+          this.enableRailClipping();
+          this.detail.classList.remove("is-open", "is-leaving");
+          this.detail.setAttribute("aria-hidden", "true");
+          this.rail.classList.remove("is-open");
+          this.activeSongId = null;
+          this.activeVersionIndex = 0;
+          this.isAnimating = false;
+          this.lastFocusedElement?.focus?.({ preventScroll: true });
+        }
+      });
     });
   }
 
@@ -592,56 +706,58 @@ class OhGalleryManager {
 
     this.isAnimating = true;
     this.detailScroll.scrollTop = 0;
-    this.disableRailClipping();
-    const travellingCovers = document.querySelectorAll(".ohg-cover");
-    travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
-    const state = Flip.getState(".ohg-cover");
-    const oldCover = document.querySelector(`#ohg-cover-${oldSong.id}`);
-    const newCover = document.querySelector(`#ohg-cover-${newSong.id}`);
-    const oldRailSlot = document.querySelector(`#ohg-rail-slot-${oldSong.id}`);
-    const newRailSlot = document.querySelector(`#ohg-rail-slot-${newSong.id}`);
+    this.animateVersionPillsOut(() => {
+      this.disableRailClipping();
+      const travellingCovers = document.querySelectorAll(".ohg-cover");
+      travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
+      const state = Flip.getState(".ohg-cover");
+      const oldCover = document.querySelector(`#ohg-cover-${oldSong.id}`);
+      const newCover = document.querySelector(`#ohg-cover-${newSong.id}`);
+      const oldRailSlot = document.querySelector(`#ohg-rail-slot-${oldSong.id}`);
+      const newRailSlot = document.querySelector(`#ohg-rail-slot-${newSong.id}`);
 
-    oldRailSlot.hidden = false;
-    oldRailSlot.append(oldCover);
-    oldCover.classList.remove("ohg-cover--detail");
-    oldCover.classList.add("ohg-cover--circle");
-    oldCover.querySelector(".ohg-cover__image").src = oldSong.art;
-    oldCover.querySelector(".ohg-cover__stripe")?.style.setProperty(
-      "--ohg-cover-stripe",
-      ohgGetStripeBackground(this.getVersion(oldSong, this.getDefaultVersionIndex(oldSong)))
-    );
+      oldRailSlot.hidden = false;
+      oldRailSlot.append(oldCover);
+      oldCover.classList.remove("ohg-cover--detail");
+      oldCover.classList.add("ohg-cover--circle");
+      this.setCoverToSongArt(oldSong);
 
-    this.heroSlot.append(newCover);
-    newCover.classList.remove("ohg-cover--circle");
-    newCover.classList.add("ohg-cover--detail");
-    newRailSlot.hidden = true;
+      this.heroSlot.append(newCover);
+      newCover.classList.remove("ohg-cover--circle");
+      newCover.classList.add("ohg-cover--detail");
+      this.setCoverToVersionArt(newSong, this.getVersion(newSong, versionIndex));
+      newRailSlot.hidden = true;
 
-    this.activeSongId = songId;
-    this.activeVersionIndex = versionIndex;
-    if (options.updateUrl !== false) this.setLocationHash(this.getSongHash(songId, versionIndex));
+      this.activeSongId = songId;
+      this.activeVersionIndex = versionIndex;
+      this.versionPillsExpanded = false;
+      if (options.updateUrl !== false) this.setLocationHash(this.getSongHash(songId, versionIndex));
 
-    gsap.to(".ohg-detail__changing", {
-      opacity: 0,
-      y: 8,
-      duration: 0.18,
-      onComplete: () => {
-        this.updateDetail(newSong, versionIndex);
-        gsap.to(".ohg-detail__changing", { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
-      }
-    });
+      gsap.to(".ohg-detail__changing", {
+        opacity: 0,
+        y: 8,
+        duration: 0.18,
+        onComplete: () => {
+          this.updateDetail(newSong, versionIndex, false);
+          gsap.to(".ohg-detail__changing", { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
+        }
+      });
 
-    Flip.from(state, {
-      duration: 0.72,
-      ease: "back.out(1.02)",
-      absolute: true,
-      nested: true,
-      zIndex: 9999,
-      onComplete: () => {
-        travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
-        this.enableRailClipping();
-        this.isAnimating = false;
-        oldRailSlot.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-      }
+      Flip.from(state, {
+        duration: 0.72,
+        ease: "back.out(1.02)",
+        absolute: true,
+        nested: true,
+        zIndex: 9999,
+        onComplete: () => {
+          travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
+          this.enableRailClipping();
+          this.animateVersionPillsIn(() => {
+            this.isAnimating = false;
+            oldRailSlot.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+          });
+        }
+      });
     });
   }
 
@@ -650,6 +766,7 @@ class OhGalleryManager {
 
     const song = this.getSong();
     const nextVersion = this.getVersion(song, index);
+    const activeCoverImage = document.querySelector(`#ohg-cover-image-${song.id}`);
     const changingContent = ["#ohg-detail-info", "#ohg-platforms", "#ohg-lyrics"];
     const gsap = window.gsap;
 
@@ -665,8 +782,17 @@ class OhGalleryManager {
       }
     })
       .to(changingContent, { opacity: 0, y: 6, duration: 0.16 }, 0)
-      .call(() => this.updateDetail(song, index, false), null, 0.16)
+      .to(activeCoverImage, {
+        opacity: 0.2,
+        scale: 0.96,
+        duration: 0.16,
+        onComplete: () => {
+          this.setCoverToVersionArt(song, nextVersion);
+          this.updateDetail(song, index, false);
+        }
+      }, 0)
       .to(changingContent, { opacity: 1, y: 0, duration: 0.28, ease: "power2.out" }, 0.18)
+      .to(activeCoverImage, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }, 0.18);
   }
 
   toggleLyrics() {
