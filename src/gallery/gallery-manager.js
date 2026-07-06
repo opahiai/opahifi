@@ -117,6 +117,7 @@ class OhGalleryManager {
   }
 
   mount() {
+    this.gallery = document.querySelector("#gallery");
     this.grid = document.querySelector("#oh-gallery-grid");
     this.detail = document.querySelector("#ohg-detail");
     this.detailScroll = document.querySelector("#ohg-detail-scroll");
@@ -129,6 +130,8 @@ class OhGalleryManager {
     this.lyricsToggle = document.querySelector("#ohg-lyrics-toggle");
 
     if (!this.grid || !this.detail || !this.railTrack) return;
+
+    this.gallery?.append(this.detail, this.rail);
 
     this.renderGallery();
     this.renderRailSlots();
@@ -439,7 +442,6 @@ class OhGalleryManager {
 
     this.disableRailClipping();
     const state = Flip.getState(".ohg-cover");
-    document.body.classList.add("ohg-modal-open");
     this.detail.classList.add("is-open");
     this.detail.setAttribute("aria-hidden", "false");
     this.rail.classList.add("is-open");
@@ -535,7 +537,6 @@ class OhGalleryManager {
         this.detail.classList.remove("is-open", "is-leaving");
         this.detail.setAttribute("aria-hidden", "true");
         this.rail.classList.remove("is-open");
-        document.body.classList.remove("ohg-modal-open");
         this.activeSongId = null;
         this.activeVersionIndex = 0;
         this.isAnimating = false;
