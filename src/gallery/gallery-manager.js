@@ -1,11 +1,16 @@
 import { OH_OPAVERSE_MODULES } from "../opaverses/opaverse.registry.js";
 
 const OHG_PLATFORM_CONFIG = Object.freeze({
-  spotify: Object.freeze({ label: "Spotify", icon: "fa-brands fa-spotify" }),
-  appleMusic: Object.freeze({ label: "Apple Music", icon: "fa-brands fa-apple" }),
-  youtube: Object.freeze({ label: "YouTube", icon: "fa-brands fa-youtube" }),
-  amazonMusic: Object.freeze({ label: "Amazon Music", icon: "fa-brands fa-amazon" }),
-  other: Object.freeze({ label: "YouTube", icon: "fa-brands fa-youtube" })
+  spotify: Object.freeze({ label: "Spotify", icon: '<i class="fa-brands fa-spotify" aria-hidden="true"></i>' }),
+  appleMusic: Object.freeze({ label: "Apple Music", icon: '<i class="fa-brands fa-apple" aria-hidden="true"></i>' }),
+  youtube: Object.freeze({
+    label: "YouTube Music",
+    icon: `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1.5 8.5v-5l4.5 2.5-4.5 2.5z"></path>
+    </svg>`
+  }),
+  amazonMusic: Object.freeze({ label: "Amazon Music", icon: '<i class="fa-brands fa-amazon" aria-hidden="true"></i>' }),
+  other: Object.freeze({ label: "YouTube", icon: '<i class="fa-brands fa-youtube" aria-hidden="true"></i>' })
 });
 
 function ohgEscapeHtml(value = "") {
@@ -527,28 +532,27 @@ class OhGalleryManager {
   renderPlatforms(platforms) {
     this.platforms.innerHTML = Object.entries(OHG_PLATFORM_CONFIG).map(([key, config]) => {
       const url = platforms[key];
-
       if (!url) {
         return `
           <span
-            class="ohg-platform ohg-platform--${key} is-disabled"
+            class="ohg-platform is-disabled"
             aria-label="${config.label} link pending"
             title="${config.label} link pending"
           >
-            <i class="${config.icon}" aria-hidden="true"></i>
+            ${config.icon}
           </span>
         `;
       }
 
       return `
         <a
-          class="ohg-platform ohg-platform--${key}"
+          class="ohg-platform"
           href="${ohgEscapeHtml(url)}"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Listen on ${config.label}"
         >
-          <i class="${config.icon}" aria-hidden="true"></i>
+          ${config.icon}
         </a>
       `;
     }).join("");

@@ -9,8 +9,8 @@
   min-height: var(--oh-main-height);
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 30%, rgb(34 217 221 / 0.08), transparent 36%),
-    #06090e;
+    radial-gradient(circle at 50% 26%, rgb(21 91 255 / 0.08), transparent 34%),
+    #05060d;
 }
 
 .ohg-shell {
@@ -241,14 +241,14 @@
 
 .ohg-icon-button {
   display: grid;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   padding: 0;
   place-items: center;
-  border: 1px solid rgb(255 255 255 / 0.08);
+  border: 1px solid rgb(170 179 214 / 0.18);
   border-radius: 50%;
-  background: #0c121d;
-  color: var(--oh-muted);
+  background: rgb(11 16 36 / 0.68);
+  color: #aab3d6;
   cursor: pointer;
 }
 
@@ -263,14 +263,14 @@
   display: grid;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
   min-height: 0;
   padding: 0;
-  border: 1px solid rgb(255 255 255 / 0.08);
+  border: 1px solid rgb(170 179 214 / 0.18);
   border-radius: 50%;
-  background: #0c121d;
-  color: var(--oh-muted);
+  background: rgb(11 16 36 / 0.68);
+  color: #aab3d6;
   box-shadow: none;
   cursor: pointer;
 }
@@ -484,44 +484,44 @@
   opacity: 1;
 }
 
-.ohg-version-pill--ghost {
-  padding-block: 0;
-  background: var(--ohg-version-ghost-bg);
-  border-color: var(--ohg-version-ghost-border);
-  border-right-color: rgb(255 255 255 / 0.08);
-  box-shadow: none;
-  cursor: default;
-  opacity: 1;
-  pointer-events: none;
-}
-
 .ohg-platforms {
+  --ohg-platform-size: 2.35rem;
+  --ohg-platform-gap: 0.58rem;
   position: absolute;
   z-index: 3;
-  top: calc(var(--ohg-stage-padding) + var(--ohg-selected-cover-size) + 0.75rem);
+  top: calc(var(--ohg-stage-padding) + var(--ohg-selected-cover-size) + 0.65rem);
   left: var(--ohg-stage-padding);
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 0.52rem;
+  gap: var(--ohg-platform-gap);
   width: calc(100% - (var(--ohg-stage-padding) * 2));
 }
 
 .ohg-platform {
   display: grid;
-  width: 2rem;
-  height: 2rem;
+  flex: 0 0 var(--ohg-platform-size);
+  width: var(--ohg-platform-size);
+  height: var(--ohg-platform-size);
   place-items: center;
-  border: 0;
+  border: 1px solid rgb(170 179 214 / 0.2);
   border-radius: 50%;
   background: transparent;
   color: #ffffff;
-  font-size: 1.08rem;
+  font-size: 1.05rem;
   text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-.ohg-platform.is-disabled {
-  opacity: 0.28;
+.ohg-platform svg {
+  width: 1.12rem;
+  height: 1.12rem;
+}
+
+.ohg-platform:hover {
+  border-color: rgb(21 91 255 / 0.78);
+  background-color: rgb(21 91 255 / 0.14);
+  transform: scale(1.05);
 }
 
 .ohg-lyrics {
@@ -568,7 +568,7 @@
   padding: 0.45rem 0;
   border: 0;
   background: transparent;
-  color: var(--oh-cyan);
+  color: #155bff;
   font-size: 0.78rem;
   font-weight: 800;
   text-align: left;
