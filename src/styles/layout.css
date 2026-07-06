@@ -184,6 +184,58 @@
   background: rgb(255 255 255 / 0.06);
 }
 
+.oh-scroll-cue {
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0.45rem;
+  place-content: center;
+  color: var(--oh-text);
+}
+
+.oh-scroll-cue__arrow {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-right: 0.18rem solid currentColor;
+  border-bottom: 0.18rem solid currentColor;
+  opacity: 0;
+  rotate: 45deg;
+  animation: oh-scroll-arrow 1.45s infinite;
+}
+
+.oh-scroll-cue__arrow:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.oh-scroll-cue__arrow:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+@keyframes oh-scroll-arrow {
+  0% {
+    opacity: 0;
+    translate: 0 -0.35rem;
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    translate: 0 0.35rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oh-scroll-cue__arrow {
+    opacity: 1;
+    animation: none;
+  }
+}
+
 .oh-journey-entrance {
   background: linear-gradient(180deg, var(--oh-bg), #090d1c);
 }

@@ -8,6 +8,7 @@ export const ohSongData = Object.freeze({
   id: "believe-the-truth-fairy",
   slug: "believe-the-truth-fairy",
   title: "Believe the Truth Fairy",
+  titleLines: Object.freeze(["Believe the", "Truth Fairy"]),
   navLabel: "Truth Fairy",
   subtitle: "Share love, not lies",
   duration: null,

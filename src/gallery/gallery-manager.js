@@ -80,6 +80,9 @@ function ohgNormalizeSong(module, index) {
     slug: data.slug ?? ohgSlugify(data.title) ?? data.id,
     order: index + 1,
     title: data.title,
+    titleLines: Object.freeze(Array.isArray(data.titleLines) && data.titleLines.length > 0
+      ? data.titleLines.slice(0, 2)
+      : [data.title]),
     subtitle: data.subtitle ?? data.opaverse?.subtitle ?? "",
     share: data.share ?? {},
     theme: data.theme,
@@ -143,6 +146,9 @@ class OhGalleryManager {
   renderGallery() {
     this.grid.innerHTML = this.songs.map((song) => {
       const version = this.getVersion(song, this.getDefaultVersionIndex(song));
+      const titleLines = song.titleLines.map((line) => (
+        `<span>${ohgEscapeHtml(line)}</span>`
+      )).join("");
 
       return `
         <div class="ohg-grid__item" id="ohg-grid-slot-${song.id}">
@@ -162,7 +168,7 @@ class OhGalleryManager {
               height="900"
               loading="lazy"
             >
-            <span class="ohg-cover__title">${ohgEscapeHtml(song.title)}</span>
+            <span class="ohg-cover__title">${titleLines}</span>
           </button>
         </div>
       `;

@@ -8,6 +8,7 @@ export const ohSongData = Object.freeze({
   id: "glittaa-phoenix",
   slug: "glittaa-phoenix",
   title: "GLITTAA Phoenix",
+  titleLines: Object.freeze(["Glittaa", "Phoenix"]),
   navLabel: "GLITTAA Phoenix",
   subtitle: "Reborn in rhythm and glitter",
   duration: null,

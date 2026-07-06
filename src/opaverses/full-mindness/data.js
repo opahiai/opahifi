@@ -8,6 +8,7 @@ export const ohSongData = Object.freeze({
   id: "full-mindness",
   slug: "full-mindness",
   title: "Full-Mindness",
+  titleLines: Object.freeze(["Full-", "Mindness"]),
   navLabel: "Full-Mindness",
   subtitle: "Namastay in Mayhem",
   duration: null,

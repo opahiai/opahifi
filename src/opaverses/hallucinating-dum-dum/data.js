@@ -8,6 +8,7 @@ export const ohSongData = Object.freeze({
   id: "hallucinating-dum-dum",
   slug: "hallucinating-dum-dum",
   title: "Hallucinating Dum Dum",
+  titleLines: Object.freeze(["Hallucinating", "Dum Dum"]),
   navLabel: "Hallucinating Dum Dum",
   subtitle: "Confidence crowns a guess",
   duration: null,

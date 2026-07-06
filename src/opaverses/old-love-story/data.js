@@ -8,6 +8,7 @@ export const ohSongData = Object.freeze({
   id: "old-love-story",
   slug: "old-love-story",
   title: "Old Love Story",
+  titleLines: Object.freeze(["Old Love", "Story"]),
   navLabel: "Old Love Story",
   subtitle: "Bring back the beat",
   duration: null,
