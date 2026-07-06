@@ -11,7 +11,7 @@ export const ohSongData = Object.freeze({
   titleLines: Object.freeze(["Believe the", "Truth Fairy"]),
   navLabel: "Truth Fairy",
   subtitle: "Share love, not lies",
-  duration: null,
+  duration: "3:55",
   releaseDate: null,
   status: "development",
   lyricsStatus: "source-provided",

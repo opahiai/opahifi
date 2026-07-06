@@ -217,26 +217,26 @@
 
 .ohg-detail__header {
   display: none;
-  grid-template-columns: auto minmax(0, 1fr) 2.5rem;
+  position: absolute;
+  z-index: 30;
+  top: calc(-1 * var(--ohg-header-space));
+  right: 0;
+  left: 0;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
   align-items: center;
-  min-height: calc(3.75rem + env(safe-area-inset-top));
-  padding-top: env(safe-area-inset-top);
-  padding-inline: 0.75rem;
-  border-bottom: 1px solid rgb(255 255 255 / 0.09);
-  background: rgb(6 9 14 / 0.88);
-  backdrop-filter: blur(16px);
+  justify-items: center;
+  min-height: var(--ohg-title-height);
+  padding-inline: var(--ohg-stage-padding);
+  border-bottom: 0;
+  background: transparent;
+}
+
+.ohg-detail.is-open .ohg-detail__header {
+  display: grid;
 }
 
 .ohg-detail__label {
-  overflow: hidden;
-  color: var(--oh-muted);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-align: center;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
+  display: none;
 }
 
 .ohg-icon-button {
@@ -252,20 +252,31 @@
   cursor: pointer;
 }
 
+.ohg-detail__header .ohg-icon-button {
+  grid-column: 3;
+  justify-self: end;
+}
+
 .ohg-back-button {
-  display: inline-flex;
+  grid-column: 1;
+  justify-self: start;
+  display: grid;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  min-height: 2.5rem;
-  padding: 0 0.8rem;
-  border: 0;
-  border-radius: 999px;
-  background: #f3f4f6;
-  color: #06090e;
-  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 0.28);
-  font: 700 0.78rem/1 "Inter", sans-serif;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-height: 0;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 50%;
+  background: #0c121d;
+  color: var(--oh-muted);
+  box-shadow: none;
   cursor: pointer;
+}
+
+.ohg-back-button span {
+  display: none;
 }
 
 .ohg-back-button:active {
@@ -499,31 +510,8 @@
   border: 1px solid rgb(255 255 255 / 0.14);
   border-radius: 50%;
   background: #0c121d;
+  color: #ffffff;
   font-size: 1.05rem;
-}
-
-.ohg-platform--spotify {
-  color: #1db954;
-}
-
-.ohg-platform--appleMusic {
-  color: white;
-}
-
-.ohg-platform--youtube {
-  color: #ff0000;
-}
-
-.ohg-platform--amazonMusic {
-  color: #ff9900;
-}
-
-.ohg-platform--other {
-  color: #ff0000;
-}
-
-.ohg-platform--soundCloud {
-  color: #ff5500;
 }
 
 .ohg-platform.is-disabled {

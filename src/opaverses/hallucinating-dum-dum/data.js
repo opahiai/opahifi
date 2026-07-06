@@ -11,7 +11,7 @@ export const ohSongData = Object.freeze({
   titleLines: Object.freeze(["Hallucinating", "Dum Dum"]),
   navLabel: "Hallucinating Dum Dum",
   subtitle: "Confidence crowns a guess",
-  duration: null,
+  duration: "3:04",
   releaseDate: null,
   status: "development",
   lyricsStatus: "development-notes",

@@ -25,6 +25,7 @@ export const ohSongData = Object.freeze({
       id: "opa-max-mix",
       slug: "opa-max-mix",
       name: "Opa Max Mix",
+      duration: "4:00",
       default: true,
       cover: ohVersionAssets.maxMix,
       art: ohVersionAssets.maxMix,

@@ -5,8 +5,7 @@ const OHG_PLATFORM_CONFIG = Object.freeze({
   appleMusic: Object.freeze({ label: "Apple Music", icon: "fa-brands fa-apple" }),
   youtube: Object.freeze({ label: "YouTube", icon: "fa-brands fa-youtube" }),
   amazonMusic: Object.freeze({ label: "Amazon Music", icon: "fa-brands fa-amazon" }),
-  other: Object.freeze({ label: "YouTube", icon: "fa-brands fa-youtube" }),
-  soundCloud: Object.freeze({ label: "SoundCloud", icon: "fa-brands fa-soundcloud" })
+  other: Object.freeze({ label: "YouTube", icon: "fa-brands fa-youtube" })
 });
 
 function ohgEscapeHtml(value = "") {

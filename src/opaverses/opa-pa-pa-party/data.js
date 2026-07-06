@@ -11,7 +11,7 @@ export const ohSongData = Object.freeze({
   titleLines: Object.freeze(["Opa Pa", "Pa Party"]),
   navLabel: "Opa Party",
   subtitle: "The meltdown becomes celebration",
-  duration: null,
+  duration: "3:55",
   releaseDate: null,
   status: "development",
   lyricsStatus: "source-with-alternate-draft",

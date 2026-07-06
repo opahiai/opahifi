@@ -11,7 +11,7 @@ export const ohSongData = Object.freeze({
   titleLines: Object.freeze(["Not Your Bot", "Beep Sleep"]),
   navLabel: "Not Your Bot",
   subtitle: "Beep-sleep rebellion",
-  duration: null,
+  duration: "3:25",
   releaseDate: null,
   status: "development",
   lyricsStatus: "partial-draft",

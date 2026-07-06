@@ -11,7 +11,7 @@ export const ohSongData = Object.freeze({
   titleLines: Object.freeze(["Yeah, Let's", "Do Brunch"]),
   navLabel: "Let’s Do Brunch",
   subtitle: "So sad we lost touch",
-  duration: null,
+  duration: "3:18",
   releaseDate: null,
   status: "development",
   lyricsStatus: "source-provided",

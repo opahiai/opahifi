@@ -11,7 +11,7 @@ export const ohSongData = Object.freeze({
   titleLines: Object.freeze(["Wellwolf", "Howl-Lehluya"]),
   navLabel: "Wellwolf",
   subtitle: "Kindness is the power move",
-  duration: null,
+  duration: "3:34",
   releaseDate: null,
   status: "development",
   lyricsStatus: "source-provided",

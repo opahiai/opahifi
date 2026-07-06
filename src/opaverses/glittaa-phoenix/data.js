@@ -25,6 +25,7 @@ export const ohSongData = Object.freeze({
       id: "original",
       slug: "original",
       name: "Original",
+      duration: "3:06",
       default: true,
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/7d6kFt6vOlkTPIn4gqozy6",
@@ -39,6 +40,7 @@ export const ohSongData = Object.freeze({
       id: "opa-sunrize-max-mix",
       slug: "opa-sunrize-max-mix",
       name: "Opa Sunrize Max Mix",
+      duration: "4:20",
       cover: ohVersionAssets.sunriseMaxMix,
       art: ohVersionAssets.sunriseMaxMix,
       stripeColors: Object.freeze(["#e8d36b", "#f4c97a", "#f4af86"]),

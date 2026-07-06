@@ -25,6 +25,7 @@ export const ohSongData = Object.freeze({
       id: "opa-mayhem-mix",
       slug: "opa-mayhem-mix",
       name: "Opa Mayhem Mix",
+      duration: "3:47",
       default: true,
       cover: ohVersionAssets.mayhemMix,
       art: ohVersionAssets.mayhemMix,
