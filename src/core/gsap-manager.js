@@ -39,10 +39,11 @@ class OhGsapManager {
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
     const ScrollToPlugin = window.ScrollToPlugin;
+    const Flip = window.Flip;
 
-    if (!gsap || !ScrollTrigger || !ScrollToPlugin) return;
+    if (!gsap || !ScrollTrigger || !ScrollToPlugin || !Flip) return;
 
-    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Flip);
     this.matchMedia = gsap.matchMedia();
 
     this.matchMedia.add("(prefers-reduced-motion: no-preference)", () => {
@@ -111,7 +112,7 @@ class OhGsapManager {
 
   createSectionReveals(gsap, ScrollTrigger) {
     document.querySelectorAll(".oh-home, .oh-gallery, .oh-connect, .oh-videos, .oh-about").forEach((section) => {
-      gsap.from(section.querySelectorAll(".oh-eyebrow, .oh-section-title, .oh-section-copy, .oh-sitemap, .oh-gallery__grid, .oh-link-row, .oh-video-card, .oh-button"), {
+      gsap.from(section.querySelectorAll(".oh-eyebrow, .oh-section-title, .oh-section-copy, .oh-sitemap, .ohg-heading, .ohg-grid, .oh-link-row, .oh-video-card, .oh-button"), {
         y: 32,
         opacity: 0,
         duration: 0.75,

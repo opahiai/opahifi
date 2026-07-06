@@ -10,7 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./src/styles/base.css">
   <link rel="stylesheet" href="./src/styles/layout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="./src/styles/opaverse.css">
+  <link rel="stylesheet" href="./src/styles/gallery.css">
 </head>
 <body>
   <nav class="oh-navbar" id="oh-navbar" aria-label="Main navigation">
@@ -18,7 +20,7 @@
     <div class="oh-navbar__links">
       <a class="oh-navbar__link" href="#oh-journey" data-oh-scroll>Journey</a>
       <a class="oh-navbar__link" href="#oh-home" data-oh-scroll>Home</a>
-      <a class="oh-navbar__link" href="#oh-gallery" data-oh-scroll>Gallery</a>
+      <a class="oh-navbar__link" href="#gallery" data-oh-scroll>Gallery</a>
     </div>
   </nav>
 
@@ -71,7 +73,7 @@
         <h2 class="oh-section-title">Choose where to go next</h2>
         <nav class="oh-sitemap" aria-label="OpaHiFi sitemap">
           <a href="#oh-journey" data-oh-scroll>Journey</a>
-          <a href="#oh-gallery" data-oh-scroll>Gallery</a>
+          <a href="#gallery" data-oh-scroll>Gallery</a>
           <a href="#oh-connect" data-oh-scroll>Connect</a>
           <a href="#oh-videos" data-oh-scroll>Videos</a>
           <a href="#oh-about" data-oh-scroll>About</a>
@@ -81,16 +83,9 @@
       </div>
     </section>
 
-    <section class="oh-screen oh-gallery" id="oh-gallery">
-      <div class="oh-shell">
-        <div class="oh-section-heading">
-          <div>
-            <p class="oh-eyebrow">Gallery</p>
-            <h2 class="oh-section-title">The first three songs</h2>
-          </div>
-          <a class="oh-text-link" href="#oh-journey" data-oh-scroll>Replay the journey</a>
-        </div>
-        <div class="oh-gallery__grid" id="oh-gallery-grid"></div>
+    <section class="oh-screen oh-gallery" id="gallery">
+      <div class="ohg-shell">
+        <div class="ohg-grid" id="oh-gallery-grid" aria-label="OpaHiFi song gallery"></div>
       </div>
     </section>
 
@@ -132,6 +127,71 @@
     </section>
   </main>
 
+  <section
+    class="ohg-detail"
+    id="ohg-detail"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="ohg-detail-title"
+  >
+    <div class="ohg-detail__backdrop"></div>
+
+    <header class="ohg-detail__header ohg-detail__chrome">
+      <button class="ohg-back-button" type="button" data-ohg-action="close" aria-label="Back to song gallery">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <span>Back to Gallery</span>
+      </button>
+      <span class="ohg-detail__label" id="ohg-now-playing-label">Now playing</span>
+      <button class="ohg-icon-button" type="button" data-ohg-action="share" aria-label="Share song">
+        <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <div class="ohg-detail__scroll" id="ohg-detail-scroll">
+      <div class="ohg-detail__body">
+        <div class="ohg-detail__hero">
+          <div class="ohg-hero-slot" id="ohg-hero-slot"></div>
+          <div class="ohg-detail__info ohg-detail__changing" id="ohg-detail-info">
+            <h2 class="ohg-detail__title" id="ohg-detail-title"></h2>
+            <p class="ohg-detail__subtitle" id="ohg-detail-subtitle"></p>
+            <div class="ohg-detail__meta">
+              <i class="fa-regular fa-clock" aria-hidden="true"></i>
+              <span id="ohg-detail-duration"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ohg-version-nav ohg-detail__changing" aria-label="Song versions">
+          <button class="ohg-icon-button" type="button" data-ohg-action="previousVersion" aria-label="Previous version">
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <div class="ohg-version-pills" id="ohg-version-pills"></div>
+          <button class="ohg-icon-button" type="button" data-ohg-action="nextVersion" aria-label="Next version">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="ohg-platforms ohg-detail__changing" id="ohg-platforms" aria-label="Streaming platforms"></div>
+
+        <section class="ohg-lyrics ohg-detail__changing" id="ohg-lyrics">
+          <div class="ohg-lyrics__header">
+            <h3 class="ohg-lyrics__title">Lyrics</h3>
+            <i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>
+          </div>
+          <pre class="ohg-lyrics__text" id="ohg-lyrics-text"></pre>
+          <button class="ohg-lyrics__toggle" id="ohg-lyrics-toggle" type="button" data-ohg-action="toggleLyrics">
+            Show more
+          </button>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <div class="ohg-rail" id="ohg-rail" aria-label="Other songs">
+    <div class="ohg-rail__track" id="ohg-rail-track"></div>
+  </div>
+
   <footer class="oh-footer" id="oh-footer">
     <a href="#oh-terms">Terms</a>
     <span>© OpaHiFi</span>
@@ -140,6 +200,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
   <script type="module" src="./src/app.js"></script>
 </body>
