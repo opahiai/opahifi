@@ -140,14 +140,11 @@
     aria-hidden="true"
     aria-labelledby="ohg-detail-title"
   >
-    <div class="ohg-detail__backdrop"></div>
-
-    <header class="ohg-detail__header ohg-detail__chrome">
+    <header class="ohg-detail__header">
       <button class="ohg-back-button" type="button" data-ohg-action="close" aria-label="Back to song gallery">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
         <span>Back to Gallery</span>
       </button>
-      <span class="ohg-detail__label" id="ohg-now-playing-label">Now playing</span>
       <button class="ohg-icon-button" type="button" data-ohg-action="share" aria-label="Share song">
         <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
       </button>
@@ -168,13 +165,7 @@
         </div>
 
         <div class="ohg-version-nav ohg-detail__changing" aria-label="Song versions">
-          <button class="ohg-icon-button" type="button" data-ohg-action="previousVersion" aria-label="Previous version">
-            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-          </button>
           <div class="ohg-version-pills" id="ohg-version-pills"></div>
-          <button class="ohg-icon-button" type="button" data-ohg-action="nextVersion" aria-label="Next version">
-            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-          </button>
         </div>
 
         <div class="ohg-platforms ohg-detail__changing" id="ohg-platforms" aria-label="Streaming platforms"></div>

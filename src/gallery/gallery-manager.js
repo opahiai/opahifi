@@ -1,5 +1,21 @@
 import { OH_OPAVERSE_MODULES } from "../opaverses/opaverse.registry.js";
 
+const OHG_LYRICS_PATHS = Object.freeze({
+  "believe-the-truth-fairy": "lyrics/believe-the-truth-fairy.txt",
+  "full-mindness": "lyrics/full-mindness.txt",
+  "glittaa-phoenix": "lyrics/glittaa-pheonix.txt",
+  "hallucinating-dum-dum": "lyrics/hallucinating-dum-dum.txt",
+  "old-love-story": "lyrics/old-love-story.txt",
+  "opa-pa-pa-party": "lyrics/opa-pa-pa-party.txt",
+  "splenda-love-rabbit-hell": "lyrics/splenda-love-rabbit-hell.txt",
+  "wellwolf-howl-lehluya": "lyrics/wellwolf-hoawlehluya.txt",
+  "yeah-lets-do-brunch": "lyrics/yeah-lets-do-brunch.txt"
+});
+
+const OHG_VERSION_LYRICS_PATHS = Object.freeze({
+  "glittaa-phoenix/opa-sunrize-max-mix": "lyrics/glittaa-pheonix-sunrise-mix.txt"
+});
+
 const OHG_PLATFORM_CONFIG = Object.freeze({
   spotify: Object.freeze({ label: "Spotify", icon: '<i class="fa-brands fa-spotify" aria-hidden="true"></i>' }),
   appleMusic: Object.freeze({ label: "Apple Music", icon: '<i class="fa-brands fa-apple" aria-hidden="true"></i>' }),
@@ -43,6 +59,22 @@ function ohgSlugify(value = "") {
     .replace(/^-+|-+$/g, "");
 }
 
+function ohgGetImageExtension(imageUrl = "") {
+  const cleanUrl = String(imageUrl).split(/[?#]/)[0];
+  const extension = cleanUrl.match(/\.([a-z0-9]+)$/i)?.[1]?.toLowerCase();
+
+  return extension || "png";
+}
+
+function ohgGetImageMimeType(extension = "") {
+  const normalizedExtension = extension.toLowerCase();
+  if (normalizedExtension === "jpg" || normalizedExtension === "jpeg") return "image/jpeg";
+  if (normalizedExtension === "webp") return "image/webp";
+  if (normalizedExtension === "gif") return "image/gif";
+
+  return "image/png";
+}
+
 function ohgIsOriginalVersion(version) {
   return ohgSlugify(version?.name ?? version?.id ?? version?.slug) === "original";
 }
@@ -83,7 +115,12 @@ function ohgNormalizeVersion(song, version, index) {
     art: version?.art ?? versionAssets.art ?? song.assets.art ?? version?.cover ?? versionAssets.cover ?? song.assets.cover,
     stripeColors: Object.freeze(ohgNormalizeStripeColors(version?.stripeColors ?? version?.mixColors)),
     duration: ohgFormatDuration(version?.duration ?? version?.length),
-    lyrics: version?.lyrics || song.lyrics || "Lyrics pending",
+    lyrics: version?.lyrics || song.lyrics || "",
+    lyricsPath: version?.lyricsPath
+      ?? OHG_VERSION_LYRICS_PATHS[`${song.slug ?? song.id}/${version?.slug ?? id}`]
+      ?? song.lyricsPath
+      ?? OHG_LYRICS_PATHS[song.slug ?? song.id]
+      ?? null,
     platforms: Object.freeze(ohgNormalizePlatforms(version?.platforms))
   });
 }
@@ -129,6 +166,8 @@ class OhGalleryManager {
     this.isAnimating = false;
     this.isLyricsExpanded = false;
     this.versionPillsExpanded = false;
+    this.lyricsCache = new Map();
+    this.lyricsRequestId = 0;
     this.lastFocusedElement = null;
     this.grid = null;
     this.detail = null;
@@ -177,8 +216,6 @@ class OhGalleryManager {
 
   renderGallery() {
     this.grid.innerHTML = this.songs.map((song) => {
-      const version = this.getVersion(song, this.getDefaultVersionIndex(song));
-      const stripeBackground = ohgGetStripeBackground(version);
       const titleLines = song.titleLines.map((line) => (
         `<span>${ohgEscapeHtml(line)}</span>`
       )).join("");
@@ -201,11 +238,6 @@ class OhGalleryManager {
               height="900"
               loading="lazy"
             >
-            <span
-              class="ohg-cover__stripe"
-              style="--ohg-cover-stripe: ${ohgEscapeHtml(stripeBackground)}"
-              aria-hidden="true"
-            ></span>
             <span class="ohg-cover__title">${titleLines}</span>
           </button>
         </div>
@@ -251,8 +283,6 @@ class OhGalleryManager {
     const actions = {
       close: () => this.closeSong(),
       share: () => this.shareSong(),
-      previousVersion: () => this.changeVersion(this.activeVersionIndex - 1),
-      nextVersion: () => this.changeVersion(this.activeVersionIndex + 1),
       toggleLyrics: () => this.toggleLyrics()
     };
 
@@ -280,19 +310,12 @@ class OhGalleryManager {
     if (coverImage && imageUrl) coverImage.src = imageUrl;
   }
 
-  setCoverStripe(song, version) {
-    const coverStripe = document.querySelector(`#ohg-cover-${song?.id} .ohg-cover__stripe`);
-    if (coverStripe) coverStripe.style.setProperty("--ohg-cover-stripe", ohgGetStripeBackground(version));
-  }
-
   setCoverToSongArt(song) {
     this.setCoverImage(song, song?.art);
-    this.setCoverStripe(song, this.getVersion(song, this.getDefaultVersionIndex(song)));
   }
 
   setCoverToVersionArt(song, version) {
     this.setCoverImage(song, version?.cover ?? version?.art ?? song?.cover ?? song?.art);
-    this.setCoverStripe(song, version);
   }
 
   getDefaultVersionIndex(song) {
@@ -415,7 +438,7 @@ class OhGalleryManager {
 
     this.renderVersions(song, versionIndex);
     this.renderPlatforms(version.platforms);
-    this.renderLyrics(version.lyrics);
+    this.renderLyrics(version);
   }
 
   renderVersions(song, activeIndex) {
@@ -457,10 +480,6 @@ class OhGalleryManager {
     this.versionPills.innerHTML = `${activeButton}${secondaryButtons}${ghostRibbons}`;
     this.setVersionPillsExpanded(this.versionPillsExpanded);
 
-    const previousButton = document.querySelector('[data-ohg-action="previousVersion"]');
-    const nextButton = document.querySelector('[data-ohg-action="nextVersion"]');
-    previousButton.disabled = activeIndex === 0;
-    nextButton.disabled = activeIndex === song.versions.length - 1;
   }
 
   getVersionPillElements() {
@@ -558,11 +577,36 @@ class OhGalleryManager {
     }).join("");
   }
 
-  renderLyrics(lyrics) {
-    this.lyricsText.textContent = lyrics;
+  async getLyrics(version) {
+    if (!version?.lyricsPath) return version?.lyrics || "Lyrics pending";
+    if (this.lyricsCache.has(version.lyricsPath)) return this.lyricsCache.get(version.lyricsPath);
+
+    try {
+      const lyricsUrl = new URL(version.lyricsPath, window.location.href).href;
+      const response = await fetch(lyricsUrl);
+      if (!response.ok) throw new Error(`Unable to load ${version.lyricsPath}`);
+
+      const lyricsBuffer = await response.arrayBuffer();
+      const lyrics = new TextDecoder("utf-8").decode(lyricsBuffer);
+      this.lyricsCache.set(version.lyricsPath, lyrics);
+      return lyrics;
+    } catch {
+      return version?.lyrics || "Lyrics pending";
+    }
+  }
+
+  async renderLyrics(version) {
+    const requestId = ++this.lyricsRequestId;
+    this.lyricsText.textContent = "Loading lyrics...";
     this.isLyricsExpanded = false;
     this.lyricsText.classList.remove("is-expanded");
     this.lyricsToggle.textContent = "Show more";
+    this.lyricsToggle.hidden = true;
+
+    const lyrics = await this.getLyrics(version);
+    if (requestId !== this.lyricsRequestId) return;
+
+    this.lyricsText.textContent = lyrics;
 
     requestAnimationFrame(() => {
       const canExpand = this.lyricsText.scrollHeight > this.lyricsText.clientHeight + 4;
@@ -806,18 +850,46 @@ class OhGalleryManager {
     this.lyricsToggle.textContent = this.isLyricsExpanded ? "Show less" : "Show more";
   }
 
+  async getShareImageFile(song, version) {
+    const imageUrl = version?.cover ?? version?.art ?? song?.cover ?? song?.art;
+    if (!imageUrl || typeof File === "undefined") return null;
+
+    try {
+      const absoluteImageUrl = new URL(imageUrl, window.location.href).href;
+      const response = await fetch(absoluteImageUrl);
+      if (!response.ok) return null;
+
+      const blob = await response.blob();
+      const extension = ohgGetImageExtension(absoluteImageUrl);
+      const mimeType = blob.type || ohgGetImageMimeType(extension);
+      const fileName = `${ohgSlugify(song.title)}-${ohgSlugify(version?.name ?? "cover")}.${extension}`;
+
+      return new File([blob], fileName, { type: mimeType });
+    } catch {
+      return null;
+    }
+  }
+
   async shareSong() {
     const song = this.getSong();
     if (!song) return;
 
+    const version = this.getVersion(song, this.activeVersionIndex);
     const shareUrl = song.share.url ?? this.getSongUrl(song.id, this.activeVersionIndex);
+    const shareTitle = song.share.title
+      ?? (version && !ohgIsOriginalVersion(version) ? `${song.title} - ${version.name}` : song.title);
     const shareData = {
-      title: song.share.title ?? song.title,
+      title: shareTitle,
       text: song.share.text ?? `Listen to ${song.title} by OpaHiFi`,
       url: shareUrl
     };
 
     try {
+      const shareImage = await this.getShareImageFile(song, version);
+      if (shareImage && navigator.canShare?.({ ...shareData, files: [shareImage] })) {
+        shareData.files = [shareImage];
+      }
+
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
@@ -830,11 +902,15 @@ class OhGalleryManager {
   }
 
   showShareFeedback(message) {
-    const label = document.querySelector("#ohg-now-playing-label");
-    const previousText = label.textContent;
-    label.textContent = message;
+    const shareButton = document.querySelector('[data-ohg-action="share"]');
+    if (!shareButton) return;
+
+    const previousLabel = shareButton.getAttribute("aria-label") ?? "Share song";
+    shareButton.setAttribute("aria-label", message);
+    shareButton.title = message;
     window.setTimeout(() => {
-      label.textContent = previousText;
+      shareButton.setAttribute("aria-label", previousLabel);
+      shareButton.removeAttribute("title");
     }, 1400);
   }
 
