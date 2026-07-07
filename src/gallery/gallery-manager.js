@@ -164,7 +164,6 @@ class OhGalleryManager {
     this.activeSongId = null;
     this.activeVersionIndex = 0;
     this.isAnimating = false;
-    this.isLyricsExpanded = false;
     this.versionPillsExpanded = false;
     this.lyricsCache = new Map();
     this.lyricsRequestId = 0;
@@ -177,8 +176,8 @@ class OhGalleryManager {
     this.railTrack = null;
     this.versionPills = null;
     this.platforms = null;
+    this.lyricsPanel = null;
     this.lyricsText = null;
-    this.lyricsToggle = null;
     this.handleClick = this.handleClick.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleLocationChange = this.handleLocationChange.bind(this);
@@ -194,8 +193,8 @@ class OhGalleryManager {
     this.railTrack = document.querySelector("#ohg-rail-track");
     this.versionPills = document.querySelector("#ohg-version-pills");
     this.platforms = document.querySelector("#ohg-platforms");
+    this.lyricsPanel = document.querySelector("#ohg-lyrics");
     this.lyricsText = document.querySelector("#ohg-lyrics-text");
-    this.lyricsToggle = document.querySelector("#ohg-lyrics-toggle");
 
     if (!this.grid || !this.detail || !this.railTrack) return;
 
@@ -282,8 +281,7 @@ class OhGalleryManager {
 
     const actions = {
       close: () => this.closeSong(),
-      share: () => this.shareSong(),
-      toggleLyrics: () => this.toggleLyrics()
+      share: () => this.shareSong()
     };
 
     actions[action.dataset.ohgAction]?.();
@@ -548,6 +546,54 @@ class OhGalleryManager {
     });
   }
 
+  getLateContentElements() {
+    return [this.platforms, this.lyricsPanel].filter(Boolean);
+  }
+
+  hideLateContent(onComplete = null, immediate = false) {
+    const gsap = window.gsap;
+    const elements = this.getLateContentElements();
+    this.detail?.classList.remove("is-content-ready");
+
+    if (!gsap || elements.length === 0 || immediate) {
+      gsap?.set(elements, { opacity: 0, y: 8 });
+      onComplete?.();
+      return;
+    }
+
+    gsap.to(elements, {
+      opacity: 0,
+      y: 8,
+      duration: 0.16,
+      ease: "power2.in",
+      stagger: -0.025,
+      onComplete
+    });
+  }
+
+  showLateContent(onComplete = null) {
+    const gsap = window.gsap;
+    const elements = this.getLateContentElements();
+    this.detail?.classList.add("is-content-ready");
+
+    if (!gsap || elements.length === 0) {
+      onComplete?.();
+      return;
+    }
+
+    gsap.fromTo(elements, {
+      opacity: 0,
+      y: 10
+    }, {
+      opacity: 1,
+      y: 0,
+      duration: 0.26,
+      ease: "power2.out",
+      stagger: 0.045,
+      onComplete
+    });
+  }
+
   renderPlatforms(platforms) {
     this.platforms.innerHTML = Object.entries(OHG_PLATFORM_CONFIG).map(([key, config]) => {
       const url = platforms[key];
@@ -598,20 +644,11 @@ class OhGalleryManager {
   async renderLyrics(version) {
     const requestId = ++this.lyricsRequestId;
     this.lyricsText.textContent = "Loading lyrics...";
-    this.isLyricsExpanded = false;
-    this.lyricsText.classList.remove("is-expanded");
-    this.lyricsToggle.textContent = "Show more";
-    this.lyricsToggle.hidden = true;
 
     const lyrics = await this.getLyrics(version);
     if (requestId !== this.lyricsRequestId) return;
 
     this.lyricsText.textContent = lyrics;
-
-    requestAnimationFrame(() => {
-      const canExpand = this.lyricsText.scrollHeight > this.lyricsText.clientHeight + 4;
-      this.lyricsToggle.hidden = !canExpand;
-    });
   }
 
   openSong(songId, options = {}) {
@@ -630,6 +667,7 @@ class OhGalleryManager {
     this.versionPillsExpanded = false;
     if (options.updateUrl !== false) this.setLocationHash(this.getSongHash(songId, versionIndex));
     this.disableRailClipping();
+    this.hideLateContent(null, true);
     const state = Flip.getState(".ohg-cover");
     this.detail.classList.add("is-open");
     this.detail.setAttribute("aria-hidden", "false");
@@ -651,7 +689,9 @@ class OhGalleryManager {
         travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
         this.enableRailClipping();
         this.animateVersionPillsIn(() => {
-          this.isAnimating = false;
+          this.showLateContent(() => {
+            this.isAnimating = false;
+          });
         });
       }
     });
@@ -700,7 +740,7 @@ class OhGalleryManager {
     this.isAnimating = true;
     if (options.updateUrl !== false) this.setLocationHash("#gallery", "replace");
     this.detail.classList.add("is-leaving");
-    this.animateVersionPillsOut(() => {
+    this.hideLateContent(() => this.animateVersionPillsOut(() => {
       this.disableRailClipping();
       const travellingCovers = document.querySelectorAll(".ohg-cover");
       travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
@@ -729,7 +769,7 @@ class OhGalleryManager {
         onComplete: () => {
           travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
           this.enableRailClipping();
-          this.detail.classList.remove("is-open", "is-leaving");
+          this.detail.classList.remove("is-open", "is-leaving", "is-content-ready");
           this.detail.setAttribute("aria-hidden", "true");
           this.rail.classList.remove("is-open");
           this.activeSongId = null;
@@ -738,7 +778,7 @@ class OhGalleryManager {
           this.lastFocusedElement?.focus?.({ preventScroll: true });
         }
       });
-    });
+    }));
   }
 
   changeSong(songId, options = {}) {
@@ -753,7 +793,7 @@ class OhGalleryManager {
 
     this.isAnimating = true;
     this.detailScroll.scrollTop = 0;
-    this.animateVersionPillsOut(() => {
+    this.hideLateContent(() => this.animateVersionPillsOut(() => {
       this.disableRailClipping();
       const travellingCovers = document.querySelectorAll(".ohg-cover");
       travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
@@ -780,17 +820,7 @@ class OhGalleryManager {
       this.versionPillsExpanded = false;
       if (options.updateUrl !== false) this.setLocationHash(this.getSongHash(songId, versionIndex));
 
-      const changingContent = ["#ohg-detail-info", "#ohg-platforms", "#ohg-lyrics"];
-
-      gsap.to(changingContent, {
-        opacity: 0,
-        y: 8,
-        duration: 0.18,
-        onComplete: () => {
-          this.updateDetail(newSong, versionIndex, false);
-          gsap.to(changingContent, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
-        }
-      });
+      this.updateDetail(newSong, versionIndex, false);
 
       Flip.from(state, {
         duration: 0.72,
@@ -802,12 +832,14 @@ class OhGalleryManager {
           travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
           this.enableRailClipping();
           this.animateVersionPillsIn(() => {
-            this.isAnimating = false;
-            oldRailSlot.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            this.showLateContent(() => {
+              this.isAnimating = false;
+              oldRailSlot.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            });
           });
         }
       });
-    });
+    }));
   }
 
   changeVersion(index, options = {}) {
@@ -842,12 +874,6 @@ class OhGalleryManager {
       }, 0)
       .to(changingContent, { opacity: 1, y: 0, duration: 0.28, ease: "power2.out" }, 0.18)
       .to(activeCoverImage, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }, 0.18);
-  }
-
-  toggleLyrics() {
-    this.isLyricsExpanded = !this.isLyricsExpanded;
-    this.lyricsText.classList.toggle("is-expanded", this.isLyricsExpanded);
-    this.lyricsToggle.textContent = this.isLyricsExpanded ? "Show less" : "Show more";
   }
 
   async getShareImageFile(song, version) {

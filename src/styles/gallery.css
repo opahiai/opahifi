@@ -1,15 +1,16 @@
 .oh-gallery {
   position: relative;
-  --ohg-title-height: clamp(2.25rem, 9vw, 3.5rem);
-  --ohg-title-gap: clamp(0.35rem, 2vw, 0.75rem);
-  --ohg-shell-pad-y: 0.5rem;
+  --ohg-viewport-height: var(--oh-main-height);
+  --ohg-title-height: clamp(2.25rem, 7dvh, 3.5rem);
+  --ohg-title-gap: clamp(0.35rem, 1.5dvh, 0.75rem);
+  --ohg-shell-pad-y: clamp(0.35rem, 0.9dvh, 0.75rem);
   --ohg-header-space: calc(var(--ohg-title-height) + var(--ohg-title-gap));
-  --ohg-rail-height: 5rem;
-  --ohg-stage-height: calc(100% - var(--ohg-shell-pad-y) - var(--ohg-header-space) - var(--ohg-rail-height) - env(safe-area-inset-bottom));
+  --ohg-rail-height: clamp(5rem, 10dvh, 6rem);
+  --ohg-stage-height: calc(var(--ohg-viewport-height) - (var(--ohg-shell-pad-y) * 2) - var(--ohg-header-space) - var(--ohg-rail-height) - env(safe-area-inset-bottom));
   --ohg-gallery-width: min(100vw, 31.25rem);
   width: var(--ohg-gallery-width);
-  height: var(--oh-main-height);
-  min-height: var(--oh-main-height);
+  height: var(--ohg-viewport-height);
+  min-height: var(--ohg-viewport-height);
   margin-inline: auto;
   overflow: hidden;
   background:
@@ -282,7 +283,7 @@
 }
 
 .ohg-detail__body {
-  --ohg-selected-cover-size: 8.6rem;
+  --ohg-selected-cover-size: clamp(8rem, 22dvh, 8.6rem);
   --ohg-selected-stack-width: 100%;
   --ohg-version-row-count: 3;
   --ohg-version-stack-pad-y: 10px;
@@ -298,11 +299,11 @@
   --ohg-version-pad-inline-end: 0.45rem;
   --ohg-version-active-pad-inline-end: calc(var(--ohg-version-pad-inline-end) + var(--ohg-version-width-difference));
   --ohg-version-border: 1px solid rgb(0 0 0 / 0.18);
-  --ohg-platform-button-size: 2.35rem;
+  --ohg-platform-button-size: clamp(2.25rem, 5.4dvh, 2.35rem);
   --ohg-platform-icon-size: 1.12rem;
   --ohg-platform-gap: 0.58rem;
-  --ohg-platform-top: calc(var(--ohg-stage-padding) + var(--ohg-selected-cover-size) + 0.65rem);
-  --ohg-lyrics-top: calc(var(--ohg-platform-top) + var(--ohg-platform-button-size) + 0.72rem);
+  --ohg-platform-top: calc(var(--ohg-stage-padding) + var(--ohg-selected-cover-size) + clamp(0.5rem, 1.2dvh, 0.65rem));
+  --ohg-lyrics-top: calc(var(--ohg-platform-top) + var(--ohg-platform-button-size) + clamp(0.58rem, 1.35dvh, 0.72rem));
   --ohg-lyrics-panel-height: calc(var(--ohg-stage-height) - var(--ohg-lyrics-top) - var(--ohg-stage-padding));
   --ohg-version-ghost-bg: linear-gradient(90deg,
       rgb(255 255 255 / 0.34) 0%,
@@ -486,6 +487,8 @@
   width: 100%;
   padding-inline: var(--ohg-stage-padding);
   box-sizing: border-box;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .ohg-platform {
@@ -530,6 +533,13 @@
   border: 1px solid rgb(170 179 214 / 0.12);
   border-radius: 0.68rem;
   background: rgb(11 16 36 / 0.48);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ohg-detail.is-content-ready .ohg-platforms,
+.ohg-detail.is-content-ready .ohg-lyrics {
+  pointer-events: auto;
 }
 
 .ohg-lyrics__header {
@@ -549,30 +559,37 @@
   flex: 1 1 auto;
   min-height: 0;
   margin: 0;
+  padding-right: 0.55rem;
   overflow-y: auto;
   color: #d1d5db;
   font: 500 0.76rem/1.55 "Inter", sans-serif;
+  scrollbar-color: rgb(170 179 214 / 0.78) rgb(255 255 255 / 0.08);
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
   white-space: pre-wrap;
-  mask-image: linear-gradient(to bottom, black 54%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 54%, transparent 100%);
 }
 
-.ohg-lyrics__text.is-expanded {
-  mask-image: none;
-  -webkit-mask-image: none;
+.ohg-lyrics__text::-webkit-scrollbar {
+  width: 0.38rem;
 }
 
-.ohg-lyrics__toggle {
-  width: 100%;
-  margin-top: 0.5rem;
-  padding: 0.45rem 0;
-  border: 0;
-  background: transparent;
-  color: #155bff;
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-align: left;
-  cursor: pointer;
+.ohg-lyrics__text::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.08);
+}
+
+.ohg-lyrics__text::-webkit-scrollbar-thumb {
+  border: 1px solid rgb(5 6 13 / 0.72);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.88), rgb(170 179 214 / 0.62));
+}
+
+.ohg-lyrics__text::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffffff, rgb(170 179 214 / 0.84));
+}
+
+.ohg-lyrics__text::-webkit-scrollbar-button {
+  display: none;
 }
 
 .ohg-rail {
@@ -641,7 +658,6 @@
 @media (min-width: 40rem) {
   .ohg-shell {
     width: 100%;
-    --ohg-shell-pad-y: 0.75rem;
   }
 
   .ohg-grid {
@@ -671,7 +687,7 @@
   }
 
   .oh-gallery {
-    --ohg-rail-height: 6rem;
+    --ohg-rail-height: clamp(5.5rem, 11dvh, 6rem);
   }
 
   .ohg-rail__slot {
