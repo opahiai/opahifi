@@ -17,12 +17,80 @@
 <body>
   <nav class="oh-navbar" id="oh-navbar" aria-label="Main navigation">
     <a class="oh-navbar__brand" href="#oh-hero" data-oh-scroll>OpaHiFi</a>
-    <div class="oh-navbar__links">
-      <a class="oh-navbar__link" href="#oh-journey" data-oh-scroll>Journey</a>
-      <a class="oh-navbar__link" href="#oh-home" data-oh-scroll>Home</a>
-      <a class="oh-navbar__link" href="#gallery" data-oh-scroll>Gallery</a>
-    </div>
+    <button class="oh-menu-button" type="button" data-oh-menu-open aria-expanded="false" aria-controls="oh-menu">
+      <span>Menu</span>
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
   </nav>
+
+  <div class="oh-menu" id="oh-menu" aria-hidden="true">
+    <button class="oh-menu__backdrop" type="button" data-oh-menu-close aria-label="Close menu"></button>
+    <aside class="oh-menu__panel" aria-label="OpaHiFi menu">
+      <header class="oh-menu__header">
+        <p class="oh-eyebrow">OpaHiFi</p>
+        <button class="oh-menu__close" type="button" data-oh-menu-close aria-label="Close menu">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+      <nav class="oh-menu__groups" aria-label="OpaHiFi sections">
+        <section class="oh-menu__group" aria-labelledby="oh-menu-explore">
+          <h2 id="oh-menu-explore">Explore</h2>
+          <a href="#oh-journey" data-oh-scroll data-oh-menu-link>
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <span>
+              <strong>Songology</strong>
+              <small>A visual trip into the heart of each song.</small>
+            </span>
+          </a>
+          <a href="#gallery" data-oh-scroll data-oh-menu-link>
+            <i class="fa-solid fa-record-vinyl" aria-hidden="true"></i>
+            <span>
+              <strong>Songography</strong>
+              <small>Songs catalog: versions, platform links &amp; lyrics.</small>
+            </span>
+          </a>
+          <a href="#oh-videos" data-oh-scroll data-oh-menu-link>
+            <i class="fa-solid fa-tv" aria-hidden="true"></i>
+            <span>
+              <strong>Songovision</strong>
+              <small>Videos, visuals, and moving OpaHiFi worlds.</small>
+            </span>
+          </a>
+        </section>
+        <section class="oh-menu__group" aria-labelledby="oh-menu-opahifi">
+          <h2 id="oh-menu-opahifi">OpaHiFi</h2>
+          <a href="#oh-about" data-oh-scroll data-oh-menu-link>
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            <span>
+              <strong>About OpaHiFi</strong>
+              <small>The idea, the sound, and the world behind it.</small>
+            </span>
+          </a>
+          <a href="#oh-connect" data-oh-scroll data-oh-menu-link>
+            <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+            <span>
+              <strong>Follow OpaHiFi</strong>
+              <small>Find OpaHiFi across music and social platforms.</small>
+            </span>
+          </a>
+          <a href="mailto:hello@example.com" data-oh-menu-link>
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+            <span>
+              <strong>Contact OpaHiFi</strong>
+              <small>Reach out for notes, ideas, and collaborations.</small>
+            </span>
+          </a>
+          <a href="#oh-shop" data-oh-menu-link>
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            <span>
+              <strong>Shop OpaHiFi</strong>
+              <small>Merch, objects, and future OpaHiFi drops.</small>
+            </span>
+          </a>
+        </section>
+      </nav>
+    </aside>
+  </div>
 
   <main class="oh-main" id="oh-main">
     <section class="oh-screen oh-hero" id="oh-hero">
@@ -75,44 +143,71 @@
       <div class="oh-shell oh-home__shell">
         <p class="oh-eyebrow">OpaHiFi</p>
         <h2 class="oh-section-title">Now what?!</h2>
-        <p class="oh-home__copy">Jump into the ride, browse every song world, or find Opa everywhere else.</p>
+        <p class="oh-home__copy">OpaHiFi.</p>
         <nav class="oh-sitemap" aria-label="OpaHiFi sitemap">
-          <a class="oh-sitemap__item oh-sitemap__item--primary" href="#gallery" data-oh-scroll>
-            <i class="fa-solid fa-record-vinyl" aria-hidden="true"></i>
-            <span>Gallery</span>
-          </a>
-          <a class="oh-sitemap__item oh-sitemap__item--primary" href="#oh-journey" data-oh-scroll>
-            <i class="fa-solid fa-route" aria-hidden="true"></i>
-            <span>Journey</span>
-          </a>
-          <a class="oh-sitemap__item" href="#oh-connect" data-oh-scroll>
-            <i class="fa-solid fa-bolt" aria-hidden="true"></i>
-            <span>Connect</span>
-          </a>
-          <a class="oh-sitemap__item" href="#oh-videos" data-oh-scroll>
-            <i class="fa-solid fa-play" aria-hidden="true"></i>
-            <span>Videos</span>
-          </a>
-          <a class="oh-sitemap__item" href="#oh-about" data-oh-scroll>
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-            <span>About</span>
-          </a>
-          <a class="oh-sitemap__item" href="#oh-shop">
-            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-            <span>Shop</span>
-          </a>
-          <a class="oh-sitemap__item oh-sitemap__item--wide" href="#oh-terms">
-            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
-            <span>Terms &amp; conditions</span>
-          </a>
+          <section class="oh-sitemap__group" aria-labelledby="oh-home-explore">
+            <h3 id="oh-home-explore">Explore</h3>
+            <a class="oh-sitemap__item oh-sitemap__item--primary" href="#oh-journey" data-oh-scroll>
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <span>
+                <strong>Songology</strong>
+                <small>A visual trip into the heart of each song.</small>
+              </span>
+            </a>
+            <a class="oh-sitemap__item oh-sitemap__item--primary" href="#gallery" data-oh-scroll>
+              <i class="fa-solid fa-record-vinyl" aria-hidden="true"></i>
+              <span>
+                <strong>Songography</strong>
+                <small>Songs catalog: versions, platform links &amp; lyrics.</small>
+              </span>
+            </a>
+            <a class="oh-sitemap__item oh-sitemap__item--primary" href="#oh-videos" data-oh-scroll>
+              <i class="fa-solid fa-tv" aria-hidden="true"></i>
+              <span>
+                <strong>Songovision</strong>
+                <small>Videos, visuals, and moving OpaHiFi worlds.</small>
+              </span>
+            </a>
+          </section>
+          <section class="oh-sitemap__group" aria-labelledby="oh-home-opahifi">
+            <h3 id="oh-home-opahifi">OpaHiFi</h3>
+            <a class="oh-sitemap__item" href="#oh-about" data-oh-scroll>
+              <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+              <span>
+                <strong>About OpaHiFi</strong>
+                <small>The idea, the sound, and the world behind it.</small>
+              </span>
+            </a>
+            <a class="oh-sitemap__item" href="#oh-connect" data-oh-scroll>
+              <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+              <span>
+                <strong>Follow OpaHiFi</strong>
+                <small>Find OpaHiFi across music and social platforms.</small>
+              </span>
+            </a>
+            <a class="oh-sitemap__item" href="mailto:hello@example.com">
+              <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+              <span>
+                <strong>Contact OpaHiFi</strong>
+                <small>Reach out for notes, ideas, and collaborations.</small>
+              </span>
+            </a>
+            <a class="oh-sitemap__item" href="#oh-shop">
+              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+              <span>
+                <strong>Shop OpaHiFi</strong>
+                <small>Merch, objects, and future OpaHiFi drops.</small>
+              </span>
+            </a>
+          </section>
         </nav>
       </div>
     </section>
 
     <section class="oh-screen oh-gallery" id="gallery">
       <div class="ohg-shell">
-        <h2 class="ohg-title">Gallery</h2>
-        <div class="ohg-grid" id="oh-gallery-grid" aria-label="OpaHiFi song gallery"></div>
+        <h2 class="ohg-title">Songography</h2>
+        <div class="ohg-grid" id="oh-gallery-grid" aria-label="OpaHiFi songography"></div>
       </div>
     </section>
 
@@ -163,9 +258,9 @@
     aria-labelledby="ohg-detail-title"
   >
     <header class="ohg-detail__header">
-      <button class="ohg-back-button" type="button" data-ohg-action="close" aria-label="Back to song gallery">
+      <button class="ohg-back-button" type="button" data-ohg-action="close" aria-label="Back to Songography">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-        <span>Back to Gallery</span>
+        <span>Back to Songography</span>
       </button>
       <button class="ohg-icon-button" type="button" data-ohg-action="share" aria-label="Share song">
         <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>

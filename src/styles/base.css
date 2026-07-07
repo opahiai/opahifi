@@ -6,7 +6,6 @@
   --oh-panel: #0b1024;
   --oh-text: #f7f8ff;
   --oh-muted: #aab3d6;
-  --oh-cyan: #22d9dd;
   --oh-blue: #155bff;
   --oh-violet: #5b2cff;
   --oh-orange: #ff6a00;
@@ -74,7 +73,7 @@ blockquote {
 }
 
 :focus-visible {
-  outline: 2px solid var(--oh-cyan);
+  outline: 2px solid var(--oh-blue);
   outline-offset: 4px;
 }
 

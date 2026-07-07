@@ -3,14 +3,35 @@ import { ohLayoutManager } from "./layout-manager.js";
 
 class OhNavigationManager {
   constructor() {
+    this.menu = null;
+    this.menuButton = null;
     this.handleClick = this.handleClick.bind(this);
+    this.handleKeydown = this.handleKeydown.bind(this);
   }
 
   mount() {
+    this.menu = document.querySelector("#oh-menu");
+    this.menuButton = document.querySelector("[data-oh-menu-open]");
     document.addEventListener("click", this.handleClick);
+    document.addEventListener("keydown", this.handleKeydown);
   }
 
   handleClick(event) {
+    const openMenuButton = event.target.closest("[data-oh-menu-open]");
+    if (openMenuButton) {
+      this.openMenu();
+      return;
+    }
+
+    const closeMenuButton = event.target.closest("[data-oh-menu-close]");
+    if (closeMenuButton) {
+      this.closeMenu();
+      return;
+    }
+
+    const menuLink = event.target.closest("[data-oh-menu-link]");
+    if (menuLink) this.closeMenu();
+
     const link = event.target.closest("[data-oh-scroll]");
     if (!link) return;
 
@@ -22,6 +43,22 @@ class OhNavigationManager {
 
     event.preventDefault();
     this.scrollTo(target, hash);
+  }
+
+  handleKeydown(event) {
+    if (event.key === "Escape") this.closeMenu();
+  }
+
+  openMenu() {
+    this.menu?.classList.add("is-open");
+    this.menu?.setAttribute("aria-hidden", "false");
+    this.menuButton?.setAttribute("aria-expanded", "true");
+  }
+
+  closeMenu() {
+    this.menu?.classList.remove("is-open");
+    this.menu?.setAttribute("aria-hidden", "true");
+    this.menuButton?.setAttribute("aria-expanded", "false");
   }
 
   scrollTo(target, hash) {
@@ -51,6 +88,7 @@ class OhNavigationManager {
 
   destroy() {
     document.removeEventListener("click", this.handleClick);
+    document.removeEventListener("keydown", this.handleKeydown);
   }
 }
 
