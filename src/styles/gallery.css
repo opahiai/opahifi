@@ -305,11 +305,8 @@
   --ohg-platform-top: calc(var(--ohg-stage-padding) + var(--ohg-selected-cover-size) + clamp(0.5rem, 1.2dvh, 0.65rem));
   --ohg-lyrics-top: calc(var(--ohg-platform-top) + var(--ohg-platform-button-size) + clamp(0.58rem, 1.35dvh, 0.72rem));
   --ohg-lyrics-panel-height: calc(var(--ohg-stage-height) - var(--ohg-lyrics-top) - var(--ohg-stage-padding));
-  --ohg-version-ghost-bg: linear-gradient(90deg,
-      rgb(255 255 255 / 0.34) 0%,
-      rgb(186 208 216 / 0.24) 48%,
-      rgb(118 136 146 / 0.3) 100%);
-  --ohg-version-ghost-border: rgb(0 0 0 / 0.14);
+  --ohg-version-ghost-bg: #0d0f15;
+  --ohg-version-ghost-border: #4a4d57;
   position: relative;
   display: grid;
   width: var(--ohg-selected-stack-width);
@@ -444,7 +441,7 @@
   border-right-color: rgb(255 255 255 / 0.08);
   box-shadow: none;
   cursor: default;
-  opacity: 1;
+  opacity: 0.8;
   pointer-events: none;
 }
 

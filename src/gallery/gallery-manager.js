@@ -84,10 +84,6 @@ function ohgIsOriginalVersion(version) {
   return ohgSlugify(version?.name ?? version?.id ?? version?.slug) === "original";
 }
 
-function ohgGetShareVersionToken(version) {
-  return ohgIsOriginalVersion(version) ? "main-version" : ohgSlugify(version?.name ?? version?.slug ?? version?.id);
-}
-
 function ohgGetStripeBackground(version) {
   if (!version || ohgIsOriginalVersion(version)) {
     return "linear-gradient(90deg, #ffffff 0%, #f8fafc 52%, #ffffff 100%)";
@@ -887,7 +883,9 @@ class OhGalleryManager {
 
   getSharePageUrl(song, version) {
     const songSlug = song?.slug ?? ohgSlugify(song?.title) ?? song?.id;
-    const versionToken = ohgGetShareVersionToken(version);
+    const defaultVersion = this.getVersion(song, this.getDefaultVersionIndex(song));
+    const isDefaultVersion = !version || version === defaultVersion || version.isDefault;
+    const versionToken = isDefaultVersion ? null : ohgSlugify(version?.name ?? version?.slug ?? version?.id);
     const sharePath = versionToken ? `/s/${songSlug}/${versionToken}` : `/s/${songSlug}`;
 
     return new URL(sharePath, OHG_SHARE_ORIGIN).toString();
@@ -898,9 +896,10 @@ class OhGalleryManager {
     if (!song) return;
 
     const version = this.getVersion(song, this.activeVersionIndex);
+    const isDefaultVersion = this.activeVersionIndex === this.getDefaultVersionIndex(song);
     const shareUrl = song.share.url ?? this.getSharePageUrl(song, version);
     const shareTitle = song.share.title
-      ?? (version && !ohgIsOriginalVersion(version) ? `${song.title} - ${version.name}` : song.title);
+      ?? (version && !isDefaultVersion && !ohgIsOriginalVersion(version) ? `${song.title} - ${version.name}` : song.title);
     const shareData = {
       title: ohgCleanShareText(shareTitle),
       text: ohgCleanShareText(song.share.text ?? `Listen to ${song.title} by OpaHiFi`),

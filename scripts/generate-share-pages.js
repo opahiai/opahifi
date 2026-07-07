@@ -23,10 +23,6 @@ function isOriginalVersion(version) {
   return normalizeShareToken(version?.name || version?.id || version?.slug) === "original";
 }
 
-function getVersionToken(version) {
-  return isOriginalVersion(version) ? "main-version" : normalizeShareToken(version?.name || version?.slug || version?.id);
-}
-
 function getAppHash(song, version = null) {
   const songSlug = song.slug || normalizeShareToken(song.title) || song.id;
   if (!version || version.default || isOriginalVersion(version)) return `#${encodeURIComponent(songSlug)}`;
@@ -136,6 +132,8 @@ function generate() {
 
   for (const module of OH_OPAVERSE_MODULES) {
     const song = module.data;
+    const versions = Array.isArray(song.versions) ? song.versions : [];
+    const defaultVersion = versions.find((version) => version.default) || versions[0] || null;
     const songSlug = song.slug || normalizeShareToken(song.title) || song.id;
     const songTitle = String(song.title || "OpaHiFi").trim();
     const songSharePath = `/s/${encodeURIComponent(songSlug)}`;
@@ -144,13 +142,15 @@ function generate() {
       title: songTitle,
       description: `Listen to ${songTitle} by OpaHiFi.`,
       shareUrl: new URL(songSharePath, SITE_ORIGIN).toString(),
-      imageUrl: toAbsoluteAssetUrl(song.assets?.cover || song.assets?.art),
-      appUrl: getAppUrl(song)
+      imageUrl: toAbsoluteAssetUrl(defaultVersion?.cover || defaultVersion?.art || song.assets?.cover || song.assets?.art),
+      appUrl: getAppUrl(song, defaultVersion)
     }));
     redirects.push(`${songSharePath} ${songSharePath}/index.html 200`);
 
-    for (const version of song.versions || []) {
-      const versionToken = getVersionToken(version);
+    for (const version of versions) {
+      if (version === defaultVersion || version.default) continue;
+
+      const versionToken = normalizeShareToken(version?.name || version?.slug || version?.id);
       if (!versionToken) continue;
 
       const versionTitle = isOriginalVersion(version) ? songTitle : `${songTitle} (${version.name})`;
