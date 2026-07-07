@@ -16,6 +16,8 @@ const OHG_VERSION_LYRICS_PATHS = Object.freeze({
   "glittaa-phoenix/opa-sunrize-max-mix": "lyrics/glittaa-pheonix-sunrise-mix.txt"
 });
 
+const OHG_SHARE_ORIGIN = "https://opahifi.com";
+
 const OHG_PLATFORM_CONFIG = Object.freeze({
   spotify: Object.freeze({ label: "Spotify", icon: '<i class="fa-brands fa-spotify" aria-hidden="true"></i>' }),
   appleMusic: Object.freeze({ label: "Apple Music", icon: '<i class="fa-brands fa-apple" aria-hidden="true"></i>' }),
@@ -36,6 +38,25 @@ function ohgEscapeHtml(value = "") {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function ohgCleanShareText(value = "") {
+  return String(value)
+    .replaceAll("â€™", "’")
+    .replaceAll("â€˜", "‘")
+    .replaceAll("â€œ", "“")
+    .replaceAll("â€", "”")
+    .replaceAll("â€”", "—")
+    .replaceAll("â€“", "–")
+    .replaceAll("Â¡", "¡")
+    .replaceAll("Â¿", "¿")
+    .replaceAll("Ã¡", "á")
+    .replaceAll("Ã©", "é")
+    .replaceAll("Ã­", "í")
+    .replaceAll("Ã³", "ó")
+    .replaceAll("Ãº", "ú")
+    .replaceAll("Ã±", "ñ")
+    .replaceAll("Ã¨", "è");
 }
 
 function ohgNormalizePlatforms(platforms) {
@@ -59,24 +80,12 @@ function ohgSlugify(value = "") {
     .replace(/^-+|-+$/g, "");
 }
 
-function ohgGetImageExtension(imageUrl = "") {
-  const cleanUrl = String(imageUrl).split(/[?#]/)[0];
-  const extension = cleanUrl.match(/\.([a-z0-9]+)$/i)?.[1]?.toLowerCase();
-
-  return extension || "png";
-}
-
-function ohgGetImageMimeType(extension = "") {
-  const normalizedExtension = extension.toLowerCase();
-  if (normalizedExtension === "jpg" || normalizedExtension === "jpeg") return "image/jpeg";
-  if (normalizedExtension === "webp") return "image/webp";
-  if (normalizedExtension === "gif") return "image/gif";
-
-  return "image/png";
-}
-
 function ohgIsOriginalVersion(version) {
   return ohgSlugify(version?.name ?? version?.id ?? version?.slug) === "original";
+}
+
+function ohgGetShareVersionToken(version) {
+  return ohgIsOriginalVersion(version) ? "main-version" : ohgSlugify(version?.name ?? version?.slug ?? version?.id);
 }
 
 function ohgGetStripeBackground(version) {
@@ -876,24 +885,12 @@ class OhGalleryManager {
       .to(activeCoverImage, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }, 0.18);
   }
 
-  async getShareImageFile(song, version) {
-    const imageUrl = version?.cover ?? version?.art ?? song?.cover ?? song?.art;
-    if (!imageUrl || typeof File === "undefined") return null;
+  getSharePageUrl(song, version) {
+    const songSlug = song?.slug ?? ohgSlugify(song?.title) ?? song?.id;
+    const versionToken = ohgGetShareVersionToken(version);
+    const sharePath = versionToken ? `/s/${songSlug}/${versionToken}` : `/s/${songSlug}`;
 
-    try {
-      const absoluteImageUrl = new URL(imageUrl, window.location.href).href;
-      const response = await fetch(absoluteImageUrl);
-      if (!response.ok) return null;
-
-      const blob = await response.blob();
-      const extension = ohgGetImageExtension(absoluteImageUrl);
-      const mimeType = blob.type || ohgGetImageMimeType(extension);
-      const fileName = `${ohgSlugify(song.title)}-${ohgSlugify(version?.name ?? "cover")}.${extension}`;
-
-      return new File([blob], fileName, { type: mimeType });
-    } catch {
-      return null;
-    }
+    return new URL(sharePath, OHG_SHARE_ORIGIN).toString();
   }
 
   async shareSong() {
@@ -901,21 +898,16 @@ class OhGalleryManager {
     if (!song) return;
 
     const version = this.getVersion(song, this.activeVersionIndex);
-    const shareUrl = song.share.url ?? this.getSongUrl(song.id, this.activeVersionIndex);
+    const shareUrl = song.share.url ?? this.getSharePageUrl(song, version);
     const shareTitle = song.share.title
       ?? (version && !ohgIsOriginalVersion(version) ? `${song.title} - ${version.name}` : song.title);
     const shareData = {
-      title: shareTitle,
-      text: song.share.text ?? `Listen to ${song.title} by OpaHiFi`,
+      title: ohgCleanShareText(shareTitle),
+      text: ohgCleanShareText(song.share.text ?? `Listen to ${song.title} by OpaHiFi`),
       url: shareUrl
     };
 
     try {
-      const shareImage = await this.getShareImageFile(song, version);
-      if (shareImage && navigator.canShare?.({ ...shareData, files: [shareImage] })) {
-        shareData.files = [shareImage];
-      }
-
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
