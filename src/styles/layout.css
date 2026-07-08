@@ -388,7 +388,7 @@
 .oh-journey-entrance,
 .oh-journey-exit,
 .oh-home,
-.oh-gallery,
+.oh-songography,
 .oh-connect,
 .oh-videos,
 .oh-about {
@@ -431,6 +431,8 @@
   place-items: center;
   width: clamp(8.5rem, 42vw, 15rem);
   aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--ohf-text) 22%, transparent);
   border-radius: 50%;
   background:
@@ -443,11 +445,12 @@
   width: clamp(7rem, 34vw, 11rem);
 }
 
-.oh-opa__face {
-  font-family: var(--oh-font-display);
-  font-size: clamp(1.6rem, 9vw, 3.2rem);
-  font-weight: 800;
-  letter-spacing: -0.08em;
+.oh-opa__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .oh-eyebrow {
@@ -665,7 +668,7 @@
   }
 }
 
-.oh-gallery,
+.oh-songography,
 .oh-videos {
   background: var(--ohf-bg);
 }

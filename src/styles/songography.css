@@ -1,4 +1,4 @@
-.oh-gallery {
+.oh-songography {
   position: relative;
   --ohg-viewport-height: var(--oh-main-height);
   --ohg-title-height: clamp(5.2rem, 14dvh, 7rem);
@@ -10,8 +10,8 @@
   --ohg-header-icon-size: 0.95rem;
   --ohg-rail-height: clamp(5rem, 10dvh, 6rem);
   --ohg-stage-height: calc(var(--ohg-viewport-height) - (var(--ohg-shell-pad-y) * 2) - var(--ohg-header-space) - var(--ohg-rail-height) - env(safe-area-inset-bottom));
-  --ohg-gallery-width: min(100vw, 31.25rem);
-  width: var(--ohg-gallery-width);
+  --ohg-songography-width: min(100vw, 31.25rem);
+  width: var(--ohg-songography-width);
   height: var(--ohg-viewport-height);
   min-height: var(--ohg-viewport-height);
   margin-inline: auto;
@@ -56,7 +56,7 @@
 .ohg-grid {
   --ohg-gap: clamp(0.35rem, 1.8vw, 0.55rem);
   --ohg-cover-size: clamp(5rem,
-      calc((var(--ohg-gallery-width) - 1rem - (var(--ohg-gap) * 2)) / 3),
+      calc((var(--ohg-songography-width) - 1rem - (var(--ohg-gap) * 2)) / 3),
       8.75rem);
   display: grid;
   grid-template-columns: repeat(3, var(--ohg-cover-size));
@@ -667,7 +667,7 @@
   .ohg-grid {
     --ohg-gap: 0.72rem;
     --ohg-cover-size: clamp(5.5rem,
-        calc((var(--ohg-gallery-width) - 2rem - (var(--ohg-gap) * 2)) / 3),
+        calc((var(--ohg-songography-width) - 2rem - (var(--ohg-gap) * 2)) / 3),
         9.25rem);
   }
 
@@ -690,7 +690,7 @@
     font-size: 0.6rem;
   }
 
-  .oh-gallery {
+  .oh-songography {
     --ohg-rail-height: clamp(5.5rem, 11dvh, 6rem);
   }
 

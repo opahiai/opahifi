@@ -56,9 +56,9 @@ Serve the folder through a local web server because the project uses native ES m
 npx serve .
 ```
 
-## Gallery interaction
+## Songography interaction
 
-The Gallery now follows the supplied OpaHiFi gallery prototype:
+The Songography now follows the supplied OpaHiFi songography prototype:
 
 - all song circles fit inside one mobile viewport
 - clicking a circle uses GSAP Flip to move that exact cover into the detail view
@@ -67,22 +67,22 @@ The Gallery now follows the supplied OpaHiFi gallery prototype:
 - the detail view includes version navigation, duration, platform links, share, and expandable lyrics
 - closing the detail view flips every cover back to its original grid position
 
-The Gallery does not maintain a separate song list. It imports `OH_OPAVERSE_MODULES` from:
+The Songography does not maintain a separate song list. It imports `OH_OPAVERSE_MODULES` from:
 
 ```text
 src/opaverses/opaverse.registry.js
 ```
 
-The Gallery controller is:
+The Songography controller is:
 
 ```text
-src/gallery/gallery-manager.js
+src/songography/songography-manager.js
 ```
 
-The Gallery styles are:
+The Songography styles are:
 
 ```text
-src/styles/gallery.css
+src/styles/songography.css
 ```
 
 Each module can define versions like this:
@@ -107,29 +107,29 @@ versions: Object.freeze([
 ])
 ```
 
-When `versions` is empty, the Gallery automatically creates one `Original` version using the module's base cover, lyrics, duration, and platform fields.
+When `versions` is empty, the Songography automatically creates one `Original` version using the module's base cover, lyrics, duration, and platform fields.
 
 ## Registry scopes
 
-`OH_OPAVERSE_MODULES` contains all 10 songs and feeds the Gallery.
+`OH_OPAVERSE_MODULES` contains all 10 songs and feeds the Songography.
 
 `OH_JOURNEY_MODULES` currently selects the first three modules and feeds the initial scroll Journey. Reorder the full registry to change song order; change the Journey selector when a different three-song experience is needed.
 
 
-## Gallery intro
+## Songography intro
 
-The Gallery has no heading, count, subtitle, or replay link. The song-circle grid uses the complete available viewport.
+The Songography has no heading, count, subtitle, or replay link. The song-circle grid uses the complete available viewport.
 
 
 
-## Gallery animation fix
+## Songography animation fix
 
 - Removed the colored ring/background around song circles.
 - Replaced the close-only icon with a labeled Back button.
 - The detail backdrop and rail background appear after the cover travel animation, so every circle remains visible while moving.
 
-## Gallery layering fix
+## Songography layering fix
 
-- The Back to Gallery button is visible immediately in the song detail header.
+- The Back to Songography button is visible immediately in the song detail header.
 - The detail and rail backgrounds appear immediately.
 - Every moving song cover is explicitly layered above those backgrounds during GSAP Flip transitions.

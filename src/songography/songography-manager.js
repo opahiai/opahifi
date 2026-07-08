@@ -163,7 +163,7 @@ function ohgNormalizeSong(module, index) {
   });
 }
 
-class OhGalleryManager {
+class OhSongographyManager {
   constructor() {
     this.songs = OH_OPAVERSE_MODULES.map(ohgNormalizeSong);
     this.activeSongId = null;
@@ -189,8 +189,8 @@ class OhGalleryManager {
   }
 
   mount() {
-    this.gallery = document.querySelector("#gallery");
-    this.grid = document.querySelector("#oh-gallery-grid");
+    this.songography = document.querySelector("#songography");
+    this.grid = document.querySelector("#oh-songography-grid");
     this.detail = document.querySelector("#ohg-detail");
     this.detailScroll = document.querySelector("#ohg-detail-scroll");
     this.heroSlot = document.querySelector("#ohg-hero-slot");
@@ -203,9 +203,9 @@ class OhGalleryManager {
 
     if (!this.grid || !this.detail || !this.railTrack) return;
 
-    this.gallery?.append(this.detail, this.rail);
+    this.songography?.append(this.detail, this.rail);
 
-    this.renderGallery();
+    this.renderSongography();
     this.renderRailSlots();
     const count = document.querySelector(".ohg-heading__count");
     if (count) count.textContent = `${this.songs.length} songs`;
@@ -218,7 +218,7 @@ class OhGalleryManager {
     window.requestAnimationFrame(() => this.handleLocationChange());
   }
 
-  renderGallery() {
+  renderSongography() {
     this.grid.innerHTML = this.songs.map((song) => {
       const titleLines = song.titleLines.map((line) => (
         `<span>${ohgEscapeHtml(line)}</span>`
@@ -343,7 +343,7 @@ class OhGalleryManager {
 
   getSongHash(songId, versionIndex = null) {
     const song = this.getSong(songId);
-    if (!song) return "#gallery";
+    if (!song) return "#songography";
 
     const resolvedVersionIndex = versionIndex ?? this.getDefaultVersionIndex(song);
     const songSlug = song.slug ?? ohgSlugify(song.title) ?? song.id;
@@ -361,7 +361,7 @@ class OhGalleryManager {
     const route = hash.replace(/^#/, "");
     const [rawSongSlug, rawVersionSlug] = route.split("/");
 
-    if (!rawSongSlug || rawSongSlug === "gallery") return null;
+    if (!rawSongSlug || rawSongSlug === "songography") return null;
 
     try {
       const songSlug = decodeURIComponent(rawSongSlug);
@@ -383,13 +383,13 @@ class OhGalleryManager {
   }
 
   cleanLegacyHash() {
-    if (window.location.hash === "#oh-gallery") {
-      this.setLocationHash("#gallery", "replace");
+    if (window.location.hash === "#oh-songography") {
+      this.setLocationHash("#songography", "replace");
       return;
     }
 
-    if (window.location.hash.startsWith("#oh-gallery/")) {
-      this.setLocationHash(`#${window.location.hash.slice("#oh-gallery/".length)}`, "replace");
+    if (window.location.hash.startsWith("#oh-songography/")) {
+      this.setLocationHash(`#${window.location.hash.slice("#oh-songography/".length)}`, "replace");
     }
   }
 
@@ -407,7 +407,7 @@ class OhGalleryManager {
     if (route) {
       if (!this.getSong(route.songId)) return;
 
-      document.querySelector("#gallery")?.scrollIntoView({ block: "start" });
+      document.querySelector("#songography")?.scrollIntoView({ block: "start" });
 
       if (this.activeSongId === null) {
         this.openSong(route.songId, { updateUrl: false, versionIndex: route.versionIndex });
@@ -419,7 +419,7 @@ class OhGalleryManager {
       return;
     }
 
-    if (window.location.hash === "#gallery" && this.activeSongId !== null) {
+    if (window.location.hash === "#songography" && this.activeSongId !== null) {
       this.closeSong({ updateUrl: false });
     }
   }
@@ -743,7 +743,7 @@ class OhGalleryManager {
     if (!gsap || !Flip) return;
 
     this.isAnimating = true;
-    if (options.updateUrl !== false) this.setLocationHash("#gallery", "replace");
+    if (options.updateUrl !== false) this.setLocationHash("#songography", "replace");
     this.detail.classList.add("is-leaving");
     this.hideLateContent(() => this.animateVersionPillsOut(() => {
       this.disableRailClipping();
@@ -939,4 +939,4 @@ class OhGalleryManager {
   }
 }
 
-export const ohGalleryManager = new OhGalleryManager();
+export const ohSongographyManager = new OhSongographyManager();

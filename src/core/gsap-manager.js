@@ -111,7 +111,7 @@ class OhGsapManager {
   }
 
   createSectionReveals(gsap, ScrollTrigger) {
-    document.querySelectorAll(".oh-home, .oh-gallery, .oh-connect, .oh-videos, .oh-about").forEach((section) => {
+    document.querySelectorAll(".oh-home, .oh-songography, .oh-connect, .oh-videos, .oh-about").forEach((section) => {
       gsap.from(section.querySelectorAll(".oh-eyebrow, .oh-section-title, .oh-section-copy, .oh-sitemap, .ohg-heading, .ohg-grid, .oh-link-row, .oh-video-card, .oh-button"), {
         y: 32,
         opacity: 0,

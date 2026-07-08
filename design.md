@@ -1,13 +1,13 @@
-# OpaHiFi Gallery + Song Detail
+# OpaHiFi Songography + Song Detail
 
 ## Core Idea
 
 A continuous music world:
 
-**Gallery → song detail → version switch → next song**
+**Songography → song detail → version switch → next song**
 
 The user never feels sent to another page. The selected cover moves from the
-gallery into focus while the rest of the collection becomes the song rail.
+songography into focus while the rest of the collection becomes the song rail.
 
 ---
 
@@ -47,7 +47,7 @@ Do not use cyan.
 
 ---
 
-## 1. Gallery
+## 1. Songography
 
 ### Mobile
 
@@ -62,7 +62,7 @@ All song covers fit inside one mobile screen.
 
 ### Desktop
 
-Use the same compact circle system with more columns. Keep the gallery centered
+Use the same compact circle system with more columns. Keep the songography centered
 and visually unified. Do not convert it into rectangular album cards.
 
 ---
@@ -87,7 +87,7 @@ Do not fade to a separate page or replace the selected cover with a duplicate.
 
 ### Top Controls
 
-- Back to gallery
+- Back to songography
 - OpaHiFi logo
 - Share
 
@@ -144,7 +144,7 @@ The rail keeps the full Opaverses collection present and prevents a dead end.
 
 ## 5. Visual States
 
-### Gallery State
+### Songography State
 
 Every song circle is visible together.
 
@@ -216,7 +216,7 @@ lengths, platform labels, and secondary information.
 
 ## 8. Animation
 
-- Use GSAP Flip for gallery, rail, and main-cover movement
+- Use GSAP Flip for songography, rail, and main-cover movement
 - Use short fades and vertical reveals for text and controls
 - Keep song changes smooth and version changes quick
 - Animate in a clear sequence, not all at once
@@ -238,7 +238,7 @@ lengths, platform labels, and secondary information.
 - Clicking the active cover does nothing
 - Clicking another song changes the focused song
 - Clicking a version changes only the version
-- Back reverses the transition into the full gallery
+- Back reverses the transition into the full songography
 - Share copies the exact song and version URL
 - Play All starts with the active song when one is selected
 - Swipe gestures must not trigger browser navigation accidentally
@@ -268,7 +268,7 @@ JavaScript hook.
 
 ## Required Components
 
-- `ohf-gallery`
+- `ohf-songography`
 - `ohf-song-circle`
 - `ohf-song-detail`
 - `ohf-main-artwork`
@@ -283,6 +283,6 @@ JavaScript hook.
 
 ## Final Design Statement
 
-The page is a dark gallery built to frame bright white, blue, and fire artwork.
+The page is a dark songography built to frame bright white, blue, and fire artwork.
 The selected cover physically moves into focus, while the rest of the collection
 stays visible and ready to continue the ride.
