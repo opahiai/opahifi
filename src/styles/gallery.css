@@ -1,10 +1,13 @@
 .oh-gallery {
   position: relative;
   --ohg-viewport-height: var(--oh-main-height);
-  --ohg-title-height: clamp(2.25rem, 7dvh, 3.5rem);
-  --ohg-title-gap: clamp(0.35rem, 1.5dvh, 0.75rem);
+  --ohg-title-height: clamp(5.2rem, 14dvh, 7rem);
+  --ohg-title-gap: clamp(0.15rem, 0.75dvh, 0.45rem);
   --ohg-shell-pad-y: clamp(0.35rem, 0.9dvh, 0.75rem);
   --ohg-header-space: calc(var(--ohg-title-height) + var(--ohg-title-gap));
+  --ohg-header-button-size: 2.25rem;
+  --ohg-header-button-track: calc(var(--ohg-header-button-size) + 0.25rem);
+  --ohg-header-icon-size: 0.95rem;
   --ohg-rail-height: clamp(5rem, 10dvh, 6rem);
   --ohg-stage-height: calc(var(--ohg-viewport-height) - (var(--ohg-shell-pad-y) * 2) - var(--ohg-header-space) - var(--ohg-rail-height) - env(safe-area-inset-bottom));
   --ohg-gallery-width: min(100vw, 31.25rem);
@@ -29,13 +32,25 @@
   padding-block: var(--ohg-shell-pad-y);
 }
 
+.ohg-heading {
+  align-self: end;
+  width: min(100% - 2rem, 27rem);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.ohg-heading .oh-eyebrow {
+  margin-bottom: 0.35rem;
+}
+
 .ohg-title {
   margin: 0;
-  align-self: end;
   color: var(--ohf-text);
-  font: 800 clamp(1.35rem, 7vw, 2.25rem)/1 var(--oh-font-display);
-  letter-spacing: 0;
-  text-align: center;
+  font-family: var(--oh-font-display);
+  font-size: clamp(2rem, 8.4vw, 3.4rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
 }
 
 .ohg-grid {
@@ -203,7 +218,7 @@
   top: calc(-1 * var(--ohg-header-space));
   right: 0;
   left: 0;
-  grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
+  grid-template-columns: var(--ohg-header-button-track) minmax(0, 1fr) var(--ohg-header-button-track);
   align-items: center;
   justify-items: center;
   min-height: var(--ohg-title-height);
@@ -216,16 +231,20 @@
   display: grid;
 }
 
-.ohg-icon-button {
+.ohg-icon-button,
+.ohg-back-button {
   display: grid;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--ohg-header-button-size);
+  height: var(--ohg-header-button-size);
+  min-height: 0;
   padding: 0;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--ohf-text-muted) 18%, transparent);
   border-radius: 50%;
   background: color-mix(in srgb, var(--ohf-surface) 68%, transparent);
   color: var(--ohf-text-muted);
+  font-size: var(--ohg-header-icon-size);
+  box-shadow: none;
   cursor: pointer;
 }
 
@@ -237,19 +256,6 @@
 .ohg-back-button {
   grid-column: 1;
   justify-self: start;
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  min-height: 0;
-  padding: 0;
-  border: 1px solid color-mix(in srgb, var(--ohf-text-muted) 18%, transparent);
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--ohf-surface) 68%, transparent);
-  color: var(--ohf-text-muted);
-  box-shadow: none;
-  cursor: pointer;
 }
 
 .ohg-back-button span {
@@ -301,6 +307,7 @@
   --ohg-version-border: 1px solid color-mix(in srgb, var(--ohf-mask-solid) 18%, transparent);
   --ohg-platform-button-size: clamp(2.25rem, 5.4dvh, 2.35rem);
   --ohg-platform-icon-size: 1.12rem;
+  --ohg-platform-font-icon-size: 1.05rem;
   --ohg-platform-gap: 0.58rem;
   --ohg-platform-top: calc(var(--ohg-stage-padding) + var(--ohg-selected-cover-size) + clamp(0.5rem, 1.2dvh, 0.65rem));
   --ohg-lyrics-top: calc(var(--ohg-platform-top) + var(--ohg-platform-button-size) + clamp(0.58rem, 1.35dvh, 0.72rem));
@@ -498,7 +505,7 @@
   border-radius: 50%;
   background: transparent;
   color: var(--ohf-white);
-  font-size: 1.05rem;
+  font-size: var(--ohg-platform-font-icon-size);
   text-decoration: none;
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,18 +8,21 @@
   <title>OpaHiFi — Opaverses</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="./src/styles/base.css">
   <link rel="stylesheet" href="./src/styles/layout.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="./src/styles/opaverse.css">
   <link rel="stylesheet" href="./src/styles/gallery.css">
 </head>
+
 <body>
   <nav class="oh-navbar" id="oh-navbar" aria-label="Main navigation">
     <a class="oh-navbar__brand" href="#oh-hero" data-oh-scroll>OpaHiFi</a>
-    <button class="oh-menu-button" type="button" data-oh-menu-open aria-expanded="false" aria-controls="oh-menu">
-      <span>Menu</span>
+    <button class="oh-menu-button" type="button" data-oh-menu-open aria-label="Open menu" aria-expanded="false"
+      aria-controls="oh-menu">
       <i class="fa-solid fa-bars" aria-hidden="true"></i>
     </button>
   </nav>
@@ -35,21 +39,21 @@
       <nav class="oh-menu__groups" aria-label="OpaHiFi sections">
         <section class="oh-menu__group" aria-labelledby="oh-menu-explore">
           <h2 id="oh-menu-explore">Explore</h2>
-          <a href="#oh-journey" data-oh-scroll data-oh-menu-link>
+          <a class="oh-nav-option oh-nav-option--primary" href="#oh-journey" data-oh-scroll data-oh-menu-link>
             <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
             <span>
               <strong>Songology</strong>
               <small>A visual trip into the heart of each song.</small>
             </span>
           </a>
-          <a href="#gallery" data-oh-scroll data-oh-menu-link>
+          <a class="oh-nav-option oh-nav-option--primary" href="#gallery" data-oh-scroll data-oh-menu-link>
             <i class="fa-solid fa-record-vinyl" aria-hidden="true"></i>
             <span>
               <strong>Songography</strong>
               <small>Songs catalog: versions, platform links &amp; lyrics.</small>
             </span>
           </a>
-          <a href="#oh-videos" data-oh-scroll data-oh-menu-link>
+          <a class="oh-nav-option oh-nav-option--primary" href="#oh-videos" data-oh-scroll data-oh-menu-link>
             <i class="fa-solid fa-tv" aria-hidden="true"></i>
             <span>
               <strong>Songovision</strong>
@@ -59,28 +63,28 @@
         </section>
         <section class="oh-menu__group" aria-labelledby="oh-menu-opahifi">
           <h2 id="oh-menu-opahifi">OpaHiFi</h2>
-          <a href="#oh-about" data-oh-scroll data-oh-menu-link>
+          <a class="oh-nav-option" href="#oh-about" data-oh-scroll data-oh-menu-link>
             <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
             <span>
               <strong>About OpaHiFi</strong>
               <small>The idea, the sound, and the world behind it.</small>
             </span>
           </a>
-          <a href="#oh-connect" data-oh-scroll data-oh-menu-link>
+          <a class="oh-nav-option" href="#oh-connect" data-oh-scroll data-oh-menu-link>
             <i class="fa-solid fa-bolt" aria-hidden="true"></i>
             <span>
               <strong>Follow OpaHiFi</strong>
               <small>Find OpaHiFi across music and social platforms.</small>
             </span>
           </a>
-          <a href="mailto:hello@example.com" data-oh-menu-link>
+          <a class="oh-nav-option" href="mailto:hello@example.com" data-oh-menu-link>
             <i class="fa-solid fa-envelope" aria-hidden="true"></i>
             <span>
               <strong>Contact OpaHiFi</strong>
               <small>Reach out for notes, ideas, and collaborations.</small>
             </span>
           </a>
-          <a href="#oh-shop" data-oh-menu-link>
+          <a class="oh-nav-option" href="#oh-shop" data-oh-menu-link>
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
             <span>
               <strong>Shop OpaHiFi</strong>
@@ -122,7 +126,8 @@
           <div>
             <p class="oh-eyebrow">The ride begins</p>
             <h2 class="oh-section-title">Opa becomes your guide</h2>
-            <p class="oh-section-copy">Keep scrolling. Each song opens its own world, then hands you directly to the next one.</p>
+            <p class="oh-section-copy">Keep scrolling. Each song opens its own world, then hands you directly to the
+              next one.</p>
           </div>
         </div>
       </div>
@@ -143,25 +148,25 @@
       <div class="oh-shell oh-home__shell">
         <p class="oh-eyebrow">OpaHiFi</p>
         <h2 class="oh-section-title">Now what?!</h2>
-        <p class="oh-home__copy">The songs, the lyrics, the story and everything    OpaHiFi.</p>
+        <p class="oh-home__copy">The songs, the lyrics, the story, and everything OpaHiFi.</p>
         <nav class="oh-sitemap" aria-label="OpaHiFi sitemap">
           <section class="oh-sitemap__group" aria-labelledby="oh-home-explore">
             <h3 id="oh-home-explore">Explore</h3>
-            <a class="oh-sitemap__item oh-sitemap__item--primary" href="#oh-journey" data-oh-scroll>
+            <a class="oh-nav-option oh-nav-option--primary" href="#oh-journey" data-oh-scroll>
               <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
               <span>
                 <strong>Songology</strong>
                 <small>A visual trip into the heart of each song.</small>
               </span>
             </a>
-            <a class="oh-sitemap__item oh-sitemap__item--primary" href="#gallery" data-oh-scroll>
+            <a class="oh-nav-option oh-nav-option--primary" href="#gallery" data-oh-scroll>
               <i class="fa-solid fa-record-vinyl" aria-hidden="true"></i>
               <span>
                 <strong>Songography</strong>
                 <small>Songs catalog: versions, platform links &amp; lyrics.</small>
               </span>
             </a>
-            <a class="oh-sitemap__item oh-sitemap__item--primary" href="#oh-videos" data-oh-scroll>
+            <a class="oh-nav-option oh-nav-option--primary" href="#oh-videos" data-oh-scroll>
               <i class="fa-solid fa-tv" aria-hidden="true"></i>
               <span>
                 <strong>Songovision</strong>
@@ -171,28 +176,28 @@
           </section>
           <section class="oh-sitemap__group" aria-labelledby="oh-home-opahifi">
             <h3 id="oh-home-opahifi">OpaHiFi</h3>
-            <a class="oh-sitemap__item" href="#oh-about" data-oh-scroll>
+            <a class="oh-nav-option" href="#oh-about" data-oh-scroll>
               <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
               <span>
                 <strong>About OpaHiFi</strong>
                 <small>The idea, the sound, and the world behind it.</small>
               </span>
             </a>
-            <a class="oh-sitemap__item" href="#oh-connect" data-oh-scroll>
+            <a class="oh-nav-option" href="#oh-connect" data-oh-scroll>
               <i class="fa-solid fa-bolt" aria-hidden="true"></i>
               <span>
                 <strong>Follow OpaHiFi</strong>
                 <small>Find OpaHiFi across music and social platforms.</small>
               </span>
             </a>
-            <a class="oh-sitemap__item" href="mailto:hello@example.com">
+            <a class="oh-nav-option" href="mailto:hello@example.com">
               <i class="fa-solid fa-envelope" aria-hidden="true"></i>
               <span>
                 <strong>Contact OpaHiFi</strong>
                 <small>Reach out for notes, ideas, and collaborations.</small>
               </span>
             </a>
-            <a class="oh-sitemap__item" href="#oh-shop">
+            <a class="oh-nav-option" href="#oh-shop">
               <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
               <span>
                 <strong>Shop OpaHiFi</strong>
@@ -206,7 +211,10 @@
 
     <section class="oh-screen oh-gallery" id="gallery">
       <div class="ohg-shell">
-        <h2 class="ohg-title">Songography</h2>
+        <header class="ohg-heading">
+          <p class="oh-eyebrow">Songs, versions &amp; lyrics</p>
+          <h2 class="ohg-title">Songography</h2>
+        </header>
         <div class="ohg-grid" id="oh-gallery-grid" aria-label="OpaHiFi songography"></div>
       </div>
     </section>
@@ -243,20 +251,15 @@
       <div class="oh-shell oh-center-copy">
         <p class="oh-eyebrow">About</p>
         <h2 class="oh-section-title">Music worlds guided by Opa</h2>
-        <p class="oh-section-copy">OpaHiFi turns songs into visual, scroll-driven experiences built for mobile first.</p>
+        <p class="oh-section-copy">OpaHiFi turns songs into visual, scroll-driven experiences built for mobile first.
+        </p>
         <a class="oh-button oh-button--secondary" href="#oh-connect" data-oh-scroll>Connect with Opa</a>
       </div>
     </section>
   </main>
 
-  <section
-    class="ohg-detail"
-    id="ohg-detail"
-    role="dialog"
-    aria-modal="true"
-    aria-hidden="true"
-    aria-labelledby="ohg-detail-title"
-  >
+  <section class="ohg-detail" id="ohg-detail" role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="ohg-detail-title">
     <header class="ohg-detail__header">
       <button class="ohg-back-button" type="button" data-ohg-action="close" aria-label="Back to Songography">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -314,4 +317,5 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
   <script type="module" src="./src/app.js"></script>
 </body>
+
 </html>
