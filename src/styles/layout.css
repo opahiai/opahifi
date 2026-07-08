@@ -9,13 +9,13 @@
   height: var(--oh-nav-height);
   padding-inline: 1rem;
   border-bottom: 1px solid var(--oh-border);
-  background: rgb(5 6 13 / 0.82);
+  background: color-mix(in srgb, var(--ohf-bg) 82%, transparent);
   backdrop-filter: blur(18px);
 }
 
 .oh-navbar__brand {
   flex: 0 0 auto;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--oh-font-display);
   font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -26,9 +26,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgb(170 179 214 / 0.22);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.045);
+  border: 1px solid color-mix(in srgb, var(--ohf-text-muted) 22%, transparent);
+  border-radius: var(--oh-radius-pill);
+  background: color-mix(in srgb, var(--ohf-text) 4.5%, transparent);
   color: var(--oh-text);
 }
 
@@ -36,7 +36,7 @@
   gap: 0.5rem;
   min-height: 2.4rem;
   padding: 0 0.85rem;
-  font-size: 0.78rem;
+  font-size: var(--oh-type-nav);
   font-weight: 800;
 }
 
@@ -61,10 +61,10 @@
   position: absolute;
   inset: 0;
   border: 0;
-  background: rgb(3 4 10 / 0.68);
+  background: color-mix(in srgb, var(--ohf-bg) 68%, transparent);
   opacity: 0;
   backdrop-filter: blur(12px);
-  transition: opacity 0.22s ease;
+  transition: opacity var(--oh-ease-standard);
 }
 
 .oh-menu.is-open .oh-menu__backdrop {
@@ -81,15 +81,17 @@
   gap: 0.9rem;
   padding: 1rem;
   overflow: auto;
-  border: 1px solid rgb(170 179 214 / 0.2);
-  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--ohf-text-muted) 20%, transparent);
+  border-radius: var(--oh-radius-panel);
   background:
-    linear-gradient(160deg, rgb(16 23 53 / 0.98), rgb(5 7 18 / 0.98)),
-    #050712;
-  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 0.46);
+    linear-gradient(160deg,
+      color-mix(in srgb, var(--ohf-surface) 98%, var(--ohf-blue) 12%),
+      color-mix(in srgb, var(--ohf-bg) 98%, var(--ohf-surface) 12%)),
+    var(--ohf-bg);
+  box-shadow: 0 1.5rem 4rem var(--ohf-shadow-strong);
   opacity: 0;
   transform: translateY(-0.45rem) scale(0.98);
-  transition: opacity 0.22s ease, transform 0.22s ease;
+  transition: opacity var(--oh-ease-standard), transform var(--oh-ease-standard);
 }
 
 .oh-menu.is-open .oh-menu__panel {
@@ -128,32 +130,34 @@
 .oh-menu__group h2 {
   margin: 0 0 0.25rem;
   color: var(--oh-muted);
-  font-size: 0.72rem;
+  font-size: var(--oh-type-eyebrow);
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .oh-menu__group a {
-  --oh-pill-border: rgb(92 109 255 / 0.72);
-  --oh-pill-glow: rgb(92 109 255 / 0.32);
+  --oh-pill-border: color-mix(in srgb, var(--ohf-blue) 72%, var(--ohf-text) 12%);
+  --oh-pill-glow: color-mix(in srgb, var(--ohf-blue) 32%, transparent);
   position: relative;
   isolation: isolate;
   display: grid;
   grid-template-columns: 1.1rem minmax(0, 1fr);
   align-items: center;
   gap: 0.5rem;
-  width: min(58%, 18rem);
+  width: min(100%, 18rem);
   min-height: 2.7rem;
   padding: 0.42rem 0.8rem;
   overflow: hidden;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--oh-radius-pill);
   background:
-    linear-gradient(135deg, rgb(21 91 255 / 0.14), rgb(255 255 255 / 0.035)),
-    rgb(9 14 32 / 0.68);
-  color: #f7f8ff;
-  font-family: "Poppins", sans-serif;
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--ohf-blue) 14%, transparent),
+      color-mix(in srgb, var(--ohf-text) 3.5%, transparent)),
+    color-mix(in srgb, var(--ohf-surface) 68%, transparent);
+  color: var(--ohf-text);
+  font-family: var(--oh-font-display);
   font-size: 0.78rem;
   font-weight: 800;
 }
@@ -170,21 +174,21 @@
   box-shadow: 0 0 0.45rem var(--oh-pill-glow);
   mask:
     linear-gradient(90deg,
-      #000 0 36%,
+      var(--ohf-mask-solid) 0 36%,
       rgb(0 0 0 / 0.62) 40%,
       rgb(0 0 0 / 0.16) 44%,
       transparent 48% 57%,
       rgb(0 0 0 / 0.16) 61%,
       rgb(0 0 0 / 0.62) 65%,
-      #000 70% 100%) top / 100% 50% no-repeat,
+      var(--ohf-mask-solid) 70% 100%) top / 100% 50% no-repeat,
     linear-gradient(90deg,
-      #000 0 18%,
+      var(--ohf-mask-solid) 0 18%,
       rgb(0 0 0 / 0.64) 22%,
       rgb(0 0 0 / 0.14) 26%,
       transparent 30% 43%,
       rgb(0 0 0 / 0.14) 47%,
       rgb(0 0 0 / 0.64) 51%,
-      #000 56% 100%) bottom / 100% 50% no-repeat;
+      var(--ohf-mask-solid) 56% 100%) bottom / 100% 50% no-repeat;
 }
 
 .oh-menu__group a::after,
@@ -200,23 +204,23 @@
   filter: blur(4px);
   mask:
     linear-gradient(90deg,
-      #000 0 34%,
+      var(--ohf-mask-solid) 0 34%,
       rgb(0 0 0 / 0.42) 39%,
       transparent 47% 58%,
       rgb(0 0 0 / 0.42) 66%,
-      #000 72% 100%) top / 100% 50% no-repeat,
+      var(--ohf-mask-solid) 72% 100%) top / 100% 50% no-repeat,
     linear-gradient(90deg,
-      #000 0 16%,
+      var(--ohf-mask-solid) 0 16%,
       rgb(0 0 0 / 0.42) 22%,
       transparent 31% 44%,
       rgb(0 0 0 / 0.42) 52%,
-      #000 58% 100%) bottom / 100% 50% no-repeat;
+      var(--ohf-mask-solid) 58% 100%) bottom / 100% 50% no-repeat;
 }
 
 .oh-menu__group a:hover {
-  --oh-pill-border: rgb(118 132 255 / 0.86);
-  --oh-pill-glow: rgb(118 132 255 / 0.38);
-  background: rgb(255 255 255 / 0.07);
+  --oh-pill-border: color-mix(in srgb, var(--ohf-blue) 86%, var(--ohf-text) 18%);
+  --oh-pill-glow: color-mix(in srgb, var(--ohf-blue) 38%, transparent);
+  background: color-mix(in srgb, var(--ohf-text) 7%, transparent);
 }
 
 .oh-menu__group i {
@@ -226,8 +230,8 @@
   width: 1.1rem;
   height: 1.1rem;
   place-items: center;
-  color: #fff;
-  font-size: 0.72rem;
+  color: var(--ohf-white);
+  font-size: var(--oh-icon-small);
 }
 
 .oh-menu__group span,
@@ -250,8 +254,8 @@
 .oh-menu__group small,
 .oh-sitemap__item small {
   overflow: hidden;
-  color: rgb(235 239 255 / 0.72);
-  font-size: 0.58rem;
+  color: color-mix(in srgb, var(--ohf-text) 72%, transparent);
+  font-size: var(--oh-type-small);
   font-weight: 600;
   line-height: 1.12;
   text-overflow: ellipsis;
@@ -290,8 +294,8 @@
   isolation: isolate;
   text-align: center;
   background:
-    radial-gradient(circle at 50% 22%, rgb(21 91 255 / 0.18), transparent 26%),
-    linear-gradient(180deg, #071126, var(--oh-bg));
+    radial-gradient(circle at 50% 22%, color-mix(in srgb, var(--ohf-blue) 18%, transparent), transparent 26%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ohf-surface) 58%, var(--ohf-blue) 16%), var(--ohf-bg));
 }
 
 .oh-hero__glow {
@@ -303,7 +307,7 @@
   aspect-ratio: 1;
   translate: -50% -50%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(21 91 255 / 0.26), transparent 66%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--ohf-blue) 26%, transparent), transparent 66%);
   filter: blur(18px);
 }
 
@@ -319,12 +323,12 @@
   place-items: center;
   width: clamp(8.5rem, 42vw, 15rem);
   aspect-ratio: 1;
-  border: 1px solid rgb(255 255 255 / 0.22);
+  border: 1px solid color-mix(in srgb, var(--ohf-text) 22%, transparent);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 36% 28%, white 0 5%, transparent 6%),
-    linear-gradient(145deg, var(--oh-blue), var(--oh-violet) 62%, var(--oh-orange));
-  box-shadow: 0 0 4rem rgb(21 91 255 / 0.22);
+    radial-gradient(circle at 36% 28%, var(--ohf-white) 0 5%, transparent 6%),
+    linear-gradient(145deg, var(--ohf-blue), var(--ohf-violet) 62%, var(--ohf-orange));
+  box-shadow: 0 0 4rem color-mix(in srgb, var(--ohf-blue) 22%, transparent);
 }
 
 .oh-opa--small {
@@ -332,7 +336,7 @@
 }
 
 .oh-opa__face {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--oh-font-display);
   font-size: clamp(1.6rem, 9vw, 3.2rem);
   font-weight: 800;
   letter-spacing: -0.08em;
@@ -340,8 +344,8 @@
 
 .oh-eyebrow {
   margin-bottom: 0.5rem;
-  color: var(--oh-blue);
-  font-size: 0.72rem;
+  color: var(--ohf-blue);
+  font-size: var(--oh-type-eyebrow);
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -369,7 +373,7 @@
   max-width: 34rem;
   margin-bottom: 1.5rem;
   color: var(--oh-muted);
-  font-size: clamp(0.98rem, 3.8vw, 1.2rem);
+  font-size: var(--oh-type-body);
   line-height: 1.6;
 }
 
@@ -386,19 +390,19 @@
   min-height: 3rem;
   padding: 0.75rem 1rem;
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--oh-radius-pill);
   font-size: 0.88rem;
   font-weight: 800;
 }
 
 .oh-button--primary {
   background: var(--oh-text);
-  color: #070812;
+  color: var(--ohf-ink-text);
 }
 
 .oh-button--secondary {
   border-color: var(--oh-border);
-  background: rgb(255 255 255 / 0.06);
+  background: color-mix(in srgb, var(--ohf-text) 6%, transparent);
 }
 
 .oh-scroll-cue {
@@ -454,7 +458,7 @@
 }
 
 .oh-journey-entrance {
-  background: linear-gradient(180deg, var(--oh-bg), #090d1c);
+  background: linear-gradient(180deg, var(--ohf-bg), color-mix(in srgb, var(--ohf-surface) 78%, var(--ohf-bg) 22%));
 }
 
 .oh-split {
@@ -468,8 +472,8 @@
 .oh-journey-exit {
   text-align: center;
   background:
-    radial-gradient(circle at 50% 50%, rgb(91 44 255 / 0.2), transparent 42%),
-    var(--oh-bg);
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--ohf-violet) 20%, transparent), transparent 42%),
+    var(--ohf-bg);
 }
 
 .oh-journey-exit__content,
@@ -483,9 +487,12 @@
   align-items: start;
   padding-block: clamp(1.15rem, 3.8dvh, 2.5rem);
   background:
-    radial-gradient(circle at 88% 18%, rgb(21 91 255 / 0.16), transparent 28%),
-    radial-gradient(circle at 6% 82%, rgb(255 106 0 / 0.11), transparent 30%),
-    linear-gradient(160deg, #071126 0%, #101735 48%, #07152f 100%);
+    radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--ohf-blue) 16%, transparent), transparent 28%),
+    radial-gradient(circle at 6% 82%, color-mix(in srgb, var(--ohf-orange) 8%, transparent), transparent 30%),
+    linear-gradient(160deg,
+      var(--ohf-bg) 0%,
+      color-mix(in srgb, var(--ohf-surface) 78%, var(--ohf-blue) 12%) 48%,
+      color-mix(in srgb, var(--ohf-bg) 86%, var(--ohf-blue) 14%) 100%);
 }
 
 .oh-home__shell {
@@ -499,7 +506,7 @@
 .oh-home .oh-section-title {
   max-width: 9.5ch;
   margin-bottom: 0.55rem;
-  font-size: clamp(2.25rem, 8vw, 3.35rem);
+  font-size: var(--oh-type-section);
   line-height: 0.95;
 }
 
@@ -507,7 +514,7 @@
   max-width: 30rem;
   margin-bottom: 0;
   color: var(--oh-muted);
-  font-size: clamp(0.9rem, 2.3vw, 1rem);
+  font-size: var(--oh-type-body);
   line-height: 1.45;
 }
 
@@ -526,36 +533,38 @@
 .oh-sitemap__group h3 {
   margin: 0 0 0.05rem 0.05rem;
   color: var(--oh-muted);
-  font-size: 0.62rem;
+  font-size: var(--oh-type-small);
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .oh-sitemap__item {
-  --oh-pill-border: rgb(79 94 220 / 0.62);
-  --oh-pill-glow: rgb(79 94 220 / 0.22);
+  --oh-pill-border: color-mix(in srgb, var(--ohf-blue) 62%, var(--ohf-text-muted) 18%);
+  --oh-pill-glow: color-mix(in srgb, var(--ohf-blue) 22%, transparent);
   position: relative;
   isolation: isolate;
   display: grid;
   grid-template-columns: 1.1rem minmax(0, 1fr);
   align-items: center;
   gap: 0.5rem;
-  width: min(58%, 18rem);
+  width: min(100%, 18rem);
   min-height: clamp(2.6rem, 5dvh, 2.85rem);
   padding: 0.4rem 0.8rem;
   overflow: hidden;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--oh-radius-pill);
   background:
-    linear-gradient(135deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.018)),
-    rgb(11 16 36 / 0.58);
-  color: #f7f8ff;
-  font-family: "Poppins", sans-serif;
-  font-size: clamp(0.72rem, 2.9vw, 0.82rem);
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--ohf-text) 6%, transparent),
+      color-mix(in srgb, var(--ohf-text) 1.8%, transparent)),
+    color-mix(in srgb, var(--ohf-surface) 58%, transparent);
+  color: var(--ohf-text);
+  font-family: var(--oh-font-display);
+  font-size: var(--oh-type-card);
   font-weight: 800;
   line-height: 1.05;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ohf-text) 6%, transparent);
   transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
 }
 
@@ -566,30 +575,25 @@
   width: 1.1rem;
   height: 1.1rem;
   place-items: center;
-  color: #fff;
-  font-size: 0.72rem;
+  color: var(--ohf-white);
+  font-size: var(--oh-icon-small);
 }
 
 .oh-sitemap__item--primary {
-  --oh-pill-border: rgb(21 91 255 / 0.78);
-  --oh-pill-glow: rgb(21 91 255 / 0.32);
+  --oh-pill-border: color-mix(in srgb, var(--ohf-blue) 78%, var(--ohf-text) 10%);
+  --oh-pill-glow: color-mix(in srgb, var(--ohf-blue) 32%, transparent);
   background:
-    linear-gradient(135deg, rgb(21 91 255 / 0.2), rgb(34 217 221 / 0.04)),
-    rgb(10 17 43 / 0.72);
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--ohf-blue) 20%, transparent),
+      color-mix(in srgb, var(--ohf-violet) 4%, transparent)),
+    color-mix(in srgb, var(--ohf-surface) 72%, transparent);
 }
 
 .oh-sitemap__item:hover {
-  --oh-pill-border: rgb(118 132 255 / 0.86);
-  --oh-pill-glow: rgb(118 132 255 / 0.38);
-  background-color: rgb(255 255 255 / 0.07);
+  --oh-pill-border: color-mix(in srgb, var(--ohf-blue) 86%, var(--ohf-text) 18%);
+  --oh-pill-glow: color-mix(in srgb, var(--ohf-blue) 38%, transparent);
+  background-color: color-mix(in srgb, var(--ohf-text) 7%, transparent);
   transform: translateY(-2px);
-}
-
-@media (max-width: 26rem) {
-  .oh-menu__group a,
-  .oh-sitemap__item {
-    width: min(78%, 18rem);
-  }
 }
 
 @media (min-width: 48rem) {
@@ -612,13 +616,13 @@
 
 .oh-gallery,
 .oh-videos {
-  background: #080a14;
+  background: var(--ohf-bg);
 }
 
 .oh-connect {
   background:
-    radial-gradient(circle at 50% 40%, rgb(21 91 255 / 0.16), transparent 38%),
-    #071126;
+    radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--ohf-blue) 16%, transparent), transparent 38%),
+    color-mix(in srgb, var(--ohf-surface) 58%, var(--ohf-blue) 16%);
 }
 
 .oh-link-row {
@@ -631,7 +635,7 @@
 .oh-link-row a {
   padding: 0.7rem 0.9rem;
   border: 1px solid var(--oh-border);
-  border-radius: 999px;
+  border-radius: var(--oh-radius-pill);
   color: var(--oh-muted);
   font-size: 0.82rem;
   font-weight: 700;
@@ -642,8 +646,8 @@
   gap: 1rem;
   padding: 0.8rem;
   border: 1px solid var(--oh-border);
-  border-radius: 1.25rem;
-  background: rgb(255 255 255 / 0.04);
+  border-radius: var(--oh-radius-panel);
+  background: color-mix(in srgb, var(--ohf-text) 4%, transparent);
 }
 
 .oh-video-card__media {
@@ -651,8 +655,8 @@
   min-height: 14rem;
   place-items: center;
   border-radius: 0.8rem;
-  background: linear-gradient(145deg, var(--oh-blue), var(--oh-violet), var(--oh-orange));
-  font-family: "Poppins", sans-serif;
+  background: linear-gradient(145deg, var(--ohf-blue), var(--ohf-violet), var(--ohf-orange));
+  font-family: var(--oh-font-display);
   font-size: 2rem;
   font-weight: 800;
 }
@@ -667,7 +671,7 @@
 }
 
 .oh-about {
-  background: linear-gradient(180deg, #080a14, var(--oh-bg));
+  background: linear-gradient(180deg, var(--ohf-bg), var(--ohf-bg));
 }
 
 .oh-footer {
@@ -677,7 +681,7 @@
   gap: 1rem;
   height: 50px;
   border-top: 1px solid var(--oh-border);
-  background: #03040a;
+  background: var(--ohf-bg);
   color: var(--oh-muted);
   font-size: 0.7rem;
 }

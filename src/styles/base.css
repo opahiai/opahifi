@@ -8,12 +8,42 @@
   --oh-muted: #aab3d6;
   --oh-blue: #155bff;
   --oh-violet: #5b2cff;
+  --oh-red: #ff3b2f;
   --oh-orange: #ff6a00;
   --oh-gold: #ffd166;
   --oh-border: rgb(255 255 255 / 0.14);
   --oh-shell: min(100% - 2rem, 72rem);
+  --ohf-bg: var(--oh-bg);
+  --ohf-surface: var(--oh-panel);
+  --ohf-blue: var(--oh-blue);
+  --ohf-violet: var(--oh-violet);
+  --ohf-red: var(--oh-red);
+  --ohf-orange: var(--oh-orange);
+  --ohf-gold: var(--oh-gold);
+  --ohf-text: var(--oh-text);
+  --ohf-text-muted: var(--oh-muted);
+  --ohf-cover-bg: #fefefe;
+  --ohf-cover-text: #15151a;
+  --ohf-ink-text: #06090e;
+  --ohf-shadow-strong: rgb(0 0 0 / 0.46);
+  --ohf-mask-solid: #000;
+  --ohf-white: #ffffff;
+  --oh-font-display: "Poppins", sans-serif;
+  --oh-font-body: "Inter", sans-serif;
+  --oh-font-condensed: "Oswald", sans-serif;
+  --oh-type-eyebrow: 0.72rem;
+  --oh-type-nav: 0.82rem;
+  --oh-type-small: 0.58rem;
+  --oh-type-body: clamp(0.9rem, 2.3vw, 1rem);
+  --oh-type-section: clamp(2.25rem, 8vw, 3.35rem);
+  --oh-type-card: clamp(0.72rem, 2.9vw, 0.82rem);
+  --oh-icon-small: 0.72rem;
+  --oh-radius-pill: 999px;
+  --oh-radius-panel: 1rem;
+  --oh-radius-card: 0.68rem;
+  --oh-ease-standard: 0.22s ease;
   color-scheme: dark;
-  font-family: "Inter", sans-serif;
+  font-family: var(--oh-font-body);
   background: var(--oh-bg);
 }
 
@@ -63,7 +93,7 @@ blockquote {
 h1,
 h2,
 h3 {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--oh-font-display);
   text-wrap: balance;
 }
 
