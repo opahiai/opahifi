@@ -69,6 +69,11 @@ class OhContentRenderer {
       if (value != null) element.setAttribute("aria-label", value);
     });
 
+    document.querySelectorAll("[data-oh-i18n-alt]").forEach((element) => {
+      const value = ohResolveMessage(messages, element.dataset.ohI18nAlt);
+      if (value != null) element.setAttribute("alt", value);
+    });
+
     document.querySelectorAll("[data-oh-nav-surface]").forEach((container) => {
       ohRenderNavSurface(container, messages, container.dataset.ohNavSurface === "menu");
     });

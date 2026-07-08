@@ -14,11 +14,14 @@ export const OH_I18N = Object.freeze({
       })
     }),
     hero: Object.freeze({
-      eyebrow: "One guide · many universes",
-      title: "Enter the Opaverses",
-      copy: "A continuous music ride through three worlds.",
-      homeCta: "Go to Home",
-      scrollLabel: "Scroll for the full experience"
+      imageAlt: "Opa surrounded by blue water and orange fire",
+      titleImageAlt: "Blues On Fire",
+      tagline: "DANCE FROM THE PYRE",
+      copyTop: "Scroll down for the full experience",
+      copyBeforeSkip: "or click",
+      copyAfterSkip: "to go home.",
+      homeCta: "Skip",
+      scrollLabel: "Scroll down for the full experience"
     }),
     journeyExit: Object.freeze({
       eyebrow: "Three worlds later",

@@ -1,5 +1,7 @@
 :root {
-  --oh-nav-height: 50px;
+  --oh-nav-height: 40px;
+  --oh-nav-logo-size: 1rem;
+  --oh-nav-menu-size: 2rem;
   --oh-viewport-height: 100dvh;
   --oh-main-height: calc(var(--oh-viewport-height) - var(--oh-nav-height));
   --oh-bg: #05060d;

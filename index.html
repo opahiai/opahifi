@@ -44,15 +44,22 @@
     <section class="oh-screen oh-hero" id="oh-hero">
       <div class="oh-hero__glow" aria-hidden="true"></div>
       <div class="oh-shell oh-hero__content">
-        <div class="oh-opa" aria-label="Opa">
-          <img class="oh-opa__image" src="./img/opa/opa_water-fire.png" alt="Opa">
+        <figure class="oh-hero__art">
+          <img class="oh-hero__art-image" src="./img/hero/opa_water_fire.png" alt="Opa surrounded by blue water and orange fire" data-oh-i18n-alt="hero.imageAlt">
+        </figure>
+        <div class="oh-hero__title-stack">
+          <img class="oh-hero__title-image" src="./img/hero/blues_on_fire.png" alt="Blues On Fire" data-oh-i18n-alt="hero.titleImageAlt">
+          <p class="oh-hero__tagline" data-oh-i18n="hero.tagline">Dance from the pyre</p>
         </div>
-        <p class="oh-eyebrow" data-oh-i18n="hero.eyebrow">One guide · many universes</p>
-        <h1 class="oh-hero__title" data-oh-i18n="hero.title">Enter the Opaverses</h1>
-        <p class="oh-hero__copy" data-oh-i18n="hero.copy">A continuous music ride through three worlds.</p>
-        <div class="oh-actions">
-          <a class="oh-button oh-button--secondary" href="#oh-home" data-oh-scroll data-oh-i18n="hero.homeCta">Go to Home</a>
-          <a class="oh-scroll-cue" href="#oh-journey" data-oh-scroll data-oh-i18n-aria-label="hero.scrollLabel" aria-label="Scroll for the full experience">
+        <p class="oh-hero__copy">
+          <span data-oh-i18n="hero.copyTop">Scroll down for the full experience</span>
+          <br>
+          <span data-oh-i18n="hero.copyBeforeSkip">or click</span>
+          <a class="oh-button oh-button--secondary oh-hero__skip" href="#oh-home" data-oh-scroll data-oh-i18n="hero.homeCta">Skip</a>
+          <span data-oh-i18n="hero.copyAfterSkip">to go home.</span>
+        </p>
+        <div class="oh-actions oh-actions--scroll">
+          <a class="oh-scroll-cue" href="#oh-journey" data-oh-scroll data-oh-i18n-aria-label="hero.scrollLabel" aria-label="Scroll down for the full experience">
             <span class="oh-scroll-cue__arrow" aria-hidden="true"></span>
             <span class="oh-scroll-cue__arrow" aria-hidden="true"></span>
             <span class="oh-scroll-cue__arrow" aria-hidden="true"></span>
