@@ -38,7 +38,6 @@ export const OH_I18N = Object.freeze({
       songology: Object.freeze({
         title: "Songology",
         eyebrow: "Scroll between the lines",
-        description: "Scroll between the lines.",
         copy: "Keep scrolling. Each song opens its own world, then hands you directly to the next one.",
         href: "#oh-journey",
         icon: "fa-magnifying-glass",
@@ -48,7 +47,6 @@ export const OH_I18N = Object.freeze({
       songography: Object.freeze({
         title: "Songography",
         eyebrow: "Versions, links & lyrics",
-        description: "Songs catalog: versions, platform links & lyrics.",
         href: "#songography",
         icon: "fa-record-vinyl",
         group: "explore",
@@ -57,7 +55,6 @@ export const OH_I18N = Object.freeze({
       songovision: Object.freeze({
         title: "Songovision",
         eyebrow: "Videos, clips & lyrics",
-        description: "Videos, visuals, and moving OpaHiFi worlds.",
         href: "#oh-videos",
         icon: "fa-tv",
         group: "explore",
@@ -66,7 +63,6 @@ export const OH_I18N = Object.freeze({
       about: Object.freeze({
         title: "About OpaHiFi",
         eyebrow: "What, why, and how?",
-        description: "The idea, the sound, and the world behind it.",
         copy: "OpaHiFi turns songs into visual, scroll-driven experiences built for mobile first.",
         href: "#oh-about",
         icon: "fa-circle-info",
@@ -74,15 +70,14 @@ export const OH_I18N = Object.freeze({
       }),
       follow: Object.freeze({
         title: "Follow / Contact",
-        eyebrow: "Music and social platforms",
-        description: "Find OpaHiFi across music and social platforms.",
+        eyebrow: "Streaming &  socials links",
         href: "#oh-connect",
         icon: "fa-bolt",
         group: "opahifi"
       }),
       shop: Object.freeze({
         title: "Shop OpaHiFi",
-        description: "Merch, objects, and future OpaHiFi drops.",
+        eyebrow: "Merch much?",
         href: "https://shop.opahifi.com/",
         icon: "fa-bag-shopping",
         group: "opahifi"
@@ -97,8 +92,7 @@ export const OH_I18N = Object.freeze({
       lyricsTitle: "Lyrics"
     }),
     footer: Object.freeze({
-      terms: "Terms",
-      contact: "Contact"
+      terms: "Terms"
     })
   })
 });

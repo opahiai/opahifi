@@ -19,13 +19,14 @@ function ohRenderNavOption(section, isMenu) {
 
   const scrollAttr = section.href.startsWith("#") ? " data-oh-scroll" : "";
   const menuAttr = isMenu ? " data-oh-menu-link" : "";
+  const supportingText = section.eyebrow ?? "";
 
   return `
     <a class="${classes.join(" ")}" href="${ohEscapeHtml(section.href)}"${scrollAttr}${menuAttr}>
       <i class="fa-solid ${ohEscapeHtml(section.icon)}" aria-hidden="true"></i>
       <span>
         <strong>${ohEscapeHtml(section.title)}</strong>
-        <small>${ohEscapeHtml(section.description)}</small>
+        <small>${ohEscapeHtml(supportingText)}</small>
       </span>
     </a>
   `;
