@@ -706,6 +706,7 @@ class OhSongographyManager {
     this.detail.classList.add("is-open");
     this.detail.setAttribute("aria-hidden", "false");
     this.rail.classList.add("is-open");
+    this.setRailControlsReady(false);
     this.moveCoversToDetail(songId, versionIndex);
     this.updateDetail(song, versionIndex);
 
@@ -722,6 +723,7 @@ class OhSongographyManager {
       onComplete: () => {
         travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
         this.enableRailClipping();
+        this.setRailControlsReady(true);
         this.animateVersionPillsIn(() => {
           this.showLateContent(() => {
             this.isAnimating = false;
@@ -739,6 +741,10 @@ class OhSongographyManager {
   enableRailClipping() {
     this.railTrack?.classList.remove("ohg-rail__track--unclip");
     this.railTrack?.classList.add("ohg-rail__track--clip");
+  }
+
+  setRailControlsReady(isReady) {
+    this.rail?.classList.toggle("is-controls-ready", isReady);
   }
 
   setCurrentRailSlot(songId) {
@@ -809,6 +815,7 @@ class OhSongographyManager {
     if (!gsap || !Flip) return;
 
     this.isAnimating = true;
+    this.setRailControlsReady(false);
     if (options.updateUrl !== false) this.setLocationHash("#songography", "replace");
     this.detail.classList.add("is-leaving");
     this.hideLateContent(() => this.animateVersionPillsOut(() => {
