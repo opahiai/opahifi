@@ -186,6 +186,7 @@ class OhSongographyManager {
     this.handleClick = this.handleClick.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleLocationChange = this.handleLocationChange.bind(this);
+    this.handleResize = this.handleResize.bind(this);
   }
 
   mount() {
@@ -213,6 +214,7 @@ class OhSongographyManager {
     document.addEventListener("keydown", this.handleKeydown);
     window.addEventListener("hashchange", this.handleLocationChange);
     window.addEventListener("popstate", this.handleLocationChange);
+    window.addEventListener("resize", this.handleResize);
 
     this.cleanLegacyHash();
     window.requestAnimationFrame(() => this.handleLocationChange());
@@ -286,7 +288,9 @@ class OhSongographyManager {
 
     const actions = {
       close: () => this.closeSong(),
-      share: () => this.shareSong()
+      share: () => this.shareSong(),
+      "previous-song": () => this.navigateSong(-1),
+      "next-song": () => this.navigateSong(1)
     };
 
     actions[action.dataset.ohgAction]?.();
@@ -300,8 +304,33 @@ class OhSongographyManager {
     if (event.key === "ArrowRight") this.changeVersion(this.activeVersionIndex + 1);
   }
 
+  handleResize() {
+    if (this.activeSongId !== null) this.positionRailTray();
+  }
+
   getSong(songId = this.activeSongId) {
     return this.songs.find((song) => song.id === songId) ?? null;
+  }
+
+  getSongIndex(songId = this.activeSongId) {
+    return this.songs.findIndex((song) => song.id === songId);
+  }
+
+  navigateSong(offset) {
+    if (this.isAnimating || this.songs.length === 0) return;
+
+    const activeIndex = this.getSongIndex();
+    const currentIndex = activeIndex >= 0 ? activeIndex : 0;
+    const nextIndex = (currentIndex + offset + this.songs.length) % this.songs.length;
+    const nextSong = this.songs[nextIndex];
+
+    if (!nextSong) return;
+    if (this.activeSongId === null) {
+      this.openSong(nextSong.id);
+      return;
+    }
+
+    this.changeSong(nextSong.id);
   }
 
   getVersion(song = this.getSong(), index = this.activeVersionIndex) {
@@ -712,6 +741,42 @@ class OhSongographyManager {
     this.railTrack?.classList.add("ohg-rail__track--clip");
   }
 
+  setCurrentRailSlot(songId) {
+    this.arrangeRailAroundSong(songId);
+
+    this.songs.forEach((song) => {
+      const railSlot = document.querySelector(`#ohg-rail-slot-${song.id}`);
+      if (!railSlot) return;
+      railSlot.classList.toggle("is-current", song.id === songId);
+      railSlot.hidden = false;
+    });
+
+    this.positionRailTray(songId);
+  }
+
+  arrangeRailAroundSong(songId) {
+    if (!this.railTrack || this.songs.length === 0) return;
+
+    const activeIndex = this.getSongIndex(songId);
+    const centerIndex = Math.floor(this.songs.length / 2);
+    const startIndex = (Math.max(activeIndex, 0) - centerIndex + this.songs.length) % this.songs.length;
+
+    for (let index = 0; index < this.songs.length; index += 1) {
+      const song = this.songs[(startIndex + index) % this.songs.length];
+      const railSlot = document.querySelector(`#ohg-rail-slot-${song.id}`);
+      if (railSlot) this.railTrack.append(railSlot);
+    }
+  }
+
+  positionRailTray(songId = this.activeSongId) {
+    const railSlot = document.querySelector(`#ohg-rail-slot-${songId}`);
+    if (!this.rail || !this.railTrack || !railSlot) return;
+
+    const railCenter = this.rail.clientWidth / 2;
+    const slotCenter = railSlot.offsetLeft + (railSlot.offsetWidth / 2);
+    this.railTrack.style.setProperty("--ohg-rail-offset", `${railCenter - slotCenter}px`);
+  }
+
   moveCoversToDetail(activeSongId, activeVersionIndex = null) {
     this.songs.forEach((song) => {
       const cover = document.querySelector(`#ohg-cover-${song.id}`);
@@ -727,12 +792,13 @@ class OhSongographyManager {
         cover.classList.remove("ohg-cover--circle");
         cover.classList.add("ohg-cover--detail");
         this.setCoverToVersionArt(song, this.getVersion(song, activeVersionIndex ?? this.getDefaultVersionIndex(song)));
-        railSlot.hidden = true;
       } else {
         this.setCoverToSongArt(song);
         railSlot.append(cover);
       }
     });
+
+    this.setCurrentRailSlot(activeSongId);
   }
 
   closeSong(options = {}) {
@@ -762,7 +828,10 @@ class OhSongographyManager {
         cover.classList.add("ohg-cover--circle");
         this.setCoverToSongArt(song);
         railSlot.hidden = false;
+        railSlot.classList.remove("is-current");
       });
+
+      this.railTrack?.style.removeProperty("--ohg-rail-offset");
 
       Flip.from(state, {
         duration: 0.68,
@@ -809,6 +878,7 @@ class OhSongographyManager {
       const newRailSlot = document.querySelector(`#ohg-rail-slot-${newSong.id}`);
 
       oldRailSlot.hidden = false;
+      oldRailSlot.classList.remove("is-current");
       oldRailSlot.append(oldCover);
       oldCover.classList.remove("ohg-cover--detail");
       oldCover.classList.add("ohg-cover--circle");
@@ -818,11 +888,12 @@ class OhSongographyManager {
       newCover.classList.remove("ohg-cover--circle");
       newCover.classList.add("ohg-cover--detail");
       this.setCoverToVersionArt(newSong, this.getVersion(newSong, versionIndex));
-      newRailSlot.hidden = true;
+      newRailSlot.hidden = false;
 
       this.activeSongId = songId;
       this.activeVersionIndex = versionIndex;
       this.versionPillsExpanded = false;
+      this.setCurrentRailSlot(songId);
       if (options.updateUrl !== false) this.setLocationHash(this.getSongHash(songId, versionIndex));
 
       this.updateDetail(newSong, versionIndex, false);
@@ -839,7 +910,6 @@ class OhSongographyManager {
           this.animateVersionPillsIn(() => {
             this.showLateContent(() => {
               this.isAnimating = false;
-              oldRailSlot.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
             });
           });
         }

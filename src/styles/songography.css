@@ -609,7 +609,18 @@
 }
 
 .ohg-rail::before {
-  display: none;
+  content: "";
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 50%;
+  width: 0.58rem;
+  height: 0.58rem;
+  border-right: 0.16rem solid var(--ohf-bg);
+  border-bottom: 0.16rem solid var(--ohf-bg);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -62%) rotate(45deg);
 }
 
 .ohg-rail.is-open {
@@ -621,26 +632,96 @@
   opacity: 1;
 }
 
+.ohg-rail::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 50%;
+  width: 3.2rem;
+  height: 3.2rem;
+  border: 1px solid color-mix(in srgb, var(--ohf-white) 86%, transparent);
+  border-radius: 0.65rem;
+  background: var(--ohf-white);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ohf-bg) 8%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.ohg-rail.is-open::after {
+  opacity: 1;
+}
+
 .ohg-rail__track {
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   height: 100%;
   padding-inline: 0.45rem;
-  overflow-x: auto;
+  overflow: visible;
   gap: 0.2rem;
   scrollbar-width: none;
+  transform: translateX(var(--ohg-rail-offset, 0));
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.ohg-rail__button {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  display: grid;
+  width: 2.45rem;
+  height: 2.45rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--ohf-text-muted) 22%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ohf-surface) 78%, transparent);
+  color: var(--ohf-white);
+  font-size: 0.86rem;
+  box-shadow: 0 0.55rem 1.45rem color-mix(in srgb, var(--ohf-bg) 56%, transparent);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.ohg-rail.is-open .ohg-rail__button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ohg-rail__button:hover,
+.ohg-rail__button:focus-visible {
+  border-color: color-mix(in srgb, var(--ohf-blue) 72%, transparent);
+  background: color-mix(in srgb, var(--ohf-blue) 18%, var(--ohf-surface) 82%);
+}
+
+.ohg-rail__button:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+.ohg-rail__button--previous {
+  left: 0.45rem;
+}
+
+.ohg-rail__button--next {
+  right: 0.45rem;
 }
 
 .ohg-rail__track--clip {
-  overflow-x: auto;
+  overflow: visible;
 }
 
 .ohg-rail__track--unclip {
-  overflow-x: visible;
+  overflow: visible;
 }
 
 .ohg-rail__slot {
@@ -652,6 +733,15 @@
   height: 3.2rem;
   opacity: 0.65;
   transition: opacity 0.18s ease;
+}
+
+.ohg-rail__slot .ohg-cover--circle {
+  border-radius: 0.65rem;
+}
+
+.ohg-rail__slot.is-current {
+  visibility: hidden;
+  opacity: 1;
 }
 
 .ohg-rail__slot:focus-within,

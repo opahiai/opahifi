@@ -99,6 +99,8 @@ export const OH_I18N = Object.freeze({
       ariaLabel: "OpaHiFi songography",
       backLabel: "Back to Songography",
       shareLabel: "Share song",
+      previousSongLabel: "Previous song",
+      nextSongLabel: "Next song",
       lyricsTitle: "Lyrics"
     }),
     footer: Object.freeze({
