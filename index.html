@@ -21,22 +21,25 @@
 <body>
   <nav class="oh-navbar" id="oh-navbar" aria-label="Main navigation">
     <a class="oh-navbar__brand" href="#oh-hero" data-oh-scroll>OpaHiFi</a>
-    <button class="oh-menu-button" type="button" data-oh-menu-open data-oh-i18n-aria-label="nav.menuOpen" aria-label="Open menu" aria-expanded="false"
-      aria-controls="oh-menu">
+    <button class="oh-menu-button" type="button" data-oh-menu-open data-oh-i18n-aria-label="nav.menuOpen"
+      aria-label="Open menu" aria-expanded="false" aria-controls="oh-menu">
       <i class="fa-solid fa-bars" aria-hidden="true"></i>
     </button>
   </nav>
 
   <div class="oh-menu" id="oh-menu" aria-hidden="true">
-    <button class="oh-menu__backdrop" type="button" data-oh-menu-close data-oh-i18n-aria-label="nav.menuClose" aria-label="Close menu"></button>
+    <button class="oh-menu__backdrop" type="button" data-oh-menu-close data-oh-i18n-aria-label="nav.menuClose"
+      aria-label="Close menu"></button>
     <aside class="oh-menu__panel" data-oh-i18n-aria-label="nav.menuLabel" aria-label="OpaHiFi menu">
       <header class="oh-menu__header">
         <p class="oh-eyebrow" data-oh-i18n="home.eyebrow">OpaHiFi</p>
-        <button class="oh-menu__close" type="button" data-oh-menu-close data-oh-i18n-aria-label="nav.menuClose" aria-label="Close menu">
+        <button class="oh-menu__close" type="button" data-oh-menu-close data-oh-i18n-aria-label="nav.menuClose"
+          aria-label="Close menu">
           <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
       </header>
-      <nav class="oh-menu__groups" data-oh-nav-surface="menu" data-oh-i18n-aria-label="nav.sectionsLabel" aria-label="OpaHiFi sections"></nav>
+      <nav class="oh-menu__groups" data-oh-nav-surface="menu" data-oh-i18n-aria-label="nav.sectionsLabel"
+        aria-label="OpaHiFi sections"></nav>
     </aside>
   </div>
 
@@ -45,25 +48,19 @@
       <div class="oh-hero__glow" aria-hidden="true"></div>
       <div class="oh-shell oh-hero__content">
         <figure class="oh-hero__art">
-          <img class="oh-hero__art-image" src="./img/hero/opa_water_fire.png" alt="Opa surrounded by blue water and orange fire" data-oh-i18n-alt="hero.imageAlt">
+          <img class="oh-hero__art-image" src="./img/hero/opa_water_fire.png"
+            alt="Opa surrounded by blue water and orange fire" data-oh-i18n-alt="hero.imageAlt">
         </figure>
         <div class="oh-hero__title-stack">
-          <img class="oh-hero__title-image" src="./img/hero/blues_on_fire.png" alt="Blues On Fire" data-oh-i18n-alt="hero.titleImageAlt">
+          <img class="oh-hero__title-image" src="./img/hero/blues_on_fire.png" alt="Blues On Fire"
+            data-oh-i18n-alt="hero.titleImageAlt">
           <p class="oh-hero__tagline" data-oh-i18n="hero.tagline">Dance from the pyre</p>
         </div>
-        <p class="oh-hero__copy">
-          <span data-oh-i18n="hero.copyTop">Scroll down for the full experience</span>
-          <br>
-          <span data-oh-i18n="hero.copyBeforeSkip">or click</span>
-          <a class="oh-button oh-button--secondary oh-hero__skip" href="#oh-home" data-oh-scroll data-oh-i18n="hero.homeCta">Skip</a>
-          <span data-oh-i18n="hero.copyAfterSkip">to go home.</span>
-        </p>
-        <div class="oh-actions oh-actions--scroll">
-          <a class="oh-scroll-cue" href="#oh-home" data-oh-scroll data-oh-i18n-aria-label="hero.scrollLabel" aria-label="Scroll to home">
-            <span class="oh-scroll-cue__arrow" aria-hidden="true"></span>
-            <span class="oh-scroll-cue__arrow" aria-hidden="true"></span>
-            <span class="oh-scroll-cue__arrow" aria-hidden="true"></span>
-          </a>
+        <div class="oh-actions oh-actions--hero">
+          <a class="oh-button oh-button--primary" href="#oh-home" data-oh-scroll data-oh-i18n="hero.exploreCta">Explore
+            OpaHiFi</a>
+          <a class="oh-button oh-button--secondary" href="#songography" data-oh-scroll
+            data-oh-i18n="hero.listenCta">Listen Now</a>
         </div>
       </div>
     </section>
@@ -73,7 +70,8 @@
         <div class="oh-shell oh-journey-entrance__content">
           <p class="oh-eyebrow" data-oh-i18n="sections.songology.eyebrow">Scroll between the lines</p>
           <h2 class="oh-section-title" data-oh-i18n="sections.songology.title">Songology</h2>
-          <p class="oh-section-copy" data-oh-i18n="sections.songology.copy">Keep scrolling. Each song opens its own world, then hands you directly to the
+          <p class="oh-section-copy" data-oh-i18n="sections.songology.copy">Keep scrolling. Each song opens its own
+            world, then hands you directly to the
             next one.</p>
         </div>
       </div>
@@ -84,8 +82,10 @@
         <div class="oh-shell oh-journey-exit__content">
           <p class="oh-eyebrow" data-oh-i18n="journeyExit.eyebrow">Three worlds later</p>
           <h2 class="oh-section-title" data-oh-i18n="journeyExit.title">The ride ends. OpaHiFi opens.</h2>
-          <p class="oh-section-copy" data-oh-i18n="journeyExit.copy">Explore every section without leaving the continuous page.</p>
-          <a class="oh-button oh-button--primary" href="#oh-home" data-oh-scroll data-oh-i18n="journeyExit.cta">Enter Home</a>
+          <p class="oh-section-copy" data-oh-i18n="journeyExit.copy">Explore every section without leaving the
+            continuous page.</p>
+          <a class="oh-button oh-button--primary" href="#oh-home" data-oh-scroll data-oh-i18n="journeyExit.cta">Enter
+            Home</a>
         </div>
       </div>
     </section>
@@ -95,42 +95,51 @@
         <p class="oh-eyebrow" data-oh-i18n="home.eyebrow">OpaHiFi</p>
         <h2 class="oh-section-title" data-oh-i18n="home.title">Now what?!</h2>
         <p class="oh-home__copy" data-oh-i18n="home.copy">The songs, the lyrics, the story, and everything OpaHiFi.</p>
-        <nav class="oh-sitemap" data-oh-nav-surface="home" data-oh-i18n-aria-label="nav.homeSitemapLabel" aria-label="OpaHiFi sitemap"></nav>
+        <nav class="oh-sitemap" data-oh-nav-surface="home" data-oh-i18n-aria-label="nav.homeSitemapLabel"
+          aria-label="OpaHiFi sitemap"></nav>
       </div>
     </section>
 
     <section class="oh-screen oh-songography" id="songography">
       <div class="ohg-shell">
         <header class="ohg-heading">
-          <p class="oh-eyebrow" data-oh-i18n="sections.songography.eyebrow">Songs catalog: versions, platform links &amp; lyrics</p>
+          <p class="oh-eyebrow" data-oh-i18n="sections.songography.eyebrow">Songs catalog: versions, platform links
+            &amp; lyrics</p>
           <h2 class="ohg-title" data-oh-i18n="sections.songography.title">Songography</h2>
         </header>
-        <div class="ohg-grid" id="oh-songography-grid" data-oh-i18n-aria-label="songography.ariaLabel" aria-label="OpaHiFi songography"></div>
+        <div class="ohg-grid" id="oh-songography-grid" data-oh-i18n-aria-label="songography.ariaLabel"
+          aria-label="OpaHiFi songography"></div>
       </div>
     </section>
 
     <section class="oh-screen oh-connect" id="oh-connect">
       <div class="oh-shell oh-follow">
         <div class="oh-follow__profile">
-          <p class="oh-eyebrow" data-oh-i18n="sections.follow.eyebrow">Find OpaHiFi across music and social platforms</p>
+          <p class="oh-eyebrow" data-oh-i18n="sections.follow.eyebrow">Find OpaHiFi across music and social platforms
+          </p>
           <h2 class="oh-section-title" data-oh-i18n="sections.follow.title">Follow / Contact</h2>
         </div>
-        <img class="oh-follow__image" src="./img/follow/opa_fans.png" alt="OpaHiFi fans" width="1254" height="1254" loading="lazy">
+        <img class="oh-follow__image" src="./img/follow/opa_fans.png" alt="OpaHiFi fans" width="1254" height="1254"
+          loading="lazy">
 
         <div class="oh-socials" aria-label="OpaHiFi links">
           <section class="oh-socials__group" aria-labelledby="oh-socials-listen">
             <h3 class="oh-socials__title" id="oh-socials-listen">Artist Pages</h3>
             <div class="oh-socials__row">
-              <a class="oh-socials__link" href="https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
+              <a class="oh-socials__link" href="https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP" target="_blank"
+                rel="noopener noreferrer" aria-label="Spotify">
                 <i class="fa-brands fa-spotify" aria-hidden="true"></i>
               </a>
-              <a class="oh-socials__link" href="https://music.apple.com/us/artist/opahifi/1867221913" target="_blank" rel="noopener noreferrer" aria-label="Apple Music">
+              <a class="oh-socials__link" href="https://music.apple.com/us/artist/opahifi/1867221913" target="_blank"
+                rel="noopener noreferrer" aria-label="Apple Music">
                 <i class="fa-brands fa-apple" aria-hidden="true"></i>
               </a>
-              <a class="oh-socials__link" href="https://music.youtube.com/channel/UCyCvRtCK73bbnKqSzC1FOVA" target="_blank" rel="noopener noreferrer" aria-label="YouTube Music">
+              <a class="oh-socials__link" href="https://music.youtube.com/channel/UCyCvRtCK73bbnKqSzC1FOVA"
+                target="_blank" rel="noopener noreferrer" aria-label="YouTube Music">
                 <i class="fa-solid fa-play" aria-hidden="true"></i>
               </a>
-              <a class="oh-socials__link" href="https://music.amazon.com/artists/B0GCXHGG79/opahifi" target="_blank" rel="noopener noreferrer" aria-label="Amazon Music">
+              <a class="oh-socials__link" href="https://music.amazon.com/artists/B0GCXHGG79/opahifi" target="_blank"
+                rel="noopener noreferrer" aria-label="Amazon Music">
                 <i class="fa-brands fa-amazon" aria-hidden="true"></i>
               </a>
             </div>
@@ -139,13 +148,16 @@
           <section class="oh-socials__group" aria-labelledby="oh-socials-connect">
             <h3 class="oh-socials__title" id="oh-socials-connect">Socials</h3>
             <div class="oh-socials__row">
-              <a class="oh-socials__link" href="https://instagram.com/opahifi" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a class="oh-socials__link" href="https://instagram.com/opahifi" target="_blank" rel="noopener noreferrer"
+                aria-label="Instagram">
                 <i class="fa-brands fa-instagram" aria-hidden="true"></i>
               </a>
-              <a class="oh-socials__link" href="https://www.youtube.com/@OpaHiFi" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <a class="oh-socials__link" href="https://www.youtube.com/@OpaHiFi" target="_blank"
+                rel="noopener noreferrer" aria-label="YouTube">
                 <i class="fa-brands fa-youtube" aria-hidden="true"></i>
               </a>
-              <a class="oh-socials__link" href="https://tiktok.com/@opahifi" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <a class="oh-socials__link" href="https://tiktok.com/@opahifi" target="_blank" rel="noopener noreferrer"
+                aria-label="TikTok">
                 <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
               </a>
             </div>
@@ -164,12 +176,15 @@
         <p class="oh-eyebrow" data-oh-i18n="sections.songovision.eyebrow">Videos, visuals, and moving OpaHiFi worlds</p>
         <h2 class="oh-section-title" data-oh-i18n="sections.songovision.title">Songovision</h2>
         <div class="oh-video-grid" role="list" aria-label="OpaHiFi videos">
-          <a class="oh-video-card oh-video-card--meet" href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9"
-            target="_blank" rel="noopener noreferrer" aria-label="Watch Meet Opa" role="listitem">
+          <a class="oh-video-card oh-video-card--meet"
+            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9" target="_blank"
+            rel="noopener noreferrer" aria-label="Watch Meet Opa" role="listitem">
             <span class="oh-video-scene" aria-hidden="true">
-              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-meet-bg.png" alt="" loading="lazy">
+              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-meet-bg.png" alt=""
+                loading="lazy">
               <span class="oh-video-watch">
-                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-meet.png" alt="" loading="lazy">
+                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-meet.png" alt=""
+                  loading="lazy">
                 <i class="fa-solid fa-play" aria-hidden="true"></i>
                 <span class="oh-video-watch__label">Meet Opa!</span>
               </span>
@@ -179,9 +194,11 @@
           <a class="oh-video-card" href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T"
             target="_blank" rel="noopener noreferrer" aria-label="Watch Video Clips" role="listitem">
             <span class="oh-video-scene" aria-hidden="true">
-              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-video-bg.png" alt="" loading="lazy">
+              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-video-bg.png" alt=""
+                loading="lazy">
               <span class="oh-video-watch">
-                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-video.png" alt="" loading="lazy">
+                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-video.png" alt=""
+                  loading="lazy">
                 <i class="fa-solid fa-play" aria-hidden="true"></i>
                 <span class="oh-video-watch__label">Video Clips</span>
               </span>
@@ -191,9 +208,11 @@
           <a class="oh-video-card" href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA"
             target="_blank" rel="noopener noreferrer" aria-label="Watch Lyrics Shorts" role="listitem">
             <span class="oh-video-scene" aria-hidden="true">
-              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-lyrics-bg.png" alt="" loading="lazy">
+              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-lyrics-bg.png" alt=""
+                loading="lazy">
               <span class="oh-video-watch">
-                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-lyrics.png" alt="" loading="lazy">
+                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-lyrics.png" alt=""
+                  loading="lazy">
                 <i class="fa-solid fa-play" aria-hidden="true"></i>
                 <span class="oh-video-watch__label">Lyrics Shorts</span>
               </span>
@@ -208,91 +227,62 @@
         <div class="opa-about-track" data-opa-about-track>
           <article class="opa-about-slide opa-about-slide-1">
             <div class="opa-about-orbit" aria-hidden="true"></div>
-            <p class="opa-about-kicker">About OpaHiFi</p>
+            <p class="opa-about-kicker">7% Nonsense</p>
             <h2 class="opa-about-heading">
-              Music
-              <span class="opa-about-heading-outline">with a world inside</span>
+              100% Human
+              <span class="opa-about-heading-outline">Lyrics</span>
             </h2>
             <p class="opa-about-copy">
-              OpaHiFi turns pressure, chaos, heartbreak, bots, bad advice, weird thoughts, and very human feelings into
-              <span class="opa-about-copy-highlight">songs worth dancing through.</span>
+              OpaHiFi lyrics are written by a human, <br />based on human experience, <br />from a human perspective.
+              <br /> <br />
+              Every word is there for a reason, making the result 100% authentic and 7% nonsense.
+              <span class="opa-about-copy-highlight">but human nonsense of course.</span>
             </p>
           </article>
 
           <article class="opa-about-slide opa-about-slide-2">
             <div class="opa-about-orbit" aria-hidden="true"></div>
-            <p class="opa-about-kicker">Why it exists</p>
+            <p class="opa-about-kicker">Dance thru the meltdowns</p>
             <h2 class="opa-about-heading">
-              Feel it.
-              <span class="opa-about-heading-outline">Then move.</span>
+              Real Life,
+              <span class="opa-about-heading-outline">Remixed</span>
             </h2>
             <p class="opa-about-copy">
-              Life gets loud, confusing, funny, painful, and absurd. OpaHiFi does not pretend otherwise. It finds the beat
-              inside the mess and gives it somewhere to go.
+              Anxiety, heartbreak, fake connection, bots, bad advice, and everyday chaos.<br />
+              The strange, painful, and funny parts of being human.<br /><br />
+              OpaHiFi turns those meltdowns upside down—channeling the mess into music, laughter, and positive energy.
             </p>
           </article>
 
           <article class="opa-about-slide opa-about-slide-3">
             <div class="opa-about-orbit" aria-hidden="true"></div>
-            <p class="opa-about-kicker">How it works</p>
+            <p class="opa-about-kicker">Small pkg, Big fun!</p>
             <h2 class="opa-about-heading">
-              Truth
-              <span class="opa-about-heading-outline">with rhythm</span>
-            </h2>
-            <div class="opa-about-equation" aria-label="Truth plus absurdity plus rhythm equals Opa">
-              <span class="opa-about-pill">Truth</span>
-              <span class="opa-about-pill opa-about-pill-symbol">+</span>
-              <span class="opa-about-pill">Absurdity</span>
-              <span class="opa-about-pill opa-about-pill-symbol">+</span>
-              <span class="opa-about-pill">Rhythm</span>
-              <span class="opa-about-pill">= Opa!</span>
-            </div>
-          </article>
-
-          <article class="opa-about-slide opa-about-slide-4">
-            <div class="opa-about-orbit" aria-hidden="true"></div>
-            <p class="opa-about-kicker">Who is Opa?</p>
-            <h2 class="opa-about-heading">
-              Not a guru.
-              <span class="opa-about-heading-outline">A guide.</span>
-            </h2>
-            <div class="opa-about-quote">
-              "Pressure is the rhythm.<br>
-              Anxiety's the beat."
-            </div>
-          </article>
-
-          <article class="opa-about-slide opa-about-slide-5">
-            <div class="opa-about-orbit" aria-hidden="true"></div>
-            <p class="opa-about-kicker">The OpaHiFi point of view</p>
-            <h2 class="opa-about-heading">
-              Keep the weird.
-              <span class="opa-about-heading-outline">Choose the beat.</span>
+              Who's
+              <span class="opa-about-heading-outline">Opa?</span>
             </h2>
             <p class="opa-about-copy">
-              Make pain dance. Question the obvious. Laugh before the breakdown. Choose kindness without becoming boring.
-              And when life gets too serious, <strong>shout Opa and keep moving.</strong>
+              Opa is the big-hearted force behind OpaHiFi, determined to make the world a better place for everyone, but
+              with absolutely no patience for bullcrap.
             </p>
           </article>
         </div>
 
-        <div class="opa-about-swipe">Swipe</div>
-
         <div class="opa-about-controls">
-          <button class="opa-about-arrow" type="button" aria-label="Previous slide" data-opa-about-prev>&lsaquo;</button>
+          <button class="opa-about-arrow" type="button" aria-label="Previous slide"
+            data-opa-about-prev>&lsaquo;</button>
 
           <div class="opa-about-progress">
             <div class="opa-about-counter">
-              <strong data-opa-about-label>About OpaHiFi</strong>
-              <span data-opa-about-count>01 / 05</span>
+              <strong data-opa-about-label>100% Human Lyrics</strong>
+              <span data-opa-about-count>01 / 03</span>
             </div>
 
             <div class="opa-about-bars" aria-label="Choose slide">
-              <button class="opa-about-bar" type="button" aria-label="Slide 1" aria-current="true" data-opa-about-bar></button>
+              <button class="opa-about-bar" type="button" aria-label="Slide 1" aria-current="true"
+                data-opa-about-bar></button>
               <button class="opa-about-bar" type="button" aria-label="Slide 2" data-opa-about-bar></button>
               <button class="opa-about-bar" type="button" aria-label="Slide 3" data-opa-about-bar></button>
-              <button class="opa-about-bar" type="button" aria-label="Slide 4" data-opa-about-bar></button>
-              <button class="opa-about-bar" type="button" aria-label="Slide 5" data-opa-about-bar></button>
             </div>
           </div>
 
@@ -305,7 +295,8 @@
   <section class="ohg-detail" id="ohg-detail" role="dialog" aria-modal="true" aria-hidden="true"
     aria-labelledby="ohg-detail-title">
     <header class="ohg-detail__header">
-      <button class="ohg-icon-button" type="button" data-ohg-action="share" data-oh-i18n-aria-label="songography.shareLabel" aria-label="Share song">
+      <button class="ohg-icon-button" type="button" data-ohg-action="share"
+        data-oh-i18n-aria-label="songography.shareLabel" aria-label="Share song">
         <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
       </button>
     </header>

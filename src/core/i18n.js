@@ -17,11 +17,8 @@ export const OH_I18N = Object.freeze({
       imageAlt: "Opa surrounded by blue water and orange fire",
       titleImageAlt: "Blues On Fire",
       tagline: "DANCE FROM THE PYRE",
-      copyTop: "Scroll down for the full experience",
-      copyBeforeSkip: "or click",
-      copyAfterSkip: "to go home.",
-      homeCta: "Skip",
-      scrollLabel: "Scroll to home"
+      exploreCta: "Explore OpaHiFi",
+      listenCta: "Listen Now"
     }),
     journeyExit: Object.freeze({
       eyebrow: "Three worlds later",

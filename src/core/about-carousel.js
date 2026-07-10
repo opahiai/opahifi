@@ -10,11 +10,9 @@ class OhAboutCarousel {
     this.touchDeltaX = 0;
     this.isVisible = false;
     this.labels = [
-      "About OpaHiFi",
-      "Why it exists",
-      "How it works",
-      "Who is Opa?",
-      "The point of view"
+      "100% Human Lyrics",
+      "Real Life, Remixed",
+      "Who's Opa?"
     ];
 
     this.handleKeydown = this.handleKeydown.bind(this);

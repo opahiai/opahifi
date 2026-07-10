@@ -487,7 +487,6 @@
   letter-spacing: -0.055em;
 }
 
-.oh-hero__copy,
 .oh-section-copy {
   max-width: 34rem;
   margin-bottom: 1.5rem;
@@ -496,21 +495,16 @@
   line-height: 1.6;
 }
 
-.oh-hero__copy {
-  margin-top: clamp(0.65rem, 2dvh, 1.35rem);
-  margin-bottom: 0.25rem;
-  font-size: var(--oh-type-body);
-}
-
-.oh-actions--scroll {
-  width: auto;
-  gap: 0;
-}
-
 .oh-actions {
-  display: grid;
-  width: min(100%, 25rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: auto;
   gap: 0.65rem;
+}
+
+.oh-actions--hero {
+  margin-top: clamp(1.5rem, 2dvh, 2rem);
 }
 
 .oh-button {
@@ -533,71 +527,6 @@
 .oh-button--secondary {
   border-color: var(--oh-border);
   background: color-mix(in srgb, var(--ohf-text) 6%, transparent);
-}
-
-.oh-button.oh-hero__skip {
-  min-height: 0;
-  margin-inline: 0.12rem;
-  padding: 0.06rem 0.35rem;
-  border-color: color-mix(in srgb, var(--ohf-text-muted) 32%, transparent);
-  border-radius: 0.45rem;
-  background: transparent;
-  color: var(--ohf-text);
-  font-size: inherit;
-  line-height: 1;
-  vertical-align: middle;
-}
-
-.oh-scroll-cue {
-  display: grid;
-  justify-items: center;
-  gap: 0.1rem;
-  min-width: 3rem;
-  min-height: 3rem;
-  padding: 0.45rem;
-  place-content: center;
-  color: var(--oh-text);
-}
-
-.oh-scroll-cue__arrow {
-  width: 0.85rem;
-  height: 0.85rem;
-  border-right: 0.18rem solid currentColor;
-  border-bottom: 0.18rem solid currentColor;
-  opacity: 0;
-  rotate: 45deg;
-  animation: oh-scroll-arrow 1.45s infinite;
-}
-
-.oh-scroll-cue__arrow:nth-child(2) {
-  animation-delay: 0.16s;
-}
-
-.oh-scroll-cue__arrow:nth-child(3) {
-  animation-delay: 0.32s;
-}
-
-@keyframes oh-scroll-arrow {
-  0% {
-    opacity: 0;
-    translate: 0 -0.35rem;
-  }
-
-  35% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    translate: 0 0.35rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .oh-scroll-cue__arrow {
-    opacity: 1;
-    animation: none;
-  }
 }
 
 .oh-journey-entrance {
@@ -1014,18 +943,10 @@
 }
 
 .opa-about-slide-2 {
-  --opa-about-slide-color: #3d43ff;
-}
-
-.opa-about-slide-3 {
   --opa-about-slide-color: var(--ohf-violet);
 }
 
-.opa-about-slide-4 {
-  --opa-about-slide-color: #9d3d89;
-}
-
-.opa-about-slide-5 {
+.opa-about-slide-3 {
   --opa-about-slide-color: #e75b5b;
 }
 
@@ -1082,9 +1003,7 @@
   -webkit-text-stroke: 1.2px var(--ohf-text);
 }
 
-.opa-about-copy,
-.opa-about-equation,
-.opa-about-quote {
+.opa-about-copy {
   width: min(100%, 23rem);
   margin: auto 0 0;
 }
@@ -1108,40 +1027,6 @@
 .opa-about-copy-highlight {
   color: var(--opa-about-slide-color);
   font-weight: 950;
-}
-
-.opa-about-equation {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  gap: clamp(0.28rem, 1dvh, 0.42rem);
-}
-
-.opa-about-pill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: clamp(1.95rem, 5.8dvh, 2.35rem);
-  padding: 0.4rem 0.6rem;
-  border: 1px solid color-mix(in srgb, var(--opa-about-slide-color) 48%, var(--ohf-white) 12%);
-  border-radius: var(--oh-radius-pill);
-  background: color-mix(in srgb, var(--ohf-white) 5.5%, transparent);
-  font-size: clamp(0.68rem, 2dvh, 0.78rem);
-  font-weight: 900;
-  text-align: center;
-}
-
-.opa-about-pill-symbol {
-  padding-inline: 0;
-  border: 0;
-  background: none;
-  color: var(--oh-muted);
-}
-
-.opa-about-quote {
-  font-size: clamp(1.2rem, 6vw, 2rem);
-  font-weight: 950;
-  line-height: 1.04;
-  letter-spacing: -0.05em;
 }
 
 .opa-about-controls {
@@ -1229,18 +1114,10 @@
 }
 
 .opa-about-bar:nth-child(2)::before {
-  background: #3d43ff;
-}
-
-.opa-about-bar:nth-child(3)::before {
   background: var(--ohf-violet);
 }
 
-.opa-about-bar:nth-child(4)::before {
-  background: #9d3d89;
-}
-
-.opa-about-bar:nth-child(5)::before {
+.opa-about-bar:nth-child(3)::before {
   background: #e75b5b;
 }
 
@@ -1248,16 +1125,6 @@
   width: 100%;
 }
 
-.opa-about-swipe {
-  position: absolute;
-  top: 0.7rem;
-  right: 0.8rem;
-  color: color-mix(in srgb, var(--ohf-white) 38%, transparent);
-  font-size: 0.56rem;
-  font-weight: 900;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
 
 @media (prefers-reduced-motion: reduce) {
   .opa-about-track,
@@ -1281,11 +1148,6 @@
 @media (min-width: 48rem) {
   .oh-navbar {
     padding-inline: 2rem;
-  }
-
-  .oh-actions {
-    display: flex;
-    width: auto;
   }
 
   .oh-videos {
@@ -1373,9 +1235,7 @@
     font-size: clamp(4rem, 8vw, 8rem);
   }
 
-  .opa-about-copy,
-  .opa-about-equation,
-  .opa-about-quote {
+  .opa-about-copy {
     grid-column: 2;
     grid-row: 1 / span 2;
     align-self: center;
@@ -1388,15 +1248,6 @@
     padding: 1rem 1.15rem;
     font-size: clamp(1rem, 1.45vw, 1.35rem);
     line-height: 1.48;
-  }
-
-  .opa-about-pill {
-    min-height: 3rem;
-    font-size: 1rem;
-  }
-
-  .opa-about-quote {
-    font-size: clamp(2rem, 3.8vw, 4.2rem);
   }
 
   .opa-about-orbit {
