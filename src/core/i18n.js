@@ -59,7 +59,7 @@ export const OH_I18N = Object.freeze({
       }),
       about: Object.freeze({
         title: "About OpaHiFi",
-        eyebrow: "What, why, and how?",
+        eyebrow: "Really?!, What?, and Who?",
         copy: "OpaHiFi turns songs into visual, scroll-driven experiences built for mobile first.",
         href: "#oh-about",
         icon: "fa-circle-info",
