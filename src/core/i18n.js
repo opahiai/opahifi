@@ -74,7 +74,7 @@ export const OH_I18N = Object.freeze({
       }),
       follow: Object.freeze({
         title: "Follow OpaHiFi",
-        eyebrow: "Find OpaHiFi across music and social platforms",
+        eyebrow: "Music and social platforms",
         description: "Find OpaHiFi across music and social platforms.",
         href: "#oh-connect",
         icon: "fa-bolt",
@@ -90,7 +90,7 @@ export const OH_I18N = Object.freeze({
       shop: Object.freeze({
         title: "Shop OpaHiFi",
         description: "Merch, objects, and future OpaHiFi drops.",
-        href: "#oh-shop",
+        href: "https://shop.opahifi.com/",
         icon: "fa-bag-shopping",
         group: "opahifi"
       })
