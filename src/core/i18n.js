@@ -21,7 +21,7 @@ export const OH_I18N = Object.freeze({
       copyBeforeSkip: "or click",
       copyAfterSkip: "to go home.",
       homeCta: "Skip",
-      scrollLabel: "Scroll down for the full experience"
+      scrollLabel: "Scroll to home"
     }),
     journeyExit: Object.freeze({
       eyebrow: "Three worlds later",
@@ -98,7 +98,6 @@ export const OH_I18N = Object.freeze({
 });
 
 export const OH_NAV_SECTION_KEYS = Object.freeze([
-  "songology",
   "songography",
   "songovision",
   "about",

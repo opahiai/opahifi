@@ -70,6 +70,8 @@ class OhGsapManager {
   }
 
   createEntranceAnimation(gsap, ScrollTrigger) {
+    if (document.querySelector("#oh-journey[hidden]")) return;
+
     gsap.from(".oh-journey-entrance__content > *", {
       y: 60,
       opacity: 0,
@@ -85,6 +87,8 @@ class OhGsapManager {
   }
 
   createOpaverseAnimations(gsap, ScrollTrigger) {
+    if (document.querySelector("#oh-journey[hidden]")) return;
+
     document.querySelectorAll("[data-oh-opaverse]").forEach((scene) => {
       const presetName = scene.dataset.ohPreset;
       const preset = OH_PRESETS[presetName] ?? OH_PRESETS.pressure;
