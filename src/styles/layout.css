@@ -15,12 +15,22 @@
 }
 
 .oh-navbar__brand {
+  display: inline-flex;
+  align-items: baseline;
   flex: 0 0 auto;
   font-family: var(--oh-font-display);
   font-size: var(--oh-nav-logo-size);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.04em;
+}
+
+.oh-navbar__brand-opa {
+  font-size: 1.18em;
+}
+
+.oh-navbar__brand-hifi {
+  font-size: 1em;
 }
 
 .oh-menu-button,
@@ -146,7 +156,10 @@
 }
 
 .oh-menu .oh-nav-option {
-  display: block;
+  display: grid;
+  grid-template-columns: clamp(1.6rem, 7vw, 3.2rem) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(0.75rem, 3vw, 1.35rem);
   box-sizing: border-box;
   width: 100%;
   min-height: auto;
@@ -174,7 +187,12 @@
 }
 
 .oh-menu .oh-nav-option i {
-  display: none;
+  display: grid;
+  width: clamp(1.2rem, 5vw, 2.2rem);
+  height: clamp(1.2rem, 5vw, 2.2rem);
+  place-items: center;
+  color: var(--ohf-white);
+  font-size: clamp(0.9rem, 3.5vw, 1.35rem);
 }
 
 .oh-menu .oh-nav-option span {
