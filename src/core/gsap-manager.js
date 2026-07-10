@@ -63,15 +63,14 @@ class OhGsapManager {
 
   createHeroAnimation(gsap) {
     gsap.timeline({ defaults: { ease: "power3.out" } })
-      .from(".oh-opa", { scale: 0.7, opacity: 0, duration: 0.8 })
-      .from(".oh-hero .oh-eyebrow", { y: 20, opacity: 0, duration: 0.45 }, "-=0.35")
-      .from(".oh-hero__title", { y: 38, opacity: 0, duration: 0.65 }, "-=0.25")
+      .from(".oh-hero__art", { scale: 0.92, opacity: 0, duration: 0.8 })
+      .from(".oh-hero__title-stack", { y: 38, opacity: 0, duration: 0.65 }, "-=0.25")
       .from(".oh-hero__copy", { y: 24, opacity: 0, duration: 0.5 }, "-=0.3")
       .from(".oh-hero .oh-button", { y: 18, opacity: 0, duration: 0.4, stagger: 0.08 }, "-=0.2");
   }
 
   createEntranceAnimation(gsap, ScrollTrigger) {
-    gsap.from(".oh-journey-entrance .oh-split > *", {
+    gsap.from(".oh-journey-entrance__content > *", {
       y: 60,
       opacity: 0,
       duration: 1,
