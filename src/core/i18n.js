@@ -65,7 +65,7 @@ export const OH_I18N = Object.freeze({
       }),
       about: Object.freeze({
         title: "About OpaHiFi",
-        eyebrow: "The idea, the sound, and the world behind it",
+        eyebrow: "What, why, and how?",
         description: "The idea, the sound, and the world behind it.",
         copy: "OpaHiFi turns songs into visual, scroll-driven experiences built for mobile first.",
         href: "#oh-about",
@@ -78,13 +78,6 @@ export const OH_I18N = Object.freeze({
         description: "Find OpaHiFi across music and social platforms.",
         href: "#oh-connect",
         icon: "fa-bolt",
-        group: "opahifi"
-      }),
-      contact: Object.freeze({
-        title: "Contact OpaHiFi",
-        description: ".",
-        href: "mailto:hello@example.com",
-        icon: "fa-envelope",
         group: "opahifi"
       }),
       shop: Object.freeze({
@@ -116,7 +109,6 @@ export const OH_NAV_SECTION_KEYS = Object.freeze([
   "songovision",
   "about",
   "follow",
-  "contact",
   "shop"
 ]);
 
