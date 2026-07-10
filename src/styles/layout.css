@@ -812,6 +812,20 @@
   height: clamp(1.35rem, 6vw, 1.75rem);
 }
 
+.oh-socials__email {
+  justify-self: center;
+  color: var(--ohf-text);
+  font-size: clamp(0.9rem, 3.6vw, 1rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.oh-socials__email:hover,
+.oh-socials__email:focus-visible {
+  color: var(--ohf-orange);
+}
+
 .oh-link-row {
   display: flex;
   flex-wrap: wrap;
