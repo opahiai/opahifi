@@ -56,7 +56,7 @@ export const OH_I18N = Object.freeze({
       }),
       songovision: Object.freeze({
         title: "Songovision",
-        eyebrow: "Videos, visuals, and moving OpaHiFi worlds",
+        eyebrow: "Videos, clips & lyrics",
         description: "Videos, visuals, and moving OpaHiFi worlds.",
         href: "#oh-videos",
         icon: "fa-tv",
@@ -82,7 +82,7 @@ export const OH_I18N = Object.freeze({
       }),
       contact: Object.freeze({
         title: "Contact OpaHiFi",
-        description: "Reach out for notes, ideas, and collaborations.",
+        description: ".",
         href: "mailto:hello@example.com",
         icon: "fa-envelope",
         group: "opahifi"
