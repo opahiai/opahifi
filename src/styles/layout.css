@@ -915,6 +915,29 @@
   overflow: hidden;
 }
 
+.opa-about-header {
+  position: absolute;
+  z-index: 8;
+  top: clamp(0.9rem, 2.5dvh, 1.25rem);
+  left: 1rem;
+  right: 1rem;
+  pointer-events: none;
+}
+
+.opa-about-header .oh-eyebrow {
+  margin-bottom: 0.45rem;
+}
+
+.opa-about-title {
+  max-width: 10ch;
+  margin: 0;
+  color: var(--ohf-text);
+  font-size: clamp(2.15rem, 10vw, 4.6rem);
+  font-weight: 1000;
+  line-height: 0.9;
+  letter-spacing: -0.075em;
+}
+
 .opa-about-track {
   display: flex;
   transition: transform 0.68s cubic-bezier(0.22, 0.9, 0.24, 1);
@@ -932,7 +955,7 @@
   min-width: 0;
   height: 100%;
   overflow: hidden;
-  padding: clamp(0.9rem, 2.5dvh, 1.25rem) 1rem calc(5.8rem + env(safe-area-inset-bottom));
+  padding: clamp(8rem, 24dvh, 10.2rem) 1rem calc(5.8rem + env(safe-area-inset-bottom));
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--ohf-white) 2.5%, transparent), transparent 34%),
     linear-gradient(150deg, color-mix(in srgb, var(--opa-about-slide-color) 14%, transparent), transparent 45%);
@@ -1214,13 +1237,23 @@
     text-align: center;
   }
 
+  .opa-about-header {
+    top: clamp(1.5rem, 4dvh, 3rem);
+    left: clamp(2rem, 5vw, 5rem);
+    right: clamp(2rem, 5vw, 5rem);
+  }
+
+  .opa-about-title {
+    font-size: clamp(3.4rem, 5.8vw, 5.8rem);
+  }
+
   .opa-about-slide {
     display: grid;
     grid-template-columns: minmax(18rem, 0.82fr) minmax(18rem, 1.18fr);
     grid-template-rows: auto 1fr;
     align-items: center;
     column-gap: clamp(2rem, 6vw, 6rem);
-    padding: clamp(1.5rem, 4dvh, 3rem) clamp(2rem, 5vw, 5rem) 6.6rem;
+    padding: clamp(9rem, 23dvh, 12rem) clamp(2rem, 5vw, 5rem) 6.6rem;
   }
 
   .opa-about-kicker {
