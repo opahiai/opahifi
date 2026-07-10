@@ -67,6 +67,10 @@ body {
   color: var(--oh-text);
 }
 
+body.is-menu-open {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
   text-decoration: none;

@@ -50,12 +50,14 @@ class OhNavigationManager {
   }
 
   openMenu() {
+    document.body.classList.add("is-menu-open");
     this.menu?.classList.add("is-open");
     this.menu?.setAttribute("aria-hidden", "false");
     this.menuButton?.setAttribute("aria-expanded", "true");
   }
 
   closeMenu() {
+    document.body.classList.remove("is-menu-open");
     this.menu?.classList.remove("is-open");
     this.menu?.setAttribute("aria-hidden", "true");
     this.menuButton?.setAttribute("aria-expanded", "false");
