@@ -27,9 +27,9 @@ export const OH_I18N = Object.freeze({
       cta: "Enter Home"
     }),
     home: Object.freeze({
-      eyebrow: "OpaHiFi",
-      title: "Now what?!",
-      copy: "The songs, the lyrics, the story, and everything OpaHiFi."
+      eyebrow: "Everything OpaHiFi",
+      title: "Welcome Home",
+      copy: "Listen, watch, follow, contact, and shop OpaHiFi.",
     }),
     sections: Object.freeze({
       songology: Object.freeze({
