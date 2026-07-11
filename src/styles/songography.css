@@ -56,7 +56,8 @@
 .ohg-grid {
   --ohg-gap: clamp(0.35rem, 1.8vw, 0.55rem);
   --ohg-cover-size: clamp(5rem,
-      calc((var(--ohg-songography-width) - 1rem - (var(--ohg-gap) * 2)) / 3),
+      min(calc((var(--ohg-songography-width) - 1rem - (var(--ohg-gap) * 2)) / 3),
+        calc((100dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-title-gap) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * 3)) / 4)),
       8.75rem);
   display: grid;
   grid-template-columns: repeat(3, var(--ohg-cover-size));
@@ -759,7 +760,8 @@
   .ohg-grid {
     --ohg-gap: 0.72rem;
     --ohg-cover-size: clamp(5.5rem,
-        calc((var(--ohg-songography-width) - 2rem - (var(--ohg-gap) * 2)) / 3),
+        min(calc((var(--ohg-songography-width) - 2rem - (var(--ohg-gap) * 2)) / 3),
+          calc((100dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-title-gap) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * 3)) / 4)),
         9.25rem);
   }
 
