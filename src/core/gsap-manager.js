@@ -63,7 +63,13 @@ class OhGsapManager {
   }
 
   prepareInitialStates(gsap) {
+    this.prepareHeroTaglineWords();
+
     gsap.set(".oh-hero__art, .oh-hero__title-stack, .oh-actions--hero .oh-button", {
+      autoAlpha: 0
+    });
+
+    gsap.set(".oh-hero__tagline-word", {
       autoAlpha: 0
     });
 
@@ -95,10 +101,34 @@ class OhGsapManager {
         { y: 42, scale: 0.96, autoAlpha: 0 },
         { y: 0, scale: 1, autoAlpha: 1, duration: 0.9, clearProps: "transform,opacity,visibility" },
         "-=0.48")
+      .fromTo(".oh-hero__tagline-word",
+        { yPercent: 80, autoAlpha: 0 },
+        { yPercent: 0, autoAlpha: 1, duration: 0.48, stagger: 0.075, clearProps: "transform,opacity,visibility" },
+        "-=0.46")
       .fromTo(".oh-actions--hero .oh-button",
         { y: 20, autoAlpha: 0 },
         { y: 0, autoAlpha: 1, duration: 0.58, stagger: 0.1, clearProps: "transform,opacity,visibility" },
         "-=0.36");
+  }
+
+  prepareHeroTaglineWords() {
+    const tagline = document.querySelector(".oh-hero__tagline");
+    if (!tagline || tagline.dataset.ohTaglineSplit === "true") return;
+
+    const words = tagline.textContent.trim().split(/\s+/).filter(Boolean);
+    tagline.innerHTML = words
+      .map((word) => `<span class="oh-hero__tagline-word">${this.escapeHtml(word)}</span>`)
+      .join(" ");
+    tagline.dataset.ohTaglineSplit = "true";
+  }
+
+  escapeHtml(value = "") {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   createEntranceAnimation(gsap, ScrollTrigger) {
