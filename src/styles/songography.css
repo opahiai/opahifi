@@ -5,9 +5,6 @@
   --ohg-title-gap: clamp(0.15rem, 0.75dvh, 0.45rem);
   --ohg-shell-pad-y: clamp(0.35rem, 0.9dvh, 0.75rem);
   --ohg-header-space: calc(var(--ohg-title-height) + var(--ohg-title-gap));
-  --ohg-header-button-size: 2.25rem;
-  --ohg-header-button-track: calc(var(--ohg-header-button-size) + 0.25rem);
-  --ohg-header-icon-size: 0.95rem;
   --ohg-rail-height: clamp(5rem, 10dvh, 6rem);
   --ohg-stage-height: calc(var(--ohg-viewport-height) - (var(--ohg-shell-pad-y) * 2) - var(--ohg-header-space) - var(--ohg-rail-height) - env(safe-area-inset-bottom));
   --ohg-songography-width: min(100vw, 31.25rem);
@@ -216,52 +213,6 @@
 .ohg-detail.is-open {
   visibility: visible;
   pointer-events: auto;
-}
-
-.ohg-detail__header {
-  display: none;
-  position: absolute;
-  z-index: 30;
-  top: calc(-1 * var(--ohg-header-space));
-  right: 0;
-  left: 0;
-  grid-template-columns: var(--ohg-header-button-track) minmax(0, 1fr) var(--ohg-header-button-track);
-  align-items: center;
-  justify-items: center;
-  min-height: var(--ohg-title-height);
-  padding-inline: var(--ohg-stage-padding);
-  border-bottom: 0;
-  background: transparent;
-}
-
-.ohg-detail.is-open .ohg-detail__header {
-  display: grid;
-}
-
-.ohg-icon-button {
-  display: grid;
-  width: var(--ohg-header-button-size);
-  height: var(--ohg-header-button-size);
-  min-height: 0;
-  padding: 0;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--ohf-text-muted) 18%, transparent);
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--ohf-surface) 68%, transparent);
-  color: var(--ohf-text-muted);
-  font-size: var(--ohg-header-icon-size);
-  box-shadow: none;
-  cursor: pointer;
-}
-
-.ohg-detail__header .ohg-icon-button {
-  grid-column: 3;
-  justify-self: end;
-}
-
-.ohg-icon-button:disabled {
-  opacity: 0.22;
-  cursor: default;
 }
 
 .ohg-detail__scroll {
@@ -493,14 +444,23 @@
   flex: 0 0 var(--ohg-platform-button-size);
   width: var(--ohg-platform-button-size);
   height: var(--ohg-platform-button-size);
+  min-height: 0;
+  padding: 0;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--ohf-text-muted) 20%, transparent);
   border-radius: 50%;
   background: transparent;
   color: var(--ohf-white);
   font-size: var(--ohg-platform-font-icon-size);
+  font-family: inherit;
   text-decoration: none;
+  cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ohg-platform.is-disabled {
+  cursor: default;
+  opacity: 0.34;
 }
 
 .ohg-platform svg {
@@ -508,10 +468,31 @@
   height: var(--ohg-platform-icon-size);
 }
 
-.ohg-platform:hover {
+.ohg-platform:not(.is-disabled):hover {
   border-color: color-mix(in srgb, var(--ohf-blue) 78%, transparent);
   background-color: color-mix(in srgb, var(--ohf-blue) 14%, transparent);
   transform: scale(1.05);
+}
+
+.ohg-platform-separator {
+  flex: 0 0 1px;
+  width: 1px;
+  height: calc(var(--ohg-platform-button-size) * 0.64);
+  margin-inline: calc(var(--ohg-platform-gap) * 0.18);
+  border-radius: var(--oh-radius-pill);
+  background: color-mix(in srgb, var(--ohf-white) 32%, transparent);
+}
+
+.ohg-platform--share {
+  border-color: var(--ohf-white);
+  background: var(--ohf-white);
+  color: var(--ohf-bg);
+}
+
+.ohg-platform--share:not(.is-disabled):hover {
+  border-color: var(--ohf-white);
+  background: color-mix(in srgb, var(--ohf-white) 84%, var(--ohf-blue) 16%);
+  color: var(--ohf-bg);
 }
 
 .ohg-lyrics {
@@ -767,11 +748,6 @@
     --ohg-gap: 0.72rem;
     --ohg-grid-side-padding: 2rem;
     --ohg-cover-size: clamp(5.5rem, min(var(--ohg-cover-size-by-width), var(--ohg-cover-size-by-height)), 9.25rem);
-  }
-
-  .ohg-detail__header {
-    min-height: 4rem;
-    padding-inline: 1rem;
   }
 
   .ohg-detail__body {

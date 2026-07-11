@@ -629,7 +629,7 @@ class OhSongographyManager {
   }
 
   renderPlatforms(platforms) {
-    this.platforms.innerHTML = Object.entries(OHG_PLATFORM_CONFIG).map(([key, config]) => {
+    const platformLinks = Object.entries(OHG_PLATFORM_CONFIG).map(([key, config]) => {
       const url = platforms[key];
       if (!url) {
         return `
@@ -655,6 +655,19 @@ class OhSongographyManager {
         </a>
       `;
     }).join("");
+
+    this.platforms.innerHTML = `
+      ${platformLinks}
+      <span class="ohg-platform-separator" aria-hidden="true"></span>
+      <button
+        class="ohg-platform ohg-platform--share"
+        type="button"
+        data-ohg-action="share"
+        aria-label="Share song"
+      >
+        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+      </button>
+    `;
   }
 
   async getLyrics(version) {
