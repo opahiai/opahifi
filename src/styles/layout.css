@@ -33,8 +33,7 @@
   font-size: 1em;
 }
 
-.oh-menu-button,
-.oh-menu__close {
+.oh-menu-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -109,25 +108,6 @@
 .oh-menu.is-open .oh-menu__panel {
   opacity: 1;
   transform: none;
-}
-
-.oh-menu__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.oh-menu__header .oh-eyebrow {
-  margin-bottom: 0;
-}
-
-.oh-menu__close {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-color: transparent;
-  background: transparent;
-  font-size: 1.25rem;
 }
 
 .oh-menu__groups {

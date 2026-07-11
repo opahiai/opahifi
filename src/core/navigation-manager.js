@@ -19,7 +19,7 @@ class OhNavigationManager {
   handleClick(event) {
     const openMenuButton = event.target.closest("[data-oh-menu-open]");
     if (openMenuButton) {
-      this.openMenu();
+      this.toggleMenu();
       return;
     }
 
@@ -49,11 +49,21 @@ class OhNavigationManager {
     if (event.key === "Escape") this.closeMenu();
   }
 
+  toggleMenu() {
+    if (this.menu?.classList.contains("is-open")) {
+      this.closeMenu();
+      return;
+    }
+
+    this.openMenu();
+  }
+
   openMenu() {
     document.body.classList.add("is-menu-open");
     this.menu?.classList.add("is-open");
     this.menu?.setAttribute("aria-hidden", "false");
     this.menuButton?.setAttribute("aria-expanded", "true");
+    this.setMenuButtonState(true);
   }
 
   closeMenu() {
@@ -61,6 +71,16 @@ class OhNavigationManager {
     this.menu?.classList.remove("is-open");
     this.menu?.setAttribute("aria-hidden", "true");
     this.menuButton?.setAttribute("aria-expanded", "false");
+    this.setMenuButtonState(false);
+  }
+
+  setMenuButtonState(isOpen) {
+    const icon = this.menuButton?.querySelector("i");
+    if (!this.menuButton || !icon) return;
+
+    icon.classList.toggle("fa-bars", !isOpen);
+    icon.classList.toggle("fa-xmark", isOpen);
+    this.menuButton.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
   }
 
   scrollTo(target, hash) {
