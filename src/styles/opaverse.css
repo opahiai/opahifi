@@ -1,0 +1,142 @@
+.oh-opaverses {
+  background: var(--oh-bg);
+}
+
+.oh-opaverse {
+  position: relative;
+  min-height: calc(var(--oh-main-height) * 1.8);
+  scroll-margin-top: var(--oh-nav-height);
+  background: var(--oh-scene-bg);
+}
+
+.oh-opaverse__stage {
+  position: sticky;
+  top: var(--oh-nav-height);
+  display: grid;
+  min-height: var(--oh-main-height);
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.oh-opaverse__ambient {
+  position: absolute;
+  z-index: -3;
+  inset: 0;
+  background:
+    radial-gradient(circle at 76% 28%, color-mix(in srgb, var(--oh-scene-primary) 34%, transparent), transparent 32%),
+    radial-gradient(circle at 20% 76%, color-mix(in srgb, var(--oh-scene-secondary) 26%, transparent), transparent 38%),
+    linear-gradient(160deg, color-mix(in srgb, var(--oh-scene-bg) 76%, black), var(--oh-scene-bg));
+}
+
+.oh-opaverse__visual {
+  position: absolute;
+  z-index: -1;
+  top: 13%;
+  right: -12%;
+  width: min(82vw, 38rem);
+  aspect-ratio: 900 / 563;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 1.5rem;
+  background: var(--oh-scene-bg);
+  box-shadow: 0 0 7rem color-mix(in srgb, var(--oh-scene-primary) 36%, transparent);
+  opacity: 0.88;
+}
+
+
+
+
+.oh-opaverse__art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.oh-opaverse__visual-number {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.45rem;
+  color: rgb(255 255 255 / 0.42);
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(3.5rem, 19vw, 9rem);
+  font-weight: 800;
+  letter-spacing: -0.1em;
+  line-height: 0.8;
+  text-shadow: 0 0 2rem rgb(0 0 0 / 0.65);
+}
+
+.oh-opaverse__content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  align-content: end;
+  min-height: var(--oh-main-height);
+  padding-block: clamp(3rem, 9vh, 7rem);
+}
+
+.oh-opaverse__number {
+  margin-bottom: 0.65rem;
+  color: var(--oh-scene-primary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.oh-opaverse__title {
+  max-width: 10ch;
+  margin-bottom: 0.85rem;
+  font-size: clamp(2.65rem, 13vw, 7.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+}
+
+.oh-opaverse__accent {
+  width: min(52vw, 17rem);
+  height: 0.22rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--oh-scene-primary), var(--oh-scene-secondary));
+}
+
+.oh-opaverse__copy {
+  max-width: 31rem;
+  margin-bottom: 1rem;
+  color: rgb(247 248 255 / 0.78);
+  font-size: clamp(0.95rem, 3.8vw, 1.18rem);
+  line-height: 1.55;
+}
+
+.oh-opaverse__quote {
+  max-width: 29rem;
+  margin-bottom: 1rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--oh-scene-primary);
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(1rem, 4.2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+@media (min-width: 48rem) {
+  .oh-opaverse {
+    min-height: calc(var(--oh-main-height) * 2.1);
+  }
+
+  .oh-opaverse__visual {
+    top: 50%;
+    right: 6%;
+    width: min(44vw, 38rem);
+    translate: 0 -50%;
+  }
+
+  .oh-opaverse__content {
+    align-content: center;
+  }
+
+  .oh-opaverse__copy,
+  .oh-opaverse__quote {
+    max-width: min(40vw, 34rem);
+  }
+}

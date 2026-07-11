@@ -1,490 +1,378 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpaHiFi - Listen</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;700;900&family=Great+Vibes&display=swap"
-        rel="stylesheet">
-    <link rel="icon" href="img/ico/favicon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script>
-        document.documentElement.classList.add('pl3-js');
-    </script>
-    <meta name="color-scheme" content="dark">
-    <meta name="theme-color" content="#050711">
-    <style>
-        html {
-            background: #050711;
-        }
-
-        body {
-            min-height: 100%;
-            background:
-                radial-gradient(1200px 600px at 20% 10%, rgba(31, 111, 235, 0.18), transparent 60%),
-                radial-gradient(900px 500px at 80% 30%, rgba(140, 70, 255, 0.16), transparent 55%),
-                radial-gradient(900px 520px at 25% 85%, rgba(239, 68, 68, 0.18), transparent 60%),
-                linear-gradient(180deg, #060914 0%, #050711 100%);
-            color: #fff;
-        }
-    </style>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LHJPDBZDMB"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-LHJPDBZDMB');
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05060d">
+  <title>OpaHiFi</title>
+  <link rel="icon" href="/img/ico/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./src/styles/base.css">
+  <link rel="stylesheet" href="./src/styles/layout.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="./src/styles/opaverse.css">
+  <link rel="stylesheet" href="./src/styles/songography.css">
 </head>
 
 <body>
+  <nav class="oh-navbar" id="oh-navbar" aria-label="Main navigation">
+    <a class="oh-navbar__brand" href="#oh-hero" data-oh-scroll aria-label="OpaHiFi">
+      <span class="oh-navbar__brand-opa">opa</span><span class="oh-navbar__brand-hifi">HiFi</span>
+    </a>
+    <button class="oh-menu-button" type="button" data-oh-menu-open data-oh-i18n-aria-label="nav.menuOpen"
+      aria-label="Open menu" aria-expanded="false" aria-controls="oh-menu">
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+  </nav>
 
-    <section id="p_listen3" class="PL3-section PL3-section--preload" aria-label="OpaHiFi">
-        <div class="PL3-wrap">
-            <div class="PL3-card">
-                <nav class="PL3-nav" aria-label="OpaHiFi navigation">
-                    <div class="PL3-navInner">
-                        <div class="PL3-heroTitle">OpaHiFi</div>
-                        <div class="PL3-btnRow" aria-label="Actions">
-                            <button class="PL3-heroBtn" type="button" data-pl3-action="listen">
-                                <span class="PL3-heroBtn-text">Stream</span>
-                                <div class="PL3-heroBtn-icons">
-                                    <a href="https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP" target="_blank"
-                                        rel="noopener" aria-label="Spotify">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/spotify-white.svg" alt="Spotify">
-                                    </a>
-                                    <a href="https://music.apple.com/us/artist/opahifi/1867221913" target="_blank"
-                                        rel="noopener" aria-label="Apple Music">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/apple-white.svg" alt="Apple Music">
-                                    </a>
-                                    <a href="https://music.youtube.com/channel/UCyCvRtCK73bbnKqSzC1FOVA" target="_blank"
-                                        rel="noopener" aria-label="YouTube Music">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/youtubemusic-white.svg"
-                                            alt="YouTube Music">
-                                    </a>
-                                    <a href="https://www.youtube.com/@OpaHiFi" target="_blank" rel="noopener"
-                                        aria-label="YouTube">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/youtube-white.svg" alt="YouTube">
-                                    </a>
-                                    <a href="https://music.amazon.com/artists/B0GCXHGG79/opahifi" target="_blank"
-                                        rel="noopener" aria-label="Amazon Music">
-                                        <i class="fa-brands fa-amazon PL3-heroBtn-icon" aria-hidden="true"></i>
-                                    </a>
-                                    <span class="PL3-heroBtn-close" data-pl3-close-btn aria-label="Close">×</span>
-                                </div>
-                            </button>
-                            <button class="PL3-heroBtn" type="button" data-pl3-action="follow">
-                                <span class="PL3-heroBtn-text">Follow</span>
-                                <div class="PL3-heroBtn-icons">
-                                    <a href="https://instagram.com/opahifi" target="_blank" rel="noopener"
-                                        aria-label="Instagram">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/instagram-white.svg" alt="Instagram">
-                                    </a>
-                                    <a href="https://www.youtube.com/@OpaHiFi" target="_blank" rel="noopener"
-                                        aria-label="YouTube">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/youtube-white.svg" alt="YouTube">
-                                    </a>
-                                    <a href="https://tiktok.com/@opahifi" target="_blank" rel="noopener"
-                                        aria-label="TikTok">
-                                        <img class="PL3-heroBtn-icon" src="img/ico/tiktok-white.svg" alt="TikTok">
-                                    </a>
-                                    <a href="mailto:contact@opahifi.com" aria-label="Email">
-                                        <svg class="PL3-heroBtn-icon" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#FFFFFF"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            aria-hidden="true" focusable="false">
-                                            <path
-                                                d="M4 6h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" />
-                                            <path d="m22 8-10 7L2 8" />
-                                        </svg>
-                                    </a>
-                                    <span class="PL3-heroBtn-close" data-pl3-close-btn aria-label="Close">×</span>
-                                </div>
-                            </button>
-                            <button class="PL3-heroBtn" type="button" data-pl3-action="shop">
-                                <span class="PL3-heroBtn-text">Shop</span>
-                            </button>
-                        </div>
-                    </div>
-                </nav>
-                <div class="PL3-split">
-                    <!-- 1) Header -->
-                    <div class="PL3-part PL3-part--header" aria-label="Header">
-                        <div class="PL3-heroRow" aria-label="Hero">
-                            <div class="PL3-heroText" aria-label="Title and slogan">
-                                <div class="PL3-heroSlogan">PULSE. POWER. <br />PARTY. PEOPLE.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div class="oh-menu" id="oh-menu" aria-hidden="true">
+    <button class="oh-menu__backdrop" type="button" data-oh-menu-close data-oh-i18n-aria-label="nav.menuClose"
+      aria-label="Close menu"></button>
+    <aside class="oh-menu__panel" data-oh-i18n-aria-label="nav.menuLabel" aria-label="OpaHiFi menu">
+      <nav class="oh-menu__groups" data-oh-nav-surface="menu" data-oh-i18n-aria-label="nav.sectionsLabel"
+        aria-label="OpaHiFi sections"></nav>
+    </aside>
+  </div>
 
-                    <!-- 3) Highlight -->
-                    <div class="PL3-part PL3-part--highlight" aria-label="Highlight">
-                        <div class="PL3-tabs" data-pl3-tabs>
-
-                            <!-- Tab navigation -->
-                            <div class="PL3-tabNav" role="tablist" aria-label="Content sections">
-                                <button class="PL3-tabBtn" role="tab" aria-selected="true"
-                                    aria-controls="PL3-tabPanel-release" data-pl3-tab="release">
-                                    <span class="PL3-tabLabel">Focus</span>
-                                </button>
-                                <button class="PL3-tabBtn" role="tab" aria-selected="false"
-                                    aria-controls="PL3-tabPanel-videos" data-pl3-tab="videos">
-                                    <span class="PL3-tabLabel">Videos</span>
-                                </button>
-                                <button class="PL3-tabBtn" role="tab" aria-selected="false"
-                                    aria-controls="PL3-tabPanel-about" data-pl3-tab="about">
-                                    <span class="PL3-tabLabel">About</span>
-                                </button>
-                            </div>
-
-                            <!-- Tab panels -->
-                            <div class="PL3-tabPanels">
-                                <div class="PL3-tabPanel" id="PL3-tabPanel-release" role="tabpanel"
-                                    aria-label="Featured Release">
-                                    <div class="PL3-focusLayout" data-pl3-audio-player>
-                                        <div class="PL3-focusHeader">Featured Release</div>
-                                        <div class="PL3-focusBody">
-                                            <div class="PL3-focusArtCol">
-                                                <div class="PL3-focusArtWrap">
-                                                    <img src="img/music/versions/version-fullmindness-mayhemmix.png"
-                                                        alt="Featured Release" class="PL3-focusArtImg">
-                                                    <canvas class="PL3-focusArtProgress" data-pl3-audio-visualizer
-                                                        aria-hidden="true"></canvas>
-                                                </div>
-                                                <audio data-pl3-wave-audio preload="metadata" hidden>
-                                                    <source src="audio/audio-full-mindness-elm-st.m4a" type="audio/mp4">
-                                                </audio>
-                                            </div>
-                                            <div class="PL3-focusLinksCol">
-                                                <button class="PL3-focusPill PL3-focusPill--play" type="button"
-                                                    data-pl3-audio-toggle
-                                                    data-pl3-audio-src="audio/audio-full-mindness-elm-st.m4a"
-                                                    aria-label="Play Full-Mindness audio" aria-pressed="false"><i
-                                                        class="fa-solid fa-play"></i> <span
-                                                        data-pl3-audio-toggle-label>Play</span></button>
-                                                <button class="PL3-focusPill" type="button"
-                                                    data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV3W8uiqhjN7dgZsGnzajUTN">Videos</button>
-                                                <button class="PL3-focusPill" type="button"
-                                                    data-pl3-group="full-mindness">Lyrics</button>
-                                                <a class="PL3-focusPill" href="full-mindness.html">Context</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="PL3-tabPanel" id="PL3-tabPanel-videos" role="tabpanel" aria-label="Videos"
-                                    hidden>
-                                    <div class="PL3-videoGrid">
-                                        <a class="PL3-videoCard PL3-videoCard--meet"
-                                            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9"
-                                            data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9"
-                                            aria-label="Watch Meet Opa">
-                                            <span class="PL3-videoScene" aria-hidden="true">
-                                                <img class="PL3-videoThumb PL3-videoThumb--bg"
-                                                    src="img/opa/videos/opa-meet-bg.png" alt="" loading="lazy">
-                                                <span class="PL3-videoWatchBtn">
-                                                    <img class="PL3-videoThumb PL3-videoThumb--fg"
-                                                        src="img/opa/videos/opa-meet.png" alt="" loading="lazy">
-                                                    <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                                    <span class="PL3-videoWatchBtnLabel">MEET OPA!</span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                        <a class="PL3-videoCard"
-                                            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T"
-                                            data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T"
-                                            aria-label="Watch Video Clips">
-                                            <span class="PL3-videoScene" aria-hidden="true">
-                                                <img class="PL3-videoThumb PL3-videoThumb--bg"
-                                                    src="img/opa/videos/opa-video-bg.png" alt="" loading="lazy">
-                                                <span class="PL3-videoWatchBtn">
-                                                    <img class="PL3-videoThumb PL3-videoThumb--fg"
-                                                        src="img/opa/videos/opa-video.png" alt="" loading="lazy">
-                                                    <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                                    <span class="PL3-videoWatchBtnLabel">VIDEO CLIPS</span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                        <a class="PL3-videoCard"
-                                            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA"
-                                            data-pl3-video-embed="https://www.youtube.com/playlist?list=PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA"
-                                            aria-label="Watch Lyrics Shorts">
-                                            <span class="PL3-videoScene" aria-hidden="true">
-                                                <img class="PL3-videoThumb PL3-videoThumb--bg"
-                                                    src="img/opa/videos/opa-lyrics-bg.png" alt="" loading="lazy">
-                                                <span class="PL3-videoWatchBtn">
-                                                    <img class="PL3-videoThumb PL3-videoThumb--fg"
-                                                        src="img/opa/videos/opa-lyrics.png" alt="" loading="lazy">
-                                                    <i class="fa-solid fa-play" aria-hidden="true"></i>
-                                                    <span class="PL3-videoWatchBtnLabel">LYRICS SHORTS</span>
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="PL3-tabPanel" id="PL3-tabPanel-about" role="tabpanel" aria-label="About"
-                                    hidden>
-                                    <div class="opahifi-cycle">
-                                        <div class="cycle-grid">
-                                            <span class="cycle-arrow cycle-arrow--top" aria-hidden="true">
-                                                <svg class="cycle-arrowIcon" viewBox="0 0 28 28" focusable="false">
-                                                    <circle class="cycle-arrowDot" cx="6.5" cy="18" r="1.65" />
-                                                    <path class="cycle-arrowTrail"
-                                                        d="M8.5 18C11.25 13.2 16.05 10.95 22 11.65" />
-                                                    <path class="cycle-arrowHead" d="M17.6 7.85L22.7 11.7L16.9 15.25" />
-                                                </svg>
-                                            </span>
-                                            <span class="cycle-arrow cycle-arrow--right" aria-hidden="true">
-                                                <svg class="cycle-arrowIcon" viewBox="0 0 28 28" focusable="false">
-                                                    <circle class="cycle-arrowDot" cx="6.5" cy="18" r="1.65" />
-                                                    <path class="cycle-arrowTrail"
-                                                        d="M8.5 18C11.25 13.2 16.05 10.95 22 11.65" />
-                                                    <path class="cycle-arrowHead" d="M17.6 7.85L22.7 11.7L16.9 15.25" />
-                                                </svg>
-                                            </span>
-                                            <span class="cycle-arrow cycle-arrow--bottom" aria-hidden="true">
-                                                <svg class="cycle-arrowIcon" viewBox="0 0 28 28" focusable="false">
-                                                    <circle class="cycle-arrowDot" cx="6.5" cy="18" r="1.65" />
-                                                    <path class="cycle-arrowTrail"
-                                                        d="M8.5 18C11.25 13.2 16.05 10.95 22 11.65" />
-                                                    <path class="cycle-arrowHead" d="M17.6 7.85L22.7 11.7L16.9 15.25" />
-                                                </svg>
-                                            </span>
-                                            <span class="cycle-arrow cycle-arrow--left" aria-hidden="true">
-                                                <svg class="cycle-arrowIcon" viewBox="0 0 28 28" focusable="false">
-                                                    <circle class="cycle-arrowDot" cx="6.5" cy="18" r="1.65" />
-                                                    <path class="cycle-arrowTrail"
-                                                        d="M8.5 18C11.25 13.2 16.05 10.95 22 11.65" />
-                                                    <path class="cycle-arrowHead" d="M17.6 7.85L22.7 11.7L16.9 15.25" />
-                                                </svg>
-                                            </span>
-                                            <article class="cycle-pillar cycle-pillar--pulse cycle-pillar--top">
-                                                <div class="cycle-pillarInner">
-                                                    <h3>PULSE</h3>
-                                                    <p>
-                                                        <span>Heartbeats turn to rhythm</span>
-                                                        <span>Lyrics run through veins</span>
-                                                        <span>Melodies make you feel alive</span>
-                                                    </p>
-                                                </div>
-                                            </article>
-                                            <article class="cycle-pillar cycle-pillar--power cycle-pillar--top">
-                                                <div class="cycle-pillarInner">
-                                                    <h3>POWER</h3>
-                                                    <p>
-                                                        <span>Beats that ignite movement</span>
-                                                        <span>Dance turns into energy</span>
-                                                        <span>Body leads, the mind follows</span>
-                                                    </p>
-                                                </div>
-                                            </article>
-                                            <article class="cycle-pillar cycle-pillar--people cycle-pillar--bottom">
-                                                <div class="cycle-pillarInner">
-                                                    <h3>PEOPLE</h3>
-                                                    <p>
-                                                        <span>Songs that bridge &amp; connect</span>
-                                                        <span>Love opens into vulnerability</span>
-                                                        <span>If you fall, you're not alone</span>
-                                                    </p>
-                                                </div>
-                                            </article>
-                                            <article class="cycle-pillar cycle-pillar--party cycle-pillar--bottom">
-                                                <div class="cycle-pillarInner">
-                                                    <h3>PARTY</h3>
-                                                    <p>
-                                                        <span>Music to celebrate the win</span>
-                                                        <span>The sound of letting go</span>
-                                                        <span>Release turns to elevation</span>
-                                                    </p>
-                                                </div>
-                                            </article>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4) Gallery -->
-                    <div class="PL3-part PL3-part--gallery" aria-label="Gallery">
-                        <div class="PL3-galleryHeader">
-                            <div class="PL3-subTitle">All Releases</div>
-                        </div>
-                        <!-- Use comma-separated row slot counts per breakpoint; add `hidden` to a button to disable that slot. -->
-                        <div class="PL3-gallery" aria-label="OpaHiFi groups" data-pl3-layout-mobile="4,3"
-                            data-pl3-layout-tablet="4,3">
-                            <div class="PL3-galleryGhostRack PL3-galleryGhostRack--top">
-                                <span class="PL3-galleryGhostHex PL3-galleryGhostHex--spacer" aria-hidden="true"></span>
-                                <span class="PL3-galleryGhostHex PL3-galleryGhostHex--playlist">
-                                    <div class="PL3-galleryGhostPlaylistCard">
-                                        <button class="PL3-galleryGhostPlaylistBtn" type="button"
-                                            data-pl3-playlist-toggle aria-expanded="false" aria-label="Open playlists">
-                                            <span class="PL3-galleryGhostPlaylistLabel">Play All</span>
-                                            <img class="PL3-galleryGhostPlaylistImg" src="img/btns/playlist.png"
-                                                alt="Play the List" loading="lazy" onerror="this.hidden=true">
-                                        </button>
-                                        <div class="PL3-galleryGhostPlaylistBack" data-pl3-ghost-playlist-links
-                                            data-pl3-playlist-toggle aria-expanded="false" aria-label="Playlist links">
-                                            <span class="PL3-galleryGhostPlaylistBackTitle">Playlists:</span>
-                                            <div class="PL3-galleryGhostPlaylistBackRow">
-                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
-                                                    href="https://open.spotify.com/playlist/5rAMYPsUmFoq3yoBnIGYQR?si=qw3P1s6eT7OLxatM2zUb3w"
-                                                    target="_blank" rel="noopener" aria-label="Spotify playlist">
-                                                    <img class="PL3-playlistPillIcon" src="img/ico/spotify-white.svg"
-                                                        alt="Spotify">
-                                                </a>
-                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
-                                                    href="https://music.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF&si=S9qhguENixnuD3Ps"
-                                                    target="_blank" rel="noopener" aria-label="YouTube Music playlist">
-                                                    <img class="PL3-playlistPillIcon"
-                                                        src="img/ico/youtubemusic-white.svg" alt="YouTube Music">
-                                                </a>
-                                                <a class="PL3-playlistPillLink PL3-galleryGhostPlaylistLink"
-                                                    href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF"
-                                                    target="_blank" rel="noopener" aria-label="YouTube playlist">
-                                                    <img class="PL3-playlistPillIcon" src="img/ico/youtube-white.svg"
-                                                        alt="YouTube">
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </span>
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Wellwolf Howl-Lehluya"
-                                    data-pl3-group="wellwolf-howl-lehluya">
-                                    <img class="PL3-galleryImg" src="img/music/base/base-wellwolfhowllehluya.png"
-                                        alt="Wellwolf Howl-Lehluya cover" loading="lazy"
-                                        onerror="this.src='img/music/opahifi_album.png'">
-                                </button>
-                            </div>
-                            <div class="PL3-galleryRow PL3-galleryRow--top">
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Old Love Story"
-                                    data-pl3-group="old-love-story">
-                                    <img class="PL3-galleryImg" src="img/music/base/base-oldlovestory.png"
-                                        alt="Old Love Story cover" loading="lazy"
-                                        onerror="this.src='img/music/opahifi_album.png'">
-                                </button>
-
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Opa pa pa party"
-                                    data-pl3-group="opa-pa-pa-party">
-                                    <img class="PL3-galleryImg" src="img/music/base/base-opapapaparty.png"
-                                        alt="Opa pa pa party cover" loading="lazy"
-                                        onerror="this.src='img/music/opahifi_album.png'">
-                                </button>
-
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Glittaa Phoenix"
-                                    data-pl3-group="glittaa-phoenix">
-                                    <img class="PL3-galleryImg" src="img/music/base/base-glittaaphoenix.png"
-                                        alt="Glittaa Phoenix cover" loading="lazy"
-                                        onerror="this.src='img/music/opahifi_album.png'">
-                                </button>
-
-                                <button class="PL3-galleryItemBtn" type="button"
-                                    aria-label="Open Splenda Love Rabbit Hell"
-                                    data-pl3-group="splenda-love-rabbit-hell">
-                                    <img class="PL3-galleryImg" src="img/music/base/base-splendaloverabbithell.png"
-                                        alt="Splenda Love Rabbit Hell cover" loading="lazy"
-                                        onerror="this.src='img/music/opahifi_album.png'">
-                                </button>
-                            </div>
-
-                            <div class="PL3-galleryRow PL3-galleryRow--bottom">
-                                <button class="PL3-galleryItemBtn" type="button"
-                                    aria-label="Open Believe the Truth fairy" data-pl3-group="believe-the-truth-fairy">
-                                    <img class="PL3-galleryImg" src="img/music/base/base-believethetruthfairy.png"
-                                        alt="Believe the Truth fairy cover" loading="lazy"
-                                        onerror="this.src='img/music/opahifi_album.png'">
-                                </button>
-
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Full-Mindness"
-                                    data-pl3-group="full-mindness">
-                                    <img class="PL3-galleryImg" src="img/music/base/base-fullmindness.png"
-                                        alt="Full-Mindness cover" loading="lazy"
-                                        onerror="this.src='img/music/opahifi_album.png'">
-                                </button>
-
-                                <button class="PL3-galleryItemBtn" type="button" aria-label="Open Yeah, Let's Do Brunch"
-                                    data-pl3-group="yeah-lets-do-brunch">
-                                    <img class="PL3-galleryImg" src="img/music/base/base-yeahletsdobrunch.png"
-                                        alt="Yeah, Let's Do Brunch cover" loading="lazy"
-                                        onerror="this.src='img/music/opahifi_album.png'">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="PL3-groupPanel" id="PL3-group-panel" aria-hidden="true">
-                    <div class="PL3-groupPanelInner">
-                        <div class="PL3-groupPanelTop">
-                            <div class="PL3-groupPanelArtDockWrap">
-                                <div class="PL3-groupPanelArtDock" data-pl3-group-art-dock aria-hidden="true"></div>
-                                <button class="PL3-groupPanelShareBtn" type="button" data-pl3-group-share
-                                    aria-label="Share">
-                                    <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            <div class="PL3-groupPanelGroupMeta" data-pl3-group-meta>
-                                <div class="PL3-groupPanelGroupTitle" data-pl3-group-title></div>
-                                <div class="PL3-groupPanelGroupCount" data-pl3-group-count></div>
-                            </div>
-                        </div>
-                        <div class="PL3-groupPanelMeta">
-                            <div class="PL3-groupPanelVersions" data-pl3-group-versions></div>
-                        </div>
-                        <div class="PL3-groupPanelFooter">
-                            <button class="PL3-groupPanelCloseBtn" type="button" data-pl3-group-close
-                                aria-label="Close panel">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <main class="oh-main" id="oh-main">
+    <section class="oh-screen oh-hero" id="oh-hero">
+      <div class="oh-hero__glow" aria-hidden="true"></div>
+      <div class="oh-shell oh-hero__content">
+        <figure class="oh-hero__art">
+          <img class="oh-hero__art-image" src="./img/hero/opa_water_fire.png"
+            alt="Opa surrounded by blue water and orange fire" data-oh-i18n-alt="hero.imageAlt">
+        </figure>
+        <div class="oh-hero__title-stack">
+          <img class="oh-hero__title-image" src="./img/hero/blues_on_fire.png" alt="Blues On Fire"
+            data-oh-i18n-alt="hero.titleImageAlt">
+          <p class="oh-hero__tagline" data-oh-i18n="hero.tagline">Dance from the pyre</p>
         </div>
+        <div class="oh-actions oh-actions--hero">
+          <a class="oh-button oh-button--primary" href="#oh-home" data-oh-scroll data-oh-i18n="hero.exploreCta">Explore
+            OpaHiFi</a>
+          <a class="oh-button oh-button--secondary" href="#songography" data-oh-scroll
+            data-oh-i18n="hero.listenCta">Listen Now</a>
+        </div>
+      </div>
     </section>
-    <div class="PL3-modal PL3-previewModal" id="PL3-preview-modal" hidden aria-hidden="true">
-        <div class="PL3-previewOverlay" data-pl3-preview-close></div>
-        <div class="PL3-previewPanel" role="dialog" aria-modal="true" aria-label="Video preview">
-            <div class="PL3-previewInner">
-                <div class="PL3-previewHeader">
-                    <div class="PL3-previewTitle">Preview</div>
-                    <div class="PL3-previewHeaderActions">
-                        <button class="PL3-previewSound" type="button" data-pl3-preview-sound aria-label="Toggle sound">
-                            <i class="fa-solid fa-volume-high" aria-hidden="true"></i>
 
-                        </button>
-                        <button class="PL3-previewClose" type="button" data-pl3-preview-close
-                            aria-label="Close">×</button>
-                    </div>
-                </div>
-                <div class="PL3-previewFrame">
-                    <iframe id="PL3-preview-iframe" title="YouTube preview"
-                        allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
+    <section class="oh-journey" id="oh-journey" hidden>
+      <div class="oh-screen oh-journey-entrance">
+        <div class="oh-shell oh-journey-entrance__content">
+          <p class="oh-eyebrow" data-oh-i18n="sections.songology.eyebrow">Scroll between the lines</p>
+          <h2 class="oh-section-title" data-oh-i18n="sections.songology.title">Songology</h2>
+          <p class="oh-section-copy" data-oh-i18n="sections.songology.copy">Keep scrolling. Each song opens its own
+            world, then hands you directly to the
+            next one.</p>
         </div>
-    </div>
+      </div>
 
-    <div class="PL3-modal PL3-artZoomModal" id="PL3-art-zoom-modal" hidden aria-hidden="true">
-        <div class="PL3-artZoomOverlay" data-pl3-art-zoom-close></div>
-        <div class="PL3-artZoomPanel" role="dialog" aria-modal="true" aria-label="Expanded cover art">
-            <div class="PL3-artZoomInner">
-                <button class="PL3-artZoomClose" type="button" data-pl3-art-zoom-close aria-label="Close">×</button>
-                <img class="PL3-artZoomImage" id="PL3-art-zoom-image" alt="">
-            </div>
+      <div class="oh-opaverses" id="oh-opaverses" aria-label="Opaverse experience"></div>
+
+      <div class="oh-screen oh-journey-exit" id="oh-journey-exit">
+        <div class="oh-shell oh-journey-exit__content">
+          <p class="oh-eyebrow" data-oh-i18n="journeyExit.eyebrow">Three worlds later</p>
+          <h2 class="oh-section-title" data-oh-i18n="journeyExit.title">The ride ends. OpaHiFi opens.</h2>
+          <p class="oh-section-copy" data-oh-i18n="journeyExit.copy">Explore every section without leaving the
+            continuous page.</p>
+          <a class="oh-button oh-button--primary" href="#oh-home" data-oh-scroll data-oh-i18n="journeyExit.cta">Enter
+            Home</a>
         </div>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-home" id="oh-home">
+      <div class="oh-shell oh-home__shell">
+        <p class="oh-eyebrow" data-oh-i18n="home.eyebrow">Home page</p>
+        <h2 class="oh-section-title" data-oh-i18n="home.title">Now what?!</h2>
+        <p class="oh-home__copy" data-oh-i18n="home.copy">The songs, the lyrics, the story, and everything OpaHiFi.</p>
+        <nav class="oh-sitemap" data-oh-nav-surface="home" data-oh-i18n-aria-label="nav.homeSitemapLabel"
+          aria-label="OpaHiFi sitemap"></nav>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-songography" id="songography">
+      <div class="ohg-shell">
+        <header class="ohg-heading">
+          <p class="oh-eyebrow" data-oh-i18n="sections.songography.eyebrow">Songs catalog: versions, platform links
+            &amp; lyrics</p>
+          <h2 class="ohg-title" data-oh-i18n="sections.songography.title">Songography</h2>
+        </header>
+        <div class="ohg-grid" id="oh-songography-grid" data-oh-i18n-aria-label="songography.ariaLabel"
+          aria-label="OpaHiFi songography"></div>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-connect" id="oh-connect">
+      <div class="oh-shell oh-follow">
+        <div class="oh-follow__profile">
+          <p class="oh-eyebrow" data-oh-i18n="sections.follow.eyebrow">Find OpaHiFi across music and social platforms
+          </p>
+          <h2 class="oh-section-title" data-oh-i18n="sections.follow.title">Follow / Contact</h2>
+        </div>
+        <img class="oh-follow__image" src="./img/follow/opa_fans.png" alt="OpaHiFi fans" width="1254" height="1254"
+          loading="lazy">
+
+        <div class="oh-socials" aria-label="OpaHiFi links">
+          <section class="oh-socials__group" aria-labelledby="oh-socials-listen">
+            <h3 class="oh-socials__title" id="oh-socials-listen">Artist Pages</h3>
+            <div class="oh-socials__row">
+              <a class="oh-socials__link" href="https://open.spotify.com/artist/1WD2qPlo13H0gWENdreAsP" target="_blank"
+                rel="noopener noreferrer" aria-label="Spotify">
+                <i class="fa-brands fa-spotify" aria-hidden="true"></i>
+              </a>
+              <a class="oh-socials__link" href="https://music.apple.com/us/artist/opahifi/1867221913" target="_blank"
+                rel="noopener noreferrer" aria-label="Apple Music">
+                <i class="fa-brands fa-apple" aria-hidden="true"></i>
+              </a>
+              <a class="oh-socials__link" href="https://music.youtube.com/channel/UCyCvRtCK73bbnKqSzC1FOVA"
+                target="_blank" rel="noopener noreferrer" aria-label="YouTube Music">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+              </a>
+              <a class="oh-socials__link" href="https://music.amazon.com/artists/B0GCXHGG79/opahifi" target="_blank"
+                rel="noopener noreferrer" aria-label="Amazon Music">
+                <i class="fa-brands fa-amazon" aria-hidden="true"></i>
+              </a>
+            </div>
+          </section>
+
+          <section class="oh-socials__group" aria-labelledby="oh-socials-connect">
+            <h3 class="oh-socials__title" id="oh-socials-connect">Socials</h3>
+            <div class="oh-socials__row">
+              <a class="oh-socials__link" href="https://instagram.com/opahifi" target="_blank" rel="noopener noreferrer"
+                aria-label="Instagram">
+                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+              </a>
+              <a class="oh-socials__link" href="https://www.youtube.com/@OpaHiFi" target="_blank"
+                rel="noopener noreferrer" aria-label="YouTube">
+                <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+              </a>
+              <a class="oh-socials__link" href="https://tiktok.com/@opahifi" target="_blank" rel="noopener noreferrer"
+                aria-label="TikTok">
+                <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+              </a>
+            </div>
+          </section>
+
+          <section class="oh-socials__group" aria-labelledby="oh-socials-email">
+            <h3 class="oh-socials__title" id="oh-socials-email">Email</h3>
+            <a class="oh-socials__email" href="mailto:contact@opahifi.com">contact@opahifi.com</a>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-videos" id="oh-videos">
+      <div class="oh-shell">
+        <p class="oh-eyebrow" data-oh-i18n="sections.songovision.eyebrow">Videos, visuals, and moving OpaHiFi worlds</p>
+        <h2 class="oh-section-title" data-oh-i18n="sections.songovision.title">Songovision</h2>
+        <div class="oh-video-grid" role="list" aria-label="OpaHiFi videos">
+          <a class="oh-video-card oh-video-card--meet"
+            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9" target="_blank"
+            rel="noopener noreferrer" aria-label="Watch Meet Opa" role="listitem">
+            <span class="oh-video-scene" aria-hidden="true">
+              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-meet-bg.png" alt=""
+                loading="lazy">
+              <span class="oh-video-watch">
+                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-meet.png" alt=""
+                  loading="lazy">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+                <span class="oh-video-watch__label">Meet Opa!</span>
+              </span>
+            </span>
+          </a>
+
+          <a class="oh-video-card" href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T"
+            target="_blank" rel="noopener noreferrer" aria-label="Watch Video Clips" role="listitem">
+            <span class="oh-video-scene" aria-hidden="true">
+              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-video-bg.png" alt=""
+                loading="lazy">
+              <span class="oh-video-watch">
+                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-video.png" alt=""
+                  loading="lazy">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+                <span class="oh-video-watch__label">Video Clips</span>
+              </span>
+            </span>
+          </a>
+
+          <a class="oh-video-card" href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA"
+            target="_blank" rel="noopener noreferrer" aria-label="Watch Lyrics Shorts" role="listitem">
+            <span class="oh-video-scene" aria-hidden="true">
+              <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-lyrics-bg.png" alt=""
+                loading="lazy">
+              <span class="oh-video-watch">
+                <img class="oh-video-thumb oh-video-thumb--fg" src="./img/opa/videos/opa-lyrics.png" alt=""
+                  loading="lazy">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+                <span class="oh-video-watch__label">Lyrics Shorts</span>
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="oh-screen oh-about" id="oh-about">
+      <div class="opa-about-carousel" aria-label="About OpaHiFi" data-opa-about-carousel>
+        <header class="opa-about-header">
+          <p class="oh-eyebrow" data-oh-i18n="sections.about.eyebrow">What, why, and how?</p>
+          <h2 class="opa-about-title" data-oh-i18n="sections.about.title">About OpaHiFi</h2>
+        </header>
+
+        <div class="opa-about-track" data-opa-about-track>
+          <article class="opa-about-slide opa-about-slide-1">
+            <div class="opa-about-orbit" aria-hidden="true"></div>
+            <p class="opa-about-kicker">7% Nonsense</p>
+            <h2 class="opa-about-heading">
+              100% Human
+              <span class="opa-about-heading-outline">Lyrics</span>
+            </h2>
+            <figure class="opa-about-media">
+              <img class="opa-about-image" src="./img/about/slide1.png" alt="" loading="lazy">
+            </figure>
+            <div class="opa-about-copy">
+              <p>OpaHiFi lyrics are written by a human, based on human experience, from a human perspective.</p>
+              <p>Every word is there for a reason, making the result 100% authentic and 7% nonsense.
+                <span class="opa-about-copy-highlight">but human nonsense of course.</span>
+              </p>
+            </div>
+          </article>
+
+          <article class="opa-about-slide opa-about-slide-2">
+            <div class="opa-about-orbit" aria-hidden="true"></div>
+            <p class="opa-about-kicker">Themes</p>
+            <h2 class="opa-about-heading">
+              Real Life,
+              <span class="opa-about-heading-outline">Remixed</span>
+            </h2>
+            <figure class="opa-about-media">
+              <img class="opa-about-image" src="./img/about/slide2.png" alt="" loading="lazy">
+            </figure>
+            <div class="opa-about-copy">
+              <p>Anxiety, heartbreak, fake connection, bots, bad advice, and everyday chaos.
+                The strange, painful, and funny parts of being human.</p>
+              <p>OpaHiFi turns those meltdowns upside down—channeling the mess into music, laughter, and positive
+                energy.</p>
+            </div>
+          </article>
+
+          <article class="opa-about-slide opa-about-slide-3">
+            <div class="opa-about-orbit" aria-hidden="true"></div>
+            <p class="opa-about-kicker">Small pkg, <Br />Big fun!</p>
+            <h2 class="opa-about-heading">
+              Who's
+              <span class="opa-about-heading-outline">Opa?</span>
+            </h2>
+            <figure class="opa-about-media">
+              <img class="opa-about-image" src="./img/about/slide3.png" alt="" loading="lazy">
+            </figure>
+            <div class="opa-about-copy">
+              <p>Opa is the big-hearted force behind OpaHiFi, determined to make the world a better place for everyone,
+                but
+                with absolutely no patience for bullcrap.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="opa-about-controls">
+          <button class="opa-about-arrow" type="button" aria-label="Previous slide"
+            data-opa-about-prev>&lsaquo;</button>
+
+          <div class="opa-about-progress">
+            <div class="opa-about-bars" aria-label="Choose slide">
+              <button class="opa-about-bar" type="button" aria-label="Slide 1" aria-current="true"
+                data-opa-about-bar></button>
+              <button class="opa-about-bar" type="button" aria-label="Slide 2" data-opa-about-bar></button>
+              <button class="opa-about-bar" type="button" aria-label="Slide 3" data-opa-about-bar></button>
+            </div>
+          </div>
+
+          <button class="opa-about-arrow" type="button" aria-label="Next slide" data-opa-about-next>&rsaquo;</button>
+        </div>
+      </div>
+
+      <footer class="oh-footer" id="oh-footer">
+        <div class="oh-footer__content">
+          <a href="/src/styles/terms.html" data-oh-terms-open>Terms of Use</a>
+          <span class="oh-footer__separator">&bull;</span>
+          <span>&copy; 2026 OpaHiFi</span>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <section class="oh-terms-overlay" data-oh-terms-overlay role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="oh-terms-title">
+    <div class="oh-terms-overlay__panel">
+      <header class="oh-terms-overlay__header">
+        <h2 id="oh-terms-title">Terms of Use</h2>
+        <button class="oh-terms-overlay__close" type="button" data-oh-terms-close aria-label="Close terms">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+      <iframe class="oh-terms-overlay__frame" src="/src/styles/terms.html" title="Terms of Use"></iframe>
     </div>
+  </section>
 
-    <script src="https://unpkg.com/wavesurfer.js@7.12.6/dist/wavesurfer.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Flip.min.js"></script>
-    <script src="script.js"></script>
+  <section class="ohg-detail" id="ohg-detail" role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="ohg-detail-title">
+    <div class="ohg-detail__scroll" id="ohg-detail-scroll">
+      <div class="ohg-detail__body">
+        <div class="ohg-detail__hero">
+          <div class="ohg-hero-slot" id="ohg-hero-slot"></div>
+          <div class="ohg-detail__info ohg-detail__changing" id="ohg-detail-info">
+            <h2 class="ohg-detail__title" id="ohg-detail-title"></h2>
+            <p class="ohg-detail__subtitle" id="ohg-detail-subtitle"></p>
+            <div class="ohg-detail__meta">
+              <i class="fa-regular fa-clock" aria-hidden="true"></i>
+              <span id="ohg-detail-duration"></span>
+            </div>
+          </div>
+        </div>
 
+        <div class="ohg-version-nav ohg-detail__changing" aria-label="Song versions">
+          <div class="ohg-version-pills" id="ohg-version-pills"></div>
+        </div>
+
+        <div class="ohg-platforms ohg-detail__changing" id="ohg-platforms" aria-label="Streaming platforms"></div>
+
+        <section class="ohg-lyrics ohg-detail__changing" id="ohg-lyrics">
+          <div class="ohg-lyrics__header">
+            <h3 class="ohg-lyrics__title" data-oh-i18n="songography.lyricsTitle">Lyrics</h3>
+          </div>
+          <pre class="ohg-lyrics__text" id="ohg-lyrics-text"></pre>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <div class="ohg-rail" id="ohg-rail" aria-label="Other songs">
+    <button class="ohg-rail__button ohg-rail__button--previous" type="button" data-ohg-action="previous-song"
+      data-oh-i18n-aria-label="songography.previousSongLabel" aria-label="Previous song">
+      <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <div class="ohg-rail__track" id="ohg-rail-track"></div>
+    <button class="ohg-rail__close" type="button" data-ohg-action="close"
+      data-oh-i18n-aria-label="songography.backLabel" aria-label="Back to Songography">
+      <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+    </button>
+    <button class="ohg-rail__button ohg-rail__button--next" type="button" data-ohg-action="next-song"
+      data-oh-i18n-aria-label="songography.nextSongLabel" aria-label="Next song">
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
+  <script type="module" src="./src/app.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,139 @@
+const ohAssets = Object.freeze({
+  cover: new URL("./assets/cover.webp", import.meta.url).href,
+  art: new URL("./assets/art.webp", import.meta.url).href,
+  master: new URL("./assets/master.png", import.meta.url).href
+});
+
+export const ohSongData = Object.freeze({
+  id: "believe-the-truth-fairy",
+  slug: "believe-the-truth-fairy",
+  title: "Believe the Truth Fairy",
+  titleLines: Object.freeze(["Believe the", "Truth Fairy"]),
+  navLabel: "Truth Fairy",
+  subtitle: "Share love, not lies",
+  duration: "3:55",
+  releaseDate: null,
+  status: "development",
+  lyricsStatus: "source-provided",
+  assets: ohAssets,
+  versions: Object.freeze([
+    Object.freeze({
+      id: "original",
+      slug: "original",
+      name: "Original",
+      duration: "3:55",
+      default: true,
+      cover: ohAssets.cover,
+      art: ohAssets.art,
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/2koDtHQbjsXNrNhetZfDqk?si=PDYCcyqBT9GwvMpXw5v5zg",
+        appleMusic: "https://music.apple.com/us/album/believe-the-truth-fairy-single/1867985683",
+        youtube: "https://music.youtube.com/watch?v=-hxtCiZO5uE&si=6RDhiG__48bZB4mj",
+        amazonMusic: "https://music.amazon.com/albums/B0GF23N5JZ?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_hgBVvMSzssPMIipbWlbISEq4T&trackAsin=B0GF1YZG2P",
+        other: "https://youtu.be/-hxtCiZO5uE?si=7UXrK83pSmKyPXcC"
+      })
+    })
+  ]),
+  theme: Object.freeze({
+    background: "#071b26",
+    primary: "#22d9dd",
+    secondary: "#ffd166"
+  }),
+  opaverse: Object.freeze({
+    subtitle: "Share love, not lies",
+    summary: "Misinformation, lazy certainty, and online hate meet a tired truth fairy with receipts.",
+    featuredLine: "For every lie spread, a truth fairy dies.",
+    animationPreset: "pressure"
+  }),
+  lyrics: `No one is born hating. 
+Hate is learned. 
+Share love, not lies.
+
+Night scrollin' as mind’s closin' — 
+"What you read online is fact," they say.
+Fed the tunes you want to hear — 
+Night after night after day.
+Quick to take a popular stand — 
+Heard one side — now you’re an expert.
+
+You can believe in life after love.
+Believe that children are our future.
+You can believe you can fly and touch the sky.
+But keep in mind — even Bitcoin has two sides.
+
+Believe what you want — 
+There’s always another view 
+Before you spread fear and hate — 
+Stop — think it through 
+Behind the noise and lies
+Truth remains — open the blinds
+For every lie spread — 
+A truth fairy dies. 
+
+Swipe to the right, tappin' that heart — 
+Hot bot you stalk said, "It’s the talk".
+Shoppin' lies to the beat that moves your hips — 
+Tik after Tik after Tok. 
+Truth sold out like a gospel choir —
+Bought the hype, now you're preaching Fyre
+
+Believe that pain can make you a believer — 
+For both Tinkerbell and Justin Bieber.
+You can believe in miracles — where you from?
+But keep in mind — every person can be wrong
+
+Believe what you want — 
+There’s always another view 
+Before you spread fear and hate — 
+Stop — think it through
+Behind the noise and lies
+Truth remains — open the blinds
+For every lie spread — 
+A truth fairy dies. 
+
+When first lesson’s a lie —
+Trade a tooth for a buck.
+No wonder truth runs dry —
+No one really gives a...
+
+Believe in yourself — the greatest of all
+Believe you can change the world, start small
+Believe in live and let live — 
+In the miracles you can achieve
+When you believe
+
+Opa opa — hold up!
+
+Don’t start believin’ — if you’re just holdin’ on to feelin’
+Trolls see no truth, hear no truth, speak their piece— war-feedin’
+Shares and posts beat sticks and stones
+Polarized views turn our world to Game of Thrones
+Minds fed TV meals from echo-microwave
+Blind hate on repeat — takes reason to the grave
+So unless your words pass the truth fairy’s test
+Save her — and the rest — broaden your view, not your cast 
+
+Believe what you want
+There’s always another view 
+Before you spread fear and hate
+Stop. 
+
+Respect the truth fairy — it’s a thankless role
+No sparkle, no wand, no Disney payroll
+Her vital gift might slap — right where it hurts most
+Only fair if we cut crap—before truth turns to ghost.
+
+
+
+
+
+
+[a]Shares and posts beat sticks and stones
+Polarized views turn our world to Game of Thrones`,
+  developmentNotes: ``,
+  share: Object.freeze({
+    title: "Believe the Truth Fairy",
+    text: null,
+    url: null
+  })
+});

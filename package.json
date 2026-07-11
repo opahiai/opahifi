@@ -1,8 +1,5 @@
 {
-  "name": "opahifi-v3",
+  "name": "opahifi-all-song-modules",
   "private": true,
-  "scripts": {
-    "generate:shares": "node scripts/generate-share-pages.js",
-    "build": "npm run generate:shares"
-  }
+  "type": "module"
 }

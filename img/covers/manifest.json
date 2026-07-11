@@ -1,0 +1,223 @@
+{
+  "cover_size": [
+    900,
+    900
+  ],
+  "art_size": [
+    900,
+    563
+  ],
+  "art_crop": "bottom 62.5% of the square cover",
+  "songs": [
+    {
+      "slug": "believe-the-truth-fairy",
+      "source": "base-believethetruthfairy.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    },
+    {
+      "slug": "full-mindness",
+      "source": "base-fullmindness.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    },
+    {
+      "slug": "glittaa-phoenix",
+      "source": "base-glittaaphoenix.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    },
+    {
+      "slug": "hallucinating-dum-dum",
+      "source": "base-hallucinatingdumdum.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    },
+    {
+      "slug": "not-your-bot-beep-sleep",
+      "source": "base-notyourbot-beepsleep.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    },
+    {
+      "slug": "opa-pa-pa-party",
+      "source": "base-opapapaparty.png",
+      "source_size": [
+        450,
+        450
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": true
+    },
+    {
+      "slug": "splenda-love-rabbit-hell",
+      "source": "base-splendaloverabbithell.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    },
+    {
+      "slug": "wellwolf-howl-lehluya",
+      "source": "base-wellwolfhowllehluya.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    },
+    {
+      "slug": "yeah-lets-do-brunch",
+      "source": "base-yeahletsdobrunch.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    },
+    {
+      "slug": "old-love-story",
+      "source": "base-oldlovestory.png",
+      "source_size": [
+        900,
+        900
+      ],
+      "master_size": [
+        900,
+        900
+      ],
+      "cover_size": [
+        900,
+        900
+      ],
+      "art_size": [
+        900,
+        563
+      ],
+      "master_upscaled": false
+    }
+  ]
+}

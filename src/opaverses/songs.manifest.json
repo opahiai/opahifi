@@ -1,0 +1,117 @@
+{
+  "moduleCount": 10,
+  "order": [
+    "full-mindness",
+    "hallucinating-dum-dum",
+    "yeah-lets-do-brunch",
+    "splenda-love-rabbit-hell",
+    "believe-the-truth-fairy",
+    "old-love-story",
+    "glittaa-phoenix",
+    "not-your-bot-beep-sleep",
+    "wellwolf-howl-lehluya",
+    "opa-pa-pa-party"
+  ],
+  "songs": [
+    {
+      "slug": "full-mindness",
+      "title": "Full-Mindness",
+      "lyricsStatus": "source-provided",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "hallucinating-dum-dum",
+      "title": "Hallucinating Dum Dum",
+      "lyricsStatus": "development-notes",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "yeah-lets-do-brunch",
+      "title": "Yeah, Let’s Do Brunch",
+      "lyricsStatus": "source-provided",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "splenda-love-rabbit-hell",
+      "title": "Splenda Love Rabbit Hell",
+      "lyricsStatus": "source-provided",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "believe-the-truth-fairy",
+      "title": "Believe the Truth Fairy",
+      "lyricsStatus": "source-provided",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "old-love-story",
+      "title": "Old Love Story",
+      "lyricsStatus": "source-provided",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "glittaa-phoenix",
+      "title": "GLITTAA Phoenix",
+      "lyricsStatus": "source-provided",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "not-your-bot-beep-sleep",
+      "title": "Not Your Bot — Beep Sleep",
+      "lyricsStatus": "partial-draft",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "wellwolf-howl-lehluya",
+      "title": "Wellwolf Howl-Leh-Lu-Ya",
+      "lyricsStatus": "source-provided",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    },
+    {
+      "slug": "opa-pa-pa-party",
+      "title": "Opa Pa Pa Pa Party",
+      "lyricsStatus": "source-with-alternate-draft",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
+    }
+  ]
+}
