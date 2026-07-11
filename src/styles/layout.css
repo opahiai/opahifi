@@ -1110,15 +1110,16 @@
 }
 
 .opa-about-controls {
+  --opa-about-arrow-size: 2.5rem;
   position: absolute;
   z-index: 10;
   bottom: max(0.55rem, env(safe-area-inset-bottom));
   left: 50%;
   display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
+  grid-template-columns: var(--opa-about-arrow-size) minmax(0, 1fr) var(--opa-about-arrow-size);
   align-items: center;
   gap: 0.65rem;
-  width: min(calc(100% - 1.6rem), 22rem);
+  width: min(calc(100% - 1.6rem), 20rem);
   padding: 0.55rem 0.15rem;
   background: transparent;
   box-shadow: none;
@@ -1127,8 +1128,8 @@
 
 .opa-about-arrow {
   display: grid;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: var(--opa-about-arrow-size);
+  height: var(--opa-about-arrow-size);
   padding: 0;
   place-items: center;
   border: 1px solid var(--ohf-white);
@@ -1223,7 +1224,7 @@
 
 @media (min-width: 31.25rem) {
   .opa-about-controls {
-    grid-template-columns: 2.6rem minmax(0, 1fr) 2.6rem;
+    --opa-about-arrow-size: 2.6rem;
   }
 
   .oh-video-card {
@@ -1356,14 +1357,12 @@
   }
 
   .opa-about-controls {
-    width: min(calc(100% - 3rem), 31rem);
-    grid-template-columns: 3rem minmax(0, 1fr) 3rem;
+    --opa-about-arrow-size: 3rem;
+    width: min(calc(100% - 3rem), 20rem);
     gap: 1rem;
   }
 
   .opa-about-arrow {
-    width: 3rem;
-    height: 3rem;
     font-size: 1.55rem;
   }
 
