@@ -430,6 +430,7 @@
 }
 
 .oh-hero__content {
+  --oh-hero-art-min-height: calc(var(--oh-main-height) * 0.7);
   display: grid;
   width: 100%;
   justify-items: center;
@@ -445,6 +446,7 @@
   align-self: start;
   justify-self: center;
   width: min(100%, 145dvh, 1672px);
+  height: var(--oh-hero-art-min-height);
   margin: 0;
   overflow: hidden;
 }
@@ -456,8 +458,8 @@
 }
 
 .oh-hero__art-image {
-  height: auto;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   object-position: center 10%;
 }
 
