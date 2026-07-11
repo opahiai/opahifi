@@ -67,7 +67,7 @@ export const OH_I18N = Object.freeze({
       }),
       follow: Object.freeze({
         title: "Follow / Contact",
-        eyebrow: "Streaming &  socials links",
+        eyebrow: "Streaming & socials links",
         href: "#oh-connect",
         icon: "fa-bolt",
         group: "opahifi"

@@ -6,8 +6,9 @@
   --ohg-playlist-height: clamp(2.25rem, 5.4dvh, 2.7rem);
   --ohg-playlist-top-gap: clamp(0.7rem, 1.15dvh, 1rem);
   --ohg-playlist-row-height: calc(var(--ohg-playlist-height) + var(--ohg-playlist-top-gap));
+  --ohg-shell-row-gap: var(--ohg-title-gap);
   --ohg-shell-pad-y: clamp(0.35rem, 0.9dvh, 0.75rem);
-  --ohg-header-space: calc(var(--ohg-title-height) + var(--ohg-title-gap) + var(--ohg-playlist-row-height) + var(--ohg-title-gap));
+  --ohg-header-space: calc(var(--ohg-title-height) + var(--ohg-shell-row-gap) + var(--ohg-playlist-row-height) + var(--ohg-shell-row-gap));
   --ohg-rail-height: clamp(5rem, 10dvh, 6rem);
   --ohg-stage-height: calc(var(--ohg-viewport-height) - (var(--ohg-shell-pad-y) * 2) - var(--ohg-header-space) - var(--ohg-rail-height) - env(safe-area-inset-bottom));
   --ohg-songography-width: min(100vw, 31.25rem);
@@ -21,11 +22,17 @@
     var(--ohf-bg);
 }
 
+.oh-songography.is-song-open {
+  --ohg-playlist-height: 0rem;
+  --ohg-playlist-top-gap: 0rem;
+  --ohg-shell-row-gap: 0rem;
+}
+
 .ohg-shell {
   position: relative;
   display: grid;
   grid-template-rows: var(--ohg-title-height) var(--ohg-playlist-row-height) minmax(0, 1fr);
-  row-gap: var(--ohg-title-gap);
+  row-gap: var(--ohg-shell-row-gap);
   width: 100%;
   height: 100%;
   margin-inline: auto;
@@ -67,6 +74,11 @@
   background: color-mix(in srgb, var(--ohf-surface) 56%, transparent);
   color: var(--ohf-text);
   margin-bottom: -0.6rem;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.oh-songography.is-song-open .ohg-playlist-bar {
+  display: none;
 }
 
 .ohg-playlist-bar__label {
@@ -96,6 +108,11 @@
   transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
+.ohg-playlist-bar__link svg {
+  width: 0.98rem;
+  height: 0.98rem;
+}
+
 .ohg-playlist-bar__link:hover,
 .ohg-playlist-bar__link:focus-visible {
   border-color: color-mix(in srgb, var(--ohf-blue) 74%, transparent);
@@ -111,7 +128,7 @@
   --ohg-grid-row-gaps: calc(var(--ohg-grid-rows) - 1);
   --ohg-grid-col-gaps: calc(var(--ohg-grid-cols) - 1);
   --ohg-grid-width-space: calc(var(--ohg-songography-width) - var(--ohg-grid-side-padding) - (var(--ohg-gap) * var(--ohg-grid-col-gaps)));
-  --ohg-grid-height-space: calc(93dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-playlist-row-height) - (var(--ohg-title-gap) * 2) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * var(--ohg-grid-row-gaps)));
+  --ohg-grid-height-space: calc(93dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-playlist-row-height) - (var(--ohg-shell-row-gap) * 2) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * var(--ohg-grid-row-gaps)));
   --ohg-cover-size-by-width: calc(var(--ohg-grid-width-space) / var(--ohg-grid-cols));
   --ohg-cover-size-by-height: calc(var(--ohg-grid-height-space) / var(--ohg-grid-rows));
   --ohg-cover-size: clamp(5rem, min(var(--ohg-cover-size-by-width), var(--ohg-cover-size-by-height)), 8.75rem);

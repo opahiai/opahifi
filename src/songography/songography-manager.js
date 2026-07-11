@@ -31,6 +31,12 @@ const OHG_PLATFORM_CONFIG = Object.freeze({
   other: Object.freeze({ label: "YouTube", icon: '<i class="fa-brands fa-youtube" aria-hidden="true"></i>' })
 });
 
+const OHG_PLAYLIST_LINKS = Object.freeze({
+  spotify: "https://open.spotify.com/playlist/5rAMYPsUmFoq3yoBnIGYQR?si=qw3P1s6eT7OLxatM2zUb3w",
+  youtube: "https://music.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF&si=S9qhguENixnuD3Ps",
+  other: "https://www.youtube.com/playlist?list=PLtGnlTqdsNV2QBkI-_1QFuidj3alcuLHF"
+});
+
 function ohgEscapeHtml(value = "") {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -181,6 +187,7 @@ class OhSongographyManager {
     this.railTrack = null;
     this.versionPills = null;
     this.platforms = null;
+    this.playlistLinks = null;
     this.lyricsPanel = null;
     this.lyricsText = null;
     this.handleClick = this.handleClick.bind(this);
@@ -199,6 +206,7 @@ class OhSongographyManager {
     this.railTrack = document.querySelector("#ohg-rail-track");
     this.versionPills = document.querySelector("#ohg-version-pills");
     this.platforms = document.querySelector("#ohg-platforms");
+    this.playlistLinks = document.querySelector("#ohg-playlist-links");
     this.lyricsPanel = document.querySelector("#ohg-lyrics");
     this.lyricsText = document.querySelector("#ohg-lyrics-text");
 
@@ -207,6 +215,7 @@ class OhSongographyManager {
     this.songography?.append(this.detail, this.rail);
 
     this.renderSongography();
+    this.renderPlaylistLinks();
     this.renderRailSlots();
     const count = document.querySelector(".ohg-heading__count");
     if (count) count.textContent = `${this.songs.length} songs`;
@@ -670,6 +679,27 @@ class OhSongographyManager {
     `;
   }
 
+  renderPlaylistLinks() {
+    if (!this.playlistLinks) return;
+
+    this.playlistLinks.innerHTML = Object.entries(OHG_PLAYLIST_LINKS).map(([key, url]) => {
+      const config = OHG_PLATFORM_CONFIG[key];
+      if (!config) return "";
+
+      return `
+        <a
+          class="ohg-playlist-bar__link"
+          href="${ohgEscapeHtml(url)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="OpaHiFi playlist on ${config.label}"
+        >
+          ${config.icon}
+        </a>
+      `;
+    }).join("");
+  }
+
   async getLyrics(version) {
     if (!version?.lyricsPath) return version?.lyrics || "Lyrics pending";
     if (this.lyricsCache.has(version.lyricsPath)) return this.lyricsCache.get(version.lyricsPath);
@@ -718,6 +748,7 @@ class OhSongographyManager {
     const state = Flip.getState(".ohg-cover");
     this.detail.classList.add("is-open");
     this.detail.setAttribute("aria-hidden", "false");
+    this.songography?.classList.add("is-song-open");
     this.rail.classList.add("is-open");
     this.setRailControlsReady(false);
     this.moveCoversToDetail(songId, versionIndex);
@@ -836,6 +867,7 @@ class OhSongographyManager {
       const travellingCovers = document.querySelectorAll(".ohg-cover");
       travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
       const state = Flip.getState(".ohg-cover");
+      this.songography?.classList.remove("is-song-open");
 
       this.songs.forEach((song) => {
         const cover = document.querySelector(`#ohg-cover-${song.id}`);
