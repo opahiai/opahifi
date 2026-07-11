@@ -906,7 +906,9 @@
 
 
 .oh-about {
+  --oh-footer-height: 40px;
   align-items: stretch;
+  grid-template-rows: minmax(0, 1fr) var(--oh-footer-height);
   background:
     radial-gradient(circle at 8% 6%, color-mix(in srgb, var(--ohf-blue) 18%, transparent), transparent 17rem),
     var(--ohf-bg);
@@ -919,7 +921,7 @@
 .opa-about-carousel {
   position: relative;
   width: 100%;
-  height: var(--oh-main-height);
+  height: calc(var(--oh-main-height) - var(--oh-footer-height));
   overflow: hidden;
 }
 
@@ -972,9 +974,7 @@
   gap: clamp(0.6rem, 2dvh, 1rem);
   overflow: hidden;
   padding:
-    clamp(6.35rem, 18dvh, 7.7rem)
-    clamp(0.9rem, 4vw, 1.5rem)
-    calc(5.9rem + env(safe-area-inset-bottom));
+    clamp(6.35rem, 18dvh, 7.7rem) clamp(0.9rem, 4vw, 1.5rem) calc(5.9rem + env(safe-area-inset-bottom));
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--ohf-white) 2.5%, transparent), transparent 34%),
     linear-gradient(150deg, color-mix(in srgb, var(--opa-about-slide-color) 14%, transparent), transparent 45%);
@@ -1096,7 +1096,7 @@
   margin: 0;
 }
 
-.opa-about-copy p + p {
+.opa-about-copy p+p {
   margin-top: 1em;
 }
 
@@ -1237,9 +1237,7 @@
     grid-template-rows: auto auto minmax(0, 1fr);
     column-gap: clamp(2rem, 6vw, 6rem);
     padding:
-      clamp(7.6rem, 19dvh, 10rem)
-      clamp(1.5rem, 4vw, 4rem)
-      calc(5.5rem + env(safe-area-inset-bottom));
+      clamp(7.6rem, 19dvh, 10rem) clamp(1.5rem, 4vw, 4rem) calc(5.5rem + env(safe-area-inset-bottom));
   }
 
   .opa-about-kicker {
@@ -1294,7 +1292,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  height: 50px;
+  height: var(--oh-footer-height);
   border-top: 1px solid var(--oh-border);
   background: var(--ohf-bg);
   color: var(--oh-muted);

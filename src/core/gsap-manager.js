@@ -48,6 +48,7 @@ class OhGsapManager {
 
     this.matchMedia.add("(prefers-reduced-motion: no-preference)", () => {
       this.context = gsap.context(() => {
+        this.prepareInitialStates(gsap);
         this.createHeroAnimation(gsap);
         this.createEntranceAnimation(gsap, ScrollTrigger);
         this.createOpaverseAnimations(gsap, ScrollTrigger);
@@ -61,11 +62,43 @@ class OhGsapManager {
     window.addEventListener("load", this.handleRefresh, { once: true });
   }
 
+  prepareInitialStates(gsap) {
+    gsap.set(".oh-hero__art, .oh-hero__title-stack, .oh-actions--hero .oh-button", {
+      autoAlpha: 0
+    });
+
+    if (!document.querySelector("#oh-journey[hidden]")) {
+      gsap.set(".oh-journey-entrance__content > *", {
+        autoAlpha: 0
+      });
+    }
+
+    document.querySelectorAll(".oh-home, .oh-songography, .oh-connect, .oh-videos, .oh-about").forEach((section) => {
+      const revealItems = this.getSectionRevealItems(section);
+      if (revealItems.length === 0) return;
+      gsap.set(revealItems, {
+        x: (_index, element) => this.getRevealStart(element).x,
+        y: (_index, element) => this.getRevealStart(element).y,
+        scale: (_index, element) => this.getRevealStart(element).scale,
+        autoAlpha: 0,
+        willChange: "transform, opacity"
+      });
+    });
+  }
+
   createHeroAnimation(gsap) {
     gsap.timeline({ defaults: { ease: "power3.out" } })
-      .from(".oh-hero__art", { scale: 0.92, opacity: 0, duration: 0.8 })
-      .from(".oh-hero__title-stack", { y: 38, opacity: 0, duration: 0.65 }, "-=0.25")
-      .from(".oh-actions--hero .oh-button", { y: 18, opacity: 0, duration: 0.4, stagger: 0.08 }, "-=0.2");
+      .fromTo(".oh-hero__art",
+        { y: 28, scale: 0.96, autoAlpha: 0 },
+        { y: 0, scale: 1, autoAlpha: 1, duration: 1.15, clearProps: "transform,opacity,visibility" })
+      .fromTo(".oh-hero__title-stack",
+        { y: 42, scale: 0.96, autoAlpha: 0 },
+        { y: 0, scale: 1, autoAlpha: 1, duration: 0.9, clearProps: "transform,opacity,visibility" },
+        "-=0.48")
+      .fromTo(".oh-actions--hero .oh-button",
+        { y: 20, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.58, stagger: 0.1, clearProps: "transform,opacity,visibility" },
+        "-=0.36");
   }
 
   createEntranceAnimation(gsap, ScrollTrigger) {
@@ -114,19 +147,82 @@ class OhGsapManager {
 
   createSectionReveals(gsap, ScrollTrigger) {
     document.querySelectorAll(".oh-home, .oh-songography, .oh-connect, .oh-videos, .oh-about").forEach((section) => {
-      gsap.from(section.querySelectorAll(".oh-eyebrow, .oh-section-title, .oh-section-copy, .oh-sitemap, .ohg-heading, .ohg-grid, .oh-follow__profile, .oh-follow__image, .oh-socials__group, .oh-link-row, .oh-video-card, .oh-button"), {
-        y: 32,
-        opacity: 0,
-        duration: 0.75,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: section,
-          start: "top 68%",
-          once: true
-        }
-      });
+      const revealItems = this.getSectionRevealItems(section);
+
+      if (revealItems.length === 0) return;
+
+      gsap.fromTo(revealItems,
+        {
+          x: (_index, element) => this.getRevealStart(element).x,
+          y: (_index, element) => this.getRevealStart(element).y,
+          scale: (_index, element) => this.getRevealStart(element).scale,
+          autoAlpha: 0,
+          willChange: "transform, opacity"
+        },
+        {
+          x: 0,
+          y: 0,
+          scale: 1,
+          autoAlpha: 1,
+          duration: 0.95,
+          stagger: { each: 0.075, from: "start" },
+          ease: "power3.out",
+          clearProps: "transform,opacity,visibility,willChange",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 76%",
+            once: true,
+            invalidateOnRefresh: true
+          }
+        });
     });
+  }
+
+  getSectionRevealItems(section) {
+    const revealSelectors = [
+      ".oh-eyebrow",
+      ".oh-section-title",
+      ".oh-section-copy",
+      ".oh-home__copy",
+      ".oh-sitemap__group",
+      ".ohg-heading",
+      ".ohg-grid__item",
+      ".oh-follow__profile",
+      ".oh-follow__image",
+      ".oh-socials__group",
+      ".oh-link-row",
+      ".oh-video-card",
+      ".opa-about-header",
+      ".opa-about-kicker",
+      ".opa-about-heading",
+      ".opa-about-media",
+      ".opa-about-copy",
+      ".opa-about-controls",
+      ".oh-button"
+    ].join(", ");
+
+    return [...section.querySelectorAll(revealSelectors)]
+      .filter((element) => !element.closest("[aria-hidden='true']"));
+  }
+
+  getRevealStart(element) {
+    if (element.matches(".oh-eyebrow, .oh-section-title, .ohg-heading, .opa-about-header, .opa-about-kicker, .opa-about-heading")) {
+      return { x: -34, y: 0, scale: 1 };
+    }
+
+    if (element.matches(".ohg-grid__item, .oh-video-card, .oh-socials__group")) {
+      return { x: 28, y: 14, scale: 0.975 };
+    }
+
+    if (element.matches(".oh-follow__image, .opa-about-media")) {
+      return { x: 44, y: 0, scale: 0.96 };
+    }
+
+    if (element.matches(".oh-sitemap__group, .oh-link-row, .opa-about-controls, .oh-button")) {
+      return { x: 0, y: 30, scale: 0.985 };
+    }
+
+    return { x: 0, y: 36, scale: 0.985 };
   }
 
   handleRefresh() {
