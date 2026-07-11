@@ -174,9 +174,9 @@
         <p class="oh-eyebrow" data-oh-i18n="sections.songovision.eyebrow">Videos, clips &amp; lyrics</p>
         <h2 class="oh-section-title" data-oh-i18n="sections.songovision.title">Songovision</h2>
         <div class="oh-video-grid" role="list" aria-label="OpaHiFi videos">
-          <a class="oh-video-card oh-video-card--meet"
-            href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9" target="_blank"
-            rel="noopener noreferrer" aria-label="Watch Meet Opa" role="listitem">
+          <button class="oh-video-card oh-video-card--meet" type="button" data-oh-video-open
+            data-oh-video-list="PLtGnlTqdsNV02--EhJTxL1WJG7oAf1Fc9" data-oh-video-title="Meet Opa playlist"
+            aria-label="Watch Meet Opa" role="listitem">
             <span class="oh-video-scene" aria-hidden="true">
               <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-meet-bg.png" alt=""
                 loading="lazy">
@@ -187,10 +187,11 @@
                 <span class="oh-video-watch__label">Meet Opa!</span>
               </span>
             </span>
-          </a>
+          </button>
 
-          <a class="oh-video-card" href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T"
-            target="_blank" rel="noopener noreferrer" aria-label="Watch Video Clips" role="listitem">
+          <button class="oh-video-card" type="button" data-oh-video-open
+            data-oh-video-list="PLtGnlTqdsNV22pErYzaWpzQh1Ilcb266T" data-oh-video-title="Video Clips playlist"
+            aria-label="Watch Video Clips" role="listitem">
             <span class="oh-video-scene" aria-hidden="true">
               <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-video-bg.png" alt=""
                 loading="lazy">
@@ -201,10 +202,11 @@
                 <span class="oh-video-watch__label">Video Clips</span>
               </span>
             </span>
-          </a>
+          </button>
 
-          <a class="oh-video-card" href="https://www.youtube.com/playlist?list=PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA"
-            target="_blank" rel="noopener noreferrer" aria-label="Watch Lyrics Shorts" role="listitem">
+          <button class="oh-video-card" type="button" data-oh-video-open
+            data-oh-video-list="PLtGnlTqdsNV0mslgh_bWih69lDOORw7rA" data-oh-video-title="Lyrics Shorts playlist"
+            aria-label="Watch Lyrics Shorts" role="listitem">
             <span class="oh-video-scene" aria-hidden="true">
               <img class="oh-video-thumb oh-video-thumb--bg" src="./img/opa/videos/opa-lyrics-bg.png" alt=""
                 loading="lazy">
@@ -215,7 +217,17 @@
                 <span class="oh-video-watch__label">Lyrics Shorts</span>
               </span>
             </span>
-          </a>
+          </button>
+        </div>
+        <div class="oh-video-player" data-oh-video-player aria-hidden="true">
+          <button class="oh-video-player__close" type="button" data-oh-video-close aria-label="Close video">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+          <div class="oh-video-player__frame">
+            <iframe class="oh-video-player__iframe" data-oh-video-iframe title="OpaHiFi video" loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
         </div>
       </div>
     </section>
