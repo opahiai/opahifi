@@ -55,10 +55,16 @@
 
 .ohg-grid {
   --ohg-gap: clamp(0.35rem, 1.8vw, 0.55rem);
-  --ohg-cover-size: clamp(5rem,
-      min(calc((var(--ohg-songography-width) - 1rem - (var(--ohg-gap) * 2)) / 3),
-        calc((100dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-title-gap) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * 3)) / 4)),
-      8.75rem);
+  --ohg-grid-side-padding: 1rem;
+  --ohg-grid-rows: 4;
+  --ohg-grid-cols: 3;
+  --ohg-grid-row-gaps: calc(var(--ohg-grid-rows) - 1);
+  --ohg-grid-col-gaps: calc(var(--ohg-grid-cols) - 1);
+  --ohg-grid-width-space: calc(var(--ohg-songography-width) - var(--ohg-grid-side-padding) - (var(--ohg-gap) * var(--ohg-grid-col-gaps)));
+  --ohg-grid-height-space: calc(93dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-title-gap) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * var(--ohg-grid-row-gaps)));
+  --ohg-cover-size-by-width: calc(var(--ohg-grid-width-space) / var(--ohg-grid-cols));
+  --ohg-cover-size-by-height: calc(var(--ohg-grid-height-space) / var(--ohg-grid-rows));
+  --ohg-cover-size: clamp(5rem, min(var(--ohg-cover-size-by-width), var(--ohg-cover-size-by-height)), 8.75rem);
   display: grid;
   grid-template-columns: repeat(3, var(--ohg-cover-size));
   grid-auto-rows: var(--ohg-cover-size);
@@ -759,10 +765,8 @@
 
   .ohg-grid {
     --ohg-gap: 0.72rem;
-    --ohg-cover-size: clamp(5.5rem,
-        min(calc((var(--ohg-songography-width) - 2rem - (var(--ohg-gap) * 2)) / 3),
-          calc((100dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-title-gap) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * 3)) / 4)),
-        9.25rem);
+    --ohg-grid-side-padding: 2rem;
+    --ohg-cover-size: clamp(5.5rem, min(var(--ohg-cover-size-by-width), var(--ohg-cover-size-by-height)), 9.25rem);
   }
 
   .ohg-detail__header {
