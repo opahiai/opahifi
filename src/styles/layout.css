@@ -1008,24 +1008,25 @@
 .opa-about-header {
   position: absolute;
   z-index: 8;
-  top: clamp(0.9rem, 2.5dvh, 1.25rem);
+  top: clamp(0.85rem, 2dvh, 1.15rem);
   left: 1rem;
   right: 1rem;
   pointer-events: none;
 }
 
 .opa-about-header .oh-eyebrow {
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.25rem;
+  font-size: clamp(0.62rem, 2.4vw, 0.78rem);
 }
 
 .opa-about-title {
-  max-width: 10ch;
+  max-width: 12ch;
   margin: 0;
   color: var(--ohf-text);
-  font-size: clamp(2.15rem, 10vw, 4.6rem);
+  font-size: clamp(1.9rem, 8.4vw, 3.35rem);
   font-weight: 1000;
-  line-height: 0.9;
-  letter-spacing: -0.075em;
+  line-height: 0.92;
+  letter-spacing: -0.06em;
 }
 
 .opa-about-track {
@@ -1045,7 +1046,7 @@
   min-width: 0;
   height: 100%;
   overflow: hidden;
-  padding: clamp(8rem, 26dvh, 10rem) 1rem calc(5.8rem + env(safe-area-inset-bottom));
+  padding: clamp(7.1rem, 22dvh, 8.5rem) 1rem calc(7.2rem + env(safe-area-inset-bottom));
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--ohf-white) 2.5%, transparent), transparent 34%),
     linear-gradient(150deg, color-mix(in srgb, var(--opa-about-slide-color) 14%, transparent), transparent 45%);
@@ -1092,7 +1093,7 @@
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  margin: clamp(-1.2rem, -3dvh, -0.7rem) 0 0.6rem;
+  margin: 0 0 0.45rem;
   color: var(--opa-about-slide-color);
   font-size: 0.63rem;
   font-weight: 950;
@@ -1110,12 +1111,12 @@
 .opa-about-heading {
   position: relative;
   z-index: 1;
-  max-width: 8ch;
+  max-width: 9ch;
   margin: 0;
-  font-size: clamp(2.35rem, 12vw, 4.8rem);
+  font-size: clamp(2.15rem, 10vw, 4.15rem);
   font-weight: 1000;
-  line-height: 0.82;
-  letter-spacing: -0.085em;
+  line-height: 0.86;
+  letter-spacing: -0.07em;
   text-transform: uppercase;
 }
 
@@ -1128,11 +1129,11 @@
 .opa-about-media {
   position: absolute;
   z-index: 0;
-  top: clamp(5.7rem, 16dvh, 7.4rem);
-  right: -0.4rem;
+  top: clamp(6.4rem, 16dvh, 7.9rem);
+  right: -0.9rem;
   display: grid;
-  width: min(68vw, 20rem);
-  max-height: clamp(10rem, 31dvh, 15.5rem);
+  width: min(58vw, 17rem);
+  max-height: clamp(8.5rem, 27dvh, 13.25rem);
   margin: 0;
   place-items: center;
   pointer-events: none;
@@ -1149,18 +1150,19 @@
 .opa-about-copy {
   position: relative;
   z-index: 1;
-  width: min(100%, 23rem);
+  width: min(100%, 25rem);
   margin: auto 0 0;
 }
 
 .opa-about-copy {
-  padding: clamp(0.65rem, 1.8dvh, 0.85rem) 0.9rem;
-  border-left: 3px solid var(--opa-about-slide-color);
-  border-radius: 0 0.9rem 0.9rem 0;
-  background: color-mix(in srgb, var(--ohf-bg) 76%, transparent);
+  padding: clamp(0.78rem, 1.9dvh, 1rem) 0.95rem;
+  border-top: 3px solid var(--opa-about-slide-color);
+  border-left: 0;
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--ohf-bg) 84%, transparent);
   color: var(--ohf-text);
-  font-size: clamp(0.78rem, 2.2dvh, 1.05rem);
-  line-height: 1.38;
+  font-size: clamp(0.86rem, 2.05dvh, 1rem);
+  line-height: 1.42;
   letter-spacing: -0.012em;
   backdrop-filter: blur(12px);
 }
@@ -1181,23 +1183,26 @@
   bottom: 0;
   left: 0;
   display: grid;
-  grid-template-columns: 2.7rem minmax(0, 1fr) 2.7rem;
+  grid-template-columns: 3.15rem minmax(0, 1fr) 3.15rem;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.55rem max(0.7rem, env(safe-area-inset-right)) calc(0.55rem + env(safe-area-inset-bottom)) max(0.7rem, env(safe-area-inset-left));
-  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--ohf-bg) 97%, transparent) 30%);
+  gap: 0.7rem;
+  padding: 0.7rem max(0.8rem, env(safe-area-inset-right)) calc(0.75rem + env(safe-area-inset-bottom)) max(0.8rem, env(safe-area-inset-left));
+  background:
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--ohf-bg) 98%, transparent) 18%),
+    color-mix(in srgb, var(--ohf-bg) 92%, transparent);
+  box-shadow: 0 -1rem 2rem color-mix(in srgb, var(--ohf-bg) 70%, transparent);
 }
 
 .opa-about-arrow {
   display: grid;
-  width: 2.55rem;
-  height: 2.55rem;
+  width: 3.05rem;
+  height: 3.05rem;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--ohf-white) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ohf-white) 28%, transparent);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--ohf-white) 7%, transparent);
+  background: color-mix(in srgb, var(--ohf-white) 10%, transparent);
   color: var(--ohf-text);
-  font-size: 1.35rem;
+  font-size: 1.55rem;
   font-weight: 950;
   cursor: pointer;
 }
@@ -1215,7 +1220,7 @@
   min-width: 0;
   gap: 0.7rem;
   color: var(--oh-muted);
-  font-size: 0.59rem;
+  font-size: 0.66rem;
   font-weight: 950;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1231,12 +1236,12 @@
 
 .opa-about-bars {
   display: flex;
-  gap: 0.34rem;
+  gap: 0.48rem;
 }
 
 .opa-about-bar {
   flex: 1;
-  height: 0.32rem;
+  height: 0.55rem;
   overflow: hidden;
   padding: 0;
   border: 0;
@@ -1367,61 +1372,61 @@
   }
 
   .opa-about-header {
-    top: clamp(1.5rem, 4dvh, 3rem);
+    top: clamp(1.25rem, 3.2dvh, 2.4rem);
     left: clamp(2rem, 5vw, 5rem);
     right: clamp(2rem, 5vw, 5rem);
   }
 
   .opa-about-title {
-    font-size: clamp(3.4rem, 5.8vw, 5.8rem);
+    font-size: clamp(3rem, 4.8vw, 4.6rem);
   }
 
   .opa-about-slide {
     display: grid;
-    grid-template-columns: minmax(18rem, 0.82fr) minmax(18rem, 1.18fr);
+    grid-template-columns: minmax(18rem, 0.92fr) minmax(20rem, 1.08fr);
     grid-template-rows: auto 1fr;
     align-items: center;
-    column-gap: clamp(2rem, 6vw, 6rem);
-    padding: clamp(14rem, 28dvh, 18rem) clamp(2rem, 5vw, 5rem) 6.6rem;
+    column-gap: clamp(1.8rem, 5vw, 5rem);
+    padding: clamp(11rem, 23dvh, 14rem) clamp(2rem, 5vw, 5rem) 7rem;
   }
 
   .opa-about-kicker {
     grid-column: 1;
     align-self: end;
-    margin-top: clamp(-2rem, -4dvh, -1rem);
+    margin-top: 0;
   }
 
   .opa-about-heading {
     grid-column: 1;
     align-self: start;
-    max-width: 7ch;
-    font-size: clamp(4rem, 8vw, 8rem);
+    max-width: 8.5ch;
+    font-size: clamp(3.6rem, 6vw, 6.4rem);
   }
 
   .opa-about-media {
-    top: clamp(5.9rem, 13dvh, 8.2rem);
+    top: clamp(5.8rem, 12dvh, 7.5rem);
     right: clamp(0.8rem, 3vw, 3rem);
-    width: min(42vw, 34rem);
-    max-height: clamp(15rem, 36dvh, 24rem);
+    width: min(34vw, 27rem);
+    max-height: clamp(13rem, 31dvh, 20rem);
   }
 
   .opa-about-slide-2 .opa-about-media {
-    width: min(36vw, 29rem);
-    max-height: clamp(13rem, 32dvh, 21rem);
+    width: min(31vw, 24rem);
+    max-height: clamp(12rem, 29dvh, 18rem);
   }
 
   .opa-about-copy {
     grid-column: 2;
     grid-row: 1 / span 2;
-    align-self: start;
+    align-self: center;
     justify-self: start;
-    width: min(100%, 34rem);
+    width: min(100%, 31rem);
     margin: 0;
   }
 
   .opa-about-copy {
-    padding: 1rem 1.15rem;
-    font-size: clamp(1rem, 1.45vw, 1.35rem);
+    padding: 1.1rem 1.2rem;
+    font-size: clamp(0.98rem, 1.22vw, 1.18rem);
     line-height: 1.48;
   }
 
@@ -1432,15 +1437,15 @@
   }
 
   .opa-about-controls {
-    grid-template-columns: 3.5rem minmax(24rem, 44rem) 3.5rem;
+    grid-template-columns: 3.8rem minmax(24rem, 38rem) 3.8rem;
     justify-content: center;
     gap: 1rem;
-    padding-bottom: 0.8rem;
+    padding-bottom: 0.9rem;
   }
 
   .opa-about-arrow {
-    width: 3.2rem;
-    height: 3.2rem;
+    width: 3.55rem;
+    height: 3.55rem;
   }
 
   .opa-about-counter {
