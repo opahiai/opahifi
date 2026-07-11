@@ -216,6 +216,7 @@ class OhGsapManager {
       ".oh-home__copy",
       ".oh-sitemap__group",
       ".ohg-heading",
+      ".ohg-playlist-bar",
       ".ohg-grid__item",
       ".oh-follow__profile",
       ".oh-follow__image",
@@ -236,7 +237,7 @@ class OhGsapManager {
   }
 
   getRevealStart(element) {
-    if (element.matches(".oh-eyebrow, .oh-section-title, .ohg-heading, .opa-about-header, .opa-about-kicker, .opa-about-heading")) {
+    if (element.matches(".oh-eyebrow, .oh-section-title, .ohg-heading, .ohg-playlist-bar, .opa-about-header, .opa-about-kicker, .opa-about-heading")) {
       return { x: -34, y: 0, scale: 1 };
     }
 

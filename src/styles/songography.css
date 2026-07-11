@@ -3,8 +3,11 @@
   --ohg-viewport-height: var(--oh-main-height);
   --ohg-title-height: clamp(5.2rem, 14dvh, 7rem);
   --ohg-title-gap: clamp(0.15rem, 0.75dvh, 0.45rem);
+  --ohg-playlist-height: clamp(2.25rem, 5.4dvh, 2.7rem);
+  --ohg-playlist-top-gap: clamp(0.7rem, 1.15dvh, 1rem);
+  --ohg-playlist-row-height: calc(var(--ohg-playlist-height) + var(--ohg-playlist-top-gap));
   --ohg-shell-pad-y: clamp(0.35rem, 0.9dvh, 0.75rem);
-  --ohg-header-space: calc(var(--ohg-title-height) + var(--ohg-title-gap));
+  --ohg-header-space: calc(var(--ohg-title-height) + var(--ohg-title-gap) + var(--ohg-playlist-row-height) + var(--ohg-title-gap));
   --ohg-rail-height: clamp(5rem, 10dvh, 6rem);
   --ohg-stage-height: calc(var(--ohg-viewport-height) - (var(--ohg-shell-pad-y) * 2) - var(--ohg-header-space) - var(--ohg-rail-height) - env(safe-area-inset-bottom));
   --ohg-songography-width: min(100vw, 31.25rem);
@@ -21,7 +24,7 @@
 .ohg-shell {
   position: relative;
   display: grid;
-  grid-template-rows: var(--ohg-title-height) minmax(0, 1fr);
+  grid-template-rows: var(--ohg-title-height) var(--ohg-playlist-row-height) minmax(0, 1fr);
   row-gap: var(--ohg-title-gap);
   width: 100%;
   height: 100%;
@@ -50,6 +53,56 @@
   letter-spacing: -0.055em;
 }
 
+.ohg-playlist-bar {
+  display: inline-flex;
+  align-self: end;
+  justify-self: center;
+  align-items: center;
+  justify-content: center;
+  gap: 0.68rem;
+  height: var(--ohg-playlist-height);
+  padding: 0.28rem 0.42rem 0.28rem 0.78rem;
+  border: 1px solid color-mix(in srgb, var(--ohf-text-muted) 20%, transparent);
+  border-radius: var(--oh-radius-pill);
+  background: color-mix(in srgb, var(--ohf-surface) 56%, transparent);
+  color: var(--ohf-text);
+  margin-bottom: -0.6rem;
+}
+
+.ohg-playlist-bar__label {
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ohg-playlist-bar__links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+}
+
+.ohg-playlist-bar__link {
+  display: grid;
+  width: 1.72rem;
+  height: 1.72rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--ohf-white) 16%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ohf-white);
+  font-size: 0.88rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ohg-playlist-bar__link:hover,
+.ohg-playlist-bar__link:focus-visible {
+  border-color: color-mix(in srgb, var(--ohf-blue) 74%, transparent);
+  background: color-mix(in srgb, var(--ohf-blue) 14%, transparent);
+  transform: translateY(-1px);
+}
+
 .ohg-grid {
   --ohg-gap: clamp(0.35rem, 1.8vw, 0.55rem);
   --ohg-grid-side-padding: 1rem;
@@ -58,7 +111,7 @@
   --ohg-grid-row-gaps: calc(var(--ohg-grid-rows) - 1);
   --ohg-grid-col-gaps: calc(var(--ohg-grid-cols) - 1);
   --ohg-grid-width-space: calc(var(--ohg-songography-width) - var(--ohg-grid-side-padding) - (var(--ohg-gap) * var(--ohg-grid-col-gaps)));
-  --ohg-grid-height-space: calc(93dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-title-gap) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * var(--ohg-grid-row-gaps)));
+  --ohg-grid-height-space: calc(93dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-playlist-row-height) - (var(--ohg-title-gap) * 2) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * var(--ohg-grid-row-gaps)));
   --ohg-cover-size-by-width: calc(var(--ohg-grid-width-space) / var(--ohg-grid-cols));
   --ohg-cover-size-by-height: calc(var(--ohg-grid-height-space) / var(--ohg-grid-rows));
   --ohg-cover-size: clamp(5rem, min(var(--ohg-cover-size-by-width), var(--ohg-cover-size-by-height)), 8.75rem);
@@ -109,7 +162,7 @@
 
 .ohg-cover--circle {
   border: 0;
-  border-radius: 40%;
+  border-radius: 20%;
   background: var(--ohf-cover-bg);
   box-shadow: none;
 }

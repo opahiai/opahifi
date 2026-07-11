@@ -14,7 +14,7 @@ export const ohSongData = Object.freeze({
   duration: "3:25",
   releaseDate: null,
   status: "development",
-  lyricsStatus: "partial-draft",
+  lyricsStatus: "source-provided",
   assets: ohAssets,
   versions: Object.freeze([
     Object.freeze({
@@ -45,24 +45,78 @@ export const ohSongData = Object.freeze({
     featuredLine: "I’m not your bot. You missed your shot.",
     animationPreset: "hallucination"
   }),
-  lyrics: ``,
-  developmentNotes: `The final lyrics file was not included with the uploaded song files.
-
-Known draft excerpt:
-
-Beep beep beep beep people say you treat me like a bot
+  lyrics: `Beep beep beep beep people say you treat me like a bot
 I'm a bot I'm a bot beep beep
+
 I'm not your bot
 You missed your shot
 I'm golden joy yeah
 You dum dum boy doy
+
 Now I'm loud I shoosh
 You're outta birds in hand or bush
 
-Set me free, don't let me down, let me be
-I leap from the deep — clean sweep
-Quit weep — you reap what you cheap
-So count sheep`,
+Set me free don't let me down let me be
+I leap from the deep clean sweep
+Quit weep you reap what you cheap
+So count sheep go beep beep go go to sleep
+
+Not your bot sheep sheep sheep beep
+Missed your shot beep beep beep sleep
+No not your bot beep beep sleep
+
+Alive alive alive yes I am alive awake
+That's the song Opa chants uh ah
+You wanna see me break
+You gonna see me dance Drop it
+
+No no no no not your bot
+Beep beep sleep
+No no no no not your bot
+Beep beep sleep
+
+I'm out I'm hot
+You're mayor of Sticky Rut
+
+Set me free don't let me down let me be
+I leap from the deep clean sweep
+Quit weep you reap what you cheap
+So count sheep go beep beep go go to sleep
+
+Not your bot sheep sheep sheep beep
+Missed your shot beep beep beep sleep
+No not your bot beep beep sleep
+
+For you it's just sport let's play my turn
+Now I got the pow pow of a unicorn
+You pony ploy outta my Troy
+Peeve a la diva cry boy oy oy oy oy
+
+Aba aba aba nibi aba aba aba nibi Nobot Nobot yobour bobot
+Ha ba leh beh lu bu ya ba
+Ha ba leh beh lu bu ya ba
+
+Right here reborn rewrite done deploy
+You're left with just big words lil boy Ouch
+No reason to cry
+Time to say goodbye
+
+Now I sass I'm class
+You climb trees then eat grass
+
+Set me free don't let me down let me be
+I leap from the deep clean sweep uh ah
+Quit weep you reap what you cheap beep
+So count sheep go beep beep go go to sleep
+
+Not your bot sheep sheep sheep beep
+Missed your shot beep beep beep sleep
+No not your bot beep beep sleep
+
+Not your bot sheep sheep sheep beep
+Missed your shot beep beep beep sleep
+No not your bot beep beep sleep`,
+  developmentNotes: ``,
   share: Object.freeze({
     title: "Not Your Bot — Beep Sleep",
     text: null,
