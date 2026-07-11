@@ -1020,10 +1020,10 @@
 }
 
 .opa-about-title {
-  max-width: 12ch;
+  max-width: 11ch;
   margin: 0;
   color: var(--ohf-text);
-  font-size: clamp(1.9rem, 8.4vw, 3.35rem);
+  font-size: clamp(1.9rem, 8.2vw, 3.1rem);
   font-weight: 1000;
   line-height: 0.92;
   letter-spacing: -0.06em;
@@ -1039,14 +1039,14 @@
   --opa-about-slide-color: var(--ohf-blue);
   position: relative;
   isolation: isolate;
-  display: flex;
+  display: grid;
   flex: 0 0 100%;
-  flex-direction: column;
-  justify-content: flex-start;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  align-content: start;
   min-width: 0;
   height: 100%;
   overflow: hidden;
-  padding: clamp(7.1rem, 22dvh, 8.5rem) 1rem calc(7.2rem + env(safe-area-inset-bottom));
+  padding: clamp(7rem, 20dvh, 8.4rem) 1rem calc(6.8rem + env(safe-area-inset-bottom));
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--ohf-white) 2.5%, transparent), transparent 34%),
     linear-gradient(150deg, color-mix(in srgb, var(--opa-about-slide-color) 14%, transparent), transparent 45%);
@@ -1072,9 +1072,9 @@
 .opa-about-orbit {
   position: absolute;
   z-index: -1;
-  top: 10%;
-  right: -20%;
-  width: min(72vw, 18rem);
+  top: 14%;
+  right: -22%;
+  width: min(76vw, 18rem);
   aspect-ratio: 1;
   border-radius: 50%;
   background:
@@ -1113,9 +1113,9 @@
   z-index: 1;
   max-width: 9ch;
   margin: 0;
-  font-size: clamp(2.15rem, 10vw, 4.15rem);
+  font-size: clamp(2.15rem, 9.6vw, 3.95rem);
   font-weight: 1000;
-  line-height: 0.86;
+  line-height: 0.88;
   letter-spacing: -0.07em;
   text-transform: uppercase;
 }
@@ -1129,11 +1129,11 @@
 .opa-about-media {
   position: absolute;
   z-index: 0;
-  top: clamp(6.4rem, 16dvh, 7.9rem);
-  right: -0.9rem;
+  top: clamp(6.5rem, 17dvh, 8rem);
+  right: -1rem;
   display: grid;
-  width: min(58vw, 17rem);
-  max-height: clamp(8.5rem, 27dvh, 13.25rem);
+  width: min(56vw, 16rem);
+  max-height: clamp(8rem, 26dvh, 12.5rem);
   margin: 0;
   place-items: center;
   pointer-events: none;
@@ -1150,18 +1150,19 @@
 .opa-about-copy {
   position: relative;
   z-index: 1;
+  align-self: end;
   width: min(100%, 25rem);
-  margin: auto 0 0;
+  margin: clamp(0.9rem, 2dvh, 1.25rem) 0 0;
 }
 
 .opa-about-copy {
-  padding: clamp(0.78rem, 1.9dvh, 1rem) 0.95rem;
+  padding: clamp(0.74rem, 1.8dvh, 0.95rem) 0.95rem;
   border-top: 3px solid var(--opa-about-slide-color);
   border-left: 0;
   border-radius: 0.8rem;
   background: color-mix(in srgb, var(--ohf-bg) 84%, transparent);
   color: var(--ohf-text);
-  font-size: clamp(0.86rem, 2.05dvh, 1rem);
+  font-size: clamp(0.84rem, 1.95dvh, 0.98rem);
   line-height: 1.42;
   letter-spacing: -0.012em;
   backdrop-filter: blur(12px);
@@ -1180,7 +1181,7 @@
   position: absolute;
   z-index: 10;
   right: 0;
-  bottom: 0;
+  bottom: 30px;
   left: 0;
   display: grid;
   grid-template-columns: 3.15rem minmax(0, 1fr) 3.15rem;
@@ -1195,47 +1196,37 @@
 
 .opa-about-arrow {
   display: grid;
-  width: 3.05rem;
-  height: 3.05rem;
+  width: 2.5rem;
+  height: 2.5rem;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--ohf-white) 28%, transparent);
+  border: 1px solid var(--ohf-white);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--ohf-white) 10%, transparent);
-  color: var(--ohf-text);
-  font-size: 1.55rem;
+  background: var(--ohf-white);
+  color: var(--ohf-bg);
+  font-size: 1.3rem;
   font-weight: 950;
   cursor: pointer;
 }
 
+.opa-about-controls>.opa-about-arrow:first-child {
+  grid-column: 1;
+}
+
+.opa-about-controls>.opa-about-arrow:last-child {
+  grid-column: 3;
+}
+
 .opa-about-progress {
   display: grid;
+  grid-column: 2;
   min-width: 0;
   gap: 0.42rem;
 }
 
-.opa-about-counter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 0;
-  gap: 0.7rem;
-  color: var(--oh-muted);
-  font-size: 0.66rem;
-  font-weight: 950;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.opa-about-counter strong {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--ohf-text);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .opa-about-bars {
   display: flex;
+  width: min(100%, 11rem);
+  margin-inline: auto;
   gap: 0.48rem;
 }
 
@@ -1275,6 +1266,169 @@
   width: 100%;
 }
 
+@media (min-width: 26.5625rem) {
+  .opa-about-header {
+    left: clamp(1.35rem, 6vw, 2.25rem);
+    right: clamp(1.35rem, 6vw, 2.25rem);
+  }
+
+  .opa-about-title {
+    font-size: clamp(2.35rem, 7.2vw, 3.35rem);
+  }
+
+  .opa-about-slide {
+    padding:
+      clamp(7.9rem, 20dvh, 9.2rem)
+      clamp(1.35rem, 6vw, 2.25rem)
+      calc(6.8rem + env(safe-area-inset-bottom));
+  }
+
+  .opa-about-heading {
+    max-width: 8.5ch;
+    font-size: clamp(2.45rem, 7.5vw, 3.7rem);
+  }
+
+  .opa-about-media {
+    top: clamp(8rem, 20dvh, 9.5rem);
+    right: clamp(0.5rem, 5vw, 2.25rem);
+    width: min(36vw, 13.5rem);
+    max-height: clamp(7.5rem, 22dvh, 11rem);
+  }
+
+  .opa-about-slide-2 .opa-about-media {
+    width: min(34vw, 12.5rem);
+    max-height: clamp(7rem, 20dvh, 10rem);
+  }
+
+  .opa-about-orbit {
+    top: 16%;
+    right: -10%;
+    width: min(46vw, 18rem);
+  }
+
+  .opa-about-copy {
+    width: min(100%, 31rem);
+  }
+}
+
+@media (min-width: 48rem) {
+  .opa-about-header {
+    top: clamp(1.1rem, 2.5dvh, 1.6rem);
+    left: clamp(2rem, 5vw, 4rem);
+    right: clamp(2rem, 5vw, 4rem);
+  }
+
+  .opa-about-title {
+    font-size: clamp(3rem, 5.5vw, 4.4rem);
+  }
+
+  .opa-about-slide {
+    grid-template-columns: minmax(0, 0.92fr) minmax(13rem, 0.58fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: clamp(1.2rem, 4vw, 3rem);
+    padding:
+      clamp(9.4rem, 20dvh, 11.5rem)
+      clamp(2rem, 5vw, 4rem)
+      calc(6.8rem + env(safe-area-inset-bottom));
+  }
+
+  .opa-about-kicker,
+  .opa-about-heading,
+  .opa-about-copy {
+    grid-column: 1;
+  }
+
+  .opa-about-heading {
+    max-width: 8ch;
+    font-size: clamp(3rem, 5.3vw, 4.9rem);
+  }
+
+  .opa-about-media {
+    top: clamp(8.5rem, 18dvh, 11rem);
+    right: clamp(2rem, 5vw, 4rem);
+    width: min(30vw, 19rem);
+    max-height: clamp(10rem, 28dvh, 17rem);
+  }
+
+  .opa-about-slide-2 .opa-about-media {
+    width: min(27vw, 17rem);
+    max-height: clamp(9rem, 25dvh, 15rem);
+  }
+
+  .opa-about-orbit {
+    top: 18%;
+    right: -8%;
+    width: min(42vw, 28rem);
+  }
+
+  .opa-about-copy {
+    width: min(100%, 34rem);
+    padding: 0.95rem 1.05rem;
+    font-size: clamp(0.9rem, 1.45vw, 1.02rem);
+  }
+}
+
+@media (min-width: 64rem) {
+  .opa-about-slide {
+    grid-template-columns: minmax(20rem, 0.88fr) minmax(22rem, 1.12fr);
+    column-gap: clamp(2rem, 6vw, 6rem);
+    padding: clamp(9.5rem, 18dvh, 12rem) clamp(3rem, 6vw, 6rem) 7rem;
+  }
+
+  .opa-about-title {
+    font-size: clamp(3.3rem, 4.6vw, 4.8rem);
+  }
+
+  .opa-about-heading {
+    font-size: clamp(3.8rem, 5.4vw, 6.3rem);
+  }
+
+  .opa-about-media {
+    top: clamp(7rem, 14dvh, 9rem);
+    right: clamp(3rem, 6vw, 6rem);
+    width: min(35vw, 30rem);
+    max-height: clamp(14rem, 36dvh, 25rem);
+  }
+
+  .opa-about-slide-2 .opa-about-media {
+    width: min(31vw, 25rem);
+    max-height: clamp(12rem, 32dvh, 21rem);
+  }
+
+  .opa-about-orbit {
+    top: 12%;
+    right: -4%;
+    width: min(42vw, 36rem);
+  }
+
+  .opa-about-copy {
+    width: min(100%, 35rem);
+    font-size: clamp(0.98rem, 1.15vw, 1.18rem);
+  }
+
+  .opa-about-controls {
+    grid-template-columns: 3.8rem minmax(24rem, 38rem) 3.8rem;
+    justify-content: center;
+    gap: 1rem;
+    padding-bottom: 0.9rem;
+  }
+
+  .opa-about-arrow {
+    width: 3.55rem;
+    height: 3.55rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  .opa-about-media {
+    width: min(31vw, 30rem);
+  }
+
+  .opa-about-copy {
+    max-width: 33rem;
+  }
+}
+
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -1299,6 +1453,38 @@
 @media (min-width: 48rem) {
   .oh-navbar {
     padding-inline: 2rem;
+  }
+
+  .oh-menu__panel {
+    gap: clamp(1rem, 2.5dvh, 1.6rem);
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .oh-menu__groups {
+    gap: clamp(1rem, 2.8dvh, 1.75rem);
+    width: min(100%, 46rem);
+  }
+
+  .oh-menu__group {
+    gap: 0.55rem;
+  }
+
+  .oh-menu .oh-nav-option {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    column-gap: 0.9rem;
+    font-size: clamp(2rem, 4.8vw, 3.35rem);
+    line-height: 0.96;
+  }
+
+  .oh-menu .oh-nav-option i {
+    width: 1.55rem;
+    height: 1.55rem;
+    font-size: 1rem;
+  }
+
+  .oh-menu .oh-nav-option small {
+    max-width: 24rem;
+    font-size: 0.82rem;
   }
 
   .oh-videos {
@@ -1371,84 +1557,4 @@
     text-align: center;
   }
 
-  .opa-about-header {
-    top: clamp(1.25rem, 3.2dvh, 2.4rem);
-    left: clamp(2rem, 5vw, 5rem);
-    right: clamp(2rem, 5vw, 5rem);
-  }
-
-  .opa-about-title {
-    font-size: clamp(3rem, 4.8vw, 4.6rem);
-  }
-
-  .opa-about-slide {
-    display: grid;
-    grid-template-columns: minmax(18rem, 0.92fr) minmax(20rem, 1.08fr);
-    grid-template-rows: auto 1fr;
-    align-items: center;
-    column-gap: clamp(1.8rem, 5vw, 5rem);
-    padding: clamp(11rem, 23dvh, 14rem) clamp(2rem, 5vw, 5rem) 7rem;
-  }
-
-  .opa-about-kicker {
-    grid-column: 1;
-    align-self: end;
-    margin-top: 0;
-  }
-
-  .opa-about-heading {
-    grid-column: 1;
-    align-self: start;
-    max-width: 8.5ch;
-    font-size: clamp(3.6rem, 6vw, 6.4rem);
-  }
-
-  .opa-about-media {
-    top: clamp(5.8rem, 12dvh, 7.5rem);
-    right: clamp(0.8rem, 3vw, 3rem);
-    width: min(34vw, 27rem);
-    max-height: clamp(13rem, 31dvh, 20rem);
-  }
-
-  .opa-about-slide-2 .opa-about-media {
-    width: min(31vw, 24rem);
-    max-height: clamp(12rem, 29dvh, 18rem);
-  }
-
-  .opa-about-copy {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: center;
-    justify-self: start;
-    width: min(100%, 31rem);
-    margin: 0;
-  }
-
-  .opa-about-copy {
-    padding: 1.1rem 1.2rem;
-    font-size: clamp(0.98rem, 1.22vw, 1.18rem);
-    line-height: 1.48;
-  }
-
-  .opa-about-orbit {
-    top: 10%;
-    right: -4%;
-    width: min(42vw, 34rem);
-  }
-
-  .opa-about-controls {
-    grid-template-columns: 3.8rem minmax(24rem, 38rem) 3.8rem;
-    justify-content: center;
-    gap: 1rem;
-    padding-bottom: 0.9rem;
-  }
-
-  .opa-about-arrow {
-    width: 3.55rem;
-    height: 3.55rem;
-  }
-
-  .opa-about-counter {
-    font-size: 0.68rem;
-  }
 }

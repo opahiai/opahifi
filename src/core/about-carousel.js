@@ -3,17 +3,10 @@ class OhAboutCarousel {
     this.root = null;
     this.track = null;
     this.bars = [];
-    this.label = null;
-    this.count = null;
     this.index = 0;
     this.touchStartX = 0;
     this.touchDeltaX = 0;
     this.isVisible = false;
-    this.labels = [
-      "100% Human Lyrics",
-      "Real Life, Remixed",
-      "Who's Opa?"
-    ];
 
     this.handleKeydown = this.handleKeydown.bind(this);
   }
@@ -24,8 +17,6 @@ class OhAboutCarousel {
 
     this.track = this.root.querySelector("[data-opa-about-track]");
     this.bars = [...this.root.querySelectorAll("[data-opa-about-bar]")];
-    this.label = this.root.querySelector("[data-opa-about-label]");
-    this.count = this.root.querySelector("[data-opa-about-count]");
 
     this.root.querySelector("[data-opa-about-prev]")?.addEventListener("click", () => this.go(-1));
     this.root.querySelector("[data-opa-about-next]")?.addEventListener("click", () => this.go(1));
@@ -76,7 +67,7 @@ class OhAboutCarousel {
   }
 
   go(step) {
-    this.index = (this.index + step + this.labels.length) % this.labels.length;
+    this.index = (this.index + step + this.bars.length) % this.bars.length;
     this.render();
   }
 
@@ -84,10 +75,6 @@ class OhAboutCarousel {
     if (!this.track) return;
 
     this.track.style.transform = `translateX(-${this.index * 100}%)`;
-    if (this.label) this.label.textContent = this.labels[this.index];
-    if (this.count) {
-      this.count.textContent = `${String(this.index + 1).padStart(2, "0")} / ${String(this.labels.length).padStart(2, "0")}`;
-    }
 
     this.bars.forEach((bar, index) => {
       bar.setAttribute("aria-current", index === this.index ? "true" : "false");
