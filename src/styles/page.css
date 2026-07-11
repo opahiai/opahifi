@@ -1,0 +1,52 @@
+/*
+  Styles for static content pages like Terms of Use.
+*/
+
+.ohf-page-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+}
+
+.ohf-page-header {
+    padding-bottom: 2rem;
+    text-align: center;
+}
+
+.ohf-logo-link {
+    color: var(--ohf-text);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.ohf-logo-link:hover,
+.ohf-logo-link:focus {
+    color: var(--ohf-blue);
+    text-decoration: none;
+}
+
+.ohf-page-content h1 {
+    color: var(--ohf-text);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.ohf-page-content h2 {
+    color: var(--ohf-text);
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--ohf-surface);
+    padding-bottom: 0.5rem;
+}
+
+.ohf-page-content p {
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+}
+
+.ohf-page-meta {
+    color: var(--ohf-text-muted);
+}
