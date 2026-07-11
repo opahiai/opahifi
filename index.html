@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#05060d">
   <title>OpaHiFi</title>
+  <link rel="icon" href="/img/ico/favicon.ico" sizes="any">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -304,13 +305,26 @@
 
       <footer class="oh-footer" id="oh-footer">
         <div class="oh-footer__content">
-          <a href="/src/styles/terms.html" target="_blank">Terms of Use</a>
+          <a href="/src/styles/terms.html" data-oh-terms-open>Terms of Use</a>
           <span class="oh-footer__separator">&bull;</span>
           <span>&copy; 2026 OpaHiFi</span>
         </div>
       </footer>
     </section>
   </main>
+
+  <section class="oh-terms-overlay" data-oh-terms-overlay role="dialog" aria-modal="true" aria-hidden="true"
+    aria-labelledby="oh-terms-title">
+    <div class="oh-terms-overlay__panel">
+      <header class="oh-terms-overlay__header">
+        <h2 id="oh-terms-title">Terms of Use</h2>
+        <button class="oh-terms-overlay__close" type="button" data-oh-terms-close aria-label="Close terms">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+      <iframe class="oh-terms-overlay__frame" src="/src/styles/terms.html" title="Terms of Use"></iframe>
+    </div>
+  </section>
 
   <section class="ohg-detail" id="ohg-detail" role="dialog" aria-modal="true" aria-hidden="true"
     aria-labelledby="ohg-detail-title">

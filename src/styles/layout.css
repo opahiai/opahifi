@@ -1203,6 +1203,89 @@
   font-size: 0.7rem;
 }
 
+body.is-terms-open {
+  overflow: hidden;
+}
+
+.oh-terms-overlay {
+  position: fixed;
+  z-index: 3000;
+  inset: 0;
+  display: grid;
+  padding: max(0.8rem, env(safe-area-inset-top)) 0.8rem max(0.8rem, env(safe-area-inset-bottom));
+  place-items: center;
+  background: color-mix(in srgb, var(--ohf-bg) 78%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.oh-terms-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.oh-terms-overlay__panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(100%, 52rem);
+  height: min(100%, 45rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ohf-white) 14%, transparent);
+  border-radius: 0.85rem;
+  background: var(--ohf-bg);
+  box-shadow: 0 2rem 5rem color-mix(in srgb, #000 55%, transparent);
+  transform: translateY(0.65rem) scale(0.98);
+  transition: transform 0.2s ease;
+}
+
+.oh-terms-overlay.is-open .oh-terms-overlay__panel {
+  transform: none;
+}
+
+.oh-terms-overlay__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.25rem;
+  padding: 0.7rem 0.85rem 0.7rem 1rem;
+  border-bottom: 1px solid var(--oh-border);
+}
+
+.oh-terms-overlay__header h2 {
+  margin: 0;
+  color: var(--ohf-text);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.oh-terms-overlay__close {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  min-height: 0;
+  padding: 0;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--ohf-white) 18%, transparent);
+  border-radius: 50%;
+  background: var(--ohf-white);
+  color: var(--ohf-bg);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.oh-terms-overlay__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--ohf-bg);
+}
+
 /* ============================================
    Media Queries
    ============================================ */
