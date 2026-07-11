@@ -906,41 +906,42 @@
 
 
 .oh-about {
+  align-items: stretch;
   background:
     radial-gradient(circle at 8% 6%, color-mix(in srgb, var(--ohf-blue) 18%, transparent), transparent 17rem),
     var(--ohf-bg);
 }
 
-.opa-about-carousel,
-.opa-about-track {
-  width: 100%;
-  height: var(--oh-main-height);
-}
+/* ============================================
+   About carousel — mobile-first, min-width only
+   ============================================ */
 
 .opa-about-carousel {
   position: relative;
+  width: 100%;
+  height: var(--oh-main-height);
   overflow: hidden;
 }
 
 .opa-about-header {
   position: absolute;
   z-index: 8;
-  top: clamp(0.85rem, 2dvh, 1.15rem);
-  left: 1rem;
-  right: 1rem;
+  top: clamp(0.7rem, 2dvh, 1.15rem);
+  right: clamp(0.9rem, 4vw, 1.5rem);
+  left: clamp(0.9rem, 4vw, 1.5rem);
   pointer-events: none;
 }
 
 .opa-about-header .oh-eyebrow {
-  margin-bottom: 0.25rem;
-  font-size: clamp(0.62rem, 2.4vw, 0.78rem);
+  margin-bottom: 0.2rem;
+  font-size: clamp(0.6rem, 2.4vw, 0.78rem);
 }
 
 .opa-about-title {
   max-width: 11ch;
   margin: 0;
   color: var(--ohf-text);
-  font-size: clamp(1.9rem, 8.2vw, 3.1rem);
+  font-size: clamp(1.85rem, 8.2vw, 3.1rem);
   font-weight: 1000;
   line-height: 0.92;
   letter-spacing: -0.06em;
@@ -948,6 +949,8 @@
 
 .opa-about-track {
   display: flex;
+  width: 100%;
+  height: 100%;
   transition: transform 0.68s cubic-bezier(0.22, 0.9, 0.24, 1);
   will-change: transform;
 }
@@ -956,14 +959,22 @@
   --opa-about-slide-color: var(--ohf-blue);
   position: relative;
   isolation: isolate;
-  display: grid;
   flex: 0 0 100%;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  align-content: start;
   min-width: 0;
   height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(6.5rem, 0.85fr);
+  grid-template-areas:
+    "kicker  kicker"
+    "heading media"
+    "copy    copy";
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(0.6rem, 2dvh, 1rem);
   overflow: hidden;
-  padding: clamp(7rem, 20dvh, 8.4rem) 1rem calc(6.8rem + env(safe-area-inset-bottom));
+  padding:
+    clamp(6.35rem, 18dvh, 7.7rem)
+    clamp(0.9rem, 4vw, 1.5rem)
+    calc(5.9rem + env(safe-area-inset-bottom));
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--ohf-white) 2.5%, transparent), transparent 34%),
     linear-gradient(150deg, color-mix(in srgb, var(--opa-about-slide-color) 14%, transparent), transparent 45%);
@@ -981,17 +992,12 @@
   --opa-about-slide-color: #e75b5b;
 }
 
-.opa-about-slide-2 .opa-about-media {
-  width: min(60vw, 18rem);
-  max-height: clamp(9rem, 28dvh, 14rem);
-}
-
 .opa-about-orbit {
   position: absolute;
   z-index: -1;
-  top: 14%;
+  top: 15%;
   right: -22%;
-  width: min(76vw, 18rem);
+  width: min(80vw, 20rem);
   aspect-ratio: 1;
   border-radius: 50%;
   background:
@@ -1005,32 +1011,36 @@
 }
 
 .opa-about-kicker {
+  grid-area: kicker;
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  margin: 0 0 0.45rem;
+  margin: 0;
   color: var(--opa-about-slide-color);
-  font-size: 0.63rem;
+  font-size: clamp(0.58rem, 2.5vw, 0.68rem);
   font-weight: 950;
   letter-spacing: 0.18em;
+  line-height: 1.15;
   text-transform: uppercase;
 }
 
 .opa-about-kicker::before {
   content: "";
+  flex: 0 0 2rem;
   width: 2rem;
   height: 2px;
   background: var(--opa-about-slide-color);
 }
 
 .opa-about-heading {
+  grid-area: heading;
   position: relative;
   z-index: 1;
-  max-width: 9ch;
+  max-width: 8ch;
   margin: 0;
-  font-size: clamp(2.15rem, 9.6vw, 3.95rem);
+  font-size: clamp(2rem, 10vw, 3.4rem);
   font-weight: 1000;
   line-height: 0.88;
   letter-spacing: -0.07em;
@@ -1044,13 +1054,14 @@
 }
 
 .opa-about-media {
-  position: absolute;
+  grid-area: media;
+  position: relative;
   z-index: 0;
-  top: clamp(6.5rem, 17dvh, 8rem);
-  right: -1rem;
+  align-self: center;
+  justify-self: end;
   display: grid;
-  width: min(56vw, 16rem);
-  max-height: clamp(8rem, 26dvh, 12.5rem);
+  width: min(100%, 13.5rem);
+  max-height: min(28dvh, 13.5rem);
   margin: 0;
   place-items: center;
   pointer-events: none;
@@ -1065,24 +1076,28 @@
 }
 
 .opa-about-copy {
+  grid-area: copy;
   position: relative;
   z-index: 1;
-  align-self: end;
-  width: min(100%, 25rem);
-  margin: clamp(0.9rem, 2dvh, 1.25rem) 0 0;
-}
-
-.opa-about-copy {
-  padding: clamp(0.74rem, 1.8dvh, 0.95rem) 0.95rem;
+  width: 100%;
+  margin: 0;
+  padding: clamp(0.68rem, 1.7dvh, 0.9rem) clamp(0.78rem, 3vw, 1rem);
   border-top: 3px solid var(--opa-about-slide-color);
-  border-left: 0;
   border-radius: 0.8rem;
-  background: color-mix(in srgb, var(--ohf-bg) 84%, transparent);
+  background: color-mix(in srgb, var(--ohf-bg) 86%, transparent);
   color: var(--ohf-text);
-  font-size: clamp(0.84rem, 1.95dvh, 0.98rem);
-  line-height: 1.42;
+  font-size: clamp(0.78rem, 1.9dvh, 0.98rem);
+  line-height: 1.4;
   letter-spacing: -0.012em;
   backdrop-filter: blur(12px);
+}
+
+.opa-about-copy p {
+  margin: 0;
+}
+
+.opa-about-copy p + p {
+  margin-top: 1em;
 }
 
 .opa-about-copy strong {
@@ -1097,59 +1112,51 @@
 .opa-about-controls {
   position: absolute;
   z-index: 10;
-  right: 0;
-  bottom: 30px;
-  left: 0;
+  bottom: max(0.55rem, env(safe-area-inset-bottom));
+  left: 50%;
   display: grid;
-  grid-template-columns: 3.15rem minmax(0, 1fr) 3.15rem;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.7rem max(0.8rem, env(safe-area-inset-right)) calc(0.75rem + env(safe-area-inset-bottom)) max(0.8rem, env(safe-area-inset-left));
-  background:
-    linear-gradient(180deg, transparent, color-mix(in srgb, var(--ohf-bg) 98%, transparent) 18%),
-    color-mix(in srgb, var(--ohf-bg) 92%, transparent);
-  box-shadow: 0 -1rem 2rem color-mix(in srgb, var(--ohf-bg) 70%, transparent);
-  max-width: 300px;
+  gap: 0.65rem;
+  width: min(calc(100% - 1.6rem), 22rem);
+  padding: 0.55rem 0.15rem;
+  background: transparent;
+  box-shadow: none;
+  transform: translateX(-50%);
 }
 
 .opa-about-arrow {
   display: grid;
   width: 2.5rem;
   height: 2.5rem;
+  padding: 0;
+  place-items: center;
   border: 1px solid var(--ohf-white);
   border-radius: 50%;
   background: var(--ohf-white);
   color: var(--ohf-bg);
   font-size: 1.3rem;
   font-weight: 950;
+  line-height: 1;
   cursor: pointer;
-}
-
-.opa-about-controls>.opa-about-arrow:first-child {
-  grid-column: 1;
-}
-
-.opa-about-controls>.opa-about-arrow:last-child {
-  grid-column: 3;
 }
 
 .opa-about-progress {
   display: grid;
-  grid-column: 2;
   min-width: 0;
   gap: 0.42rem;
 }
 
 .opa-about-bars {
   display: flex;
-  width: min(100%, 11rem);
+  width: 100%;
   margin-inline: auto;
   gap: 0.48rem;
 }
 
 .opa-about-bar {
   flex: 1;
-  height: 0.55rem;
+  height: 0.48rem;
   overflow: hidden;
   padding: 0;
   border: 0;
@@ -1181,6 +1188,103 @@
 
 .opa-about-bar[aria-current="true"]::before {
   width: 100%;
+}
+
+/* ---- min-width breakpoints (mobile-first, matches site convention) ---- */
+
+@media (min-width: 25rem) {
+  .opa-about-heading {
+    max-width: 9ch;
+  }
+
+  .opa-about-media {
+    width: min(100%, 15rem);
+    max-height: min(31dvh, 15rem);
+  }
+
+  .opa-about-copy {
+    font-size: clamp(0.88rem, 1.95dvh, 1rem);
+  }
+}
+
+@media (min-width: 31.25rem) {
+  .opa-about-controls {
+    grid-template-columns: 2.6rem minmax(0, 1fr) 2.6rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .opa-about-header {
+    top: clamp(0.8rem, 2dvh, 1.2rem);
+    right: clamp(1.5rem, 4vw, 4rem);
+    left: clamp(1.5rem, 4vw, 4rem);
+  }
+
+  .opa-about-header .oh-eyebrow {
+    font-size: clamp(0.68rem, 1.35vw, 0.9rem);
+  }
+
+  .opa-about-title {
+    font-size: clamp(2.45rem, 5.2vw, 4.6rem);
+  }
+
+  .opa-about-slide {
+    grid-template-areas:
+      "kicker media"
+      "heading media"
+      "copy media";
+    grid-template-columns: minmax(19rem, 1fr) minmax(19rem, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: clamp(2rem, 6vw, 6rem);
+    padding:
+      clamp(7.6rem, 19dvh, 10rem)
+      clamp(1.5rem, 4vw, 4rem)
+      calc(5.5rem + env(safe-area-inset-bottom));
+  }
+
+  .opa-about-kicker {
+    font-size: clamp(0.66rem, 1.1vw, 0.82rem);
+  }
+
+  .opa-about-heading {
+    max-width: 8ch;
+    font-size: clamp(3.6rem, 7vw, 6.8rem);
+  }
+
+  .opa-about-media {
+    width: min(100%, 27rem);
+    max-height: min(58dvh, 29rem);
+  }
+
+  .opa-about-orbit {
+    top: 13%;
+    right: -10%;
+    width: min(48vw, 34rem);
+  }
+
+  .opa-about-copy {
+    width: min(100%, 36rem);
+    margin-top: clamp(0.85rem, 2dvh, 1.4rem);
+    padding: clamp(0.85rem, 1.5dvh, 1rem) clamp(1rem, 2vw, 1.35rem);
+    font-size: clamp(0.94rem, 1.7vw, 1.15rem);
+    line-height: 1.45;
+  }
+
+  .opa-about-controls {
+    width: min(calc(100% - 3rem), 31rem);
+    grid-template-columns: 3rem minmax(0, 1fr) 3rem;
+    gap: 1rem;
+  }
+
+  .opa-about-arrow {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.55rem;
+  }
+
+  .opa-about-bar {
+    height: 0.55rem;
+  }
 }
 
 
