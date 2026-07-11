@@ -433,7 +433,7 @@
   display: grid;
   width: 100%;
   justify-items: center;
-  align-content: center;
+  align-content: start;
   grid-template-rows: minmax(0, 53dvh) auto auto auto;
   min-height: var(--oh-main-height);
   gap: 0;
@@ -443,7 +443,8 @@
 
 .oh-hero__art {
   align-self: start;
-  width: 100%;
+  justify-self: center;
+  width: min(100%, calc(53dvh * 2.103));
   height: min(70dvh, 100%);
   margin: 0;
   overflow: hidden;
@@ -462,7 +463,8 @@
 }
 
 .oh-hero__title-stack {
-  --oh-hero-title-width: min(100%, 34rem);
+  --oh-hero-title-height: clamp(3.1rem, 12dvh, 6.6rem);
+  --oh-hero-title-width: min(100%, clamp(11.05rem, 42.8dvh, 23.54rem));
   --oh-hero-title-overlap: clamp(2rem, 7dvh, 4.6rem);
   display: grid;
   justify-items: stretch;
@@ -472,21 +474,24 @@
 
 .oh-hero__title-image {
   max-width: 100%;
-  max-height: clamp(3.1rem, 12dvh, 6.6rem);
+  max-height: var(--oh-hero-title-height);
   object-fit: contain;
 }
 
 .oh-hero__tagline {
+  box-sizing: border-box;
   width: 100%;
   margin: clamp(0.1rem, 0.5dvh, 0.28rem) 0 0;
   color: var(--ohf-text);
   font-family: var(--oh-font-condensed);
-  font-size: clamp(1.5rem, 8.4vw, 3.5rem);
+  font-size: clamp(1.5rem, 4.2dvh, 2.05rem);
   font-weight: 500;
   line-height: 0.85;
   letter-spacing: 0.052em;
+  text-align: justify;
+  text-align-last: justify;
   text-transform: uppercase;
-  padding: 0 5%;
+  white-space: nowrap;
 }
 
 .oh-eyebrow {
