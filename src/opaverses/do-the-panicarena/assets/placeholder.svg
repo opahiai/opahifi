@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Do The Panicarena placeholder</title>
+  <desc id="desc">Temporary cover artwork</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b82f6"/>
+      <stop offset=".52" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#e75b5b"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="900" rx="72" fill="url(#bg)"/>
+  <circle cx="450" cy="405" r="190" fill="#fff" fill-opacity=".12"/>
+  <text x="450" y="390" fill="#fff" font-family="Arial, sans-serif" font-size="78" font-weight="700" text-anchor="middle">DO THE</text>
+  <text x="450" y="485" fill="#fff" font-family="Arial, sans-serif" font-size="72" font-weight="800" text-anchor="middle">PANICARENA</text>
+  <text x="450" y="600" fill="#fff" fill-opacity=".78" font-family="Arial, sans-serif" font-size="30" text-anchor="middle">COMING SOON</text>
+</svg>
