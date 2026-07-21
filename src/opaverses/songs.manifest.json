@@ -1,5 +1,5 @@
 {
-  "moduleCount": 10,
+  "moduleCount": 11,
   "order": [
     "full-mindness",
     "hallucinating-dum-dum",
@@ -9,6 +9,7 @@
     "old-love-story",
     "glittaa-phoenix",
     "not-your-bot-beep-sleep",
+    "do-the-panicarena",
     "wellwolf-howl-lehluya",
     "opa-pa-pa-party"
   ],
@@ -91,6 +92,14 @@
         "art.webp",
         "cover.webp",
         "master.png"
+      ]
+    },
+    {
+      "slug": "do-the-panicarena",
+      "title": "Do The Panicarena",
+      "lyricsStatus": "pending",
+      "assets": [
+        "placeholder.svg"
       ]
     },
     {
