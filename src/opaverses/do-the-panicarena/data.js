@@ -11,21 +11,26 @@ export const ohSongData = Object.freeze({
   titleLines: Object.freeze(["Do The", "Panicarena"]),
   navLabel: "Do The Panicarena",
   subtitle: "Coming soon",
-  duration: "Duration pending",
+  duration: "3:29",
   releaseDate: null,
   status: "development",
-  lyricsStatus: "pending",
+  lyricsStatus: "source-provided",
+  lyricsPath: "lyrics/do-the-panicarena.txt",
   assets: ohAssets,
   versions: Object.freeze([
     Object.freeze({
       id: "original",
       slug: "original",
       name: "Original",
-      duration: "Duration pending",
+      duration: "3:29",
       default: true,
       cover: ohAssets.cover,
       art: ohAssets.art,
-      platforms: Object.freeze({})
+      platforms: Object.freeze({
+        spotify: "https://open.spotify.com/track/5wyNX1gUMECDxwHbHCDVcz?si=5b39639f9cc54914",
+        appleMusic: "https://music.apple.com/us/album/do-the-panicarena-single/6793343589",
+        amazonMusic: "https://music.amazon.com/albums/B0H9WLXV1Y?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_ZikPpmHfoy7WHzWPNppGQtQQV&trackAsin=B0H9VVVKYC"
+      })
     })
   ]),
   theme: Object.freeze({
@@ -39,7 +44,7 @@ export const ohSongData = Object.freeze({
     featuredLine: "Do The Panicarena.",
     animationPreset: "hallucination"
   }),
-  lyrics: "Lyrics pending",
+  lyrics: "",
   developmentNotes: "",
   share: Object.freeze({
     title: "Do The Panicarena",

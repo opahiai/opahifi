@@ -123,7 +123,7 @@
 .ohg-grid {
   --ohg-gap: clamp(0.35rem, 1.8vw, 0.55rem);
   --ohg-grid-side-padding: 1rem;
-  --ohg-grid-rows: 4;
+  --ohg-grid-rows: 5;
   --ohg-grid-cols: 3;
   --ohg-grid-row-gaps: calc(var(--ohg-grid-rows) - 1);
   --ohg-grid-col-gaps: calc(var(--ohg-grid-cols) - 1);
@@ -133,7 +133,7 @@
   --ohg-cover-size-by-height: calc(var(--ohg-grid-height-space) / var(--ohg-grid-rows));
   --ohg-cover-size: clamp(5rem, min(var(--ohg-cover-size-by-width), var(--ohg-cover-size-by-height)), 8.75rem);
   display: grid;
-  grid-template-columns: repeat(3, var(--ohg-cover-size));
+  grid-template-columns: repeat(var(--ohg-grid-cols), var(--ohg-cover-size));
   grid-auto-rows: var(--ohg-cover-size);
   align-content: center;
   justify-content: center;
@@ -151,6 +151,17 @@
 .ohg-grid__item {
   width: var(--ohg-cover-size);
   height: var(--ohg-cover-size);
+}
+
+.ohg-grid__item--featured {
+  grid-column: 1 / span 2;
+  grid-row: 1 / span 2;
+  width: calc((var(--ohg-cover-size) * 2) + var(--ohg-gap));
+  height: calc((var(--ohg-cover-size) * 2) + var(--ohg-gap));
+}
+
+.ohg-grid__item--featured .ohg-cover__title {
+  font-size: clamp(0.86rem, 3.4vw, 1.08rem);
 }
 
 .ohg-grid__item:last-child:nth-child(3n + 1) {
@@ -816,6 +827,8 @@
 
   .ohg-grid {
     --ohg-gap: 0.72rem;
+    --ohg-grid-cols: 5;
+    --ohg-grid-rows: 3;
     --ohg-grid-side-padding: 2rem;
     --ohg-cover-size: clamp(5.5rem, min(var(--ohg-cover-size-by-width), var(--ohg-cover-size-by-height)), 9.25rem);
   }
@@ -835,6 +848,7 @@
   }
 
   .oh-songography {
+    --ohg-songography-width: min(100vw, 52rem);
     --ohg-rail-height: clamp(5.5rem, 11dvh, 6rem);
   }
 

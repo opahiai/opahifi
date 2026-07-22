@@ -17,6 +17,7 @@ const OHG_VERSION_LYRICS_PATHS = Object.freeze({
 });
 
 const OHG_SHARE_ORIGIN = "https://opahifi.com";
+const OHG_FEATURED_GRID_SONG_ID = "do-the-panicarena";
 
 const OHG_PLATFORM_CONFIG = Object.freeze({
   spotify: Object.freeze({ label: "Spotify", icon: '<i class="fa-brands fa-spotify" aria-hidden="true"></i>' }),
@@ -106,6 +107,23 @@ function ohgFormatDuration(duration) {
   return duration && duration !== "Duration pending" ? duration : "0:00";
 }
 
+function ohgGetReleaseTime(releaseDate) {
+  if (!releaseDate) return null;
+
+  const releaseTime = Date.parse(releaseDate);
+  return Number.isNaN(releaseTime) ? null : releaseTime;
+}
+
+function ohgCompareByReleaseDate(songA, songB) {
+  const releaseTimeA = ohgGetReleaseTime(songA.releaseDate);
+  const releaseTimeB = ohgGetReleaseTime(songB.releaseDate);
+
+  if (releaseTimeA !== null && releaseTimeB !== null) return releaseTimeA - releaseTimeB;
+  if (releaseTimeA !== null) return -1;
+  if (releaseTimeB !== null) return 1;
+  return songA.order - songB.order;
+}
+
 function ohgNormalizeVersion(song, version, index) {
   const isStringVersion = typeof version === "string";
   const versionAssets = version?.assets ?? {};
@@ -157,6 +175,7 @@ function ohgNormalizeSong(module, index) {
     titleLines: Object.freeze(Array.isArray(data.titleLines) && data.titleLines.length > 0
       ? data.titleLines.slice(0, 2)
       : [data.title]),
+    releaseDate: data.releaseDate ?? null,
     art: data.assets?.art ?? data.assets?.cover ?? "",
     cover: data.assets?.cover ?? data.assets?.art ?? "",
     subtitle: data.subtitle ?? data.opaverse?.subtitle ?? "",
@@ -171,7 +190,9 @@ function ohgNormalizeSong(module, index) {
 
 class OhSongographyManager {
   constructor() {
-    this.songs = OH_OPAVERSE_MODULES.map(ohgNormalizeSong);
+    this.songs = OH_OPAVERSE_MODULES
+      .map(ohgNormalizeSong)
+      .sort(ohgCompareByReleaseDate);
     this.activeSongId = null;
     this.activeVersionIndex = 0;
     this.isAnimating = false;
@@ -234,9 +255,12 @@ class OhSongographyManager {
       const titleLines = song.titleLines.map((line) => (
         `<span>${ohgEscapeHtml(line)}</span>`
       )).join("");
+      const itemClass = song.id === OHG_FEATURED_GRID_SONG_ID
+        ? "ohg-grid__item ohg-grid__item--featured"
+        : "ohg-grid__item";
 
       return `
-        <div class="ohg-grid__item" id="ohg-grid-slot-${song.id}">
+        <div class="${itemClass}" id="ohg-grid-slot-${song.id}">
           <button
             class="ohg-cover ohg-cover--circle"
             id="ohg-cover-${song.id}"
