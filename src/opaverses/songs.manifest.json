@@ -99,7 +99,9 @@
       "title": "Do The Panicarena",
       "lyricsStatus": "pending",
       "assets": [
-        "placeholder.svg"
+        "art.webp",
+        "cover.webp",
+        "master.png"
       ]
     },
     {

@@ -1,7 +1,7 @@
 const ohAssets = Object.freeze({
-  cover: new URL("./assets/placeholder.svg", import.meta.url).href,
-  art: new URL("./assets/placeholder.svg", import.meta.url).href,
-  master: new URL("./assets/placeholder.svg", import.meta.url).href
+  cover: new URL("./assets/cover.webp", import.meta.url).href,
+  art: new URL("./assets/art.webp", import.meta.url).href,
+  master: new URL("./assets/master.png", import.meta.url).href
 });
 
 export const ohSongData = Object.freeze({
