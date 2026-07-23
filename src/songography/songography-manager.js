@@ -258,9 +258,13 @@ class OhSongographyManager {
       const itemClass = song.id === OHG_FEATURED_GRID_SONG_ID
         ? "ohg-grid__item ohg-grid__item--featured"
         : "ohg-grid__item";
+      const featuredBadge = song.id === OHG_FEATURED_GRID_SONG_ID
+        ? '<span class="ohg-cover__badge">Latest Release</span>'
+        : "";
 
       return `
         <div class="${itemClass}" id="ohg-grid-slot-${song.id}">
+          ${featuredBadge}
           <button
             class="ohg-cover ohg-cover--circle"
             id="ohg-cover-${song.id}"

@@ -43,7 +43,7 @@ export const OH_I18N = Object.freeze({
       }),
       songography: Object.freeze({
         title: "Songography",
-        eyebrow: "Versions, links & lyrics",
+        eyebrow: "Featured songs & links",
         href: "#songography",
         icon: "fa-record-vinyl",
         group: "explore",

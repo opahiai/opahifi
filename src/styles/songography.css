@@ -154,14 +154,73 @@
 }
 
 .ohg-grid__item--featured {
+  --ohg-featured-frame-top: clamp(1.35rem, 4.6vw, 1.85rem);
+  --ohg-featured-frame-side: clamp(0.42rem, 1.8vw, 0.58rem);
+  --ohg-featured-frame-bottom: clamp(0.42rem, 1.8vw, 0.58rem);
   grid-column: 1 / span 2;
   grid-row: 1 / span 2;
+  padding: var(--ohg-featured-frame-top) var(--ohg-featured-frame-side) var(--ohg-featured-frame-bottom);
+  border-radius: 22%;
+  background: linear-gradient(135deg, #1368ff 0%, #7a2cff 52%, #ff2c38 100%);
   width: calc((var(--ohg-cover-size) * 2) + var(--ohg-gap));
   height: calc((var(--ohg-cover-size) * 2) + var(--ohg-gap));
+  box-sizing: border-box;
+  box-shadow: 0 1rem 2rem color-mix(in srgb, var(--ohf-blue) 18%, transparent);
+}
+
+.ohg-grid__item--featured .ohg-cover {
+  top: var(--ohg-featured-frame-top);
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  width: auto;
+  height: calc(100% - var(--ohg-featured-frame-top) - var(--ohg-featured-frame-bottom));
+  aspect-ratio: 1 / 1;
+  transform: translateX(-50%);
+}
+
+.ohg-grid__item--featured .ohg-cover:active {
+  transform: translateX(-50%) scale(0.95);
 }
 
 .ohg-grid__item--featured .ohg-cover__title {
-  font-size: clamp(0.86rem, 3.4vw, 1.08rem);
+  top: 10%;
+  min-height: 20%;
+  padding-inline: 8%;
+  font-size: clamp(1.08rem, 4.45vw, 1.5rem);
+  font-weight: 700;
+  line-height: 0.86;
+}
+
+.ohg-grid__item--featured .ohg-cover__image {
+  height: 67%;
+}
+
+.ohg-cover__badge {
+  display: none;
+}
+
+.ohg-grid__item--featured .ohg-cover__badge {
+  position: absolute;
+  z-index: 3;
+  top: clamp(0.3rem, 1.25vw, 0.42rem);
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: calc(100% - 2rem);
+  padding: 0;
+  background: transparent;
+  color: var(--ohf-white);
+  font-family: var(--oh-font-display);
+  font-size: clamp(0.76rem, 3vw, 1rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
 }
 
 .ohg-grid__item:last-child:nth-child(3n + 1) {
