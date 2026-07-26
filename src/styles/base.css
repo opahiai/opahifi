@@ -45,6 +45,7 @@
   --oh-radius-pill: 999px;
   --oh-radius-panel: 1rem;
   --oh-radius-card: 0.68rem;
+  --oh-song-cover-radius: var(--oh-radius-card);
   --oh-ease-standard: 0.22s ease;
   color-scheme: dark;
   font-family: var(--oh-font-body);
@@ -88,6 +89,12 @@ svg,
 video {
   display: block;
   max-width: 100%;
+}
+
+.oh-song-cover {
+  overflow: hidden;
+  border-radius: var(--oh-song-cover-radius);
+  background: var(--ohf-cover-bg);
 }
 
 h1,

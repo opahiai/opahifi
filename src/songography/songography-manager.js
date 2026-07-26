@@ -262,7 +262,7 @@ class OhSongographyManager {
       return `
         <div class="${itemClass}" id="ohg-grid-slot-${song.id}">
           <button
-            class="ohg-cover ohg-cover--circle"
+            class="oh-song-cover ohg-cover ohg-cover--circle"
             id="ohg-cover-${song.id}"
             type="button"
             data-ohg-song-id="${ohgEscapeHtml(song.id)}"
