@@ -36,6 +36,7 @@ provides contrast and control.
 | Fire gold | `#FFD166` | Rare celebratory highlights only |
 | White | `#F7F8FF` | Titles and main text |
 | Muted blue-gray | `#AAB3D6` | Metadata and secondary text |
+| Natural gray | `#9A9AA3` | Eyebrows and section kickers |
 
 ### Balance
 
@@ -207,10 +208,11 @@ constant.
 Use only for tiny sparks, celebratory states, or special song moments. Never use
 them for ordinary navigation.
 
-### White and Muted Blue-Gray
+### White, Muted Blue-Gray, and Natural Gray
 
 Use white for titles and essential text. Use blue-gray for version names,
-lengths, platform labels, and secondary information.
+lengths, platform labels, and secondary information. Use natural gray for
+eyebrows and section kickers.
 
 ---
 
@@ -258,6 +260,7 @@ lengths, platform labels, and secondary information.
   --ohf-gold: #ffd166;
   --ohf-text: #f7f8ff;
   --ohf-text-muted: #aab3d6;
+  --ohf-eyebrow: #9a9aa3;
 }
 ```
 

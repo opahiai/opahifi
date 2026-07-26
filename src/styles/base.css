@@ -8,6 +8,7 @@
   --oh-panel: #0b1024;
   --oh-text: #f7f8ff;
   --oh-muted: #aab3d6;
+  --oh-natural-gray: #9a9aa3;
   --oh-blue: #155bff;
   --oh-violet: #5b2cff;
   --oh-red: #ff3b2f;
@@ -24,6 +25,7 @@
   --ohf-gold: var(--oh-gold);
   --ohf-text: var(--oh-text);
   --ohf-text-muted: var(--oh-muted);
+  --ohf-eyebrow: var(--oh-natural-gray);
   --ohf-cover-bg: #fefefe;
   --ohf-cover-text: #15151a;
   --ohf-ink-text: #06090e;

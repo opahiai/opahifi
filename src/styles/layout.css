@@ -481,7 +481,7 @@
 
 .oh-eyebrow {
   margin-bottom: 0.5rem;
-  color: var(--ohf-blue);
+  color: var(--ohf-eyebrow);
   font-size: var(--oh-type-eyebrow);
   font-weight: 800;
   letter-spacing: 0.16em;
