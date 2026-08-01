@@ -29,7 +29,9 @@ export const ohSongData = Object.freeze({
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/5wyNX1gUMECDxwHbHCDVcz?si=5b39639f9cc54914",
         appleMusic: "https://music.apple.com/us/album/do-the-panicarena-single/6793343589",
-        amazonMusic: "https://music.amazon.com/albums/B0H9WLXV1Y?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_ZikPpmHfoy7WHzWPNppGQtQQV&trackAsin=B0H9VVVKYC"
+        amazonMusic: "https://music.amazon.com/albums/B0H9WLXV1Y?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_ZikPpmHfoy7WHzWPNppGQtQQV&trackAsin=B0H9VVVKYC",
+        youtube: "https://music.youtube.com/watch?v=Bb5RPPtHDQk&si=-bmBwwQdJApLaHls",
+        other: "https://youtu.be/Bb5RPPtHDQk?si=ZjyqUpXtmt6ET4WJ"
       })
     })
   ]),

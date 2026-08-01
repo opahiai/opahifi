@@ -516,6 +516,16 @@
   margin-top: clamp(1.5rem, 2dvh, 2rem);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .oh-js:not(.oh-gsap-ready) .oh-hero__art,
+  .oh-js:not(.oh-gsap-ready) .oh-hero__title-stack,
+  .oh-js:not(.oh-gsap-ready) .oh-hero__tagline,
+  .oh-js:not(.oh-gsap-ready) .oh-actions--hero .oh-button {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
 .oh-button {
   display: inline-flex;
   align-items: center;
