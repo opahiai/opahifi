@@ -120,7 +120,7 @@
 }
 
 .ohg-grid {
-  --ohg-gap: clamp(0.35rem, 1.8vw, 0.55rem);
+  --ohg-gap: clamp(0.6rem, 2.6vw, 0.9rem);
   --ohg-grid-side-padding: 1rem;
   --ohg-grid-rows: 5;
   --ohg-grid-cols: 3;
@@ -170,6 +170,41 @@
 
 .ohg-grid__item--featured .ohg-cover__image {
   height: 67%;
+}
+
+.ohg-release-card {
+  position: absolute;
+  z-index: 0;
+  inset: 0rem 0rem 0 0;
+  border-radius: calc(var(--oh-song-cover-radius) + 0.5rem);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--ohf-blue) 88%, var(--ohf-white) 12%), var(--ohf-orange));
+  box-shadow:
+    -0.28rem 0.4rem 1.25rem color-mix(in srgb, var(--ohf-blue) 26%, transparent),
+    -0.12rem 0.16rem 0.75rem color-mix(in srgb, var(--ohf-orange) 20%, transparent);
+  pointer-events: none;
+  width: 95%;
+  height: 95%;
+}
+
+.ohg-release-card span {
+  position: absolute;
+  top: 0.5rem;
+  left: 2.5rem;
+  color: var(--ohf-white);
+  font-family: var(--oh-font-display);
+  font-size: clamp(0.72rem, 2.8vw, 0.95rem);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px color-mix(in srgb, var(--ohf-bg) 48%, transparent);
+}
+
+.ohg-grid__item--release .ohg-cover {
+  inset: 2rem 0 0 2rem;
+  width: auto;
+  height: auto;
 }
 
 .ohg-grid__item:last-child:nth-child(3n + 1) {
@@ -229,29 +264,6 @@
   transition: transform 0.5s ease, opacity 0.2s ease;
 }
 
-.ohg-cover__badge {
-  position: absolute;
-  z-index: 3;
-  top: 0.5rem;
-  right: 0.5rem;
-  display: inline-flex;
-  align-items: center;
-  max-width: calc(100% - 1rem);
-  padding: 0.24rem 0.48rem;
-  border: 1px solid color-mix(in srgb, var(--ohf-white) 70%, var(--ohf-blue) 30%);
-  border-radius: var(--oh-radius-pill);
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--ohf-blue) 88%, var(--ohf-white) 12%), var(--ohf-orange));
-  color: var(--ohf-white);
-  font-family: var(--oh-font-display);
-  font-size: clamp(0.48rem, 1.8vw, 0.66rem);
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-  box-shadow: 0 0.55rem 1.2rem color-mix(in srgb, var(--ohf-blue) 34%, transparent);
-}
-
 .ohg-grid__item .ohg-cover__image {
   transform: scale(1);
 }
@@ -263,12 +275,6 @@
 
 .ohg-cover--detail .ohg-cover__title {
   display: none;
-}
-
-.ohg-cover--detail .ohg-cover__badge {
-  top: 0.6rem;
-  right: 0.6rem;
-  font-size: 0.56rem;
 }
 
 .ohg-cover__title {
@@ -303,10 +309,6 @@
 
 .ohg-rail__slot .ohg-cover__title {
   font-size: 0.4rem;
-}
-
-.ohg-rail__slot .ohg-cover__badge {
-  display: none;
 }
 
 .ohg-cover--detail .ohg-cover__title {
@@ -844,8 +846,7 @@
   transition: opacity 0.18s ease;
 }
 
-.ohg-rail__slot .ohg-cover--circle {
-}
+.ohg-rail__slot .ohg-cover--circle {}
 
 .ohg-rail__slot.is-current {
   visibility: hidden;
@@ -863,7 +864,7 @@
   }
 
   .ohg-grid {
-    --ohg-gap: 0.72rem;
+    --ohg-gap: 1rem;
     --ohg-grid-cols: 5;
     --ohg-grid-rows: 3;
     --ohg-grid-side-padding: 2rem;

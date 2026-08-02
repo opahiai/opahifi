@@ -256,15 +256,18 @@ class OhSongographyManager {
       const titleLines = song.titleLines.map((line) => (
         `<span>${ohgEscapeHtml(line)}</span>`
       )).join("");
-      const itemClass = song.id === OHG_FEATURED_GRID_SONG_ID
-        ? "ohg-grid__item ohg-grid__item--featured"
-        : "ohg-grid__item";
-      const badge = song.badge
-        ? `<span class="ohg-cover__badge">${ohgEscapeHtml(song.badge)}</span>`
+      const releaseCard = song.badge
+        ? `<span class="ohg-release-card" aria-hidden="true"><span>${ohgEscapeHtml(song.badge)}</span></span>`
         : "";
+      const itemClass = [
+        "ohg-grid__item",
+        song.id === OHG_FEATURED_GRID_SONG_ID ? "ohg-grid__item--featured" : "",
+        song.badge ? "ohg-grid__item--release" : ""
+      ].filter(Boolean).join(" ");
 
       return `
         <div class="${itemClass}" id="ohg-grid-slot-${song.id}">
+          ${releaseCard}
           <button
             class="oh-song-cover ohg-cover ohg-cover--circle"
             id="ohg-cover-${song.id}"
@@ -281,7 +284,6 @@ class OhSongographyManager {
               height="900"
               loading="lazy"
             >
-            ${badge}
             <span class="ohg-cover__title">${titleLines}</span>
           </button>
         </div>
