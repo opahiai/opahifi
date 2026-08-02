@@ -229,6 +229,29 @@
   transition: transform 0.5s ease, opacity 0.2s ease;
 }
 
+.ohg-cover__badge {
+  position: absolute;
+  z-index: 3;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% - 1rem);
+  padding: 0.24rem 0.48rem;
+  border: 1px solid color-mix(in srgb, var(--ohf-white) 70%, var(--ohf-blue) 30%);
+  border-radius: var(--oh-radius-pill);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--ohf-blue) 88%, var(--ohf-white) 12%), var(--ohf-orange));
+  color: var(--ohf-white);
+  font-family: var(--oh-font-display);
+  font-size: clamp(0.48rem, 1.8vw, 0.66rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: 0 0.55rem 1.2rem color-mix(in srgb, var(--ohf-blue) 34%, transparent);
+}
+
 .ohg-grid__item .ohg-cover__image {
   transform: scale(1);
 }
@@ -240,6 +263,12 @@
 
 .ohg-cover--detail .ohg-cover__title {
   display: none;
+}
+
+.ohg-cover--detail .ohg-cover__badge {
+  top: 0.6rem;
+  right: 0.6rem;
+  font-size: 0.56rem;
 }
 
 .ohg-cover__title {
@@ -274,6 +303,10 @@
 
 .ohg-rail__slot .ohg-cover__title {
   font-size: 0.4rem;
+}
+
+.ohg-rail__slot .ohg-cover__badge {
+  display: none;
 }
 
 .ohg-cover--detail .ohg-cover__title {

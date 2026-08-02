@@ -179,6 +179,7 @@ function ohgNormalizeSong(module, index) {
     art: data.assets?.art ?? data.assets?.cover ?? "",
     cover: data.assets?.cover ?? data.assets?.art ?? "",
     subtitle: data.subtitle ?? data.opaverse?.subtitle ?? "",
+    badge: data.badge ?? data.releaseBadge ?? "",
     share: data.share ?? {},
     theme: data.theme,
     defaultVersionIndex: markedDefaultIndex >= 0
@@ -258,6 +259,9 @@ class OhSongographyManager {
       const itemClass = song.id === OHG_FEATURED_GRID_SONG_ID
         ? "ohg-grid__item ohg-grid__item--featured"
         : "ohg-grid__item";
+      const badge = song.badge
+        ? `<span class="ohg-cover__badge">${ohgEscapeHtml(song.badge)}</span>`
+        : "";
 
       return `
         <div class="${itemClass}" id="ohg-grid-slot-${song.id}">
@@ -277,6 +281,7 @@ class OhSongographyManager {
               height="900"
               loading="lazy"
             >
+            ${badge}
             <span class="ohg-cover__title">${titleLines}</span>
           </button>
         </div>
