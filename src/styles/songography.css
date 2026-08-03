@@ -182,13 +182,10 @@
   inset: 0rem 0rem 0 0;
   overflow: hidden;
   border-radius: calc(var(--oh-song-cover-radius) + 0.5rem);
-  background: #000040;
-  box-shadow:
-    -0.28rem 0.4rem 1.25rem color-mix(in srgb, var(--ohf-blue) 26%, transparent),
-    -0.12rem 0.16rem 0.75rem color-mix(in srgb, var(--ohf-orange) 20%, transparent);
   pointer-events: none;
   width: 95%;
   height: 95%;
+  border: 1px solid var(--ohf-white);
 }
 
 .ohg-release-card::before {
@@ -214,6 +211,11 @@
   line-height: 1;
   text-transform: uppercase;
   text-shadow: 0 1px 6px color-mix(in srgb, var(--ohf-bg) 48%, transparent);
+}
+
+.oh-songography.is-song-open .ohg-release-card,
+.oh-songography.is-song-open .ohg-featured-audio {
+  display: none;
 }
 
 .ohg-featured-audio {
@@ -952,4 +954,45 @@
     height: 3.7rem;
   }
 
+}
+
+@media (min-width: 48rem) {
+  .ohg-detail__body {
+    --ohg-selected-cover-size: clamp(8rem, 24vw, 12rem);
+    --ohg-version-max-width: min(16rem, 42vw);
+    --ohg-lyrics-panel-height: calc(var(--ohg-stage-height) - (var(--ohg-stage-padding) * 2));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: clamp(1.5rem, 4vw, 3rem);
+    height: var(--ohg-stage-height);
+  }
+
+  .ohg-detail__hero {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .ohg-version-nav {
+    width: min(var(--ohg-version-max-width), calc(50% - var(--ohg-stage-padding) - var(--ohg-version-cover-overlap)));
+  }
+
+  .ohg-platforms {
+    position: static;
+    grid-column: 1;
+    grid-row: 2;
+    justify-content: flex-start;
+    width: auto;
+    margin-top: clamp(0.85rem, 2dvh, 1.2rem);
+    padding-inline: 0;
+  }
+
+  .ohg-lyrics {
+    position: static;
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    width: 100%;
+    height: var(--ohg-lyrics-panel-height);
+    min-height: 0;
+    align-self: stretch;
+  }
 }
