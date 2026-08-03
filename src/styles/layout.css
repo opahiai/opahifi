@@ -782,17 +782,51 @@
 }
 
 .oh-socials__email {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
   justify-self: center;
+  min-height: 2.7rem;
+  max-width: 100%;
+  padding: 0.62rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--ohf-white) 22%, transparent);
+  border-radius: var(--oh-radius-pill);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--ohf-blue) 10%, transparent), color-mix(in srgb, var(--ohf-orange) 8%, transparent)),
+    color-mix(in srgb, var(--ohf-surface) 58%, transparent);
   color: var(--ohf-text);
-  font-size: clamp(0.9rem, 3.6vw, 1rem);
-  font-weight: 800;
-  letter-spacing: 0.02em;
+  font-family: var(--oh-font-display);
+  font-size: clamp(0.8rem, 3.3vw, 0.95rem);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1;
   text-decoration: none;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ohf-white) 16%, transparent);
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.oh-socials__email i {
+  flex: 0 0 auto;
+  color: color-mix(in srgb, var(--ohf-blue) 78%, var(--ohf-white) 22%);
+  font-size: 0.9em;
+}
+
+.oh-socials__email span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .oh-socials__email:hover,
 .oh-socials__email:focus-visible {
-  color: var(--ohf-orange);
+  border-color: color-mix(in srgb, var(--ohf-orange) 72%, var(--ohf-white) 28%);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--ohf-blue) 16%, transparent), color-mix(in srgb, var(--ohf-orange) 14%, transparent)),
+    color-mix(in srgb, var(--ohf-surface) 72%, transparent);
+  color: var(--ohf-white);
+  transform: translateY(-0.12rem);
 }
 
 .oh-link-row {
@@ -1198,8 +1232,13 @@
 }
 
 .opa-about-copy-highlight {
-  color: var(--opa-about-slide-color);
-  font-weight: 950;
+  display: inline;
+  padding: 0.02em 0.2em 0.08em;
+  border-radius: 0.22em;
+  background: linear-gradient(180deg, transparent 12%, color-mix(in srgb, var(--opa-about-slide-color) 82%, #2a64ff 18%) 12% 88%, transparent 88%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  color: var(--ohf-white);
 }
 
 .opa-about-controls {

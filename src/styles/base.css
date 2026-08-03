@@ -33,7 +33,7 @@
   --ohf-mask-solid: #000;
   --ohf-white: #ffffff;
   --oh-font-display: "Poppins", sans-serif;
-  --oh-font-body: "Inter", sans-serif;
+  --oh-font-body: "Poppins", sans-serif;
   --oh-font-condensed: "Oswald", sans-serif;
   --oh-type-eyebrow: 0.72rem;
   --oh-type-nav: 0.82rem;
@@ -123,6 +123,7 @@ blockquote {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
