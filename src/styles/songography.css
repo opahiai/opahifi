@@ -163,19 +163,6 @@
   height: calc((var(--ohg-cover-size) * 2) + var(--ohg-gap));
 }
 
-.ohg-grid__item--featured .ohg-cover__title {
-  top: 10%;
-  min-height: 20%;
-  padding-inline: 8%;
-  font-size: clamp(1.08rem, 4.45vw, 1.5rem);
-  font-weight: 700;
-  line-height: 0.86;
-}
-
-.ohg-grid__item--featured .ohg-cover__image {
-  height: 67%;
-}
-
 .ohg-release-card {
   position: absolute;
   z-index: 0;
@@ -271,9 +258,7 @@
 .ohg-cover {
   position: absolute;
   inset: 0;
-  display: grid;
-  grid-template-rows: 30% 70%;
-  align-items: stretch;
+  display: block;
   width: 100%;
   height: 100%;
   padding: 0;
@@ -310,66 +295,17 @@
 
 .ohg-cover__image {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   display: block;
   width: 100%;
-  height: 70%;
-  object-fit: cover;
-  object-position: center bottom;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
   transition: transform 0.5s ease, opacity 0.2s ease;
 }
 
 .ohg-grid__item .ohg-cover__image {
   transform: scale(1);
-}
-
-.ohg-cover--detail .ohg-cover__image {
-  top: 0;
-  height: 100%;
-}
-
-.ohg-cover--detail .ohg-cover__title {
-  display: none;
-}
-
-.ohg-cover__title {
-  position: absolute;
-  z-index: 2;
-  top: 10%;
-  inset-inline: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  min-height: 18%;
-  padding-inline: 12%;
-  overflow: hidden;
-  box-sizing: border-box;
-  color: var(--ohf-cover-text);
-  font-family: var(--oh-font-condensed);
-  font-size: 0.7rem;
-  font-weight: 500;
-  line-height: 0.96;
-  letter-spacing: -0.02rem;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.ohg-cover__title span {
-  display: block;
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.ohg-rail__slot .ohg-cover__title {
-  font-size: 0.4rem;
-}
-
-.ohg-cover--detail .ohg-cover__title {
-  font-size: 0.7rem;
 }
 
 .ohg-detail {
@@ -936,10 +872,6 @@
 
   .ohg-detail__hero {
     justify-content: flex-start;
-  }
-
-  .ohg-cover--detail .ohg-cover__title {
-    font-size: 0.6rem;
   }
 
   .oh-songography {

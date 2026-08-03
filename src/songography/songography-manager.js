@@ -264,9 +264,6 @@ class OhSongographyManager {
 
   renderSongography() {
     this.grid.innerHTML = this.songs.map((song) => {
-      const titleLines = song.titleLines.map((line) => (
-        `<span>${ohgEscapeHtml(line)}</span>`
-      )).join("");
       const releaseCard = song.badge
         ? `<span class="ohg-release-card" aria-hidden="true"><span>${ohgEscapeHtml(song.badge)}</span></span>`
         : "";
@@ -293,13 +290,12 @@ class OhSongographyManager {
             <img
               class="ohg-cover__image"
               id="ohg-cover-image-${song.id}"
-              src="${ohgEscapeHtml(song.art)}"
-              alt="${ohgEscapeHtml(song.title)} art"
+              src="${ohgEscapeHtml(song.cover)}"
+              alt="${ohgEscapeHtml(song.title)} cover"
               width="900"
               height="900"
               loading="lazy"
             >
-            <span class="ohg-cover__title">${titleLines}</span>
           </button>
         </div>
       `;
@@ -404,7 +400,7 @@ class OhSongographyManager {
   }
 
   setCoverToSongArt(song) {
-    this.setCoverImage(song, song?.art);
+    this.setCoverImage(song, song?.cover);
   }
 
   setCoverToVersionArt(song, version) {
