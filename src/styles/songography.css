@@ -126,11 +126,15 @@
   --ohg-grid-cols: 3;
   --ohg-grid-row-gaps: calc(var(--ohg-grid-rows) - 1);
   --ohg-grid-col-gaps: calc(var(--ohg-grid-cols) - 1);
-  --ohg-grid-width-space: calc(var(--ohg-songography-width) - var(--ohg-grid-side-padding) - (var(--ohg-gap) * var(--ohg-grid-col-gaps)));
+  --ohg-grid-width-space: calc(var(--ohg-songography-width) - (var(--ohg-grid-side-padding) * 2) - (var(--ohg-gap) * var(--ohg-grid-col-gaps)));
   --ohg-grid-height-space: calc(93dvh - var(--oh-nav-height) - var(--ohg-title-height) - var(--ohg-playlist-row-height) - (var(--ohg-shell-row-gap) * 2) - (var(--ohg-shell-pad-y) * 2) - (var(--ohg-gap) * var(--ohg-grid-row-gaps)));
   --ohg-cover-size-by-width: calc(var(--ohg-grid-width-space) / var(--ohg-grid-cols));
   --ohg-cover-size-by-height: calc(var(--ohg-grid-height-space) / var(--ohg-grid-rows));
   --ohg-cover-size: clamp(5rem, min(var(--ohg-cover-size-by-width), var(--ohg-cover-size-by-height)), 8.75rem);
+  --ohg-release-card-inset: clamp(2.15rem, calc(var(--ohg-gap) * 3), 2.55rem);
+  --ohg-featured-audio-button-size: calc(var(--ohg-release-card-inset) * 0.72);
+  --ohg-featured-audio-icon-size: calc(var(--ohg-featured-audio-button-size) * 0.46);
+  --ohg-featured-audio-gap: calc(var(--ohg-release-card-inset) * 0.16);
   display: grid;
   grid-template-columns: repeat(var(--ohg-grid-cols), var(--ohg-cover-size));
   grid-auto-rows: var(--ohg-cover-size);
@@ -176,9 +180,9 @@
   position: absolute;
   z-index: 0;
   inset: 0rem 0rem 0 0;
+  overflow: hidden;
   border-radius: calc(var(--oh-song-cover-radius) + 0.5rem);
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--ohf-blue) 88%, var(--ohf-white) 12%), var(--ohf-orange));
+  background: #000040;
   box-shadow:
     -0.28rem 0.4rem 1.25rem color-mix(in srgb, var(--ohf-blue) 26%, transparent),
     -0.12rem 0.16rem 0.75rem color-mix(in srgb, var(--ohf-orange) 20%, transparent);
@@ -187,13 +191,24 @@
   height: 95%;
 }
 
+.ohg-release-card::before {
+  position: absolute;
+  inset: -1.25rem;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--ohf-bg) 18%, transparent), color-mix(in srgb, var(--ohf-bg) 4%, transparent)),
+    url("../opaverses/do-the-panicarena/assets/art.webp") center / 190% 190%;
+  content: "";
+  filter: saturate(1.35) blur(10px);
+}
+
 .ohg-release-card span {
   position: absolute;
-  top: 0.5rem;
-  left: 2.5rem;
+  z-index: 1;
+  top: calc(var(--ohg-release-card-inset) * 0.36);
+  left: var(--ohg-release-card-inset);
   color: var(--ohf-white);
   font-family: var(--oh-font-display);
-  font-size: clamp(0.72rem, 2.8vw, 0.95rem);
+  font-size: var(--ohg-featured-audio-icon-size);
   font-weight: 900;
   letter-spacing: 0.06em;
   line-height: 1;
@@ -201,8 +216,48 @@
   text-shadow: 0 1px 6px color-mix(in srgb, var(--ohf-bg) 48%, transparent);
 }
 
+.ohg-featured-audio {
+  position: absolute;
+  z-index: 4;
+  top: var(--ohg-release-card-inset);
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: max(0.2rem, var(--ohg-featured-audio-gap));
+  width: var(--ohg-release-card-inset);
+}
+
+.ohg-featured-audio__button {
+  display: grid;
+  width: var(--ohg-featured-audio-button-size);
+  height: var(--ohg-featured-audio-button-size);
+  padding: 0;
+  place-items: center;
+  border: 2px solid var(--ohf-white);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ohf-white) 12%, transparent);
+  color: var(--ohf-white);
+  font-size: var(--ohg-featured-audio-icon-size);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.ohg-featured-audio__button:hover,
+.ohg-featured-audio__button:focus-visible,
+.ohg-featured-audio__button.is-active {
+  border-color: color-mix(in srgb, var(--ohf-white) 72%, transparent);
+  background: color-mix(in srgb, var(--ohf-white) 12%, transparent);
+  color: var(--ohf-white);
+}
+
+.ohg-featured-audio__button:active {
+  transform: scale(0.94);
+}
+
 .ohg-grid__item--release .ohg-cover {
-  inset: 2rem 0 0 2rem;
+  inset: var(--ohg-release-card-inset) 0 0 var(--ohg-release-card-inset);
   width: auto;
   height: auto;
 }

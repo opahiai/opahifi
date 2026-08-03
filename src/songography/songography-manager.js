@@ -1,4 +1,5 @@
 import { OH_OPAVERSE_MODULES } from "../opaverses/opaverse.registry.js";
+import { FeaturedAudioPlayer } from "./featured-audio-player.js";
 
 const OHG_LYRICS_PATHS = Object.freeze({
   "believe-the-truth-fairy": "lyrics/believe-the-truth-fairy.txt",
@@ -18,6 +19,8 @@ const OHG_VERSION_LYRICS_PATHS = Object.freeze({
 
 const OHG_SHARE_ORIGIN = "https://opahifi.com";
 const OHG_FEATURED_GRID_SONG_ID = "do-the-panicarena";
+const OHG_FEATURED_AUDIO_SRC = "audio/audio_panicarena.m4a";
+const OHG_FEATURED_AUDIO_TITLE = "Do the Panicarena";
 
 const OHG_PLATFORM_CONFIG = Object.freeze({
   spotify: Object.freeze({ label: "Spotify", icon: '<i class="fa-brands fa-spotify" aria-hidden="true"></i>' }),
@@ -115,6 +118,9 @@ function ohgGetReleaseTime(releaseDate) {
 }
 
 function ohgCompareByReleaseDate(songA, songB) {
+  if (songA.id === OHG_FEATURED_GRID_SONG_ID && songB.id !== OHG_FEATURED_GRID_SONG_ID) return -1;
+  if (songB.id === OHG_FEATURED_GRID_SONG_ID && songA.id !== OHG_FEATURED_GRID_SONG_ID) return 1;
+
   const releaseTimeA = ohgGetReleaseTime(songA.releaseDate);
   const releaseTimeB = ohgGetReleaseTime(songB.releaseDate);
 
@@ -212,6 +218,10 @@ class OhSongographyManager {
     this.playlistLinks = null;
     this.lyricsPanel = null;
     this.lyricsText = null;
+    this.featuredAudioPlayer = new FeaturedAudioPlayer({
+      src: OHG_FEATURED_AUDIO_SRC,
+      title: OHG_FEATURED_AUDIO_TITLE
+    });
     this.handleClick = this.handleClick.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleLocationChange = this.handleLocationChange.bind(this);
@@ -235,6 +245,7 @@ class OhSongographyManager {
     if (!this.grid || !this.detail || !this.railTrack) return;
 
     this.songography?.append(this.detail, this.rail);
+    this.featuredAudioPlayer.mount();
 
     this.renderSongography();
     this.renderPlaylistLinks();
@@ -259,6 +270,9 @@ class OhSongographyManager {
       const releaseCard = song.badge
         ? `<span class="ohg-release-card" aria-hidden="true"><span>${ohgEscapeHtml(song.badge)}</span></span>`
         : "";
+      const featuredControls = song.id === OHG_FEATURED_GRID_SONG_ID
+        ? this.featuredAudioPlayer.renderControls()
+        : "";
       const itemClass = [
         "ohg-grid__item",
         song.id === OHG_FEATURED_GRID_SONG_ID ? "ohg-grid__item--featured" : "",
@@ -268,6 +282,7 @@ class OhSongographyManager {
       return `
         <div class="${itemClass}" id="ohg-grid-slot-${song.id}">
           ${releaseCard}
+          ${featuredControls}
           <button
             class="oh-song-cover ohg-cover ohg-cover--circle"
             id="ohg-cover-${song.id}"
@@ -306,6 +321,21 @@ class OhSongographyManager {
     const action = event.target.closest("[data-ohg-action]");
     const versionButton = event.target.closest("[data-ohg-version-index]");
 
+    if (action) {
+      const actions = {
+        close: () => this.closeSong(),
+        share: () => this.shareSong(),
+        "previous-song": () => this.navigateSong(-1),
+        "next-song": () => this.navigateSong(1),
+        ...this.featuredAudioPlayer.getActionHandlers()
+      };
+
+      if (actions[action.dataset.ohgAction]) {
+        actions[action.dataset.ohgAction]();
+        return;
+      }
+    }
+
     if (songCover) {
       const songId = songCover.dataset.ohgSongId;
 
@@ -325,15 +355,6 @@ class OhSongographyManager {
     }
 
     if (!action) return;
-
-    const actions = {
-      close: () => this.closeSong(),
-      share: () => this.shareSong(),
-      "previous-song": () => this.navigateSong(-1),
-      "next-song": () => this.navigateSong(1)
-    };
-
-    actions[action.dataset.ohgAction]?.();
   }
 
   handleKeydown(event) {
@@ -1089,6 +1110,7 @@ class OhSongographyManager {
     document.removeEventListener("keydown", this.handleKeydown);
     window.removeEventListener("hashchange", this.handleLocationChange);
     window.removeEventListener("popstate", this.handleLocationChange);
+    this.featuredAudioPlayer.destroy();
   }
 }
 
