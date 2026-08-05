@@ -2,11 +2,13 @@ export class FeaturedAudioPlayer {
   constructor({
     src,
     title,
-    actionPrefix = "featured-audio"
+    actionPrefix = "featured-audio",
+    onStateChange = null
   }) {
     this.src = src;
     this.title = title;
     this.actionPrefix = actionPrefix;
+    this.onStateChange = onStateChange;
     this.audio = null;
     this.isMuted = false;
     this.handleStateChange = this.handleStateChange.bind(this);
@@ -76,6 +78,10 @@ export class FeaturedAudioPlayer {
     this.audio.pause();
   }
 
+  isPlaying() {
+    return Boolean(this.audio && !this.audio.paused);
+  }
+
   async restart() {
     if (!this.audio) return;
 
@@ -112,6 +118,7 @@ export class FeaturedAudioPlayer {
       muteButton.innerHTML = `<i class="fa-solid fa-${this.isMuted ? "volume-high" : "volume-xmark"}" aria-hidden="true"></i>`;
     }
 
+    this.onStateChange?.(this);
   }
 
   destroy() {

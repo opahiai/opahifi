@@ -81,6 +81,29 @@ function ohgNormalizeStripeColors(colors) {
   return Array.isArray(colors) ? colors.filter(Boolean).map(String) : [];
 }
 
+function ohgLightenHexColor(color, whiteRatio = 0.34) {
+  const hex = String(color).trim().replace(/^#/, "");
+  const normalizedHex = hex.length === 3
+    ? hex.split("").map((part) => `${part}${part}`).join("")
+    : hex;
+
+  if (!/^[0-9a-f]{6}$/i.test(normalizedHex)) return color;
+
+  const colorValue = Number.parseInt(normalizedHex, 16);
+  const channels = [
+    (colorValue >> 16) & 255,
+    (colorValue >> 8) & 255,
+    colorValue & 255
+  ];
+  const mixedChannels = channels.map((channel) => (
+    Math.round(channel + ((255 - channel) * whiteRatio))
+      .toString(16)
+      .padStart(2, "0")
+  ));
+
+  return `#${mixedChannels.join("")}`;
+}
+
 function ohgSlugify(value = "") {
   return String(value)
     .trim()
@@ -101,9 +124,10 @@ function ohgGetStripeBackground(version) {
 
   const colors = version.stripeColors ?? [];
   if (colors.length === 0) return "#ffffff";
-  if (colors.length === 1) return colors[0];
+  const readableColors = colors.map((color) => ohgLightenHexColor(color));
+  if (readableColors.length === 1) return readableColors[0];
 
-  return `linear-gradient(90deg, ${colors.join(", ")})`;
+  return `linear-gradient(90deg, ${readableColors.join(", ")})`;
 }
 
 function ohgFormatDuration(duration) {
@@ -221,12 +245,14 @@ class OhSongographyManager {
     this.lyricsText = null;
     this.featuredAudioPlayer = new FeaturedAudioPlayer({
       src: OHG_FEATURED_AUDIO_SRC,
-      title: OHG_FEATURED_AUDIO_TITLE
+      title: OHG_FEATURED_AUDIO_TITLE,
+      onStateChange: () => this.updateVersionAudioButton()
     });
     this.handleClick = this.handleClick.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleLocationChange = this.handleLocationChange.bind(this);
     this.handleResize = this.handleResize.bind(this);
+    this.updateVersionAudioButton = this.updateVersionAudioButton.bind(this);
   }
 
   mount() {
@@ -536,14 +562,15 @@ class OhSongographyManager {
     this.versionPills.classList.toggle("is-collapsed", !this.versionPillsExpanded);
     const activeVersion = this.getVersion(song, activeIndex) ?? this.getVersion(song, 0);
     const activeAudioSrc = activeVersion?.audioSrc ?? (song.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
+    const isActiveAudioPlaying = Boolean(activeAudioSrc && this.featuredAudioPlayer.isPlaying());
     const activeAudioButton = activeAudioSrc ? `
       <button
         class="ohg-version-pill__play"
         type="button"
         data-ohg-action="version-audio-play"
-        aria-label="Listen to ${ohgEscapeHtml(song.title)}"
+        aria-label="${isActiveAudioPlaying ? "Pause" : "Listen to"} ${ohgEscapeHtml(song.title)}"
       >
-        <i class="fa-solid fa-play" aria-hidden="true"></i>
+        <i class="fa-solid fa-${isActiveAudioPlaying ? "pause" : "play"}" aria-hidden="true"></i>
       </button>
     ` : "";
     const secondaryVersions = song.versions
@@ -583,6 +610,7 @@ class OhSongographyManager {
 
     this.versionPills.innerHTML = `${activeButton}${secondaryButtons}${ghostRibbons}`;
     this.setVersionPillsExpanded(this.versionPillsExpanded);
+    this.updateVersionAudioButton();
 
   }
 
@@ -592,7 +620,17 @@ class OhSongographyManager {
     const audioSrc = version?.audioSrc ?? (song?.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
     if (!song || !audioSrc) return;
 
-    await this.featuredAudioPlayer.restart();
+    await this.featuredAudioPlayer.toggle();
+  }
+
+  updateVersionAudioButton() {
+    const button = this.versionPills?.querySelector('[data-ohg-action="version-audio-play"]');
+    if (!button) return;
+
+    const song = this.getSong();
+    const isPlaying = this.featuredAudioPlayer.isPlaying();
+    button.setAttribute("aria-label", `${isPlaying ? "Pause" : "Listen to"} ${song?.title ?? "song"}`);
+    button.innerHTML = `<i class="fa-solid fa-${isPlaying ? "pause" : "play"}" aria-hidden="true"></i>`;
   }
 
   getVersionPillElements() {
