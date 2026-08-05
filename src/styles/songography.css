@@ -353,7 +353,11 @@
   --ohg-version-stack-pad-y: 10px;
   --ohg-version-cover-overlap-ratio: 0.58;
   --ohg-version-active-width: 100%;
-  --ohg-version-rest-width: 90%;
+  --ohg-tap-target-size: 40px;
+  --ohg-version-action-area: var(--ohg-tap-target-size);
+  --ohg-version-action-size: 100%;
+  --ohg-version-action-icon-size: calc(var(--ohg-tap-target-size) * 0.42);
+  --ohg-version-rest-width: calc(var(--ohg-version-active-width) - var(--ohg-version-action-area));
   --ohg-version-width-difference: calc(var(--ohg-version-active-width) - var(--ohg-version-rest-width));
   --ohg-version-max-width: 12.75rem;
   --ohg-version-duration-col: 1.75rem;
@@ -361,7 +365,6 @@
   --ohg-version-font-size: 0.54rem;
   --ohg-version-pad-block: 0.12rem;
   --ohg-version-pad-inline-end: 0.45rem;
-  --ohg-version-active-pad-inline-end: calc(var(--ohg-version-pad-inline-end) + var(--ohg-version-width-difference));
   --ohg-version-border: 1px solid color-mix(in srgb, var(--ohf-mask-solid) 18%, transparent);
   --ohg-platform-button-size: clamp(2.25rem, 5.4dvh, 2.35rem);
   --ohg-platform-icon-size: 1.12rem;
@@ -532,8 +535,37 @@
 
 .ohg-version-pill.is-active {
   width: var(--ohg-version-active-width);
-  padding-right: var(--ohg-version-active-pad-inline-end);
   opacity: 1;
+}
+
+.ohg-version-pill.is-active.has-audio {
+  grid-template-columns: minmax(0, 1fr) var(--ohg-version-duration-col) var(--ohg-version-action-area);
+  padding-right: var(--ohg-version-pad-inline-end);
+}
+
+.ohg-version-pill__play {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: var(--ohg-version-action-size);
+  aspect-ratio: 1;
+  padding: 0;
+  box-sizing: border-box;
+  place-items: center;
+  justify-self: center;
+  border: 1px solid color-mix(in srgb, var(--ohf-bg) 18%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ohf-bg) 8%, transparent);
+  color: var(--ohf-ink-text);
+  font-size: var(--ohg-version-action-icon-size);
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.ohg-version-pill__play:hover,
+.ohg-version-pill__play:focus-visible {
+  background: color-mix(in srgb, var(--ohf-bg) 16%, transparent);
+  transform: scale(1.04);
 }
 
 .ohg-platforms {

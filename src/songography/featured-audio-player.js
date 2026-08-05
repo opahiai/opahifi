@@ -111,6 +111,7 @@ export class FeaturedAudioPlayer {
       muteButton.setAttribute("aria-label", this.isMuted ? `Unmute ${this.title}` : `Mute ${this.title}`);
       muteButton.innerHTML = `<i class="fa-solid fa-${this.isMuted ? "volume-high" : "volume-xmark"}" aria-hidden="true"></i>`;
     }
+
   }
 
   destroy() {

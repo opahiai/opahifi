@@ -150,6 +150,7 @@ function ohgNormalizeVersion(song, version, index) {
     art: version?.art ?? versionAssets.art ?? song.assets.art ?? version?.cover ?? versionAssets.cover ?? song.assets.cover,
     stripeColors: Object.freeze(ohgNormalizeStripeColors(version?.stripeColors ?? version?.mixColors)),
     duration: ohgFormatDuration(version?.duration ?? version?.length),
+    audioSrc: version?.audioSrc ?? version?.audio ?? version?.previewSrc ?? null,
     lyrics: version?.lyrics || song.lyrics || "",
     lyricsPath: version?.lyricsPath
       ?? OHG_VERSION_LYRICS_PATHS[`${song.slug ?? song.id}/${version?.slug ?? id}`]
@@ -323,6 +324,7 @@ class OhSongographyManager {
         share: () => this.shareSong(),
         "previous-song": () => this.navigateSong(-1),
         "next-song": () => this.navigateSong(1),
+        "version-audio-play": () => this.playVersionAudio(),
         ...this.featuredAudioPlayer.getActionHandlers()
       };
 
@@ -533,21 +535,34 @@ class OhSongographyManager {
   renderVersions(song, activeIndex) {
     this.versionPills.classList.toggle("is-collapsed", !this.versionPillsExpanded);
     const activeVersion = this.getVersion(song, activeIndex) ?? this.getVersion(song, 0);
+    const activeAudioSrc = activeVersion?.audioSrc ?? (song.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
+    const activeAudioButton = activeAudioSrc ? `
+      <button
+        class="ohg-version-pill__play"
+        type="button"
+        data-ohg-action="version-audio-play"
+        aria-label="Listen to ${ohgEscapeHtml(song.title)}"
+      >
+        <i class="fa-solid fa-play" aria-hidden="true"></i>
+      </button>
+    ` : "";
     const secondaryVersions = song.versions
       .map((version, index) => ({ version, index }))
       .filter((entry) => entry.index !== activeIndex)
       .slice(0, 2);
     const activeButton = activeVersion ? `
-      <button
-        class="ohg-version-pill is-active"
-        type="button"
+      <div
+        class="ohg-version-pill is-active${activeAudioSrc ? " has-audio" : ""}"
         data-ohg-version-index="${activeIndex}"
+        role="button"
+        tabindex="0"
         aria-pressed="true"
         style="--ohg-version-stripe: ${ohgEscapeHtml(ohgGetStripeBackground(activeVersion))}"
       >
         <span class="ohg-version-pill__name">${ohgEscapeHtml(activeVersion.name)}</span>
         <span class="ohg-version-pill__duration">${ohgEscapeHtml(activeVersion.duration)}</span>
-      </button>
+        ${activeAudioButton}
+      </div>
     ` : "";
     const secondaryButtons = secondaryVersions.map(({ version, index }) => `
       <button
@@ -569,6 +584,15 @@ class OhSongographyManager {
     this.versionPills.innerHTML = `${activeButton}${secondaryButtons}${ghostRibbons}`;
     this.setVersionPillsExpanded(this.versionPillsExpanded);
 
+  }
+
+  async playVersionAudio() {
+    const song = this.getSong();
+    const version = this.getVersion(song, this.activeVersionIndex);
+    const audioSrc = version?.audioSrc ?? (song?.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
+    if (!song || !audioSrc) return;
+
+    await this.featuredAudioPlayer.restart();
   }
 
   getVersionPillElements() {
