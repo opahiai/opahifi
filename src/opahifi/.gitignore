@@ -1,0 +1,6 @@
+.DS_Store
+Thumbs.db
+.vscode/
+temp/
+.wrangler/cache/wrangler-account.json
+.wrangler/cache/pages.json
