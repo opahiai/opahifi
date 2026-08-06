@@ -201,7 +201,9 @@
 }
 
 .oh-songography.is-song-open .ohg-release-card,
-.oh-songography.is-song-open .ohg-featured-audio {
+.oh-songography.is-song-open .ohg-featured-audio,
+.oh-songography.is-song-closing .ohg-release-card,
+.oh-songography.is-song-closing .ohg-featured-audio {
   display: none;
 }
 

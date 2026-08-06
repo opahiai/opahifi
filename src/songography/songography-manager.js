@@ -977,6 +977,7 @@ class OhSongographyManager {
       const travellingCovers = document.querySelectorAll(".ohg-cover");
       travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
       const state = Flip.getState(".ohg-cover");
+      this.songography?.classList.add("is-song-closing");
       this.songography?.classList.remove("is-song-open");
 
       this.songs.forEach((song) => {
@@ -1004,6 +1005,7 @@ class OhSongographyManager {
         stagger: -0.012,
         onComplete: () => {
           travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
+          this.songography?.classList.remove("is-song-closing");
           this.enableRailClipping();
           this.detail.classList.remove("is-open", "is-leaving", "is-content-ready");
           this.detail.setAttribute("aria-hidden", "true");
