@@ -36,9 +36,9 @@ export const ohSongData = Object.freeze({
       })
     }),
     Object.freeze({
-      id: "opa-sunrize-max-mix",
-      slug: "opa-sunrize-max-mix",
-      name: "Opa Sunrize Max Mix",
+      id: "sunrize-max-mix",
+      slug: "sunrize-max-mix",
+      name: "Sunrize Max Mix",
       duration: "4:20",
       cover: ohVersionAssets.sunriseMaxMix,
       art: ohVersionAssets.sunriseMaxMix,
