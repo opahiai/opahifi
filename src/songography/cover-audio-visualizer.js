@@ -1,9 +1,9 @@
 const VISUALIZER_CONFIG = Object.freeze({
   fftSize: 256,
   smoothing: 0.84,
-  frameInset: 0.05,
+  frameInset: 0.035,
   maxAmplitude: 0.026,
-  lineWidth: 0.006
+  lineWidth: 0.0075
 });
 
 export class CoverAudioVisualizer {
