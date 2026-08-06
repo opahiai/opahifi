@@ -40,16 +40,16 @@ export const ohSongData = Object.freeze({
       })
     }),
     Object.freeze({
-      id: "opa-max-mix",
-      slug: "opa-max-mix",
-      name: "Opa Max Mix",
+      id: "max-mix",
+      slug: "max-mix",
+      name: "Max Mix",
       duration: "4:51",
       cover: ohVersionAssets.maxMix,
       art: ohVersionAssets.maxMix,
       stripeColors: Object.freeze(["#60c6e6", "#5c14b5"]),
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/3GZsz52AKg9ml2mMtC6EEw",
-        appleMusic: "https://music.apple.com/ng/song/old-love-story-opa-max-mix/1869842718",
+        appleMusic: "https://music.apple.com/ng/song/old-love-story-max-mix/1869842718",
         youtube: "https://music.youtube.com/watch?v=m7wP4U97FC8",
         amazonMusic: "https://music.amazon.com/albums/B0GHC1X6R3",
         other: "https://youtu.be/m7wP4U97FC8"

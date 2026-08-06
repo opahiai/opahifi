@@ -22,9 +22,9 @@ export const ohSongData = Object.freeze({
   assets: ohAssets,
   versions: Object.freeze([
     Object.freeze({
-      id: "opa-max-mix",
-      slug: "opa-max-mix",
-      name: "Opa Max Mix",
+      id: "max-mix",
+      slug: "max-mix",
+      name: "Max Mix",
       duration: "4:00",
       default: true,
       cover: ohVersionAssets.maxMix,
@@ -32,7 +32,7 @@ export const ohSongData = Object.freeze({
       stripeColors: Object.freeze(["#60c6e6", "#5c14b5"]),
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/0yILa8PArNyh1CJlfq5s2n?si=901f3fbf46fa4842",
-        appleMusic: "https://music.apple.com/us/song/splenda-love-rabbit-hell-opa-max-mix/1872205650",
+        appleMusic: "https://music.apple.com/us/song/splenda-love-rabbit-hell-max-mix/1872205650",
         youtube: "https://music.youtube.com/watch?v=NR3Wcb439DI&si=p0Vz4FfM4yGb8EVE",
         amazonMusic: "https://music.amazon.com/albums/B0GJQZXHNL",
         other: "https://youtu.be/NR3Wcb439DI?si=lXoiHaUDbYfOH40F"

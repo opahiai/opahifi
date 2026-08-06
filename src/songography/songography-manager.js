@@ -15,7 +15,7 @@ const OHG_LYRICS_PATHS = Object.freeze({
 });
 
 const OHG_VERSION_LYRICS_PATHS = Object.freeze({
-  "glittaa-phoenix/opa-sunrize-max-mix": "lyrics/glittaa-pheonix-sunrise-mix.txt"
+  "glittaa-phoenix/sunrize-max-mix": "lyrics/glittaa-pheonix-sunrise-mix.txt"
 });
 
 const OHG_SHARE_ORIGIN = "https://opahifi.com";
