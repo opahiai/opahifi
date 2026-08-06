@@ -1,4 +1,6 @@
 import { OH_OPAVERSE_MODULES } from "../opaverses/opaverse.registry.js";
+import { CoverAudioVisualizer } from "./cover-audio-visualizer.js";
+import { FeaturedAudioPlayer } from "./featured-audio-player.js";
 
 const OHG_LYRICS_PATHS = Object.freeze({
   "believe-the-truth-fairy": "lyrics/believe-the-truth-fairy.txt",
@@ -18,6 +20,12 @@ const OHG_VERSION_LYRICS_PATHS = Object.freeze({
 
 const OHG_SHARE_ORIGIN = "https://opahifi.com";
 const OHG_FEATURED_GRID_SONG_ID = "do-the-panicarena";
+const OHG_FEATURED_AUDIO_SRC = "audio/audio_panicarena.m4a";
+const OHG_FEATURED_AUDIO_TITLE = "Do the Panicarena";
+const OHG_RELEASE_REVEAL = Object.freeze({
+  delay: 0.04,
+  duration: 0.28
+});
 
 const OHG_PLATFORM_CONFIG = Object.freeze({
   spotify: Object.freeze({ label: "Spotify", icon: '<i class="fa-brands fa-spotify" aria-hidden="true"></i>' }),
@@ -78,6 +86,29 @@ function ohgNormalizeStripeColors(colors) {
   return Array.isArray(colors) ? colors.filter(Boolean).map(String) : [];
 }
 
+function ohgLightenHexColor(color, whiteRatio = 0.34) {
+  const hex = String(color).trim().replace(/^#/, "");
+  const normalizedHex = hex.length === 3
+    ? hex.split("").map((part) => `${part}${part}`).join("")
+    : hex;
+
+  if (!/^[0-9a-f]{6}$/i.test(normalizedHex)) return color;
+
+  const colorValue = Number.parseInt(normalizedHex, 16);
+  const channels = [
+    (colorValue >> 16) & 255,
+    (colorValue >> 8) & 255,
+    colorValue & 255
+  ];
+  const mixedChannels = channels.map((channel) => (
+    Math.round(channel + ((255 - channel) * whiteRatio))
+      .toString(16)
+      .padStart(2, "0")
+  ));
+
+  return `#${mixedChannels.join("")}`;
+}
+
 function ohgSlugify(value = "") {
   return String(value)
     .trim()
@@ -98,9 +129,10 @@ function ohgGetStripeBackground(version) {
 
   const colors = version.stripeColors ?? [];
   if (colors.length === 0) return "#ffffff";
-  if (colors.length === 1) return colors[0];
+  const readableColors = colors.map((color) => ohgLightenHexColor(color));
+  if (readableColors.length === 1) return readableColors[0];
 
-  return `linear-gradient(90deg, ${colors.join(", ")})`;
+  return `linear-gradient(90deg, ${readableColors.join(", ")})`;
 }
 
 function ohgFormatDuration(duration) {
@@ -115,6 +147,9 @@ function ohgGetReleaseTime(releaseDate) {
 }
 
 function ohgCompareByReleaseDate(songA, songB) {
+  if (songA.id === OHG_FEATURED_GRID_SONG_ID && songB.id !== OHG_FEATURED_GRID_SONG_ID) return -1;
+  if (songB.id === OHG_FEATURED_GRID_SONG_ID && songA.id !== OHG_FEATURED_GRID_SONG_ID) return 1;
+
   const releaseTimeA = ohgGetReleaseTime(songA.releaseDate);
   const releaseTimeB = ohgGetReleaseTime(songB.releaseDate);
 
@@ -144,6 +179,7 @@ function ohgNormalizeVersion(song, version, index) {
     art: version?.art ?? versionAssets.art ?? song.assets.art ?? version?.cover ?? versionAssets.cover ?? song.assets.cover,
     stripeColors: Object.freeze(ohgNormalizeStripeColors(version?.stripeColors ?? version?.mixColors)),
     duration: ohgFormatDuration(version?.duration ?? version?.length),
+    audioSrc: version?.audioSrc ?? version?.audio ?? version?.previewSrc ?? null,
     lyrics: version?.lyrics || song.lyrics || "",
     lyricsPath: version?.lyricsPath
       ?? OHG_VERSION_LYRICS_PATHS[`${song.slug ?? song.id}/${version?.slug ?? id}`]
@@ -179,6 +215,7 @@ function ohgNormalizeSong(module, index) {
     art: data.assets?.art ?? data.assets?.cover ?? "",
     cover: data.assets?.cover ?? data.assets?.art ?? "",
     subtitle: data.subtitle ?? data.opaverse?.subtitle ?? "",
+    badge: data.badge ?? data.releaseBadge ?? "",
     share: data.share ?? {},
     theme: data.theme,
     defaultVersionIndex: markedDefaultIndex >= 0
@@ -211,10 +248,18 @@ class OhSongographyManager {
     this.playlistLinks = null;
     this.lyricsPanel = null;
     this.lyricsText = null;
+    this.featuredCoverVisualizer = new CoverAudioVisualizer();
+    this.featuredAudioPlayer = new FeaturedAudioPlayer({
+      src: OHG_FEATURED_AUDIO_SRC,
+      title: OHG_FEATURED_AUDIO_TITLE,
+      onBeforePlay: () => this.featuredCoverVisualizer.prepare(),
+      onStateChange: () => this.updateVersionAudioButton()
+    });
     this.handleClick = this.handleClick.bind(this);
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleLocationChange = this.handleLocationChange.bind(this);
     this.handleResize = this.handleResize.bind(this);
+    this.updateVersionAudioButton = this.updateVersionAudioButton.bind(this);
   }
 
   mount() {
@@ -234,8 +279,13 @@ class OhSongographyManager {
     if (!this.grid || !this.detail || !this.railTrack) return;
 
     this.songography?.append(this.detail, this.rail);
+    this.featuredAudioPlayer.mount();
 
     this.renderSongography();
+    this.featuredCoverVisualizer.mount({
+      audio: this.featuredAudioPlayer.getMediaElement(),
+      cover: document.querySelector(`#ohg-cover-${OHG_FEATURED_GRID_SONG_ID}`)
+    });
     this.renderPlaylistLinks();
     this.renderRailSlots();
     const count = document.querySelector(".ohg-heading__count");
@@ -252,17 +302,24 @@ class OhSongographyManager {
 
   renderSongography() {
     this.grid.innerHTML = this.songs.map((song) => {
-      const titleLines = song.titleLines.map((line) => (
-        `<span>${ohgEscapeHtml(line)}</span>`
-      )).join("");
-      const itemClass = song.id === OHG_FEATURED_GRID_SONG_ID
-        ? "ohg-grid__item ohg-grid__item--featured"
-        : "ohg-grid__item";
+      const releaseCard = song.badge
+        ? `<span class="ohg-release-card" aria-hidden="true"><span>${ohgEscapeHtml(song.badge)}</span></span>`
+        : "";
+      const featuredControls = song.id === OHG_FEATURED_GRID_SONG_ID
+        ? this.featuredAudioPlayer.renderControls()
+        : "";
+      const itemClass = [
+        "ohg-grid__item",
+        song.id === OHG_FEATURED_GRID_SONG_ID ? "ohg-grid__item--featured" : "",
+        song.badge ? "ohg-grid__item--release" : ""
+      ].filter(Boolean).join(" ");
 
       return `
         <div class="${itemClass}" id="ohg-grid-slot-${song.id}">
+          ${releaseCard}
+          ${featuredControls}
           <button
-            class="ohg-cover ohg-cover--circle"
+            class="oh-song-cover ohg-cover ohg-cover--circle"
             id="ohg-cover-${song.id}"
             type="button"
             data-ohg-song-id="${ohgEscapeHtml(song.id)}"
@@ -271,13 +328,12 @@ class OhSongographyManager {
             <img
               class="ohg-cover__image"
               id="ohg-cover-image-${song.id}"
-              src="${ohgEscapeHtml(song.art)}"
-              alt="${ohgEscapeHtml(song.title)} art"
+              src="${ohgEscapeHtml(song.cover)}"
+              alt="${ohgEscapeHtml(song.title)} cover"
               width="900"
               height="900"
               loading="lazy"
             >
-            <span class="ohg-cover__title">${titleLines}</span>
           </button>
         </div>
       `;
@@ -299,6 +355,22 @@ class OhSongographyManager {
     const action = event.target.closest("[data-ohg-action]");
     const versionButton = event.target.closest("[data-ohg-version-index]");
 
+    if (action) {
+      const actions = {
+        close: () => this.closeSong(),
+        share: () => this.shareSong(),
+        "previous-song": () => this.navigateSong(-1),
+        "next-song": () => this.navigateSong(1),
+        "version-audio-play": () => this.playVersionAudio(),
+        ...this.featuredAudioPlayer.getActionHandlers()
+      };
+
+      if (actions[action.dataset.ohgAction]) {
+        actions[action.dataset.ohgAction]();
+        return;
+      }
+    }
+
     if (songCover) {
       const songId = songCover.dataset.ohgSongId;
 
@@ -318,15 +390,6 @@ class OhSongographyManager {
     }
 
     if (!action) return;
-
-    const actions = {
-      close: () => this.closeSong(),
-      share: () => this.shareSong(),
-      "previous-song": () => this.navigateSong(-1),
-      "next-song": () => this.navigateSong(1)
-    };
-
-    actions[action.dataset.ohgAction]?.();
   }
 
   handleKeydown(event) {
@@ -376,7 +439,7 @@ class OhSongographyManager {
   }
 
   setCoverToSongArt(song) {
-    this.setCoverImage(song, song?.art);
+    this.setCoverImage(song, song?.cover);
   }
 
   setCoverToVersionArt(song, version) {
@@ -509,21 +572,35 @@ class OhSongographyManager {
   renderVersions(song, activeIndex) {
     this.versionPills.classList.toggle("is-collapsed", !this.versionPillsExpanded);
     const activeVersion = this.getVersion(song, activeIndex) ?? this.getVersion(song, 0);
+    const activeAudioSrc = activeVersion?.audioSrc ?? (song.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
+    const isActiveAudioPlaying = Boolean(activeAudioSrc && this.featuredAudioPlayer.isPlaying());
+    const activeAudioButton = activeAudioSrc ? `
+      <button
+        class="ohg-version-pill__play"
+        type="button"
+        data-ohg-action="version-audio-play"
+        aria-label="${isActiveAudioPlaying ? "Pause" : "Listen to"} ${ohgEscapeHtml(song.title)}"
+      >
+        <i class="fa-solid fa-${isActiveAudioPlaying ? "pause" : "play"}" aria-hidden="true"></i>
+      </button>
+    ` : "";
     const secondaryVersions = song.versions
       .map((version, index) => ({ version, index }))
       .filter((entry) => entry.index !== activeIndex)
       .slice(0, 2);
     const activeButton = activeVersion ? `
-      <button
-        class="ohg-version-pill is-active"
-        type="button"
+      <div
+        class="ohg-version-pill is-active${activeAudioSrc ? " has-audio" : ""}"
         data-ohg-version-index="${activeIndex}"
+        role="button"
+        tabindex="0"
         aria-pressed="true"
         style="--ohg-version-stripe: ${ohgEscapeHtml(ohgGetStripeBackground(activeVersion))}"
       >
         <span class="ohg-version-pill__name">${ohgEscapeHtml(activeVersion.name)}</span>
         <span class="ohg-version-pill__duration">${ohgEscapeHtml(activeVersion.duration)}</span>
-      </button>
+        ${activeAudioButton}
+      </div>
     ` : "";
     const secondaryButtons = secondaryVersions.map(({ version, index }) => `
       <button
@@ -544,7 +621,27 @@ class OhSongographyManager {
 
     this.versionPills.innerHTML = `${activeButton}${secondaryButtons}${ghostRibbons}`;
     this.setVersionPillsExpanded(this.versionPillsExpanded);
+    this.updateVersionAudioButton();
 
+  }
+
+  async playVersionAudio() {
+    const song = this.getSong();
+    const version = this.getVersion(song, this.activeVersionIndex);
+    const audioSrc = version?.audioSrc ?? (song?.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
+    if (!song || !audioSrc) return;
+
+    await this.featuredAudioPlayer.toggle();
+  }
+
+  updateVersionAudioButton() {
+    const button = this.versionPills?.querySelector('[data-ohg-action="version-audio-play"]');
+    if (!button) return;
+
+    const song = this.getSong();
+    const isPlaying = this.featuredAudioPlayer.isPlaying();
+    button.setAttribute("aria-label", `${isPlaying ? "Pause" : "Listen to"} ${song?.title ?? "song"}`);
+    button.innerHTML = `<i class="fa-solid fa-${isPlaying ? "pause" : "play"}" aria-hidden="true"></i>`;
   }
 
   getVersionPillElements() {
@@ -891,6 +988,7 @@ class OhSongographyManager {
       const travellingCovers = document.querySelectorAll(".ohg-cover");
       travellingCovers.forEach((cover) => cover.classList.add("ohg-cover--travelling"));
       const state = Flip.getState(".ohg-cover");
+      this.songography?.classList.add("is-song-closing");
       this.songography?.classList.remove("is-song-open");
 
       this.songs.forEach((song) => {
@@ -917,7 +1015,18 @@ class OhSongographyManager {
         zIndex: 9999,
         stagger: -0.012,
         onComplete: () => {
+          const releaseCard = this.songography?.querySelector(".ohg-release-card");
+          const featuredCover = document.querySelector(`#ohg-cover-${OHG_FEATURED_GRID_SONG_ID}`);
+
           travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
+          gsap.set(releaseCard, { autoAlpha: 0 });
+          this.songography?.classList.remove("is-song-closing");
+          const releaseRect = releaseCard?.getBoundingClientRect();
+          const coverRect = featuredCover?.getBoundingClientRect();
+          const slideFrom = releaseRect && coverRect
+            ? { x: coverRect.left - releaseRect.left, y: coverRect.top - releaseRect.top }
+            : { x: 0, y: 0 };
+
           this.enableRailClipping();
           this.detail.classList.remove("is-open", "is-leaving", "is-content-ready");
           this.detail.setAttribute("aria-hidden", "true");
@@ -926,6 +1035,20 @@ class OhSongographyManager {
           this.activeVersionIndex = 0;
           this.isAnimating = false;
           this.lastFocusedElement?.focus?.({ preventScroll: true });
+
+          gsap.fromTo(releaseCard, {
+            autoAlpha: 0,
+            x: slideFrom.x,
+            y: slideFrom.y
+          }, {
+            autoAlpha: 1,
+            x: 0,
+            y: 0,
+            delay: OHG_RELEASE_REVEAL.delay,
+            duration: OHG_RELEASE_REVEAL.duration,
+            ease: "power2.out",
+            clearProps: "opacity,visibility,transform"
+          });
         }
       });
     }));
@@ -1082,6 +1205,8 @@ class OhSongographyManager {
     document.removeEventListener("keydown", this.handleKeydown);
     window.removeEventListener("hashchange", this.handleLocationChange);
     window.removeEventListener("popstate", this.handleLocationChange);
+    this.featuredCoverVisualizer.destroy();
+    this.featuredAudioPlayer.destroy();
   }
 }
 

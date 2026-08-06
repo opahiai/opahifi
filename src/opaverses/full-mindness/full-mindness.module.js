@@ -34,7 +34,7 @@ export const ohFullMindnessModule = Object.freeze({
       >
         <div class="oh-opaverse__stage">
           <div class="oh-opaverse__ambient" aria-hidden="true"></div>
-          <div class="oh-opaverse__visual" data-oh-scene-visual aria-hidden="true">
+          <div class="oh-song-cover oh-opaverse__visual" data-oh-scene-visual aria-hidden="true">
             <span>${this.data.number}</span>
           </div>
           <div class="oh-shell oh-opaverse__content">

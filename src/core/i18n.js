@@ -17,7 +17,7 @@ export const OH_I18N = Object.freeze({
       imageAlt: "Opa surrounded by blue water and orange fire",
       titleImageAlt: "Blues On Fire",
       tagline: "DANCE FROM THE PYRE",
-      exploreCta: "Explore OpaHiFi",
+      exploreCta: "Explore More",
       listenCta: "Listen Now"
     }),
     journeyExit: Object.freeze({
@@ -43,7 +43,7 @@ export const OH_I18N = Object.freeze({
       }),
       songography: Object.freeze({
         title: "Songography",
-        eyebrow: "Versions, links & lyrics",
+        eyebrow: "Songs library & details",
         href: "#songography",
         icon: "fa-record-vinyl",
         group: "explore",

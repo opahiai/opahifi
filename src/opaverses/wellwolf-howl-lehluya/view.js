@@ -14,7 +14,7 @@ export function ohRenderSong({ position }) {
     >
       <div class="oh-opaverse__stage">
         <div class="oh-opaverse__ambient" aria-hidden="true"></div>
-        <figure class="oh-opaverse__visual" data-oh-scene-visual>
+        <figure class="oh-song-cover oh-opaverse__visual" data-oh-scene-visual>
           <img
             class="oh-opaverse__art"
             src="${ohSongData.assets.art}"

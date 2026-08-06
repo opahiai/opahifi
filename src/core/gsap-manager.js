@@ -41,7 +41,10 @@ class OhGsapManager {
     const ScrollToPlugin = window.ScrollToPlugin;
     const Flip = window.Flip;
 
-    if (!gsap || !ScrollTrigger || !ScrollToPlugin || !Flip) return;
+    if (!gsap || !ScrollTrigger || !ScrollToPlugin || !Flip) {
+      document.documentElement.classList.add("oh-gsap-ready");
+      return;
+    }
 
     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, Flip);
     this.matchMedia = gsap.matchMedia();
@@ -49,6 +52,7 @@ class OhGsapManager {
     this.matchMedia.add("(prefers-reduced-motion: no-preference)", () => {
       this.context = gsap.context(() => {
         this.prepareInitialStates(gsap);
+        document.documentElement.classList.add("oh-gsap-ready");
         this.createHeroAnimation(gsap);
         this.createEntranceAnimation(gsap, ScrollTrigger);
         this.createOpaverseAnimations(gsap, ScrollTrigger);

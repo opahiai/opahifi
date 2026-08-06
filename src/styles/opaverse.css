@@ -36,9 +36,7 @@
   right: -12%;
   width: min(82vw, 38rem);
   aspect-ratio: 900 / 563;
-  overflow: hidden;
   border: 1px solid rgb(255 255 255 / 0.16);
-  border-radius: 1.5rem;
   background: var(--oh-scene-bg);
   box-shadow: 0 0 7rem color-mix(in srgb, var(--oh-scene-primary) 36%, transparent);
   opacity: 0.88;

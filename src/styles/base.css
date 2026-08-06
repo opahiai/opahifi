@@ -8,6 +8,7 @@
   --oh-panel: #0b1024;
   --oh-text: #f7f8ff;
   --oh-muted: #aab3d6;
+  --oh-natural-gray: #9a9aa3;
   --oh-blue: #155bff;
   --oh-violet: #5b2cff;
   --oh-red: #ff3b2f;
@@ -24,6 +25,7 @@
   --ohf-gold: var(--oh-gold);
   --ohf-text: var(--oh-text);
   --ohf-text-muted: var(--oh-muted);
+  --ohf-eyebrow: var(--oh-natural-gray);
   --ohf-cover-bg: #fefefe;
   --ohf-cover-text: #15151a;
   --ohf-ink-text: #06090e;
@@ -31,7 +33,7 @@
   --ohf-mask-solid: #000;
   --ohf-white: #ffffff;
   --oh-font-display: "Poppins", sans-serif;
-  --oh-font-body: "Inter", sans-serif;
+  --oh-font-body: "Poppins", sans-serif;
   --oh-font-condensed: "Oswald", sans-serif;
   --oh-type-eyebrow: 0.72rem;
   --oh-type-nav: 0.82rem;
@@ -43,6 +45,7 @@
   --oh-radius-pill: 999px;
   --oh-radius-panel: 1rem;
   --oh-radius-card: 0.68rem;
+  --oh-song-cover-radius: var(--oh-radius-card);
   --oh-ease-standard: 0.22s ease;
   color-scheme: dark;
   font-family: var(--oh-font-body);
@@ -88,6 +91,12 @@ video {
   max-width: 100%;
 }
 
+.oh-song-cover {
+  overflow: hidden;
+  border-radius: var(--oh-song-cover-radius);
+  background: var(--ohf-cover-bg);
+}
+
 h1,
 h2,
 h3,
@@ -114,6 +123,7 @@ blockquote {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
