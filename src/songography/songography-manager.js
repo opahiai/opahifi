@@ -21,6 +21,10 @@ const OHG_SHARE_ORIGIN = "https://opahifi.com";
 const OHG_FEATURED_GRID_SONG_ID = "do-the-panicarena";
 const OHG_FEATURED_AUDIO_SRC = "audio/audio_panicarena.m4a";
 const OHG_FEATURED_AUDIO_TITLE = "Do the Panicarena";
+const OHG_RELEASE_REVEAL = Object.freeze({
+  delay: 0.04,
+  duration: 0.28
+});
 
 const OHG_PLATFORM_CONFIG = Object.freeze({
   spotify: Object.freeze({ label: "Spotify", icon: '<i class="fa-brands fa-spotify" aria-hidden="true"></i>' }),
@@ -1004,8 +1008,18 @@ class OhSongographyManager {
         zIndex: 9999,
         stagger: -0.012,
         onComplete: () => {
+          const releaseCard = this.songography?.querySelector(".ohg-release-card");
+          const featuredCover = document.querySelector(`#ohg-cover-${OHG_FEATURED_GRID_SONG_ID}`);
+
           travellingCovers.forEach((cover) => cover.classList.remove("ohg-cover--travelling"));
+          gsap.set(releaseCard, { autoAlpha: 0 });
           this.songography?.classList.remove("is-song-closing");
+          const releaseRect = releaseCard?.getBoundingClientRect();
+          const coverRect = featuredCover?.getBoundingClientRect();
+          const slideFrom = releaseRect && coverRect
+            ? { x: coverRect.left - releaseRect.left, y: coverRect.top - releaseRect.top }
+            : { x: 0, y: 0 };
+
           this.enableRailClipping();
           this.detail.classList.remove("is-open", "is-leaving", "is-content-ready");
           this.detail.setAttribute("aria-hidden", "true");
@@ -1014,6 +1028,20 @@ class OhSongographyManager {
           this.activeVersionIndex = 0;
           this.isAnimating = false;
           this.lastFocusedElement?.focus?.({ preventScroll: true });
+
+          gsap.fromTo(releaseCard, {
+            autoAlpha: 0,
+            x: slideFrom.x,
+            y: slideFrom.y
+          }, {
+            autoAlpha: 1,
+            x: 0,
+            y: 0,
+            delay: OHG_RELEASE_REVEAL.delay,
+            duration: OHG_RELEASE_REVEAL.duration,
+            ease: "power2.out",
+            clearProps: "opacity,visibility,transform"
+          });
         }
       });
     }));

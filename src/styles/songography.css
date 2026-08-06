@@ -271,7 +271,7 @@
   isolation: isolate;
   box-shadow: none;
   outline: 0;
-  transition: border-radius 0.35s ease, transform 0.18s ease;
+  transition: border-radius 0.35s ease;
 }
 
 .ohg-cover--circle {
