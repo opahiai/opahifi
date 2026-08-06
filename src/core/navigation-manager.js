@@ -72,6 +72,7 @@ class OhNavigationManager {
     this.menu?.setAttribute("aria-hidden", "true");
     this.menuButton?.setAttribute("aria-expanded", "false");
     this.setMenuButtonState(false);
+    this.menuButton?.focus();
   }
 
   setMenuButtonState(isOpen) {
