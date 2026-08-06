@@ -1,4 +1,5 @@
 import { OH_OPAVERSE_MODULES } from "../opaverses/opaverse.registry.js";
+import { CoverAudioVisualizer } from "./cover-audio-visualizer.js";
 import { FeaturedAudioPlayer } from "./featured-audio-player.js";
 
 const OHG_LYRICS_PATHS = Object.freeze({
@@ -247,9 +248,11 @@ class OhSongographyManager {
     this.playlistLinks = null;
     this.lyricsPanel = null;
     this.lyricsText = null;
+    this.featuredCoverVisualizer = new CoverAudioVisualizer();
     this.featuredAudioPlayer = new FeaturedAudioPlayer({
       src: OHG_FEATURED_AUDIO_SRC,
       title: OHG_FEATURED_AUDIO_TITLE,
+      onBeforePlay: () => this.featuredCoverVisualizer.prepare(),
       onStateChange: () => this.updateVersionAudioButton()
     });
     this.handleClick = this.handleClick.bind(this);
@@ -279,6 +282,10 @@ class OhSongographyManager {
     this.featuredAudioPlayer.mount();
 
     this.renderSongography();
+    this.featuredCoverVisualizer.mount({
+      audio: this.featuredAudioPlayer.getMediaElement(),
+      cover: document.querySelector(`#ohg-cover-${OHG_FEATURED_GRID_SONG_ID}`)
+    });
     this.renderPlaylistLinks();
     this.renderRailSlots();
     const count = document.querySelector(".ohg-heading__count");
@@ -1198,6 +1205,7 @@ class OhSongographyManager {
     document.removeEventListener("keydown", this.handleKeydown);
     window.removeEventListener("hashchange", this.handleLocationChange);
     window.removeEventListener("popstate", this.handleLocationChange);
+    this.featuredCoverVisualizer.destroy();
     this.featuredAudioPlayer.destroy();
   }
 }

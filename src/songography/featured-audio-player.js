@@ -3,11 +3,13 @@ export class FeaturedAudioPlayer {
     src,
     title,
     actionPrefix = "featured-audio",
+    onBeforePlay = null,
     onStateChange = null
   }) {
     this.src = src;
     this.title = title;
     this.actionPrefix = actionPrefix;
+    this.onBeforePlay = onBeforePlay;
     this.onStateChange = onStateChange;
     this.audio = null;
     this.isMuted = false;
@@ -68,6 +70,7 @@ export class FeaturedAudioPlayer {
 
     if (this.audio.paused) {
       try {
+        await this.onBeforePlay?.(this);
         await this.audio.play();
       } catch {
         this.handleStateChange();
@@ -82,11 +85,16 @@ export class FeaturedAudioPlayer {
     return Boolean(this.audio && !this.audio.paused);
   }
 
+  getMediaElement() {
+    return this.audio;
+  }
+
   async restart() {
     if (!this.audio) return;
 
     this.audio.currentTime = 0;
     try {
+      await this.onBeforePlay?.(this);
       await this.audio.play();
     } catch {
       this.handleStateChange();
