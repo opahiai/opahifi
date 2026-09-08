@@ -281,6 +281,7 @@ class OhSongographyManager {
     this.playlistLinks = document.querySelector("#ohg-playlist-links");
     this.lyricsPanel = document.querySelector("#ohg-lyrics");
     this.lyricsText = document.querySelector("#ohg-lyrics-text");
+    this.title = document.querySelector(".ohg-title");
 
     if (!this.grid || !this.detail || !this.railTrack) return;
 
@@ -292,6 +293,7 @@ class OhSongographyManager {
       audio: this.featuredAudioPlayer.getMediaElement(),
       cover: document.querySelector(`#ohg-cover-${OHG_FEATURED_GRID_SONG_ID}`)
     });
+    this.syncPlaylistBarWidth();
     this.renderPlaylistLinks();
     this.renderRailSlots();
     const count = document.querySelector(".ohg-heading__count");
@@ -306,10 +308,19 @@ class OhSongographyManager {
     window.requestAnimationFrame(() => this.handleLocationChange());
   }
 
+  syncPlaylistBarWidth() {
+    if (!this.songography || !this.title) return;
+
+    const titleRange = document.createRange();
+    titleRange.selectNodeContents(this.title);
+    const titleWidth = Math.ceil(titleRange.getBoundingClientRect().width);
+    this.songography.style.setProperty("--ohg-header-text-width", `${titleWidth}px`);
+  }
+
   renderSongography() {
     this.grid.innerHTML = this.songs.map((song) => {
       const releaseCard = song.badge
-        ? `<span class="ohg-release-card" aria-hidden="true"><span>${ohgEscapeHtml(song.badge)}</span></span>`
+        ? `<span class="ohg-release-card" aria-hidden="true"><img class="ohg-release-card__image" src="${ohgEscapeHtml(song.art)}" alt=""><span>${ohgEscapeHtml(song.badge)}</span></span>`
         : "";
       const featuredControls = song.id === OHG_FEATURED_GRID_SONG_ID
         ? this.featuredAudioPlayer.renderControls()
@@ -407,6 +418,7 @@ class OhSongographyManager {
   }
 
   handleResize() {
+    this.syncPlaylistBarWidth();
     if (this.activeSongId !== null) this.positionRailTray();
   }
 
