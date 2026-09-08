@@ -10,8 +10,7 @@ export const ohSongData = Object.freeze({
   title: "Do The Panicarena",
   titleLines: Object.freeze(["Do The", "Panicarena"]),
   navLabel: "Do The Panicarena",
-  subtitle: "Latest release",
-  badge: "Latest release",
+  subtitle: "Coming soon",
   duration: "3:29",
   releaseDate: null,
   status: "development",
@@ -27,6 +26,7 @@ export const ohSongData = Object.freeze({
       default: true,
       cover: ohAssets.cover,
       art: ohAssets.art,
+      audioSrc: new URL("../../../audio/audio_panicarena.m4a", import.meta.url).href,
       platforms: Object.freeze({
         spotify: "https://open.spotify.com/track/5wyNX1gUMECDxwHbHCDVcz?si=5b39639f9cc54914",
         appleMusic: "https://music.apple.com/us/album/do-the-panicarena-single/6793343589",

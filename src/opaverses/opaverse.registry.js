@@ -9,6 +9,7 @@ import { ohSongModule as ohNotYourBotBeepSleepModule } from "./not-your-bot-beep
 import { ohSongModule as ohDoThePanicarenaModule } from "./do-the-panicarena/index.js";
 import { ohSongModule as ohWellwolfHowlLehluyaModule } from "./wellwolf-howl-lehluya/index.js";
 import { ohSongModule as ohOpaPaPaPartyModule } from "./opa-pa-pa-party/index.js";
+import { ohSongModule as ohOptimismModule } from "./optimism/index.js";
 
 export const OH_OPAVERSE_MODULES = Object.freeze([
   ohFullMindnessModule,
@@ -21,7 +22,8 @@ export const OH_OPAVERSE_MODULES = Object.freeze([
   ohNotYourBotBeepSleepModule,
   ohDoThePanicarenaModule,
   ohWellwolfHowlLehluyaModule,
-  ohOpaPaPaPartyModule
+  ohOpaPaPaPartyModule,
+  ohOptimismModule
 ]);
 
 export const OH_JOURNEY_MODULES = Object.freeze(OH_OPAVERSE_MODULES.slice(0, 3));

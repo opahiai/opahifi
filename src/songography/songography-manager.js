@@ -19,9 +19,9 @@ const OHG_VERSION_LYRICS_PATHS = Object.freeze({
 });
 
 const OHG_SHARE_ORIGIN = "https://opahifi.com";
-const OHG_FEATURED_GRID_SONG_ID = "do-the-panicarena";
-const OHG_FEATURED_AUDIO_SRC = "audio/audio_panicarena.m4a";
-const OHG_FEATURED_AUDIO_TITLE = "Do the Panicarena";
+const OHG_FEATURED_GRID_SONG_ID = "optimism";
+const OHG_FEATURED_AUDIO_SRC = "audio/optimisim-optimizmo-preview.m4a";
+const OHG_FEATURED_AUDIO_TITLE = "Optimism, Optimismo";
 const OHG_RELEASE_REVEAL = Object.freeze({
   delay: 0.04,
   duration: 0.28
@@ -252,6 +252,12 @@ class OhSongographyManager {
     this.featuredAudioPlayer = new FeaturedAudioPlayer({
       src: OHG_FEATURED_AUDIO_SRC,
       title: OHG_FEATURED_AUDIO_TITLE,
+      onBeforePlay: () => this.featuredCoverVisualizer.prepare(),
+      onStateChange: () => this.updateVersionAudioButton()
+    });
+    this.detailAudioPlayer = new FeaturedAudioPlayer({
+      src: null,
+      title: "Song preview",
       onBeforePlay: () => this.featuredCoverVisualizer.prepare(),
       onStateChange: () => this.updateVersionAudioButton()
     });
@@ -573,7 +579,7 @@ class OhSongographyManager {
     this.versionPills.classList.toggle("is-collapsed", !this.versionPillsExpanded);
     const activeVersion = this.getVersion(song, activeIndex) ?? this.getVersion(song, 0);
     const activeAudioSrc = activeVersion?.audioSrc ?? (song.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
-    const isActiveAudioPlaying = Boolean(activeAudioSrc && this.featuredAudioPlayer.isPlaying());
+    const isActiveAudioPlaying = Boolean(activeAudioSrc && this.detailAudioPlayer.isPlaying() && this.detailAudioPlayer.src === activeAudioSrc);
     const activeAudioButton = activeAudioSrc ? `
       <button
         class="ohg-version-pill__play"
@@ -625,13 +631,19 @@ class OhSongographyManager {
 
   }
 
+  restoreFeaturedAudioSource() {
+    this.detailAudioPlayer.stop();
+    this.featuredAudioPlayer.setSource(OHG_FEATURED_AUDIO_SRC, OHG_FEATURED_AUDIO_TITLE);
+  }
+
   async playVersionAudio() {
     const song = this.getSong();
     const version = this.getVersion(song, this.activeVersionIndex);
     const audioSrc = version?.audioSrc ?? (song?.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
     if (!song || !audioSrc) return;
 
-    await this.featuredAudioPlayer.toggle();
+    this.detailAudioPlayer.setSource(audioSrc, `${song.title} preview`);
+    await this.detailAudioPlayer.toggle();
   }
 
   updateVersionAudioButton() {
@@ -639,7 +651,7 @@ class OhSongographyManager {
     if (!button) return;
 
     const song = this.getSong();
-    const isPlaying = this.featuredAudioPlayer.isPlaying();
+    const isPlaying = this.detailAudioPlayer.isPlaying();
     button.setAttribute("aria-label", `${isPlaying ? "Pause" : "Listen to"} ${song?.title ?? "song"}`);
     button.innerHTML = `<i class="fa-solid fa-${isPlaying ? "pause" : "play"}" aria-hidden="true"></i>`;
   }
@@ -1031,6 +1043,7 @@ class OhSongographyManager {
           this.detail.classList.remove("is-open", "is-leaving", "is-content-ready");
           this.detail.setAttribute("aria-hidden", "true");
           this.rail.classList.remove("is-open");
+          this.restoreFeaturedAudioSource();
           this.activeSongId = null;
           this.activeVersionIndex = 0;
           this.isAnimating = false;
@@ -1207,6 +1220,7 @@ class OhSongographyManager {
     window.removeEventListener("popstate", this.handleLocationChange);
     this.featuredCoverVisualizer.destroy();
     this.featuredAudioPlayer.destroy();
+    this.detailAudioPlayer.destroy();
   }
 }
 

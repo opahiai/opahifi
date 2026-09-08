@@ -123,6 +123,16 @@
         "cover.webp",
         "master.png"
       ]
+    },
+    {
+      "slug": "optimism",
+      "title": "Optimism, Optimismo",
+      "lyricsStatus": "source-provided",
+      "assets": [
+        "art.webp",
+        "cover.webp",
+        "master.png"
+      ]
     }
   ]
 }

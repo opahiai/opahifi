@@ -17,13 +17,36 @@ export class FeaturedAudioPlayer {
   }
 
   mount() {
-    if (this.audio) return;
+    if (this.audio && this.audio.src === this.src) return;
+    this.setSource(this.src, this.title);
+  }
 
+  setSource(src, title = this.title) {
+    if (!src) return;
+
+    const nextSource = String(src);
+    const wasPlaying = Boolean(this.audio && !this.audio.paused);
+
+    if (this.audio) {
+      this.audio.pause();
+      this.audio.removeEventListener("play", this.handleStateChange);
+      this.audio.removeEventListener("pause", this.handleStateChange);
+      this.audio.removeEventListener("ended", this.handleStateChange);
+      this.audio = null;
+    }
+
+    this.src = nextSource;
+    this.title = title;
     this.audio = new Audio(this.src);
     this.audio.preload = "metadata";
+    this.audio.muted = this.isMuted;
     this.audio.addEventListener("play", this.handleStateChange);
     this.audio.addEventListener("pause", this.handleStateChange);
     this.audio.addEventListener("ended", this.handleStateChange);
+
+    if (wasPlaying) {
+      this.audio.play().catch(() => this.handleStateChange());
+    }
   }
 
   renderControls() {
@@ -127,6 +150,12 @@ export class FeaturedAudioPlayer {
     }
 
     this.onStateChange?.(this);
+  }
+
+  stop() {
+    if (!this.audio) return;
+    this.audio.pause();
+    this.handleStateChange();
   }
 
   destroy() {
