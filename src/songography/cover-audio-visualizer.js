@@ -23,9 +23,11 @@ export class CoverAudioVisualizer {
   }
 
   mount({ audio, cover }) {
-    if (!audio || !cover || this.canvas) return;
+    if (!cover || this.canvas) {
+      this.setAudio(audio);
+      return;
+    }
 
-    this.audio = audio;
     this.cover = cover;
     this.canvas = document.createElement("canvas");
     this.canvas.className = "ohg-cover__visualizer";
@@ -36,9 +38,33 @@ export class CoverAudioVisualizer {
     this.resizeObserver.observe(this.cover);
     this.resize();
 
-    this.audio.addEventListener("play", this.start);
-    this.audio.addEventListener("pause", this.stop);
-    this.audio.addEventListener("ended", this.stop);
+    this.setAudio(audio);
+  }
+
+  setAudio(audio) {
+    if (this.audio === audio) return;
+
+    this.stop();
+    this.audio?.removeEventListener("play", this.start);
+    this.audio?.removeEventListener("pause", this.stop);
+    this.audio?.removeEventListener("ended", this.stop);
+    this.source?.disconnect();
+    this.analyser?.disconnect();
+    this.context?.close();
+
+    this.audio = audio ?? null;
+    this.context = null;
+    this.source = null;
+    this.analyser = null;
+    this.waveformData = null;
+
+    this.audio?.addEventListener("play", this.start);
+    this.audio?.addEventListener("pause", this.stop);
+    this.audio?.addEventListener("ended", this.stop);
+  }
+
+  detachAudio() {
+    this.setAudio(null);
   }
 
   setupAudioGraph() {

@@ -10,8 +10,9 @@ import { ohSongModule as ohDoThePanicarenaModule } from "./do-the-panicarena/ind
 import { ohSongModule as ohWellwolfHowlLehluyaModule } from "./wellwolf-howl-lehluya/index.js";
 import { ohSongModule as ohOpaPaPaPartyModule } from "./opa-pa-pa-party/index.js";
 import { ohSongModule as ohOptimismModule } from "./optimism/index.js";
+import { OH_SONG_SETTINGS } from "./catalog.config.js";
 
-export const OH_OPAVERSE_MODULES = Object.freeze([
+const OH_IMPORTED_MODULES = Object.freeze([
   ohFullMindnessModule,
   ohHallucinatingDumDumModule,
   ohYeahLetsDoBrunchModule,
@@ -25,5 +26,14 @@ export const OH_OPAVERSE_MODULES = Object.freeze([
   ohOpaPaPaPartyModule,
   ohOptimismModule
 ]);
+
+export const OH_OPAVERSE_CATALOG = Object.freeze(OH_IMPORTED_MODULES.map((module) => ({
+  module,
+  ...(OH_SONG_SETTINGS[module.data.id] ?? { enabled: true })
+})));
+
+export const OH_OPAVERSE_MODULES = Object.freeze(
+  OH_OPAVERSE_CATALOG.filter((entry) => entry.enabled).map((entry) => entry.module)
+);
 
 export const OH_JOURNEY_MODULES = Object.freeze(OH_OPAVERSE_MODULES.slice(0, 3));

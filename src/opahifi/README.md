@@ -111,7 +111,7 @@ When `versions` is empty, the Songography automatically creates one `Original` v
 
 ## Registry scopes
 
-`OH_OPAVERSE_MODULES` contains all 10 songs and feeds the Songography.
+`OH_OPAVERSE_MODULES` contains the enabled catalog entries and feeds the Songography.
 
 `OH_JOURNEY_MODULES` currently selects the first three modules and feeds the initial scroll Journey. Reorder the full registry to change song order; change the Journey selector when a different three-song experience is needed.
 

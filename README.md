@@ -1,5 +1,28 @@
 # OpaHiFi — All Song Modules
 
+## Song catalog management
+
+Song availability and featured presentation are configured in
+`src/opaverses/catalog.config.js`.
+
+```js
+export const OH_FEATURED_SONG = Object.freeze({
+  id: "optimism",
+  label: "Latest release"
+});
+
+export const OH_SONG_SETTINGS = Object.freeze({
+  optimism: Object.freeze({ enabled: true }),
+  "full-mindness": Object.freeze({ enabled: false })
+});
+```
+
+- Set a song's `enabled` value to `false` to remove it from Songography and generated share pages.
+- Change `OH_FEATURED_SONG.id` and `.label` to switch the featured song and its label in one place. Use `Latest release`, `Spotlight`, or `Throwback`.
+- To add a song, create its normal folder/module, import it in the registry, and add its ID to `OH_SONG_SETTINGS`.
+
+The registry order controls the Journey's first three songs and the fallback display order. The existing `status` field describes the song's development state; it does not enable or disable the song.
+
 This package extends the modular starter with all **10** songs found in the supplied cover package.
 
 ## Core rule
@@ -111,7 +134,7 @@ When `versions` is empty, the Songography automatically creates one `Original` v
 
 ## Registry scopes
 
-`OH_OPAVERSE_MODULES` contains all 10 songs and feeds the Songography.
+`OH_OPAVERSE_MODULES` contains the enabled catalog entries and feeds the Songography.
 
 `OH_JOURNEY_MODULES` currently selects the first three modules and feeds the initial scroll Journey. Reorder the full registry to change song order; change the Journey selector when a different three-song experience is needed.
 
