@@ -1,4 +1,5 @@
-import { OH_OPAVERSE_MODULES } from "../opaverses/opaverse.registry.js";
+import { OH_FEATURED_SONG } from "../opaverses/catalog.config.js";
+import { OH_OPAVERSE_CATALOG } from "../opaverses/opaverse.registry.js";
 import { CoverAudioVisualizer } from "./cover-audio-visualizer.js";
 import { FeaturedAudioPlayer } from "./featured-audio-player.js";
 
@@ -19,9 +20,11 @@ const OHG_VERSION_LYRICS_PATHS = Object.freeze({
 });
 
 const OHG_SHARE_ORIGIN = "https://opahifi.com";
-const OHG_FEATURED_GRID_SONG_ID = "optimism";
-const OHG_FEATURED_AUDIO_SRC = "audio/optimisim-optimizmo-preview.m4a";
-const OHG_FEATURED_AUDIO_TITLE = "Optimism, Optimismo";
+const OHG_ENABLED_CATALOG = OH_OPAVERSE_CATALOG.filter((entry) => entry.enabled);
+const OHG_FEATURED_CATALOG_ENTRY = OHG_ENABLED_CATALOG.find(
+  (entry) => entry.module.data.id === OH_FEATURED_SONG.id
+) ?? OHG_ENABLED_CATALOG[0] ?? null;
+const OHG_FEATURED_GRID_SONG_ID = OHG_FEATURED_CATALOG_ENTRY?.module.data.id ?? null;
 const OHG_RELEASE_REVEAL = Object.freeze({
   delay: 0.04,
   duration: 0.28
@@ -190,7 +193,8 @@ function ohgNormalizeVersion(song, version, index) {
   });
 }
 
-function ohgNormalizeSong(module, index) {
+function ohgNormalizeSong(catalogEntry, index) {
+  const { module } = catalogEntry;
   const { data } = module;
   const sourceVersions = Array.isArray(data.versions) ? data.versions : [];
   const versions = Object.freeze(sourceVersions.map((version, versionIndex) => (
@@ -215,7 +219,10 @@ function ohgNormalizeSong(module, index) {
     art: data.assets?.art ?? data.assets?.cover ?? "",
     cover: data.assets?.cover ?? data.assets?.art ?? "",
     subtitle: data.subtitle ?? data.opaverse?.subtitle ?? "",
-    badge: data.badge ?? data.releaseBadge ?? "",
+    badge: data.id === OHG_FEATURED_GRID_SONG_ID
+      ? OH_FEATURED_SONG.label
+      : data.badge || data.releaseBadge || "",
+    isFeatured: data.id === OHG_FEATURED_GRID_SONG_ID,
     share: data.share ?? {},
     theme: data.theme,
     defaultVersionIndex: markedDefaultIndex >= 0
@@ -227,9 +234,13 @@ function ohgNormalizeSong(module, index) {
 
 class OhSongographyManager {
   constructor() {
-    this.songs = OH_OPAVERSE_MODULES
+    this.songs = OHG_ENABLED_CATALOG
       .map(ohgNormalizeSong)
       .sort(ohgCompareByReleaseDate);
+    this.featuredSong = this.songs.find((song) => song.isFeatured) ?? this.songs[0] ?? null;
+    const featuredVersion = this.featuredSong?.versions[this.featuredSong.defaultVersionIndex];
+    const featuredAudioSrc = featuredVersion?.audioSrc ?? null;
+    const featuredAudioTitle = this.featuredSong?.title ?? "Featured song";
     this.activeSongId = null;
     this.activeVersionIndex = 0;
     this.isAnimating = false;
@@ -250,15 +261,21 @@ class OhSongographyManager {
     this.lyricsText = null;
     this.featuredCoverVisualizer = new CoverAudioVisualizer();
     this.featuredAudioPlayer = new FeaturedAudioPlayer({
-      src: OHG_FEATURED_AUDIO_SRC,
-      title: OHG_FEATURED_AUDIO_TITLE,
-      onBeforePlay: () => this.featuredCoverVisualizer.prepare(),
+      src: featuredAudioSrc,
+      title: featuredAudioTitle,
+      onBeforePlay: (player) => {
+        this.featuredCoverVisualizer.setAudio(player.getMediaElement());
+        return this.featuredCoverVisualizer.prepare();
+      },
       onStateChange: () => this.updateVersionAudioButton()
     });
     this.detailAudioPlayer = new FeaturedAudioPlayer({
       src: null,
       title: "Song preview",
-      onBeforePlay: () => this.featuredCoverVisualizer.prepare(),
+      onBeforePlay: (player) => {
+        this.featuredCoverVisualizer.setAudio(player.getMediaElement());
+        return this.featuredCoverVisualizer.prepare();
+      },
       onStateChange: () => this.updateVersionAudioButton()
     });
     this.handleClick = this.handleClick.bind(this);
@@ -590,7 +607,7 @@ class OhSongographyManager {
   renderVersions(song, activeIndex) {
     this.versionPills.classList.toggle("is-collapsed", !this.versionPillsExpanded);
     const activeVersion = this.getVersion(song, activeIndex) ?? this.getVersion(song, 0);
-    const activeAudioSrc = activeVersion?.audioSrc ?? (song.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
+    const activeAudioSrc = activeVersion?.audioSrc ?? (song.id === OHG_FEATURED_GRID_SONG_ID ? this.featuredAudioPlayer.src : null);
     const isActiveAudioPlaying = Boolean(activeAudioSrc && this.detailAudioPlayer.isPlaying() && this.detailAudioPlayer.src === activeAudioSrc);
     const activeAudioButton = activeAudioSrc ? `
       <button
@@ -645,13 +662,13 @@ class OhSongographyManager {
 
   restoreFeaturedAudioSource() {
     this.detailAudioPlayer.stop();
-    this.featuredAudioPlayer.setSource(OHG_FEATURED_AUDIO_SRC, OHG_FEATURED_AUDIO_TITLE);
+    this.featuredAudioPlayer.setSource(this.featuredAudioPlayer.src, this.featuredAudioPlayer.title);
   }
 
   async playVersionAudio() {
     const song = this.getSong();
     const version = this.getVersion(song, this.activeVersionIndex);
-    const audioSrc = version?.audioSrc ?? (song?.id === OHG_FEATURED_GRID_SONG_ID ? OHG_FEATURED_AUDIO_SRC : null);
+    const audioSrc = version?.audioSrc ?? (song?.id === OHG_FEATURED_GRID_SONG_ID ? this.featuredAudioPlayer.src : null);
     if (!song || !audioSrc) return;
 
     this.detailAudioPlayer.setSource(audioSrc, `${song.title} preview`);

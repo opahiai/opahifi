@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { OH_OPAVERSE_MODULES } from "../src/opaverses/opaverse.registry.js";
+import { OH_OPAVERSE_CATALOG } from "../src/opaverses/opaverse.registry.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_ORIGIN = "https://opahifi.com";
@@ -130,7 +130,7 @@ function generate() {
   const redirects = [];
   ensureCleanShareRoot();
 
-  for (const module of OH_OPAVERSE_MODULES) {
+  for (const { module } of OH_OPAVERSE_CATALOG.filter((entry) => entry.enabled)) {
     const song = module.data;
     const versions = Array.isArray(song.versions) ? song.versions : [];
     const defaultVersion = versions.find((version) => version.default) || versions[0] || null;

@@ -47,8 +47,8 @@ export const ohSongData = Object.freeze({
         featuredLine: "Optimism's cute — when it's not about you.",
         animationPreset: "pressure"
     }),
-    lyrics: `Optimism, Optimismo
-Optimism, Optimismo
+    lyrics: `Optimism, opt-low-blow
+Optimism, opt-no-mo'
 
 Everything happens for a reason
 "For the best" turns into mental prison
@@ -60,8 +60,8 @@ At the end of the tunnel — all you see is doubt
 Sun will rise tomorrow — good for it, go, sun, go
 No rainbow after rain — there's just a stupid bow
 
-Optimism, Optimismo
-Optimism, Optimismo
+Optimism, opt-low-blow
+Optimism, opt-no-mo'
 
 Don't give me lemons — don't tell me what to do
 Keep your life lessons — your bull's number two
@@ -83,8 +83,8 @@ The universe's plan — trapping you inside
 Endless flight — doors close, none open instead
 Broken reading light — silver-lined storms ahead
 
-Optimism, Optimismo
-Optimism, Optimismo
+Optimism, opt-low-blow
+Optimism, opt-no-mo'
 
 Don't give me lemons — don't tell me what to do
 Keep your life lessons — your bull's number two

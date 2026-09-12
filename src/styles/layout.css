@@ -480,7 +480,7 @@
 }
 
 .oh-eyebrow {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.1rem;
   color: var(--ohf-eyebrow);
   font-size: var(--oh-type-eyebrow);
   font-weight: 800;
@@ -633,7 +633,6 @@
 }
 
 .oh-home .oh-section-title {
-  max-width: 9.5ch;
   margin-bottom: 0.55rem;
   font-size: var(--oh-type-section);
   line-height: 0.95;
