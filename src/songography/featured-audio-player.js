@@ -12,7 +12,6 @@ export class FeaturedAudioPlayer {
     this.onBeforePlay = onBeforePlay;
     this.onStateChange = onStateChange;
     this.audio = null;
-    this.isMuted = false;
     this.handleStateChange = this.handleStateChange.bind(this);
   }
 
@@ -39,7 +38,6 @@ export class FeaturedAudioPlayer {
     this.title = title;
     this.audio = new Audio(this.src);
     this.audio.preload = "metadata";
-    this.audio.muted = this.isMuted;
     this.audio.addEventListener("play", this.handleStateChange);
     this.audio.addEventListener("pause", this.handleStateChange);
     this.audio.addEventListener("ended", this.handleStateChange);
@@ -51,30 +49,14 @@ export class FeaturedAudioPlayer {
 
   renderControls() {
     return `
-      <div class="ohg-featured-audio" aria-label="${this.title} audio controls">
+      <div class="ohg-featured-audio">
         <button
-          class="ohg-featured-audio__button"
+          class="ohg-audio-button"
           type="button"
           data-ohg-action="${this.actionPrefix}-toggle"
           aria-label="Play ${this.title}"
         >
           <i class="fa-solid fa-play" aria-hidden="true"></i>
-        </button>
-        <button
-          class="ohg-featured-audio__button"
-          type="button"
-          data-ohg-action="${this.actionPrefix}-restart"
-          aria-label="Restart ${this.title}"
-        >
-          <i class="fa-solid fa-backward-step" aria-hidden="true"></i>
-        </button>
-        <button
-          class="ohg-featured-audio__button"
-          type="button"
-          data-ohg-action="${this.actionPrefix}-mute"
-          aria-label="Mute ${this.title}"
-        >
-          <i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>
         </button>
       </div>
     `;
@@ -82,9 +64,7 @@ export class FeaturedAudioPlayer {
 
   getActionHandlers() {
     return {
-      [`${this.actionPrefix}-toggle`]: () => this.toggle(),
-      [`${this.actionPrefix}-restart`]: () => this.restart(),
-      [`${this.actionPrefix}-mute`]: () => this.toggleMute()
+      [`${this.actionPrefix}-toggle`]: () => this.toggle()
     };
   }
 
@@ -112,41 +92,14 @@ export class FeaturedAudioPlayer {
     return this.audio;
   }
 
-  async restart() {
-    if (!this.audio) return;
-
-    this.audio.currentTime = 0;
-    try {
-      await this.onBeforePlay?.(this);
-      await this.audio.play();
-    } catch {
-      this.handleStateChange();
-    }
-  }
-
-  toggleMute() {
-    if (!this.audio) return;
-
-    this.isMuted = !this.isMuted;
-    this.audio.muted = this.isMuted;
-    this.handleStateChange();
-  }
-
   handleStateChange() {
     const playButton = document.querySelector(`[data-ohg-action="${this.actionPrefix}-toggle"]`);
-    const muteButton = document.querySelector(`[data-ohg-action="${this.actionPrefix}-mute"]`);
 
     if (playButton) {
       const isPlaying = Boolean(this.audio && !this.audio.paused);
       playButton.classList.toggle("is-active", isPlaying);
       playButton.setAttribute("aria-label", isPlaying ? `Pause ${this.title}` : `Play ${this.title}`);
       playButton.innerHTML = `<i class="fa-solid fa-${isPlaying ? "pause" : "play"}" aria-hidden="true"></i>`;
-    }
-
-    if (muteButton) {
-      muteButton.classList.toggle("is-active", this.isMuted);
-      muteButton.setAttribute("aria-label", this.isMuted ? `Unmute ${this.title}` : `Mute ${this.title}`);
-      muteButton.innerHTML = `<i class="fa-solid fa-${this.isMuted ? "volume-high" : "volume-xmark"}" aria-hidden="true"></i>`;
     }
 
     this.onStateChange?.(this);
