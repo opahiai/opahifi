@@ -137,7 +137,6 @@
   --ohg-release-card-inset: clamp(2.15rem, calc(var(--ohg-gap) * 3), 2.55rem);
   --ohg-featured-audio-button-size: calc(var(--ohg-release-card-inset) * 0.72);
   --ohg-featured-audio-icon-size: calc(var(--ohg-featured-audio-button-size) * 0.46);
-  --ohg-featured-audio-gap: calc(var(--ohg-release-card-inset) * 0.16);
   display: grid;
   grid-template-columns: repeat(var(--ohg-grid-cols), var(--ohg-cover-size));
   grid-auto-rows: var(--ohg-cover-size);
@@ -211,44 +210,89 @@
   display: none;
 }
 
+.ohg-audio-button {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  background: transparent;
+  color: #000;
+  font-size: 1.35rem;
+  cursor: pointer;
+  animation: ohg-audio-shimmer 5.5s ease-in-out 5;
+  transition: transform 0.18s ease;
+}
+
+.ohg-audio-button:hover,
+.ohg-audio-button:focus-visible {
+  background: transparent;
+  color: #000;
+  transform: scale(1.12);
+}
+
+.ohg-audio-button:active {
+  transform: scale(0.9);
+}
+
+.ohg-audio-button.is-shimmer-stopped {
+  animation: none;
+}
+
+@keyframes ohg-audio-shimmer {
+  0%,
+  100% {
+    color: #000;
+    text-shadow: none;
+  }
+
+  28% {
+    color: #168cff;
+    text-shadow: 0.24rem -0.18rem 0.45rem rgb(22 140 255 / 0.55);
+  }
+
+  52% {
+    color: #873cff;
+    text-shadow: 0 0 0.5rem rgb(135 60 255 / 0.55);
+  }
+
+  76% {
+    color: #ed294f;
+    text-shadow: -0.24rem 0.18rem 0.45rem rgb(237 41 79 / 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ohg-audio-button {
+    animation: none;
+  }
+}
+
 .ohg-featured-audio {
   position: absolute;
   z-index: 4;
-  top: var(--ohg-release-card-inset);
-  bottom: 0;
-  left: 0;
+  inset: var(--ohg-release-card-inset) 0 0 var(--ohg-release-card-inset);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: max(0.2rem, var(--ohg-featured-audio-gap));
-  width: var(--ohg-release-card-inset);
+  align-items: flex-end;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding: 0.08rem;
+  pointer-events: none;
+  color: #000;
 }
 
-.ohg-featured-audio__button {
-  display: grid;
-  width: var(--ohg-featured-audio-button-size);
-  height: var(--ohg-featured-audio-button-size);
-  padding: 0;
-  place-items: center;
-  border: 2px solid var(--ohf-white);
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--ohf-white) 12%, transparent);
-  color: var(--ohf-white);
-  font-size: var(--ohg-featured-audio-icon-size);
-  cursor: pointer;
-  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+.ohg-featured-audio .ohg-audio-button {
+  pointer-events: auto;
 }
 
-.ohg-featured-audio__button:hover,
-.ohg-featured-audio__button:focus-visible,
-.ohg-featured-audio__button.is-active {
-  border-color: color-mix(in srgb, var(--ohf-white) 72%, transparent);
-  background: color-mix(in srgb, var(--ohf-white) 12%, transparent);
-  color: var(--ohf-white);
-}
-
-.ohg-featured-audio__button:active {
-  transform: scale(0.94);
+.ohg-detail-audio-button {
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  bottom: 0;
 }
 
 .ohg-grid__item--release .ohg-cover {
@@ -371,11 +415,7 @@
   --ohg-version-cover-overlap-ratio: 0.58;
   --ohg-version-active-width: 100%;
   --ohg-tap-target-size: 40px;
-  --ohg-version-action-area: var(--ohg-tap-target-size);
-  --ohg-version-action-size: 100%;
-  --ohg-version-action-icon-size: calc(var(--ohg-tap-target-size) * 0.42);
-  --ohg-version-active-pad-inline-end: calc(var(--ohg-version-action-area) + var(--ohg-version-pad-inline-end));
-  --ohg-version-rest-width: calc(var(--ohg-version-active-width) - var(--ohg-version-action-area));
+  --ohg-version-rest-width: calc(var(--ohg-version-active-width) - 2.5rem);
   --ohg-version-width-difference: calc(var(--ohg-version-active-width) - var(--ohg-version-rest-width));
   --ohg-version-max-width: 12.75rem;
   --ohg-version-text-gap: 0.52rem;
@@ -558,38 +598,6 @@
 .ohg-version-pill.is-active {
   width: var(--ohg-version-active-width);
   opacity: 1;
-}
-
-.ohg-version-pill.is-active.has-audio {
-  grid-template-columns: minmax(0, 1fr);
-  padding-right: var(--ohg-version-active-pad-inline-end);
-}
-
-.ohg-version-pill__play {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  right: 0;
-  display: grid;
-  width: var(--ohg-version-action-area);
-  height: var(--ohg-version-action-area);
-  padding: 0;
-  box-sizing: border-box;
-  place-items: center;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--ohf-ink-text);
-  font-size: var(--ohg-version-action-icon-size);
-  cursor: pointer;
-  transform: translateY(-50%);
-  transition: opacity 0.18s ease, transform 0.18s ease;
-}
-
-.ohg-version-pill__play:hover,
-.ohg-version-pill__play:focus-visible {
-  opacity: 0.72;
-  transform: translateY(-50%) scale(1.04);
 }
 
 .ohg-platforms {
