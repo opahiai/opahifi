@@ -7,3 +7,6 @@ temp/
 
 # Unused, regenerable full-res master art (kept locally, not in git)
 src/opaverses/*/assets/master.png
+
+# Unused duplicate source cover-art archive (kept locally, not in git)
+img/covers/
