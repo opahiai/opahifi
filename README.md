@@ -156,3 +156,18 @@ The Songography has no heading, count, subtitle, or replay link. The song-circle
 - The Back to Songography button is visible immediately in the song detail header.
 - The detail and rail backgrounds appear immediately.
 - Every moving song cover is explicitly layered above those backgrounds during GSAP Flip transitions.
+
+
+## OPA HIFI COVER PACKAGE
+
+Each song folder contains:
+
+cover.webp
+- 900 x 900 WebP
+- full cover for the website
+
+art.webp
+- 900 x 563 WebP
+- bottom 62.5% of the cover
+- use when only the artwork is needed
+
