@@ -1012,6 +1012,7 @@ class OhSongographyManager {
         this.heroSlot.append(cover);
         cover.classList.remove("ohg-cover--circle");
         cover.classList.add("ohg-cover--detail");
+        this.featuredCoverVisualizer.setCover(cover);
         this.setCoverToVersionArt(song, this.getVersion(song, activeVersionIndex ?? this.getDefaultVersionIndex(song)));
       } else {
         this.setCoverToSongArt(song);
@@ -1052,6 +1053,7 @@ class OhSongographyManager {
         gridSlot.append(cover);
         cover.classList.remove("ohg-cover--detail");
         cover.classList.add("ohg-cover--circle");
+        if (song.id === OHG_FEATURED_GRID_SONG_ID) this.featuredCoverVisualizer.setCover(cover);
         this.setCoverToSongArt(song);
         railSlot.hidden = false;
         railSlot.classList.remove("is-current");
@@ -1139,6 +1141,7 @@ class OhSongographyManager {
       this.heroSlot.append(newCover);
       newCover.classList.remove("ohg-cover--circle");
       newCover.classList.add("ohg-cover--detail");
+      this.featuredCoverVisualizer.setCover(newCover);
       this.setCoverToVersionArt(newSong, this.getVersion(newSong, versionIndex));
       newRailSlot.hidden = false;
 
