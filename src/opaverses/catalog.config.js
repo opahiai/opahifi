@@ -1,6 +1,6 @@
 export const OH_FEATURED_SONG = Object.freeze({
   id: "do-the-panicarena",
-  label: "Latest release"
+  label: "SPOTLIGHT"
 });
 
 export const OH_SONG_SETTINGS = Object.freeze({
@@ -15,5 +15,5 @@ export const OH_SONG_SETTINGS = Object.freeze({
   "do-the-panicarena": Object.freeze({ enabled: true }),
   "wellwolf-howl-lehluya": Object.freeze({ enabled: true }),
   "opa-pa-pa-party": Object.freeze({ enabled: true }),
-  "optimisms-cute": Object.freeze({ enabled: false })
+  "optimisms-cute": Object.freeze({ enabled: true })
 });
