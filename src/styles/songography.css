@@ -415,7 +415,8 @@
   --ohg-version-cover-overlap-ratio: 0.58;
   --ohg-version-active-width: 100%;
   --ohg-tap-target-size: 40px;
-  --ohg-version-rest-width: calc(var(--ohg-version-active-width) - 2.5rem);
+  --ohg-version-pills-gap: 2.5rem;
+  --ohg-version-rest-width: calc(var(--ohg-version-active-width) - var(--ohg-version-pills-gap));
   --ohg-version-width-difference: calc(var(--ohg-version-active-width) - var(--ohg-version-rest-width));
   --ohg-version-max-width: 12.75rem;
   --ohg-version-text-gap: 0.52rem;
