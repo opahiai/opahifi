@@ -243,6 +243,7 @@
 }
 
 @keyframes ohg-audio-shimmer {
+
   0%,
   100% {
     color: #000;
@@ -571,6 +572,10 @@
   cursor: default;
   opacity: 0.8;
   pointer-events: none;
+}
+
+.ohg-version-pill-details.is-active {
+  padding-right: var(--ohg-version-pills-gap);
 }
 
 .ohg-version-pill__name,
