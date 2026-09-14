@@ -63,6 +63,17 @@ export class CoverAudioVisualizer {
     this.audio?.addEventListener("ended", this.stop);
   }
 
+  setCover(cover) {
+    if (!cover || this.cover === cover || !this.canvas) return;
+
+    this.resizeObserver?.disconnect();
+    this.cover = cover;
+    this.cover.append(this.canvas);
+    this.resizeObserver = new ResizeObserver(() => this.resize());
+    this.resizeObserver.observe(this.cover);
+    this.resize();
+  }
+
   detachAudio() {
     this.setAudio(null);
   }

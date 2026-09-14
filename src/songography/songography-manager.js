@@ -260,6 +260,7 @@ class OhSongographyManager {
     this.lyricsPanel = null;
     this.lyricsText = null;
     this.featuredCoverVisualizer = new CoverAudioVisualizer();
+    this.detailAudioButton = null;
     this.featuredAudioPlayer = new FeaturedAudioPlayer({
       src: featuredAudioSrc,
       title: featuredAudioTitle,
@@ -400,6 +401,10 @@ class OhSongographyManager {
       };
 
       if (actions[action.dataset.ohgAction]) {
+        if (action.dataset.ohgAction === "version-audio-play"
+          || action.dataset.ohgAction === "featured-audio-toggle") {
+          action.classList.add("is-shimmer-stopped");
+        }
         actions[action.dataset.ohgAction]();
         return;
       }
@@ -609,23 +614,27 @@ class OhSongographyManager {
     const activeVersion = this.getVersion(song, activeIndex) ?? this.getVersion(song, 0);
     const activeAudioSrc = activeVersion?.audioSrc ?? (song.id === OHG_FEATURED_GRID_SONG_ID ? this.featuredAudioPlayer.src : null);
     const isActiveAudioPlaying = Boolean(activeAudioSrc && this.detailAudioPlayer.isPlaying() && this.detailAudioPlayer.src === activeAudioSrc);
-    const activeAudioButton = activeAudioSrc ? `
-      <button
-        class="ohg-version-pill__play"
-        type="button"
-        data-ohg-action="version-audio-play"
-        aria-label="${isActiveAudioPlaying ? "Pause" : "Listen to"} ${ohgEscapeHtml(song.title)}"
-      >
-        <i class="fa-solid fa-${isActiveAudioPlaying ? "pause" : "play"}" aria-hidden="true"></i>
-      </button>
-    ` : "";
+    this.detailAudioButton?.remove();
+    this.detailAudioButton = null;
+    if (activeAudioSrc && this.heroSlot) {
+      this.detailAudioButton = document.createElement("button");
+      this.detailAudioButton.className = "ohg-audio-button ohg-detail-audio-button";
+      this.detailAudioButton.type = "button";
+      this.detailAudioButton.dataset.ohgAction = "version-audio-play";
+      this.detailAudioButton.setAttribute(
+        "aria-label",
+        `${isActiveAudioPlaying ? "Pause" : "Play"} ${song.title}`
+      );
+      this.detailAudioButton.innerHTML = `<i class="fa-solid fa-${isActiveAudioPlaying ? "pause" : "play"}" aria-hidden="true"></i>`;
+      this.heroSlot.append(this.detailAudioButton);
+    }
     const secondaryVersions = song.versions
       .map((version, index) => ({ version, index }))
       .filter((entry) => entry.index !== activeIndex)
       .slice(0, 2);
     const activeButton = activeVersion ? `
       <div
-        class="ohg-version-pill is-active${activeAudioSrc ? " has-audio" : ""}"
+        class="ohg-version-pill is-active"
         data-ohg-version-index="${activeIndex}"
         role="button"
         tabindex="0"
@@ -634,7 +643,6 @@ class OhSongographyManager {
       >
         <span class="ohg-version-pill__name">${ohgEscapeHtml(activeVersion.name)}</span>
         <span class="ohg-version-pill__duration">${ohgEscapeHtml(activeVersion.duration)}</span>
-        ${activeAudioButton}
       </div>
     ` : "";
     const secondaryButtons = secondaryVersions.map(({ version, index }) => `
@@ -676,12 +684,13 @@ class OhSongographyManager {
   }
 
   updateVersionAudioButton() {
-    const button = this.versionPills?.querySelector('[data-ohg-action="version-audio-play"]');
+    const button = this.detailAudioButton;
     if (!button) return;
 
     const song = this.getSong();
     const isPlaying = this.detailAudioPlayer.isPlaying();
-    button.setAttribute("aria-label", `${isPlaying ? "Pause" : "Listen to"} ${song?.title ?? "song"}`);
+    button.classList.toggle("is-active", isPlaying);
+    button.setAttribute("aria-label", `${isPlaying ? "Pause" : "Play"} ${song?.title ?? "song"}`);
     button.innerHTML = `<i class="fa-solid fa-${isPlaying ? "pause" : "play"}" aria-hidden="true"></i>`;
   }
 
@@ -1003,6 +1012,7 @@ class OhSongographyManager {
         this.heroSlot.append(cover);
         cover.classList.remove("ohg-cover--circle");
         cover.classList.add("ohg-cover--detail");
+        this.featuredCoverVisualizer.setCover(cover);
         this.setCoverToVersionArt(song, this.getVersion(song, activeVersionIndex ?? this.getDefaultVersionIndex(song)));
       } else {
         this.setCoverToSongArt(song);
@@ -1031,6 +1041,8 @@ class OhSongographyManager {
       const state = Flip.getState(".ohg-cover");
       this.songography?.classList.add("is-song-closing");
       this.songography?.classList.remove("is-song-open");
+      this.detailAudioButton?.remove();
+      this.detailAudioButton = null;
 
       this.songs.forEach((song) => {
         const cover = document.querySelector(`#ohg-cover-${song.id}`);
@@ -1041,6 +1053,7 @@ class OhSongographyManager {
         gridSlot.append(cover);
         cover.classList.remove("ohg-cover--detail");
         cover.classList.add("ohg-cover--circle");
+        if (song.id === OHG_FEATURED_GRID_SONG_ID) this.featuredCoverVisualizer.setCover(cover);
         this.setCoverToSongArt(song);
         railSlot.hidden = false;
         railSlot.classList.remove("is-current");
@@ -1128,6 +1141,7 @@ class OhSongographyManager {
       this.heroSlot.append(newCover);
       newCover.classList.remove("ohg-cover--circle");
       newCover.classList.add("ohg-cover--detail");
+      this.featuredCoverVisualizer.setCover(newCover);
       this.setCoverToVersionArt(newSong, this.getVersion(newSong, versionIndex));
       newRailSlot.hidden = false;
 

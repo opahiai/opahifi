@@ -5,14 +5,12 @@ const ohAssets = Object.freeze({
 });
 
 export const ohSongData = Object.freeze({
-    id: "optimism",
-    slug: "optimism",
-    title: "Optimism, Optimismo",
-    titleLines: Object.freeze(["Optimism", "Optimismo"]),
-    navLabel: "Optimism, Optimismo",
-    subtitle: "Latest release",
-    badge: "Latest release",
-    duration: "3:21",
+    id: "optimisms-cute",
+    slug: "optimisms-cute",
+    title: "Optimism's Cute",
+    titleLines: Object.freeze(["Optimism's", "Cute"]),
+    navLabel: "Optimism's Cute",
+    duration: "3:09",
     releaseDate: null,
     status: "development",
     lyricsStatus: "source-provided",
@@ -22,17 +20,17 @@ export const ohSongData = Object.freeze({
             id: "original",
             slug: "original",
             name: "Original",
-            duration: "3:21",
+            duration: "3:09",
             default: true,
             cover: ohAssets.cover,
             art: ohAssets.art,
             audioSrc: new URL("../../../audio/optimisim-optimizmo-preview.m4a", import.meta.url).href,
             platforms: Object.freeze({
-                spotify: "https://open.spotify.com/track/7IsZ6xqS6WMY6S7KwhaHid?si=UpACA4TESUyXVXKwBIQUOw",
-                appleMusic: "https://music.apple.com/us/song/optimisim-optimismo/6809288186",
-                youtube: "https://music.youtube.com/watch?v=NlaCC4pM4_s&si=_nyfSX6LTi77ZhJ2",
-                amazonMusic: "https://music.amazon.com/albums/B0HJ18LC3R?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_ZwnBKj85CT9xEKsBDYpYEUUZW&trackAsin=B0HJ16XFNC",
-                other: "https://youtu.be/NlaCC4pM4_s?si=I3IdwzkpcvDyCZXu"
+                spotify: "https://open.spotify.com/track/14YhDhLgNTzGtLryY86LBM?si=042472492ceb43e6",
+                appleMusic: "https://music.apple.com/us/song/optimisms-cute/6811533332",
+                youtube: "https://music.youtube.com/watch?v=PiQ3yICJN9s&si=k8Mo4FWkxDOBO-K_",
+                amazonMusic: "https://amazon.com/music/player/tracks/B0HJNHQ16M?marketplaceId=ATVPDKIKX0DER&musicTerritory=US&ref=dm_sh_PjqAkYyQqApUu5doIk7yg1rR0",
+                other: "https://youtu.be/PiQ3yICJN9s?si=dpKdO8IJ_a0GtHpz"
             })
         })
     ]),
@@ -122,7 +120,7 @@ You're not mi-smo — no mo' wisdumb
 Optimism — nonsensism`,
     developmentNotes: ``,
     share: Object.freeze({
-        title: "Optimism, Optimismo",
+        title: "Optimism's Cute",
         text: null,
         url: null
     })
