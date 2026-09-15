@@ -641,8 +641,10 @@ class OhSongographyManager {
         aria-pressed="true"
         style="--ohg-version-stripe: ${ohgEscapeHtml(ohgGetStripeBackground(activeVersion))}"
       >
+      <div class="ohg-version-pill-details is-active" >
         <span class="ohg-version-pill__name">${ohgEscapeHtml(activeVersion.name)}</span>
         <span class="ohg-version-pill__duration">${ohgEscapeHtml(activeVersion.duration)}</span>
+      </div>
       </div>
     ` : "";
     const secondaryButtons = secondaryVersions.map(({ version, index }) => `
@@ -653,8 +655,10 @@ class OhSongographyManager {
         aria-pressed="false"
         style="--ohg-version-stripe: ${ohgEscapeHtml(ohgGetStripeBackground(version))}"
       >
+      <div class="ohg-version-pill-details" >
         <span class="ohg-version-pill__name">${ohgEscapeHtml(version.name)}</span>
         <span class="ohg-version-pill__duration">${ohgEscapeHtml(version.duration)}</span>
+       </div>
       </button>
     `).join("");
     const ghostCount = Math.max(0, 3 - 1 - secondaryVersions.length);

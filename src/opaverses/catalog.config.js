@@ -1,6 +1,6 @@
 export const OH_FEATURED_SONG = Object.freeze({
-  id: "do-the-panicarena",
-  label: "SPOTLIGHT"
+  id: "optimisms-cute",
+  label: "LATEST RELEASE"
 });
 
 export const OH_SONG_SETTINGS = Object.freeze({
