@@ -1,5 +1,6 @@
 .oh-songography {
   --ohg-rail-height: clamp(6.1rem, 13dvh, 7.2rem);
+  --ohg-back-row: 2rem;
 }
 
 .oh-songography.is-song-open {
@@ -8,7 +9,7 @@
   --ohg-playlist-height: 0rem;
   --ohg-playlist-top-gap: 0rem;
   --ohg-shell-row-gap: 0rem;
-  --ohg-header-space: 2.25rem;
+  --ohg-header-space: var(--ohg-back-row);
 }
 
 .oh-songography.is-song-open .ohg-heading {
@@ -31,16 +32,30 @@
   flex: 1 1 0 !important;
 }
 
+.ohg-detail.is-open .ohg-detail__body {
+  --ohg-platform-top: calc(
+    var(--ohg-stage-padding) +
+    var(--ohg-back-row) +
+    var(--ohg-selected-cover-size) +
+    clamp(0.5rem, 1.2dvh, 0.65rem)
+  );
+  padding-top: calc(var(--ohg-stage-padding) + var(--ohg-back-row));
+}
+
+.ohg-detail.is-open .ohg-version-nav {
+  top: calc(var(--ohg-stage-padding) + var(--ohg-back-row));
+}
+
 .ohg-detail__back {
   position: absolute;
-  z-index: 140;
-  top: calc(var(--ohg-shell-pad-y, 0.5rem) + 0.15rem);
+  z-index: 200;
+  top: 0.45rem;
   left: var(--ohg-stage-padding, 1.35rem);
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   margin: 0;
-  padding: 0.35rem 0.15rem;
+  padding: 0.45rem 0.2rem;
   border: 0;
   background: transparent;
   color: var(--ohf-text);
