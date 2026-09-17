@@ -2,6 +2,25 @@
   --ohg-rail-height: clamp(6.1rem, 13dvh, 7.2rem);
 }
 
+.oh-songography.is-song-open {
+  --ohg-title-height: 0rem;
+  --ohg-title-gap: 0rem;
+  --ohg-header-space: 0rem;
+}
+
+.oh-songography.is-song-open .ohg-heading {
+  display: none;
+}
+
+.ohg-version-pill--ghost {
+  display: none !important;
+}
+
+.ohg-version-pills:not(:has(.ohg-version-pill:not(.is-active):not(.ohg-version-pill--ghost))) .ohg-version-pill.is-active {
+  width: auto;
+  min-width: 7.5rem;
+}
+
 .ohg-detail__back {
   position: absolute;
   z-index: 20;
