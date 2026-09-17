@@ -401,11 +401,7 @@ class OhSongographyManager {
       };
 
       if (actions[action.dataset.ohgAction]) {
-        if (action.dataset.ohgAction === "version-audio-play"
-          || action.dataset.ohgAction === "featured-audio-toggle") {
-          action.classList.add("is-shimmer-stopped");
-        }
-        actions[action.dataset.ohgAction]();
+         actions[action.dataset.ohgAction]();
         return;
       }
     }

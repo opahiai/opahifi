@@ -223,7 +223,6 @@
   color: #000;
   font-size: 1.35rem;
   cursor: pointer;
-  animation: ohg-audio-shimmer 5.5s ease-in-out 5;
   transition: transform 0.18s ease;
 }
 
@@ -236,40 +235,6 @@
 
 .ohg-audio-button:active {
   transform: scale(0.9);
-}
-
-.ohg-audio-button.is-shimmer-stopped {
-  animation: none;
-}
-
-@keyframes ohg-audio-shimmer {
-
-  0%,
-  100% {
-    color: #000;
-    text-shadow: none;
-  }
-
-  28% {
-    color: #168cff;
-    text-shadow: 0.24rem -0.18rem 0.45rem rgb(22 140 255 / 0.55);
-  }
-
-  52% {
-    color: #873cff;
-    text-shadow: 0 0 0.5rem rgb(135 60 255 / 0.55);
-  }
-
-  76% {
-    color: #ed294f;
-    text-shadow: -0.24rem 0.18rem 0.45rem rgb(237 41 79 / 0.55);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ohg-audio-button {
-    animation: none;
-  }
 }
 
 .ohg-featured-audio {
