@@ -1,6 +1,14 @@
 import { OH_SONG_SETTINGS } from "../opaverses/catalog.config.js";
 import { ohSongographyManager } from "./songography-manager.js";
 
+if (!document.querySelector("link[data-ohg-recs-style]")) {
+  const recsStyles = document.createElement("link");
+  recsStyles.rel = "stylesheet";
+  recsStyles.href = new URL("../styles/songography-recs.css", import.meta.url).href;
+  recsStyles.dataset.ohgRecsStyle = "true";
+  document.head.append(recsStyles);
+}
+
 const OHG_SEEN_STORAGE_KEY = "ohg-seen-songs";
 const OHG_RECOMMENDATION_COUNT = 3;
 
@@ -30,8 +38,32 @@ function ohgEnsureSeenSet(manager) {
 }
 
 const proto = Object.getPrototypeOf(ohSongographyManager);
+const originalMount = proto.mount;
 const originalOpenSong = proto.openSong;
 const originalChangeSong = proto.changeSong;
+
+proto.mount = function mount() {
+  const result = originalMount.call(this);
+
+  if (this.detail && !this.detail.querySelector(".ohg-detail__back")) {
+    this.detail.insertAdjacentHTML("afterbegin", `
+      <button class="ohg-detail__back" type="button" data-ohg-action="close" aria-label="Back to Songography">
+        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+        <span>Back</span>
+      </button>
+    `);
+  }
+
+  if (this.rail) {
+    this.rail.setAttribute("aria-label", "Also spin");
+    this.rail.querySelectorAll(".ohg-rail__button, .ohg-rail__close").forEach((element) => element.remove());
+    if (!this.rail.querySelector(".ohg-rail__label")) {
+      this.rail.insertAdjacentHTML("afterbegin", '<p class="ohg-rail__label">Also spin</p>');
+    }
+  }
+
+  return result;
+};
 
 proto.markSongSeen = function markSongSeen(songId) {
   if (!songId) return;
