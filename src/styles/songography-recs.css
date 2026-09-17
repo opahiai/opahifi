@@ -24,6 +24,45 @@
   display: none;
 }
 
+.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__hero {
+  display: grid;
+  grid-template-columns: var(--ohg-selected-cover-size) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.95rem;
+  width: 100%;
+}
+
+.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__title {
+  margin: 0;
+  color: var(--ohf-text);
+  font-family: var(--oh-font-display, inherit);
+  font-size: clamp(1.15rem, 5.6vw, 1.7rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__subtitle:empty {
+  display: none;
+}
+
+.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__meta {
+  color: var(--ohf-text-muted, #9a9aa3);
+  font-family: var(--oh-font-condensed, inherit);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .ohg-version-pills {
   justify-content: stretch;
 }
