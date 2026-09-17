@@ -1,35 +1,18 @@
 .oh-songography {
   --ohg-rail-height: clamp(6.1rem, 13dvh, 7.2rem);
-  height: var(--oh-main-height);
-  max-height: var(--oh-main-height);
-  min-height: 0;
-  overflow: hidden;
 }
 
 .oh-songography.is-song-open {
   --ohg-title-height: 0rem;
   --ohg-title-gap: 0rem;
-  --ohg-back-row: 2.15rem;
-  --ohg-header-space: var(--ohg-back-row);
+  --ohg-playlist-height: 0rem;
+  --ohg-playlist-top-gap: 0rem;
+  --ohg-shell-row-gap: 0rem;
+  --ohg-header-space: 2.25rem;
 }
 
-.oh-songography.is-song-open .ohg-heading,
-.oh-songography.is-song-open .ohg-shell {
-  display: none;
-}
-
-.ohg-detail {
-  top: var(--ohg-header-space, 0rem);
-  height: var(--ohg-stage-height);
-  max-height: calc(var(--oh-main-height) - var(--ohg-header-space, 0rem) - var(--ohg-rail-height) - env(safe-area-inset-bottom));
-  overflow: hidden;
-}
-
-.ohg-detail__scroll,
-.ohg-detail__body {
-  min-height: 0;
-  max-height: 100%;
-  overflow: hidden;
+.oh-songography.is-song-open .ohg-heading {
+  visibility: hidden;
 }
 
 .ohg-version-pill--ghost {
@@ -50,8 +33,8 @@
 
 .ohg-detail__back {
   position: absolute;
-  z-index: 20;
-  top: calc(var(--ohg-header-space) * -1 + 0.45rem);
+  z-index: 140;
+  top: calc(var(--ohg-shell-pad-y, 0.5rem) + 0.15rem);
   left: var(--ohg-stage-padding, 1.35rem);
   display: inline-flex;
   align-items: center;
