@@ -20,11 +20,7 @@
   display: none !important;
 }
 
-.ohg-version-nav.is-single {
-  display: none;
-}
-
-.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__hero {
+.ohg-detail.is-open .ohg-detail__hero {
   display: grid;
   grid-template-columns: var(--ohg-selected-cover-size) minmax(0, 1fr);
   align-items: center;
@@ -32,29 +28,30 @@
   width: 100%;
 }
 
-.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__info {
+.ohg-detail.is-open .ohg-detail__info {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
   min-width: 0;
+  min-height: var(--ohg-selected-cover-size);
 }
 
-.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__title {
+.ohg-detail.is-open .ohg-detail__title {
   margin: 0;
   color: var(--ohf-text);
   font-family: var(--oh-font-display, inherit);
-  font-size: clamp(1.15rem, 5.6vw, 1.7rem);
+  font-size: clamp(1.15rem, 5.4vw, 1.65rem);
   font-weight: 800;
   line-height: 0.95;
   letter-spacing: -0.04em;
 }
 
-.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__subtitle:empty {
+.ohg-detail.is-open .ohg-detail__subtitle:empty {
   display: none;
 }
 
-.ohg-detail.is-open:has(.ohg-version-nav.is-single) .ohg-detail__meta {
+.ohg-detail.is-open .ohg-detail__meta {
   color: var(--ohf-text-muted, #9a9aa3);
   font-family: var(--oh-font-condensed, inherit);
   font-size: 0.72rem;
@@ -63,12 +60,52 @@
   text-transform: uppercase;
 }
 
-.ohg-version-pills {
-  justify-content: stretch;
+.ohg-detail.is-open .ohg-version-nav {
+  position: static;
+  inset: auto;
+  display: block;
+  width: auto;
+  max-width: none;
+  height: auto;
+  margin: 0.15rem 0 0;
+  padding: 0;
 }
 
-.ohg-version-pill {
-  flex: 1 1 0 !important;
+.ohg-version-nav.is-single {
+  display: none;
+}
+
+.ohg-detail.is-open .ohg-version-pills {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  height: auto;
+  gap: 0.35rem;
+}
+
+.ohg-detail.is-open .ohg-version-pill {
+  flex: 0 1 auto !important;
+  width: auto !important;
+  min-height: 1.7rem;
+  padding: 0.42rem 0.7rem !important;
+  border: 1px solid color-mix(in srgb, var(--ohf-white) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ohf-surface) 70%, transparent);
+  color: var(--ohf-text);
+  font-size: 0.62rem;
+  opacity: 0.72;
+}
+
+.ohg-detail.is-open .ohg-version-pill.is-active {
+  width: auto !important;
+  border-color: color-mix(in srgb, var(--ohf-blue) 70%, transparent);
+  background: color-mix(in srgb, var(--ohf-blue) 22%, transparent);
+  color: var(--ohf-text);
+  opacity: 1;
+}
+
+.ohg-detail.is-open .ohg-version-pill__duration {
+  display: none;
 }
 
 .ohg-detail.is-open .ohg-detail__body {
@@ -79,10 +116,6 @@
     clamp(0.5rem, 1.2dvh, 0.65rem)
   );
   padding-top: calc(var(--ohg-stage-padding) + var(--ohg-back-row));
-}
-
-.ohg-detail.is-open .ohg-version-nav {
-  top: calc(var(--ohg-stage-padding) + var(--ohg-back-row));
 }
 
 .ohg-detail__back {

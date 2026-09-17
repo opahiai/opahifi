@@ -55,6 +55,12 @@ proto.mount = function mount() {
     `);
   }
 
+  const info = this.detail?.querySelector(".ohg-detail__info");
+  const versionNav = this.detail?.querySelector(".ohg-version-nav");
+  if (info && versionNav && versionNav.parentElement !== info) {
+    info.append(versionNav);
+  }
+
   if (this.rail) {
     this.rail.setAttribute("aria-label", "Also spin");
     this.rail.querySelectorAll(".ohg-rail__button, .ohg-rail__close").forEach((element) => element.remove());
