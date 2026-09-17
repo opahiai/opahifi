@@ -6,6 +6,7 @@ import { ohAboutCarousel } from "./core/about-carousel.js";
 import { ohTermsOverlay } from "./core/terms-overlay.js";
 import { ohSongovisionPlayer } from "./core/songovision-player.js";
 import { ohSongographyManager } from "./songography/songography-manager.js";
+import "./songography/songography-recs.js";
 import { ohRenderOpaverses } from "./opaverses/opaverse-renderer.js";
 
 function ohMountApp() {
