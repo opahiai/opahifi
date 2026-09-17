@@ -1,6 +1,9 @@
 .oh-songography {
   --ohg-rail-height: clamp(7rem, 15dvh, 8.25rem);
   --ohg-back-row: 2rem;
+  --ohg-stripe-row: 1.55rem;
+  --ohg-stripe-gap: 0.28rem;
+  --ohg-stripe-count: 1;
 }
 
 .oh-songography.is-song-open {
@@ -17,9 +20,15 @@
 }
 
 .ohg-detail.is-open .ohg-detail__body {
+  --ohg-version-stack-height: calc(
+    (var(--ohg-stripe-count) * var(--ohg-stripe-row)) +
+    (max(var(--ohg-stripe-count) - 1, 0) * var(--ohg-stripe-gap)) +
+    0.45rem
+  );
   --ohg-platform-top: calc(
     var(--ohg-stage-padding) +
     var(--ohg-back-row) +
+    var(--ohg-version-stack-height) +
     var(--ohg-selected-cover-size) +
     clamp(0.5rem, 1.2dvh, 0.65rem)
   );
@@ -27,7 +36,90 @@
 }
 
 .ohg-detail.is-open .ohg-version-nav {
-  top: calc(var(--ohg-stage-padding) + var(--ohg-back-row));
+  position: relative;
+  z-index: 4;
+  inset: auto;
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  margin: 0;
+  padding: 0 0 0.45rem;
+  background: transparent;
+}
+
+.ohg-detail.is-open .ohg-version-pills {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ohg-stripe-gap);
+  width: 100%;
+  height: auto;
+}
+
+.ohg-detail.is-open .ohg-version-pill,
+.ohg-detail.is-open .ohg-version-others {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 var(--ohg-stripe-row) !important;
+  width: 100% !important;
+  min-height: var(--ohg-stripe-row);
+  padding: 0 0.85rem !important;
+  border: 1px solid color-mix(in srgb, var(--ohf-bg) 18%, transparent);
+  border-radius: 999px;
+  background: var(--ohg-version-stripe, #fff);
+  color: var(--ohf-ink-text, #111);
+  font-family: var(--oh-font-condensed, inherit);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 0.72;
+  cursor: pointer;
+}
+
+.ohg-detail.is-open .ohg-version-pill.is-active {
+  opacity: 1;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--ohf-bg) 28%, transparent);
+}
+
+.ohg-detail.is-open .ohg-version-pill-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 !important;
+}
+
+.ohg-detail.is-open .ohg-version-pill__name,
+.ohg-detail.is-open .ohg-version-pill__duration {
+  display: block;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ohg-detail.is-open .ohg-version-pill__duration {
+  flex: 0 0 auto;
+  margin-left: 0.75rem;
+  font-size: 0.62rem;
+  opacity: 0.78;
+}
+
+.ohg-detail.is-open .ohg-version-others {
+  justify-content: center;
+  background: color-mix(in srgb, var(--ohf-surface) 78%, transparent);
+  border-color: color-mix(in srgb, var(--ohf-white) 16%, transparent);
+  color: var(--ohf-text);
+  opacity: 0.88;
+}
+
+.ohg-version-pill--ghost {
+  display: none !important;
 }
 
 .ohg-detail__back {
