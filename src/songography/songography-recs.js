@@ -41,6 +41,7 @@ const proto = Object.getPrototypeOf(ohSongographyManager);
 const originalMount = proto.mount;
 const originalOpenSong = proto.openSong;
 const originalChangeSong = proto.changeSong;
+const originalUpdateDetail = proto.updateDetail;
 
 proto.mount = function mount() {
   const result = originalMount.call(this);
@@ -62,6 +63,20 @@ proto.mount = function mount() {
     }
   }
 
+  return result;
+};
+
+proto.syncVersionNav = function syncVersionNav() {
+  const nav = this.versionPills?.closest(".ohg-version-nav");
+  this.versionPills?.querySelectorAll(".ohg-version-pill--ghost").forEach((element) => element.remove());
+  const count = this.versionPills?.querySelectorAll(".ohg-version-pill").length ?? 0;
+  nav?.style.setProperty("--ohg-version-row-count", String(Math.max(count, 1)));
+  nav?.classList.toggle("is-single", count <= 1);
+};
+
+proto.updateDetail = function updateDetail(...args) {
+  const result = originalUpdateDetail.apply(this, args);
+  this.syncVersionNav();
   return result;
 };
 
