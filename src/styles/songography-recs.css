@@ -1,5 +1,5 @@
 .oh-songography {
-  --ohg-rail-height: clamp(6.1rem, 13dvh, 7.2rem);
+  --ohg-rail-height: clamp(7rem, 15dvh, 8.25rem);
   --ohg-back-row: 2rem;
 }
 
@@ -84,7 +84,7 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   align-content: end;
-  padding: 0.15rem 0.9rem env(safe-area-inset-bottom);
+  padding: 0.4rem 0.9rem calc(0.75rem + env(safe-area-inset-bottom));
 }
 
 .ohg-rail__label {
@@ -128,7 +128,7 @@
 
 @media (min-width: 40rem) {
   .oh-songography {
-    --ohg-rail-height: clamp(6.4rem, 13dvh, 7.4rem);
+    --ohg-rail-height: clamp(7.2rem, 15dvh, 8.4rem);
   }
 
   .ohg-rail__slot {
