@@ -55,10 +55,10 @@ proto.mount = function mount() {
   }
 
   if (this.rail) {
-    this.rail.setAttribute("aria-label", "Also spin");
+    this.rail.setAttribute("aria-label", "You might also like");
     this.rail.querySelectorAll(".ohg-rail__button, .ohg-rail__close").forEach((element) => element.remove());
     if (!this.rail.querySelector(".ohg-rail__label")) {
-      this.rail.insertAdjacentHTML("afterbegin", '<p class="ohg-rail__label">Also spin</p>');
+      this.rail.insertAdjacentHTML("afterbegin", '<p class="ohg-rail__label">You might also like</p>');
     }
   }
 
