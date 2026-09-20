@@ -221,7 +221,7 @@ class OhGsapManager {
       ".oh-sitemap__group",
       ".ohg-heading",
       ".ohg-playlist-bar",
-      ".ohg-grid__item",
+      ".ohg-grid",
       ".oh-follow__profile",
       ".oh-follow__image",
       ".oh-socials__group",
@@ -245,7 +245,7 @@ class OhGsapManager {
       return { x: -34, y: 0, scale: 1 };
     }
 
-    if (element.matches(".ohg-grid__item, .oh-video-card, .oh-socials__group")) {
+    if (element.matches(".oh-video-card, .oh-socials__group")) {
       return { x: 28, y: 14, scale: 0.975 };
     }
 
